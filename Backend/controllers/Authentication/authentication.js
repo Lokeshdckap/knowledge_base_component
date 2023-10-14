@@ -104,7 +104,7 @@ const login = async (req, res) => {
       return res.status(401).send({ email: "Invaild Crendtials" });
     }
   } catch (error) {
-    console.log(error);
+    console.log("error",error);
   }
 };
 

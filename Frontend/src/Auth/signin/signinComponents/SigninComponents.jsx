@@ -15,7 +15,7 @@ export default function SigninComponents() {
 
   function togglePassword() {
     setPasswordVisible((prevState) => !prevState);
-  }
+  };
 
   const [formValues, setFormValues] = useState({
     email: "",
@@ -35,12 +35,12 @@ export default function SigninComponents() {
     let passwordRegex = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
 
     if (!formValues.email.trim()) {
-      validationErrors.email = "email is required";
+      validationErrors.email = "Email is required";
       isValid = false;
-    }
+    };
 
     if (!formValues.password.trim()) {
-      validationErrors.password = "password is required";
+      validationErrors.password = "Password is required";
       isValid = false;
     } else if (!passwordRegex.test(formValues.password)) {
       validationErrors.password = "Password is not valid";

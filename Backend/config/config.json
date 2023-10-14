@@ -1,0 +1,26 @@
+{
+  "development": {
+    "username": "dckap",
+    "password": "admin",
+    "database": "knowledge_base",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  },
+
+
+
+  "test": {
+    "username": "yourUserName",
+    "password": "yourPassword",
+    "database": "aratta_express_db",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  },
+  "production": {
+    "username": "yourUserName",
+    "password": "yourPassword",
+    "database": "aratta_express_db",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  }
+}

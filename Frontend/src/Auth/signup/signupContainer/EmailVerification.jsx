@@ -1,10 +1,12 @@
-import React from 'react'
-import emailverify from '../../../assets/images/emailverify.png';
-
+import React from "react";
+import emailverify from "../../../assets/images/emailverify.png";
 
 export default function EmailVerification() {
+  const resend = (value) => {
+    console.log(value);
+  };
   return (
-    <div>
+     <div>
       <div className='bg-primary w-screen h-64 absolute'>
 
       </div>
@@ -18,8 +20,9 @@ export default function EmailVerification() {
       </div>
       <div className='bg-secondary w-screen h-64'>
 
-      </div>x
+      </div>
 
     </div>
-  )
+
+  );
 }

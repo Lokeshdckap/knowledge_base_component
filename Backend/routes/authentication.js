@@ -10,16 +10,16 @@ const passport = require("passport");
 
 const authController = require("../controllers/Authentication/authentication");
 
-const forgotPassword = require('../controllers/Authentication/passwordReset')
+const forgotPassword = require("../controllers/Authentication/passwordReset");
 
-router.post("/register", authMiddleware.saveUser,authController.register);
+
+router.post("/register", authMiddleware.saveUser, authController.register);
 
 router.post("/login", authController.login);
 
-router.post('/forgotPassword',forgotPassword.forgotPassword);
+router.post("/forgotPassword", forgotPassword.forgotPassword);
 
-router.post('/resetPassword/:uuid/:token',forgotPassword.resetPassword);
-
+router.post("/resetPassword/:uuid/:token", forgotPassword.resetPassword);
 
 router.get(
   "/auth/google",
@@ -38,10 +38,9 @@ router.get(
   }
 );
 
-router.get('/verify-email/:uuid/:token', authController.verifyEmail)
+router.get("/verify-email/:uuid/:token", authController.verifyEmail);
 
-router.post('/resendVerifyEmail/:uuid/:token', authController.resendEmailLink)
-
+router.post("/resendVerifyEmail/:uuid/:token", authController.resendEmailLink);
 
 // router.route('/:id')
 //     .get(employeeController.getEmployee)

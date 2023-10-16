@@ -4,7 +4,7 @@ const app = express();
 
 const cors = require("cors");
 
-const fs = require('fs')
+const fs = require("fs");
 
 require("dotenv").config();
 
@@ -33,7 +33,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // Middlewares
-const path = require('path')
+const path = require("path");
 app.use(express.json());
 
 app.use(express.urlencoded({ extended: false }));
@@ -42,9 +42,8 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use("/", require("./routes/authentication"));
 
+app.use("/", require("./routes/dashboard"));
+
 //listening to server connection
-
-
-
 
 app.listen(PORT, () => console.log(`Serpassportver running on port ${PORT}`));

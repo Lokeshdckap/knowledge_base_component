@@ -16,4 +16,14 @@ const passwordResetSchema = Joi.object({
   password: Joi.string().min(6).required(),
   confirmPassword: Joi.string().min(6).required(),
 });
-module.exports = { registrationSchema, loginSchema, passwordResetSchema };
+
+const createTeamSchema = Joi.object({
+  team_name: Joi.string().required(),
+});
+
+module.exports = {
+  registrationSchema,
+  loginSchema,
+  passwordResetSchema,
+  createTeamSchema,
+};

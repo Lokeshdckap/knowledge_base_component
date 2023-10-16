@@ -31,6 +31,10 @@ db.password_reset_token = require("../models/password_reset_token")(sequelize, D
 
 db.email_verification_token = require("../models/email_verification_token")(sequelize, DataTypes);
 
+db.teams = require("../models/teams")(sequelize, DataTypes);
+
+
+
 //exporting the module
 
 module.exports = db;

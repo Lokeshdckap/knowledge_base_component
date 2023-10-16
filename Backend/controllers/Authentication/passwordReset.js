@@ -16,7 +16,7 @@ const path = require("path");
 
 const fs = require("fs");
 
-const {passwordResetSchema} = require("../../utils/userValidations");
+const {passwordResetSchema} = require("../../utils/validations");
 
 
 const forgotPassword = async (req, res) => {

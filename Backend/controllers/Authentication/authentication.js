@@ -8,12 +8,8 @@ const Joi = require("joi");
 const crypto = require("crypto");
 const generateAuthToken = require("../../utils/generateAuthToken");
 const sendEmail = require("../../utils/sendEmails");
-const uuid = require('uuid')
-const {
-  registrationSchema,
-  loginSchema,
-} = require("../../utils/userValidations");
-
+const uuid = require("uuid");
+const { registrationSchema, loginSchema } = require("../../utils/validations");
 
 const register = async (req, res) => {
   try {
@@ -36,17 +32,15 @@ const register = async (req, res) => {
       username,
       email,
       password: await bcrypt.hash(password, 15),
-      uuid : uuid.v4()
+      uuid: uuid.v4(),
     });
 
-
-
     if (user) {
-    const expiresAt = new Date(Date.now() + 3600000);
+      const expiresAt = new Date(Date.now() + 3600000);
       let setToken = await new emailVerificationToken({
         user_uuid: user.uuid,
         token: crypto.randomBytes(32).toString("hex"),
-        expires_at : expiresAt
+        expires_at: expiresAt,
       }).save();
 
       if (setToken) {
@@ -72,7 +66,6 @@ const register = async (req, res) => {
     return res.status(500).send("Error in registering user");
   }
 };
-
 
 const login = async (req, res) => {
   try {
@@ -112,7 +105,6 @@ const login = async (req, res) => {
     console.log("error", error);
   }
 };
-
 
 const verifyEmail = async (req, res) => {
   try {

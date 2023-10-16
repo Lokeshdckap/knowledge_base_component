@@ -114,6 +114,7 @@ export default function SignupComponents() {
       });
   };
 
+
   useEffect(() => {
     axiosClient.get(
       `http://localhost:4000/verify-email/${params.uuid}/${params.token}`
@@ -126,7 +127,6 @@ export default function SignupComponents() {
           token: data.jwttoken,
           verify: data.verify,
         });
-
       })
       .catch((err) => {
         // debugger;

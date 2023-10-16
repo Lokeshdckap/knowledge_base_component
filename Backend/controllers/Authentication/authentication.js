@@ -8,11 +8,12 @@ const Joi = require("joi");
 const crypto = require("crypto");
 const generateAuthToken = require("../../utils/generateAuthToken");
 const sendEmail = require("../../utils/sendEmails");
+const uuid = require('uuid')
 const {
   registrationSchema,
   loginSchema,
 } = require("../../utils/userValidations");
-const uuid = require("uuid");
+
 
 const register = async (req, res) => {
   try {
@@ -27,7 +28,6 @@ const register = async (req, res) => {
     const userExists = await User.findOne({
       where: { email },
     });
-
     if (userExists) {
       return res.status(400).send("Email is already exists");
     }
@@ -36,12 +36,17 @@ const register = async (req, res) => {
       username,
       email,
       password: await bcrypt.hash(password, 15),
+      uuid : uuid.v4()
     });
 
+
+
     if (user) {
+    const expiresAt = new Date(Date.now() + 3600000);
       let setToken = await new emailVerificationToken({
         user_uuid: user.uuid,
         token: crypto.randomBytes(32).toString("hex"),
+        expires_at : expiresAt
       }).save();
 
       if (setToken) {
@@ -55,7 +60,6 @@ const register = async (req, res) => {
         const emailink = emailTemplate.replace("{{link}}", link);
 
         await sendEmail(user.email, "Email Verification", emailink);
-        
       } else {
         return res.status(400).send("token not created");
       }
@@ -68,6 +72,7 @@ const register = async (req, res) => {
     return res.status(500).send("Error in registering user");
   }
 };
+
 
 const login = async (req, res) => {
   try {
@@ -104,9 +109,10 @@ const login = async (req, res) => {
       return res.status(401).send({ email: "Invaild Crendtials" });
     }
   } catch (error) {
-    console.log("error",error);
+    console.log("error", error);
   }
 };
+
 
 const verifyEmail = async (req, res) => {
   try {
@@ -121,6 +127,11 @@ const verifyEmail = async (req, res) => {
     });
 
     //if token doesnt exist, send status of 400
+    if (usertoken.expires_at < new Date()) {
+      return res
+        .status(400)
+        .json({ message: "Token has expired or Invaild Token" });
+    }
     if (!usertoken) {
       return res.status(400).send({
         msg: "Your verification link may have expired. Please click on resend for verify your Email.",
@@ -195,8 +206,10 @@ const resendEmailLink = async (req, res, next) => {
   else {
   }
 };
+
 module.exports = {
   register,
   login,
   verifyEmail,
+  resendEmailLink,
 };

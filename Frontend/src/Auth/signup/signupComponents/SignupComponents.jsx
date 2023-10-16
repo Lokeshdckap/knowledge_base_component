@@ -8,7 +8,6 @@ import { useStateContext } from "../../../context/ContextProvider";
 import axiosClient from "../../../axios-client";
 import HashLoader from "react-spinners/HashLoader";
 
-
 export default function SignupComponents() {
   const [errors, setError] = useState({});
   const params = useParams();
@@ -40,7 +39,6 @@ export default function SignupComponents() {
     e.preventDefault();
     const validationErrors = {};
 
-
     if (!formValues.username.trim()) {
       validationErrors.username = "username is required";
     }
@@ -64,7 +62,6 @@ export default function SignupComponents() {
       validationErrors.confirmPassword = "Password not match";
     }
 
-
     setError(validationErrors);
 
     // setLoading(false)
@@ -76,7 +73,6 @@ export default function SignupComponents() {
         .then(({ data }) => {
           console.log(data);
           setLoading(false);
-
           navigate("/emailverify");
         })
         .catch((err) => {
@@ -89,10 +85,8 @@ export default function SignupComponents() {
 
             error[keys] = value;
 
-
             setError(error);
             setLoading(false);
-
           } else {
             console.error("Error:", response.status);
           }
@@ -115,18 +109,16 @@ export default function SignupComponents() {
   };
 
   useEffect(() => {
-    axiosClient.get(
-      `http://localhost:4000/verify-email/${params.uuid}/${params.token}`
-    )
+    axiosClient
+      .get(`http://localhost:4000/verify-email/${params.uuid}/${params.token}`)
       .then(({ data }) => {
-        setLoading(false)
+        setLoading(false);
 
         console.log(data);
         setAuth({
           token: data.jwttoken,
           verify: data.verify,
         });
-
       })
       .catch((err) => {
         // debugger;
@@ -248,7 +240,6 @@ export default function SignupComponents() {
                       className="material-symbols-outlined absolute right-3 top-3 cursor-pointer text-gray-500 text-xl"
                       onClick={toggleConfirmPassword}
                     >
-                  
                       visibility
                     </span>
                   ) : (
@@ -256,7 +247,6 @@ export default function SignupComponents() {
                       className="material-symbols-outlined absolute right-3 top-3 cursor-pointer text-gray-500 text-xl"
                       onClick={toggleConfirmPassword}
                     >
-              
                       visibility_off
                     </span>
                   )}
@@ -295,13 +285,15 @@ export default function SignupComponents() {
               >
                 Signup with google
               </button>
-         
             </div>
           </div>
         </div>
       </div>
-      {loading && <p className="absolute top-72 left-[600px]">    
-                <HashLoader color="#3197e8" /></p>}
+      {loading && (
+        <p className="absolute top-72 left-[600px]">
+          <HashLoader color="#3197e8" />
+        </p>
+      )}
     </div>
   );
 }

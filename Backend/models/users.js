@@ -1,5 +1,5 @@
 "use strict";
-const password_reset_token = require('../models/password_reset_token')
+// const password_reset_token = require('../models/password_reset_token')
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class users extends Model {

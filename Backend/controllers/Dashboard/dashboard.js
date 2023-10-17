@@ -16,6 +16,7 @@ const createTeams = async (req, res) => {
     const teamExists = await Teams.findOne({ where: { name: team_name } });
 
     if (teamExists) {
+      
       return res.status(400).send({Error:`${teamExists.name} Team Is Already Exists`});
     } else {
       const newTeam = await Teams.create({

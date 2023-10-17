@@ -46,4 +46,4 @@ app.use("/", require("./routes/dashboard"));
 
 //listening to server connection
 
-app.listen(PORT, () => console.log(`Serpassportver running on port ${PORT}`));
+app.listen(PORT, () => console.log(`Serpassportver running server on port ${PORT}`));

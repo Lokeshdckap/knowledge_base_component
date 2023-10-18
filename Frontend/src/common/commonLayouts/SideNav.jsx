@@ -5,6 +5,7 @@ import AddNew from "../commonComponents/AddNew";
 
 export default function SideNav(props) {
   const [AddNewMenu, setAddNewMenu] = useState(false);
+  const teamName = String(props.teams.name);
 
 
   return (
@@ -21,22 +22,26 @@ export default function SideNav(props) {
         </span>
       </div>
       <div className="bg-blue-100 h-[40px] w-[45px] rounded-sm ml-3 mt-7">
-        <p className="text-2xl font-bold p-1 ">DC</p>
+        <p className="text-2xl font-bold p-1 ">{teamName.slice(0, 2)}</p>
       </div>
 
-      <div className="space-y-6  mt-64  " >
+      <div className="space-y-6  mt-64  ">
         <div className="bg-white h-8 w-8 rounded-full ml-5 cursor-pointer relative">
           {AddNewMenu ? (
-            <i class="fa-solid fa-x text-lg pl-[9px] pt-[2px]  text-textPrimary cursor-pointer" onClick= {() => setAddNewMenu(false)}></i>
+            <i
+              class="fa-solid fa-x text-lg pl-[9px] pt-[2px]  text-textPrimary cursor-pointer"
+              onClick={() => setAddNewMenu(false)}
+            ></i>
           ) : (
             <i
               class="fa-solid fa-plus text-xl pl-[7px] pt-[2px]  text-textPrimary cursor-pointer"
-              title="Add new" onClick= {() => setAddNewMenu(true)}
+              title="Add new"
+              onClick={() => setAddNewMenu(true)}
             ></i>
           )}
           {AddNewMenu && (
             <div className="absolute left-8 bottom-8">
-              <AddNew />
+              <AddNew team={props.teams} />
             </div>
           )}
         </div>

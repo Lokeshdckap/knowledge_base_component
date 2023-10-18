@@ -2,9 +2,10 @@ import React, { useEffect, useState } from "react";
 import mainLogo from "../../assets/images/mainlogo.png"
 import Input from "../../common/commonComponents/Input";
 import axiosClient from "../../axios-client";
+import { useNavigate } from "react-router-dom";
 
 export default function TeamPage() {
-
+    const navigate = useNavigate();
     const [formValues, setFormValues] = useState({});
     
       const HandleChange = (e) => {
@@ -19,7 +20,9 @@ export default function TeamPage() {
         
         axiosClient.post("/team",formValues)
         .then((res) => {
-            console.log(res);
+            // console.log(res);
+            navigate('/dashboard')
+            
           })
           .catch((err) => {
             console.log(err);

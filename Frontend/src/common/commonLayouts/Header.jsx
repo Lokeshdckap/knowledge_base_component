@@ -3,7 +3,6 @@ import Main from "./Main";
 import { Navigate, useNavigate } from "react-router-dom";
 
 export default function Header(props) {
-  console.log(props.widths);
 
   const navigate = useNavigate();
   const onLogout = () => {
@@ -15,7 +14,7 @@ export default function Header(props) {
       <div
         className={`flex items-center justify-between m-auto ${props.widths}  mt-4`}
       >
-        <h2>DCKAP's Team</h2>
+        <h2>{props.teams} Team</h2>
         <div>
           <form>
             <div class="flex">

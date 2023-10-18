@@ -7,11 +7,13 @@ export default function GuestLayout()
 
     if(auth)
     {
-        return <Navigate to="/dashboard" />
+
+        return <Navigate to="/teampage" />
+
     }
     return (
-        <div>
-            <Outlet />
+       <div>
+            <Outlet /> 
         </div>
     )
     

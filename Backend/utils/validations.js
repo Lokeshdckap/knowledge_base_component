@@ -21,9 +21,15 @@ const createTeamSchema = Joi.object({
   team_name: Joi.string().required(),
 });
 
+
+const createTypeSchema = Joi.object({
+  type: Joi.string().required(),
+});
+
 module.exports = {
   registrationSchema,
   loginSchema,
   passwordResetSchema,
   createTeamSchema,
+  createTypeSchema
 };

@@ -51,9 +51,9 @@ const register = async (req, res) => {
           "utf8"
         );
 
-        const emailink = emailTemplate.replace("{{link}}", link);
+        // const emailink = emailTemplate.replace("{{link}}", link);
 
-        await sendEmail(user.email, "Email Verification", emailink);
+        // await sendEmail(user.email, "Email Verification", emailink);
       } else {
         return res.status(400).send("token not created");
       }
@@ -153,14 +153,12 @@ const verifyEmail = async (req, res) => {
             },
           }
         );
-        console.log(updated);
 
         const user = await User.findOne({
           where: {
             uuid: usertoken.user_uuid,
           },
         });
-        console.log(user);
 
         //if not updated sencsrfd error message
         if (!updated) {
@@ -180,22 +178,59 @@ const verifyEmail = async (req, res) => {
   }
 };
 
-const resendEmailLink = async (req, res, next) => {
-  const user = await User.findOne({ where: { id: req.params.id } });
-  // user is not found into database
-  if (!user) {
-    return res.status(400).send({
-      msg: "We were unable to find a user with that email. Make sure your Email is correct!",
-    });
-  }
-  // user has been already verified
-  else if (user.isVerified) {
-    return res
-      .status(200)
-      .send("This account has been already verified. Please log in.");
-  }
-  // send verification link
-  else {
+const resendEmailLink = async (req, res) => {
+  try {
+    const userEmail = req.body.email;
+    const user = await User.findOne({ where: { email: userEmail } });
+    // user is not found into database
+    if (!user) {
+      return res.status(400).send({
+        msg: "We were unable to find a user with that email. Make sure your Email is correct!",
+      });
+    }
+    // user has been already verified
+    else if (user.isVerified) {
+      return res
+        .status(200)
+        .send("This account has been already verified. Please log in.");
+    }
+    // send verification link
+    else {
+      if (user) {
+        const expiresAt = new Date(Date.now() + 3600000);
+        let setToken = await new emailVerificationToken({
+          user_uuid: user.uuid,
+          token: crypto.randomBytes(32).toString("hex"),
+          expires_at: expiresAt,
+        }).save();
+
+        if (setToken) {
+          const link = `http://localhost:3000/email-verify/${user.uuid}/${setToken.token}`;
+
+          const emailTemplate = fs.readFileSync(
+            path.join(
+              __dirname,
+              "../../",
+              "public",
+              "emailTemplates/index.html"
+            ),
+            "utf8"
+          );
+
+          const emailink = emailTemplate.replace("{{link}}", link);
+
+          await sendEmail(user.email, "Email Verification", emailink);
+        } else {
+          return res.status(400).send("token not created");
+        }
+        return res.status(200).send({ verify: user.isVerified });
+        // return res.status(302).send('Please Verify Your Email')
+      } else {
+        return res.status(409).send("Details are not correct");
+      }
+    }
+  } catch (err) {
+    return res.status(500).send("Error in resend link send to user");
   }
 };
 

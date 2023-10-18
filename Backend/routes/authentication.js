@@ -40,7 +40,7 @@ router.get(
 
 router.get("/verify-email/:uuid/:token", authController.verifyEmail);
 
-router.post("/resendVerifyEmail/:uuid/:token", authController.resendEmailLink);
+router.post("/resendVerifyEmail", authController.resendEmailLink);
 
 // router.route('/:id')
 //     .get(employeeController.getEmployee)

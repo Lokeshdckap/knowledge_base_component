@@ -26,7 +26,7 @@ const createTeams = async (req, res) => {
       return res.status(400).send({"team_name":`${teamExists.name} Team Is Already Exists`});
 
     } else {
-      const newTeam = await Teams.create({
+      const newTeam = await Team.create({
         name: team_name,
         uuid: uuid.v4(),
         user_uuid: req.user.id,
@@ -51,7 +51,7 @@ const createTeams = async (req, res) => {
 
 const getTeam = async (req, res) => {
   try {
-    const Teams = await Team.findAll(); // This performs a SELECT * query on the "users" table
+    const Teams = await Team.findAll();
     res.json(Teams);
   } catch (error) {
     res.status(500).json({ error: "Internal server error" });

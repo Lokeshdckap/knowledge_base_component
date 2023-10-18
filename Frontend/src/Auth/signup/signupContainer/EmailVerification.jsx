@@ -1,9 +1,25 @@
 import React from "react";
 import emailverify from "../../../assets/images/emailverify.png";
-
+import axiosClient from "../../../axios-client";
+import Cookies from 'js-cookie';
+import { ToastContainer, toast } from "react-toastify";
+import { Link } from "react-router-dom";
 export default function EmailVerification() {
-  const resend = (value) => {
-    console.log(value);
+
+  const userEmail = Cookies.get('userEmail');
+
+  const showToastMessage = (data) => {
+    toast.success(data, {
+      position: toast.POSITION.TOP_CENTER,
+    });
+  };
+  const resendLink = () => {
+    console.log(userEmail);
+    axiosClient.post("http://localhost:4000/resendVerifyEmail",{"email":userEmail})
+    .then(({ data }) => {
+
+      showToastMessage(data);
+    })
   };
   return (
      <div>
@@ -15,13 +31,15 @@ export default function EmailVerification() {
         <img src={emailverify} alt="" className='h-[350px] w-96 m-auto' />
         <h2 className='w-[350px] m-auto text-textPrimary'> Before proceeding Our Knowledge Base, please check your email for a verification</h2>
         <div className='text-center pt-5'>
-          <button type="submit" className="bg-primary  w-36 text-white h-11 rounded-md ">Resend Link</button>
+          <button type="submit" className="bg-primary  w-36 text-white h-11 rounded-md " onClick={resendLink}>Resend Link</button>
+          <Link to="/signin"><button type="submit" className="bg-primary  w-36 text-white h-11 rounded-md ml-2">Please Login</button></Link>
+
         </div>
       </div>
       <div className='bg-secondary w-screen h-64'>
 
       </div>
-
+      <ToastContainer />
     </div>
 
   );

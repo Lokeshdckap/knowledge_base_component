@@ -1,7 +1,6 @@
 const db = require("../../utils/database");
 const User = db.users;
 const Team = db.teams;
-// const Type = db.type;
 const Batch = db.batch;
 const uuid = require("uuid");
 
@@ -25,7 +24,7 @@ const createTeams = async (req, res) => {
       return res.status(400).send({"team_name":`${teamExists.name} Team Is Already Exists`});
 
     } else {
-      const newTeam = await Teams.create({
+      const newTeam = await Team.create({
         name: team_name,
         uuid: uuid.v4(),
         user_uuid: req.user.id,
@@ -78,19 +77,15 @@ const addNewBatch = async (req, res) => {
 };
 
 const getBatch = async(req,res)=>{
-   console.log(req.params.uuid,'ll');
 
-  // const condition = {
-  //   where: {
-  //     team_uuid: req.params.uuid // Replace with your desired condition
-  //   }
-  // };
-  // console.log(condition)
-  // const batchs = await Batch.findAll( {where: {
-  //   team_uuid: req.params.uuid
-  // }});
-  // console.log(batchs);
-
+  
+  const batchs = await Batch.findAll( {where: {
+    team_uuid: req.params.uuid
+  }});
+   
+  return res.status(200).send({
+    batchs,
+  });
 }
 
 module.exports = {

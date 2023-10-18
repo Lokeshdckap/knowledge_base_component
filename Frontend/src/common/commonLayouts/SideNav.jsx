@@ -4,8 +4,10 @@ import Dashboard from "../../Dashboard/container/Dashboard";
 import AddNew from "../commonComponents/AddNew";
 
 export default function SideNav(props) {
+  
   const [AddNewMenu, setAddNewMenu] = useState(false);
-  const teamName = String(props.teams.name);
+
+  const teamName = String(props.teams.name);  
 
 
   return (
@@ -41,7 +43,7 @@ export default function SideNav(props) {
           )}
           {AddNewMenu && (
             <div className="absolute left-8 bottom-8">
-              <AddNew team={props.teams} />
+              <AddNew click={props.clickEvent} />
             </div>
           )}
         </div>

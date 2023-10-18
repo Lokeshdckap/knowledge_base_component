@@ -1,10 +1,12 @@
 import React from "react";
 
 export default function Main(props) {
+  const allBatchList = props.allBatch;
+
   return (
-    <div className="mt-20">
-      <div>
-        <div className={`flex justify-between ${props.widths} m-auto`}>
+    <div className="pt-16 h-[550px] overflow-auto z-0">
+      <div className="h-[550px] ">
+        <div className={`flex justify-between ${props.widths} m-auto  `}>
           <div className="flex space-x-3">
             <div className="rounded-full h-12 w-12 bg-[#DEE0E4]">
               <i className="fa-solid fa-user-group text-[25px] pl-2 pt-[10px] text-[#6E7E86]"></i>
@@ -24,10 +26,27 @@ export default function Main(props) {
           </div>
         </div>
         <div className="mt-14">
-          <hr class={`h-px my-8 bg-[#D5D7DA] border-0 dark:bg-gray-900 ${props.widths} m-auto`} />
+          <hr
+            class={`h-px my-8 bg-[#D5D7DA] border-0 dark:bg-gray-900 ${props.widths} m-auto`}
+          />
         </div>
         <div className={`${props.widths} m-auto flex flex-wrap gap-[40px] `}>
-          <div className="bg-white w-[230px] h-[120px] rounded-[10px]">
+          {allBatchList.map((BatchList) => 
+            <div className="bg-white w-[230px] h-[120px] rounded-[10px]">
+              <div className="bg-gradient-to-r from-primary to-[#226576] w-[230px] h-[36px] rounded-t-lg text-end pt-px">
+                <span class="material-symbols-outlined text-white cursor-pointer text-2xl pr-1">
+                  more_vert
+                </span>
+              </div>
+              <div className="pl-5 pt-5">
+                <p>{BatchList.title}</p>
+                <p className="text-gray-500">0 scripts</p>
+                  
+              </div>
+            </div>
+          )}
+
+          {/* <div className="bg-white w-[230px] h-[120px] rounded-[10px]">
             <div className="bg-gradient-to-r from-primary to-[#226576] w-[230px] h-[36px] rounded-t-lg text-end pt-px">
               <span class="material-symbols-outlined text-white cursor-pointer text-2xl pr-1">more_vert</span>
             </div>
@@ -46,12 +65,7 @@ export default function Main(props) {
             <div className="bg-gradient-to-r from-primary to-[#226576] w-[230px] h-[36px] rounded-t-lg text-end pt-px">
               <span class="material-symbols-outlined text-white cursor-pointer text-2xl pr-1">more_vert</span>
             </div>
-          </div>
-          <div className="bg-white w-[230px] h-[120px] rounded-[10px]">
-            <div className="bg-gradient-to-r from-primary to-[#226576] w-[230px] h-[36px] rounded-t-lg text-end pt-px">
-              <span class="material-symbols-outlined text-white cursor-pointer text-2xl pr-1">more_vert</span>
-            </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

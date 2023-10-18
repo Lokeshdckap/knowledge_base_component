@@ -3,6 +3,8 @@ import Main from "./Main";
 import { Navigate, useNavigate } from "react-router-dom";
 
 export default function Header(props) {
+ 
+
 
   const navigate = useNavigate();
   const onLogout = () => {
@@ -10,11 +12,11 @@ export default function Header(props) {
     window.location.href = "/signin";
   };
   return (
-    <div className="">
+    <div className="h-[65px] ">
       <div
         className={`flex items-center justify-between m-auto ${props.widths}  mt-4`}
       >
-        <h2>{props.teams} Team</h2>
+        <h2>{props.teams} 's Team</h2>
         <div>
           <form>
             <div class="flex">
@@ -24,7 +26,7 @@ export default function Header(props) {
                 class="flex-shrink-0 z-10 inline-flex items-center p-2 px-4 text-sm font-medium text-center text-gray-900 bg-gray-100 border border-gray-300 rounded-l-lg hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700 dark:text-white dark:border-gray-600"
                 type="button"
               >
-                Alls
+                All
                 <svg
                   class="w-2.5 h-2.5 ml-2.5"
                   aria-hidden="true"

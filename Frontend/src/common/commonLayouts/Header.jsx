@@ -3,8 +3,8 @@ import Main from "./Main";
 import { Navigate, useNavigate } from "react-router-dom";
 
 export default function Header(props) {
-  console.log(props.widths);
-
+ 
+  
   const navigate = useNavigate();
   const onLogout = () => {
     localStorage.clear();

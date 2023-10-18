@@ -5,28 +5,56 @@ import axiosClient from "../../axios-client";
 
 export default function TeamPage() {
 
-    const [formValues, setFormValues] = useState({});
+    const [formValues, setFormValues] = useState({
+
+    });
+    const [errors, setError] = useState({});
     
       const HandleChange = (e) => {
         const { name, value } = e.target;
-
-
         setFormValues({ ...formValues, [name]: value });
-        // delete errors[name];
+        delete errors[name];
       };
 
     const createTeam = () => {
+
+
+      const validationErrors = {};
+
+      if (!formValues.team_name) {
+        validationErrors.team_name = "Team is required";
+      }
         
+    setError(validationErrors);
+    if (Object.keys(validationErrors).length === 0) {
+
         axiosClient.post("/team",formValues)
         .then((res) => {
             console.log(res);
           })
           .catch((err) => {
-            console.log(err);
+            const response = err.response;
+            if (response && response.status === 400) {
+
+              // console.log(response);
+              let error = {};
+              let keys = Object.keys(response.data);
+              let value = Object.values(response.data);
+              console.log(value);
+  
+              error[keys] = value;
+  
+              setError(error);
+
+            } 
+            else {
+
+              console.error("Error:", response.status);
+            }
           });
       
     }
-
+  }
 
   return (
     <div>
@@ -51,7 +79,16 @@ export default function TeamPage() {
           
 
           />
-          <button class="bg-primary ml-48 mt-10  hover:bg-blue-950 text-white font-bold py-3 px-10 rounded" onClick={createTeam}>
+          {!errors.team_name ? (
+              <div>
+                <p className="invisible">Required</p>
+              </div>
+            ) : (
+              <div>
+                <p className="text-red-500 ml-20">{errors.team_name}</p>
+              </div>
+            )}
+          <button class="bg-primary ml-48 mt-8  hover:bg-blue-950 text-white font-bold py-3 px-10 rounded" onClick={createTeam}>
             Create team
           </button>
         </div>

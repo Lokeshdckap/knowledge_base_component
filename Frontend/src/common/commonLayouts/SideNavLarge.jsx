@@ -3,6 +3,9 @@ import mainLogo from "../../assets/images/mainlogo.png";
 import AddNew from "../commonComponents/AddNew";
 
 export default function SideNavLarge(props) {
+
+  const teamName = props.teams.name;
+
   const [AddNewMenu, setAddNewMenu] = useState(false);
 
   return (
@@ -20,7 +23,7 @@ export default function SideNavLarge(props) {
       </div>
       <div className="mt-8 w-[200px] m-auto flex items-center space-x-4 ">
         <span class="material-symbols-outlined text-white">group</span>
-        <p className="text-xl font-bold  text-white">Dckap Tea...</p>
+        <p className="text-xl font-bold  text-white">{teamName} Tea...</p>
         <i class="fa-solid fa-angle-down text-white cursor-pointer"></i>
       </div>
       <div className=" ml-[27px] space-y-4 mt-80 relative">
@@ -43,7 +46,7 @@ export default function SideNavLarge(props) {
         </div>
         {AddNewMenu && (
           <div className="absolute left-28 bottom-48   ">
-            <AddNew />
+            <AddNew team={props.teams} />
           </div>
         )}
 

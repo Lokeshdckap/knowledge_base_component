@@ -27,13 +27,20 @@ db.sequelize = sequelize;
 //connecting to model
 db.users = require("../models/users")(sequelize, DataTypes);
 
-db.password_reset_token = require("../models/password_reset_token")(sequelize, DataTypes);
+db.password_reset_token = require("../models/password_reset_token")(
+  sequelize,
+  DataTypes
+);
 
-db.email_verification_token = require("../models/email_verification_token")(sequelize, DataTypes);
+db.email_verification_token = require("../models/email_verification_token")(
+  sequelize,
+  DataTypes
+);
 
 db.teams = require("../models/teams")(sequelize, DataTypes);
 
 
+db.batch = require("../models/batch")(sequelize, DataTypes);
 
 //exporting the module
 

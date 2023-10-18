@@ -16,5 +16,4 @@ export default function GuestLayout()
             <Outlet /> 
         </div>
     )
-    
 }

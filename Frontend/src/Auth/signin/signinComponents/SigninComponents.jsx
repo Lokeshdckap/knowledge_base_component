@@ -57,7 +57,6 @@ export default function SigninComponents() {
     if (validation()) {
       axiosClient.post("http://localhost:4000/login", formValues)
         .then(({ data }) => {
-          console.log(data);
           setAuth({
             token: data.token,
             verify: data.verify,

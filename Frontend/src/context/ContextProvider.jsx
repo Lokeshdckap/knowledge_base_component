@@ -22,7 +22,6 @@ export const ContextProvider = ({children}) => {
         <StateContext.Provider value={{ 
             auth,
             setAuth,
-
          }}>
             {children}
         </StateContext.Provider>

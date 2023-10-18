@@ -4,14 +4,22 @@ import SideNav from "../../common/commonLayouts/SideNav";
 import SideNavLarge from "../../common/commonLayouts/SideNavLarge";
 import Main from "../../common/commonLayouts/Main";
 import "./../../";
+
 import axiosClient from "../../axios-client";
+
+import EditPage from "../../common/commonLayouts/EditPage";
+import EditHeader from "../../common/commonLayouts/EditHeader";
+
 
 export default function Dashboard() {
   const [state, setState] = useState(false);
   const [team, setTeam] = useState({});
 
+
+
   const handleClick = () => {
     setState((prevState) => !prevState);
+    console.log(state);
   };
 
   const getTeam = async () => {
@@ -52,6 +60,7 @@ export default function Dashboard() {
           <SideNav buttonClicked={handleClick} teams={team} />
         )}
         <div className="bg-[#F9FAFB] h-[80px] w-screen">
+
           <Header
             widths={state ? "w-[1000px]" : "w-[1160px]"}
             teams={team.name}
@@ -61,6 +70,9 @@ export default function Dashboard() {
             teams={team.name}
           />
         </div>
+
+          </div>
+
       </div>
     </div>
   );

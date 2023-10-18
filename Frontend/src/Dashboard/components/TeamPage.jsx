@@ -5,16 +5,16 @@ import axiosClient from "../../axios-client";
 import { useNavigate } from "react-router-dom";
 
 export default function TeamPage() {
-<<<<<<<<< Temporary merge branch 1
+
 
     const [formValues, setFormValues] = useState({
 
     });
     const [errors, setError] = useState({});
-=========
+
     const navigate = useNavigate();
-    const [formValues, setFormValues] = useState({});
->>>>>>>>> Temporary merge branch 2
+
+
     
       const HandleChange = (e) => {
         const { name, value } = e.target;

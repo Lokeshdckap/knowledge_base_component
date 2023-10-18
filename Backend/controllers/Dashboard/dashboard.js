@@ -1,9 +1,14 @@
 const db = require("../../utils/database");
 const User = db.users;
-const Teams = db.teams;
+const Team = db.teams;
+// const Type = db.type;
+const Batch = db.batch;
 const uuid = require("uuid");
 
-const { createTeamSchema } = require("../../utils/validations");
+const {
+  createTeamSchema,
+  createTypeSchema,
+} = require("../../utils/validations");
 
 const createTeams = async (req, res) => {
   try {
@@ -13,11 +18,12 @@ const createTeams = async (req, res) => {
 
     const team_name = req.body.team_name;
 
-    const teamExists = await Teams.findOne({ where: { name: team_name } });
+    const teamExists = await Team.findOne({ where: { name: team_name } });
 
     if (teamExists) {
       
       return res.status(400).send({"team_name":`${teamExists.name} Team Is Already Exists`});
+
     } else {
       const newTeam = await Teams.create({
         name: team_name,
@@ -41,6 +47,55 @@ const createTeams = async (req, res) => {
     });
   }
 };
+
+const getTeam = async (req, res) => {
+  try {
+    const Teams = await Team.findAll(); // This performs a SELECT * query on the "users" table
+    res.json(Teams);
+  } catch (error) {
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+const addNewBatch = async (req, res) => {
+    
+    const team_uuid = req.body.uuid
+
+  const batch = await Batch.create({  
+    uuid: uuid.v4(),
+    team_uuid : team_uuid,
+  });
+  // console.log(batch)
+  if (batch) {
+    return res.status(200).send({
+      Success: "Your Batch Created Sucessfully",
+    });
+  } else {
+    return res.status(500).send({
+      Error: "Error Batch Not Created",
+    });
+  }
+};
+
+const getBatch = async(req,res)=>{
+   console.log(req.params.uuid,'ll');
+
+  // const condition = {
+  //   where: {
+  //     team_uuid: req.params.uuid // Replace with your desired condition
+  //   }
+  // };
+  // console.log(condition)
+  // const batchs = await Batch.findAll( {where: {
+  //   team_uuid: req.params.uuid
+  // }});
+  // console.log(batchs);
+
+}
+
 module.exports = {
-  createTeams,
+  createTeams, 
+  getTeam,
+  addNewBatch,
+  getBatch,
 };

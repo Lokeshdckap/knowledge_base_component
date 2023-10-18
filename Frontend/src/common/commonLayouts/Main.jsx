@@ -11,7 +11,7 @@ export default function Main(props) {
             </div>
             <div>
               <h1 className="text-xl font-bold">Team Documents</h1>
-              <h3 className="text-sm">DCKAP's Teams</h3>
+              <h3 className="text-sm">{props.teams}'s Teams</h3>
             </div>
           </div>
           <div className="flex items-center space-x-5">

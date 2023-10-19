@@ -28,10 +28,10 @@ export default function Dashboard() {
     await axiosClient.get("/getTeam")
       .then((res) => {
         // console.log(res);
-        setTeam(res.data[2]);
+        setTeam(res.data[1]);
         setAllTeam(res.data)
 
-        teamId = res.data[2];
+        teamId = res.data[1];
         
         getBatch(teamId.uuid)
       })

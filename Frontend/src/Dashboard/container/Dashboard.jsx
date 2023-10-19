@@ -3,10 +3,9 @@ import Header from "../../common/commonLayouts/Header";
 import SideNav from "../../common/commonLayouts/SideNav";
 import SideNavLarge from "../../common/commonLayouts/SideNavLarge";
 import Main from "../../common/commonLayouts/Main";
+
 import axiosClient from "../../axios-client";
 
-import EditPage from "../../common/commonLayouts/EditPage";
-import EditHeader from "../../common/commonLayouts/EditHeader";
 
 
 export default function Dashboard() {
@@ -87,7 +86,9 @@ export default function Dashboard() {
           <SideNav buttonClicked={handleClick} clickEvent={addNewBatch} teams={team} />
         )}
 
+
         <div className="bg-[#F9FAFB] h-[80px] w-screen z-[10px] ">
+
           <Header
             widths={state ? "w-[1000px]" : "w-[1160px]"}
             teams={team.name}
@@ -99,9 +100,11 @@ export default function Dashboard() {
           />
         </div>
 
-          </div>
+
 
       </div>
+      </div>
+
 
   );
 }

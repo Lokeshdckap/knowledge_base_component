@@ -20,6 +20,10 @@ const createTeams = async (req, res) => {
     const teamExists = await Team.findOne({ where: { name: team_name } });
 
     if (teamExists) {
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin
       
       return res.status(400).send({"team_name":`${teamExists.name} Team Is Already Exists`});
 
@@ -49,7 +53,7 @@ const createTeams = async (req, res) => {
 
 const getTeam = async (req, res) => {
   try {
-    const Teams = await Team.findAll(); // This performs a SELECT * query on the "users" table
+    const Teams = await Team.findAll();
     res.json(Teams);
   } catch (error) {
     res.status(500).json({ error: "Internal server error" });

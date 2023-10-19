@@ -6,13 +6,13 @@ import { useNavigate } from "react-router-dom";
 
 export default function TeamPage() {
 
-    const navigate = useNavigate();
-
 
     const [formValues, setFormValues] = useState({
 
     });
     const [errors, setError] = useState({});
+
+    const navigate = useNavigate();
 
     
       const HandleChange = (e) => {

@@ -15,7 +15,8 @@ module.exports = {
         unique:true,
       },
       title: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        defaultValue : "New Batch",
       },
       description: {
         type: Sequelize.STRING

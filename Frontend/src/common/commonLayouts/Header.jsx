@@ -10,11 +10,11 @@ export default function Header(props) {
     window.location.href = "/signin";
   };
   return (
-    <div className="">
+    <div className="h-[65px] ">
       <div
         className={`flex items-center justify-between m-auto ${props.widths}  mt-4`}
       >
-        <h2>{props.teams} Team</h2>
+        <h2>{props.teams} 's Team</h2>
         <div>
           <form>
             <div class="flex">

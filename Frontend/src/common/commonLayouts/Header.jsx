@@ -3,13 +3,7 @@ import Main from "./Main";
 import { Navigate, useNavigate } from "react-router-dom";
 
 export default function Header(props) {
-<<<<<<< HEAD
- 
 
-
-=======
-
->>>>>>> origin
   const navigate = useNavigate();
   const onLogout = () => {
     localStorage.clear();

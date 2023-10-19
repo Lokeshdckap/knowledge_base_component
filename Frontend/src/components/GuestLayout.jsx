@@ -7,9 +7,7 @@ export default function GuestLayout()
 
     if(auth)
     {
-
         return <Navigate to="/teampage" />
-
     }
     return (
        <div>

@@ -21,13 +21,6 @@ module.exports = {
       description: {
         type: Sequelize.STRING
       },
-      batch_uuid: {
-        type: Sequelize.UUID,
-        references: {         
-          model: 'batches',
-          key: 'uuid'
-        }
-      },
       team_uuid: {
         type: Sequelize.UUID,
         references: {         
@@ -36,7 +29,7 @@ module.exports = {
         }
       },
       deleted_at: {
-        type: Sequelize.DATE
+        type: Sequelize.DATE 
       },
       createdAt: {
         allowNull: false,

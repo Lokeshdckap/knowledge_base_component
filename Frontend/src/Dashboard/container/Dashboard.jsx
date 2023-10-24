@@ -92,15 +92,15 @@ export default function Dashboard() {
   const addNewBatch = (e) => {
 
     let team_uuid = localStorage.getItem("team_uuid");
-    
 
     axiosClient.post("/addNewBatch", {"uuid" : team_uuid})
-      .then((res) => {
+        .then((res) => {
           getBatch(team_uuid);
         })
         .catch((err) => {
           console.log(err);
         });
+
   };
 
   const addNewScript = () => {
@@ -113,6 +113,7 @@ export default function Dashboard() {
       .catch((err) => {
         console.log(err);
       });
+
   }
 
   const switchTeamEvent = (e) => {

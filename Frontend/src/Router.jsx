@@ -10,6 +10,7 @@ import DefaultLayout from "./components/DefaultLayout.jsx";
 import GuestLayout from "./components/GuestLayout.jsx";
 import Dashboard from "./Dashboard/container/Dashboard";
 import TeamPage from "./Dashboard/components/TeamPage";
+import { Batch } from "./Batch/container/Batch";
 
 
 const router = createBrowserRouter([
@@ -22,7 +23,15 @@ const router = createBrowserRouter([
         element: <Navigate to="/dashboard" />
       },
       {
-        path: "/dashboard",
+        path: "/dashboard/:uuid",
+        element: <Dashboard />,
+      },
+      {
+        path: "/dashboard/:uuid/b",
+        element: <Batch />,
+      },
+      {
+        path: "/dashboard/:uuid/s",
         element: <Dashboard />,
       },
       {

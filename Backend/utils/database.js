@@ -43,12 +43,8 @@ db.batch = require("../models/batch")(sequelize, DataTypes);
 
 db.script = require("../models/script")(sequelize, DataTypes);
 
-db.teams.hasMany(db.batch)
-db.batch.belongsTo(db.teams)
-db.batch.hasMany(db.script)
-db.script.belongsTo(db.batch)
-
 
 //exporting the module
+
 
 module.exports = db;

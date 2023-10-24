@@ -13,6 +13,7 @@ module.exports = {
         allowNull: false,
         type: Sequelize.UUID,
         unique:true,
+        field: 'uuid',
       },
       title: {
         type: Sequelize.STRING,
@@ -23,6 +24,7 @@ module.exports = {
       },
       team_uuid: {
         type: Sequelize.UUID,
+        field: 'uuid',
         references: {         
           model: 'teams',
           key: 'uuid'

@@ -150,17 +150,17 @@ export default function Dashboard() {
         )}
 
         <div className="bg-[#F9FAFB] h-[80px] w-screen z-[10px] ">
-          {/* <Header
+          <Header
             widths={state ? "w-[1000px]" : "w-[1160px]"}
             team={team}
-          /> */}
-          <EditHeader widths={state ? "w-[1040px]" : "w-[1200px]"} />
-          {/* <Main
+          />
+          {/* <EditHeader widths={state ? "w-[1040px]" : "w-[1200px]"} /> */}
+          <Main
             widths={state ? "w-[1000px]" : "w-[1120px]"}
             team={team} batches={batch} scripts={script}
             addBatchEvent = {addNewBatch} scriptEvent={addNewScript}
-          /> */}
-          <EditPage widths={state ? "w-[800px]" : "w-[933px]"} />
+          />
+          {/* <EditPage widths={state ? "w-[800px]" : "w-[933px]"} /> */}
         </div>
       </div>
     </div>

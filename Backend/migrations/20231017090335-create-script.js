@@ -12,6 +12,7 @@ module.exports = {
       uuid: {
         allowNull: false,
         type: Sequelize.UUID,
+        field: 'uuid',
         unique:true,
       },
       title: {
@@ -20,6 +21,7 @@ module.exports = {
       },
       batch_uuid: {
         type: Sequelize.UUID,
+        field: 'uuid',
         references: {         
           model: 'batches',
           key: 'uuid'
@@ -28,6 +30,7 @@ module.exports = {
       },
       team_uuid: {
         type: Sequelize.UUID,
+        field: 'uuid',
         references: {         
           model: 'teams',
           key: 'uuid'

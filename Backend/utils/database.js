@@ -42,6 +42,10 @@ db.teams = require("../models/teams")(sequelize, DataTypes);
 
 db.batch = require("../models/batch")(sequelize, DataTypes);
 
+db.script = require("../models/script")(sequelize, DataTypes);
+
+
 //exporting the module
+
 
 module.exports = db;

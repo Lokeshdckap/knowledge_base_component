@@ -35,8 +35,10 @@ export default function TeamPage() {
 
         axiosClient.post("/team",formValues)
         .then((res) => {
-            // console.log(res);
-            navigate('/dashboard')
+          // localStorage.setItem(res.data.newTeam);
+            localStorage.setItem("team_uuid",res.data.newTeam.uuid);
+            localStorage.setItem("sidePopUp",false);
+            navigate(`/dashboard/${localStorage.getItem("team_uuid")}`)
             
           })
           .catch((err) => {

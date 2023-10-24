@@ -1,7 +1,9 @@
 const db = require("../../utils/database");
+const { Op } = require('sequelize');
 const User = db.users;
 const Team = db.teams;
 const Batch = db.batch;
+const Script = db.script;
 const uuid = require("uuid");
 
 const {
@@ -20,10 +22,6 @@ const createTeams = async (req, res) => {
     const teamExists = await Team.findOne({ where: { name: team_name } });
 
     if (teamExists) {
-<<<<<<< HEAD
-=======
-
->>>>>>> origin
       
       return res.status(400).send({"team_name":`${teamExists.name} Team Is Already Exists`});
 
@@ -36,7 +34,7 @@ const createTeams = async (req, res) => {
 
       if (newTeam) {
         return res.status(200).send({
-          Success: "Your Team Created Sucessfully",
+          Success: "Your Team Created Sucessfully",newTeam,
         });
       } else {
         return res.status(500).send({
@@ -53,7 +51,15 @@ const createTeams = async (req, res) => {
 
 const getTeam = async (req, res) => {
   try {
-    const Teams = await Team.findAll();
+    
+    const Teams = await Team.findAll({ 
+      where: {
+        [Op.and]: [ 
+          { uuid: req.params.uuid },
+          { user_uuid: req.user.id },
+        ],
+      },
+    });
     res.json(Teams);
   } catch (error) {
     res.status(500).json({ error: "Internal server error" });
@@ -63,8 +69,8 @@ const getTeam = async (req, res) => {
 const addNewBatch = async (req, res) => {
     
     const team_uuid = req.body.uuid
-
-  const batch = await Batch.create({  
+  // console.log(req.body);
+    const batch = await Batch.create({  
     uuid: uuid.v4(),
     team_uuid : team_uuid,
   });
@@ -80,21 +86,89 @@ const addNewBatch = async (req, res) => {
   }
 };
 
-const getBatch = async(req,res)=>{
 
+const addNewScripts = async (req, res) => {
+
+  const team_uuid = req.body.uuid;
+  const batch_uuid = req.body.batch_uuid
+
+
+  const script = await Script.create({  
+    uuid: uuid.v4(),
+    team_uuid : team_uuid,
+    batch_uuid: batch_uuid ? batch_uuid : null,
+
+  });
+  if (script) {
+    return res.status(200).send({
+      Success: "Your Script Created Sucessfully",
+    });
+  } else {
+    return res.status(500).send({
+      Error: "Error Script Not Created",
+    });
+  }
+
+
+};
+
+
+const getBatch = async(req,res)=>{
+  // console.log(req.params);
   
   const batchs = await Batch.findAll( {where: {
     team_uuid: req.params.uuid
   }});
-   
   return res.status(200).send({
-    batchs,
+    batchs
   });
 }
+
+
+
+
+
+const switchTeam = async(req,res)=>{
+
+ 
+  const selectedTeam = await Team.findOne( {where: {
+    uuid: req.params.uuid
+  }});
+   
+  return res.status(200).send({
+    selectedTeam,
+  });
+}
+
+const getScript = async(req,res)=>{
+
+  const script = await Script.findAll( {where: {
+    team_uuid: req.params.uuid
+  }});
+   
+  return res.status(200).send({
+    script,
+  });
+}
+
+const getAllTeam = async(req,res)=>{
+  const getAllTeam = await Team.findAll( {where: {
+    user_uuid: req.user.id
+  }});
+   
+  return res.status(200).send({
+    getAllTeam,
+  });
+}
+
 
 module.exports = {
   createTeams, 
   getTeam,
   addNewBatch,
   getBatch,
+  switchTeam,
+  addNewScripts,
+  getScript,
+  getAllTeam,
 };

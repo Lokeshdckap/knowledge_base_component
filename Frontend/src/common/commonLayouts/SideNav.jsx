@@ -7,11 +7,11 @@ export default function SideNav(props) {
   
   const [AddNewMenu, setAddNewMenu] = useState(false);
 
-  const teamName = String(props.teams.name);  
+  const teamName = String(props.team.name);  
 
 
   return (
-    <div className="bg-primary h-[664px] w-[72px]">
+    <div className="bg-primary h-[632px] w-[72px]">
       <div>
         <img src={mainLogo} alt="" className="m-4" />
       </div>
@@ -43,7 +43,7 @@ export default function SideNav(props) {
           )}
           {AddNewMenu && (
             <div className="absolute left-8 bottom-8">
-              <AddNew click={props.clickEvent} />
+              <AddNew click={props.addBatchEvent} scriptEvent={props.scriptEvent}/>
             </div>
           )}
         </div>

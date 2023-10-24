@@ -3,7 +3,9 @@ import Main from "./Main";
 import { Navigate, useNavigate } from "react-router-dom";
 
 export default function Header(props) {
+
   const teamName =props.team.name;
+
   const navigate = useNavigate();
   const onLogout = () => {
     localStorage.removeItem("ACCESS_TOKEN");

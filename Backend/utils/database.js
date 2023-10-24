@@ -39,7 +39,6 @@ db.email_verification_token = require("../models/email_verification_token")(
 
 db.teams = require("../models/teams")(sequelize, DataTypes);
 
-
 db.batch = require("../models/batch")(sequelize, DataTypes);
 
 db.script = require("../models/script")(sequelize, DataTypes);

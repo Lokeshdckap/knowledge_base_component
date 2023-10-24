@@ -20,17 +20,20 @@ const dashboardController = require("../controllers/Dashboard/dashboard");
     dashboardController.getTeam
   );
 
+
   router.post(
   "/addNewBatch",
   verifyAuthMiddleware.verifyToken,
   dashboardController.addNewBatch
   );
 
+
   router.get(
     "/getBatch/:uuid",
     verifyAuthMiddleware.verifyToken,
     dashboardController.getBatch
   );
+
 
   router.get(
     "/switchTeam/:uuid",

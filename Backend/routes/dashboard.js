@@ -15,7 +15,7 @@ router.post(
 );
 
 router.get(
-  "/getTeam",
+  "/getTeam/uuid",
   verifyAuthMiddleware.verifyToken,
   dashboardController.getTeam
 );
@@ -27,9 +27,33 @@ router.post(
 );
 
 router.get(
-    "/getBatch/:uuid",
-    verifyAuthMiddleware.verifyToken,
-    dashboardController.getBatch
-  );
+  "/getBatch/:uuid",
+  verifyAuthMiddleware.verifyToken,
+  dashboardController.getBatch
+);
+router.post(
+  "/addNewScript/:uuid",
+  verifyAuthMiddleware.verifyToken,
+  dashboardController.addNewScripts
+);
+router.get(
+  "/getScript/:uuid",
+  verifyAuthMiddleware.verifyToken,
+  dashboardController.getScript
+);
+
+router.get(
+  "/getBatchAndScript/:team_uuid/:batch_uuid",
+  verifyAuthMiddleware.verifyToken,
+  dashboardController.getBatchAndScripts
+);
+router.get(
+  "/getAllTeam",
+  verifyAuthMiddleware.verifyToken,
+  dashboardController.getAllTeam
+);
+
+
+
 
 module.exports = router;

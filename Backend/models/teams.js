@@ -9,6 +9,9 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      teams.hasMany(models.batch, { foreignKey: 'team_uuid' });
+      teams.hasMany(models.script, { foreignKey: 'team_uuid' });
+
     }
   }
   teams.init(

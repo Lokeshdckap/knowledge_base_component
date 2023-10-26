@@ -7,15 +7,16 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         type: Sequelize.INTEGER,
+        primaryKey: true,
       },
       uuid: {
         type: Sequelize.UUID,
         allowNull: false,
         unique: true,
-        primaryKey: true,
       },
       title: {
         type: Sequelize.STRING,
+        defaultValue:"Untitled Content"
       },
       team_uuid: {
         type: Sequelize.UUID,

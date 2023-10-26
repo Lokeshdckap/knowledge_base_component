@@ -2,27 +2,34 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('teams', {
+    await queryInterface.createTable('pages', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      name: {
+      uuid: {
+        type: Sequelize.UUID
+      },
+      title: {
         type: Sequelize.STRING
       },
-      user_uuid: {
-        type: Sequelize.UUID, // This is the foreign key column
+      description: {
+        type: Sequelize.STRING
+      },
+      content: {
+        type: Sequelize.TEXT
+      },
+      script_uuid: {
+        type: Sequelize.UUID,
         references: {
-          model: 'users', // This references the 'users' table
-          key: 'uuid',     // This references the 'uuid' column in the 'users' table
+          model: "scripts", // This references the 'script' table
+          key: "uuid", // This references the 'uuid' column in the 'batch' table
         },
       },
-      uuid: {
-        allowNull: false,
-        type: Sequelize.UUID,
-        unique:true,
+      page_uuid: {
+        type: Sequelize.UUID
       },
       createdAt: {
         allowNull: false,
@@ -35,6 +42,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('teams');
+    await queryInterface.dropTable('pages');
   }
 };

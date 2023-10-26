@@ -169,15 +169,15 @@ export default function Dashboard() {
 
 
 
-          <EditHeader widths={state ? "w-[1040px]" : "w-[1200px]"} clickPublish={handleSave} /> 
-          <EditPage widths={state ? "w-[800px]" : "w-[933px]"} marginEditor={state ?  "ml-[10px]" : "mr-[115px]"} getValue={getValue}/>
+          {/* <EditHeader widths={state ? "w-[1040px]" : "w-[1200px]"} clickPublish={handleSave} /> 
+          <EditPage widths={state ? "w-[800px]" : "w-[933px]"} marginEditor={state ?  "ml-[10px]" : "mr-[115px]"} getValue={getValue}/> */}
 
 
             {/* <BatchHeader widths={state ? "w-[1000px]" : "w-[1160px]"} />
             <BatchLayouts widths={state ? "w-[1000px]" : "w-[1120px]"} /> */}
 
 
-{/* 
+
   <Header
             widths={state ? "w-[1000px]" : "w-[1160px]"}
             team={team}
@@ -187,7 +187,7 @@ export default function Dashboard() {
             widths={state ? "w-[1000px]" : "w-[1120px]"}
             team={team} batches={batch} scripts={script}
             addBatchEvent = {addNewBatch} scriptEvent={addNewScript}
-          />  */}
+          /> 
 
 
 

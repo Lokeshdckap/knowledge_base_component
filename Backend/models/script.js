@@ -1,6 +1,7 @@
-"use strict";
-const { Model } = require("sequelize");
-const batch = require("./batch");
+'use strict';
+const {
+  Model
+} = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class script extends Model {
     /**
@@ -9,28 +10,22 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      
       script.belongsTo(models.batch, {foreignKey: 'batch_uuid'});
-
       script.belongsTo(models.teams, {foreignKey: 'team_uuid'});
 
-    } 
-   
-  }
-
-  
-  script.init(
-    {
-      uuid: DataTypes.UUID,
-      title: DataTypes.STRING,
-      batch_uuid: DataTypes.UUID,
-      team_uuid: DataTypes.UUID,
-      deleted_at: DataTypes.DATE,
-    },
-    {
-      sequelize,
-      modelName: "script",
+      // define association here
     }
-  );
+  }
+  script.init({
+    uuid: DataTypes.UUID,
+    title: DataTypes.STRING,
+    team_uuid: DataTypes.UUID,
+    batch_uuid: DataTypes.UUID,
+    deleted_at: DataTypes.DATE
+  }, {
+    sequelize,
+    modelName: 'script',
+  });
   return script;
 };

@@ -44,6 +44,18 @@ db.batch = require("../models/batch")(sequelize, DataTypes);
 db.script = require("../models/script")(sequelize, DataTypes);
 
 
+db.teams.hasMany(db.batch, { foreignKey: 'team_uuid' ,targetKey: 'uuid'});
+
+db.batch.belongsTo(db.teams, { foreignKey: "team_uuid",targetKey: 'uuid' });
+
+db.teams.hasMany(db.script, { foreignKey: 'team_uuid',targetKey: 'uuid' });
+
+db.script.belongsTo(db.teams, {foreignKey: 'team_uuid',targetKey: 'uuid'});
+
+db.batch.hasMany(db.script, { foreignKey: "batch_uuid",targetKey: 'uuid'});
+
+db.script.belongsTo(db.batch, {foreignKey: 'batch_uuid',targetKey: 'uuid'});
+
 //exporting the module
 
 

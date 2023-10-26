@@ -6,24 +6,23 @@ module.exports = {
       id: {
         allowNull: false,
         autoIncrement: true,
-        primaryKey: true,
         type: Sequelize.INTEGER
       },
       name: {
         type: Sequelize.STRING
       },
       user_uuid: {
-        allowNull: false,
-        type: Sequelize.UUID,
-        references: {         
-          model: 'users',
-          key: 'uuid'
-        }
+        type: Sequelize.UUID, // This is the foreign key column
+        references: {
+          model: 'users', // This references the 'users' table
+          key: 'uuid',     // This references the 'uuid' column in the 'users' table
+        },
       },
       uuid: {
         allowNull: false,
         type: Sequelize.UUID,
         unique:true,
+        primaryKey: true,
       },
       createdAt: {
         allowNull: false,

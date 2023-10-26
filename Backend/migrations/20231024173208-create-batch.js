@@ -2,36 +2,30 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('scripts', {
+    await queryInterface.createTable('batches', {
       id: {
         allowNull: false,
         autoIncrement: true,
-        primaryKey: true,
         type: Sequelize.INTEGER
       },
       uuid: {
-        allowNull: false,
+        allowNull:false,
         type: Sequelize.UUID,
         unique:true,
+        primaryKey: true,
       },
       title: {
-        type: Sequelize.STRING,
-        defaultValue :"Untitle Content",
+        type: Sequelize.STRING
       },
-      batch_uuid: {
-        type: Sequelize.UUID,
-        references: {         
-          model: 'batches',
-          key: 'uuid'
-        }
-
+      description: {
+        type: Sequelize.STRING
       },
       team_uuid: {
         type: Sequelize.UUID,
-        references: {         
-          model: 'teams',
-          key: 'uuid'
-        }
+        references: {
+          model: 'teams', // This references the 'teams' table
+          key: 'uuid',     // This references the 'uuid' column in the 'teams' table
+        },
       },
       deleted_at: {
         type: Sequelize.DATE
@@ -47,6 +41,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('scripts');
+    await queryInterface.dropTable('batches');
   }
 };

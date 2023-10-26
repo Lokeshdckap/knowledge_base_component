@@ -144,9 +144,15 @@ const switchTeam = async(req,res)=>{
 
 const getScript = async(req,res)=>{
 
-  const script = await Script.findAll( {where: {
-    team_uuid: req.params.uuid
-  }});
+  const script = await Script.findAll( 
+   {where: {
+      [Op.and]: [{ team_uuid: req.params.uuid }, { batch_uuid: null }],
+    },
+    
+    
+  }
+  
+  );
    
   return res.status(200).send({
     script,
@@ -166,19 +172,20 @@ const getAllTeam = async(req,res)=>{
 
 
 const getBatchAndScripts = async (req, res) => {
+  console.log(req.params.team_uuid);
+  console.log(req.params.batch_uuid);
   let result = await Script.findAll({
-    where: { uuid: '471bffcc-a829-4141-be3a-853b4b57ba36' },
     include: [
       {
         model: Batch,
         where: {
-          uuid: 'c967d9d9-5711-4f1d-8cb8-3882f31ec9b6', // WHERE condition for the Batch model
+          uuid: req.params.batch_uuid, // WHERE condition for the Batch model
         },
         include: [
           {
             model: Team,
             where: {
-              uuid: 'eb468c14-3b0b-40c3-97e2-c23693ad25eb', // WHERE condition for the Team model
+              uuid: req.params.team_uuid, // WHERE condition for the Team model
             },
           },
         ],
@@ -186,7 +193,23 @@ const getBatchAndScripts = async (req, res) => {
     ],
 })
  return res.status(200).json({result})
+// console.log(result);
 };
+
+
+
+
+const addScriptTitle = (req,res)=>{
+
+  const scriptTitleUpdate = Script.update(
+    { title: req.query.inputValue },
+    {
+      where: { uuid: req.query.queryParameter},
+    }
+  )
+  return res.status(200).json({ scriptTitleUpdate });
+  
+}
 
 
 module.exports = {
@@ -198,5 +221,6 @@ module.exports = {
   addNewScripts,
   getScript,
   getAllTeam,
-  getBatchAndScripts
+  getBatchAndScripts,
+  addScriptTitle
 };

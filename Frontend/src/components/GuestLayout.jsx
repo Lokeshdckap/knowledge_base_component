@@ -9,6 +9,7 @@ export default function GuestLayout()
     {
         
         return <Navigate to="/teampage" />
+        
     }
     return (
        <div>

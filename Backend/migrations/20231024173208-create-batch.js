@@ -6,16 +6,18 @@ module.exports = {
       id: {
         allowNull: false,
         autoIncrement: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        primaryKey: true,
       },
       uuid: {
         allowNull:false,
         type: Sequelize.UUID,
         unique:true,
-        primaryKey: true,
+        
       },
       title: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        defaultValue:"New Batch"
       },
       description: {
         type: Sequelize.STRING

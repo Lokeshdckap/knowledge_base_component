@@ -18,19 +18,30 @@ export default function Dashboard() {
 
   const navigate = useNavigate();
 
-   //hooks
 
+
+
+   //hooks
+   
    useEffect(() => {
     getTeam();
     getAllTeam();
   }, []);
 
+
+
+
+
+  //state
   const [state, setState] = useState(false);
   const [team, setTeam] = useState([]);
   const [allTeam, setAllTeam] = useState([]);
   const [batch, setBatch] = useState([]);
   const [script, setScript] = useState([]);
   const [data, setData] = useState(null);
+  const [childScript, setChildScript] = useState([]);
+
+
 
 //Event
   const handleClick = () => {
@@ -107,10 +118,11 @@ export default function Dashboard() {
 
   };
 
-  const addNewScript = () => {
+  const addNewScript = (e) => {
     let team_uuid = localStorage.getItem("team_uuid");
-  
-    axiosClient.post("/addNewScript",{"uuid" : team_uuid})
+    let batch_uuid = e.target.id;
+
+    axiosClient.post("/addNewScript",{"uuid" : team_uuid,"batch_uuid":batch_uuid})
     .then((res) => {
           getScript(team_uuid);
       })
@@ -130,6 +142,22 @@ export default function Dashboard() {
 
   };
 
+
+  const handleChildrenScripts = async(e) =>{
+
+    let team_uuid = localStorage.getItem("team_uuid");
+    let batch_uuid = e.target.id
+    
+    await axiosClient
+    .get(`/getBatchAndScripts/${team_uuid}/${batch_uuid}`)
+    .then((res) => {
+      setChildScript(res.data.result);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  }
+ 
   
 
   const handleSave = () =>{
@@ -157,6 +185,8 @@ export default function Dashboard() {
             scriptEvent={addNewScript}
             batches={batch}
             scripts={script}
+            handleChildrenScripts={handleChildrenScripts}
+            childScript={childScript}
           />
         ) : (
           <SideNav buttonClicked={handleClick} team={team} addBatchEvent = {addNewBatch} scriptEvent={addNewScript} />
@@ -169,25 +199,24 @@ export default function Dashboard() {
 
 
 
-          <EditHeader widths={state ? "w-[1040px]" : "w-[1200px]"} clickPublish={handleSave} /> 
-          <EditPage widths={state ? "w-[800px]" : "w-[933px]"} marginEditor={state ?  "ml-[10px]" : "mr-[115px]"} getValue={getValue}/>
+          {/* <EditHeader widths={state ? "w-[1040px]" : "w-[1200px]"} clickPublish={handleSave} /> 
+          <EditPage widths={state ? "w-[800px]" : "w-[933px]"} marginEditor={state ?  "ml-[10px]" : "mr-[115px]"} getValue={getValue}/> */}
 
 
             {/* <BatchHeader widths={state ? "w-[1000px]" : "w-[1160px]"} />
             <BatchLayouts widths={state ? "w-[1000px]" : "w-[1120px]"} /> */}
 
 
-{/* 
-  <Header
-            widths={state ? "w-[1000px]" : "w-[1160px]"}
-            team={team}
-          />
+              <Header
+                widths={state ? "w-[1000px]" : "w-[1160px]"}
+                team={team}
+              />
 
            <Main
             widths={state ? "w-[1000px]" : "w-[1120px]"}
             team={team} batches={batch} scripts={script}
             addBatchEvent = {addNewBatch} scriptEvent={addNewScript}
-          />  */}
+          /> 
 
 
 

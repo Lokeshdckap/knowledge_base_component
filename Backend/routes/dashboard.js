@@ -62,4 +62,10 @@ router.get(
   dashboardController.getBatchAndScripts
 );
 
+router.get(
+  '/addScriptTitle',
+  verifyAuthMiddleware.verifyToken,
+  dashboardController.addScriptTitle
+
+)
 module.exports = router;

@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from "react";
 import mainLogo from "../../assets/images/mainlogo.png";
 import AddNew from "../commonComponents/AddNew";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function SideNavLarge(props) {
+
+
   const teamName = props.team.name;
   const AllTeams = props.allTeams;
   const batchList = props.batches;
   const scriptList = props.scripts;
-
+  const childScript = props.childScript
+  // console.log(childScript[0].batch_uuid);
 
   const navigate = useNavigate();
 
@@ -43,15 +46,13 @@ export default function SideNavLarge(props) {
     }
     else{
       setPopup(targetId);
-
     }
   };
 
-  const renderPage = (e) =>{
-    let targetPage = e.target
-    // alert(targetPage)
-    // console.log(targetPage.data-setid );
-    // navigate(`/dashboard/${localStorage.getItem("team_uuid")}/b`)
+
+  const renderPage =(e) =>{
+    let TargetScriptId = e.target.id
+    navigate(`/dashboard/${localStorage.getItem("team_uuid")}/s/${TargetScriptId}`)
   }
 
   return (
@@ -71,7 +72,7 @@ export default function SideNavLarge(props) {
         <div className="mt-8 w-[200px] m-auto flex items-center space-x-4 ">
           <span className="material-symbols-outlined text-white">group</span>
           <p className="text-xl font-bold  text-white w-48 truncate ">
-            {teamName} Tea...
+           <Link to={`/dashboard/${localStorage.getItem("team_uuid")}`}>{teamName} Tea...</Link> 
           </p>
           {teamDropDown ? (
             <i
@@ -131,7 +132,7 @@ export default function SideNavLarge(props) {
           </div>
         )}
       </div>
-
+      {/* ${childScript.length > 0 && (childScript[0].batch_uuid == batch.uuid && "bg-cyan-950")} */}
       {
         <ul className="mt-5 space-y-1 h-[280px] overflow-auto ">
           {batchList.map((batch) => (
@@ -139,20 +140,31 @@ export default function SideNavLarge(props) {
               <li
                 key={batch.id}
                 id={batch.uuid}
-                className="text-[#BCD1FF] pl-8 cursor-pointer hover:bg-cyan-950 pt-1 pb-1  -z-0 truncate relative value"
+                className={`text-[#BCD1FF] pl-8 cursor-pointer hover:bg-cyan-950 pt-1 pb-1  -z-0 truncate relative `}
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}
-                onClick={renderPage}
+             
               >
                 {overState == batch.uuid ? (
                   <i
                     className="fa-solid fa-angle-down pr-3.5"
                     id={batch.uuid}
+
+                    onClick={props.handleChildrenScripts}
                   ></i>
                 ) : (
-                  <i className="fa-solid fa-folder pr-3" id={batch.uuid}></i>
-                )}
-                {batch.title}
+                  (childScript.length > 0 && childScript[0].batch_uuid == batch.uuid) ? (
+                    <i className="fa-solid fa-angle-down pr-3" id={batch.uuid}></i>
+
+                  ) :(
+                    <i className="fa-solid fa-folder pr-3" id={batch.uuid}></i>
+
+                  )
+                  )
+
+                  
+                }
+                <span> {batch.title}</span>
                 {overState == batch.uuid && (
                   <i
                     className="fa-solid fa-ellipsis-vertical text-[#BCD1FF] pl-[54px]"
@@ -161,15 +173,33 @@ export default function SideNavLarge(props) {
                   ></i>
                 )}
               </li>
+                  {childScript && 
+                    childScript.map((child) => (
+                        (child.batch_uuid == batch.uuid &&
+                          <li
+                          key={child.id}
+                          id={child.uuid}
+                          className="text-[#BCD1FF] pl-16 cursor-pointer hover:bg-cyan-950 pt-1 pb-1 truncate"
+                          onMouseEnter={handleScriptMouseEnter}
+                          onMouseLeave={handleScriptMouseLeave}
+                          onClick={renderPage}
+                        >
+                          <i className="fa-solid fa-file pr-3"></i>
+                          {child.title}
+                        </li>
+                        )
+                    ))
+                  }
               {popUp == batch.uuid && (
                 <div className="box-border bg-white  w-44 p-4 border-[1px] border-slate-300 rounded-xl shadow-lg absolute left-52 z-50">
                   <div className="w-[130px] m-auto space-y-3">
                     <p
                       className="text-lg cursor-pointer text-textPrimary hover:bg-primary  hover:text-white hover:rounded
                       " 
-                      id="script"
+                      id={batch.uuid}
+                      onClick={props.scriptEvent}
                     >
-                      <i className="fa-regular fa-file pr-[7px]" id={batch.uuid}></i>New Script
+                      <i className="fa-regular fa-file pr-[7px]" id={batch.uuid}></i>New Script                      
                     </p>
                     <p
                       className="text-lg cursor-pointer text-textPrimary hover:bg-primary  hover:text-white hover:rounded"

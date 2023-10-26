@@ -6,7 +6,8 @@ module.exports = {
       id: {
         allowNull: false,
         autoIncrement: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        primaryKey: true,
       },
       name: {
         type: Sequelize.STRING
@@ -22,7 +23,7 @@ module.exports = {
         allowNull: false,
         type: Sequelize.UUID,
         unique:true,
-        primaryKey: true,
+        
       },
       createdAt: {
         allowNull: false,

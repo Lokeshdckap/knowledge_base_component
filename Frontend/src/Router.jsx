@@ -11,6 +11,7 @@ import GuestLayout from "./components/GuestLayout.jsx";
 import Dashboard from "./Dashboard/container/Dashboard";
 import TeamPage from "./Dashboard/components/TeamPage";
 import { Batch } from "./Batch/container/Batch";
+import { Scripts } from "./Scripts/container/Scripts";
 
 
 const router = createBrowserRouter([
@@ -31,8 +32,8 @@ const router = createBrowserRouter([
         element: <Batch />,
       },
       {
-        path: "/dashboard/:uuid/s",
-        element: <Dashboard />,
+        path: "/dashboard/:uuid/s/:uuid",
+        element: <Scripts />,
       },
       {
         path: "/teampage",

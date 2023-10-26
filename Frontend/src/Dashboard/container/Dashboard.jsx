@@ -12,25 +12,15 @@ import { EditorComponents } from "../../common/commonComponents/EditorComponents
 import { BatchHeader } from "../../common/commonLayouts/BatchHeader";
 import { BatchLayouts } from "../../common/commonLayouts/BatchLayouts";
 
-
 export default function Dashboard() {
-
-
   const navigate = useNavigate();
 
+  //hooks
 
-
-
-   //hooks
-   
-   useEffect(() => {
+  useEffect(() => {
     getTeam();
     getAllTeam();
   }, []);
-
-
-
-
 
   //state
   const [state, setState] = useState(false);
@@ -41,17 +31,14 @@ export default function Dashboard() {
   const [data, setData] = useState(null);
   const [childScript, setChildScript] = useState([]);
 
-
-
-//Event
+  //Event
   const handleClick = () => {
     setState((prevState) => !prevState);
   };
 
-//Api
+  //Api
 
   const getTeam = async () => {
-
     let teamUUID = localStorage.getItem("team_uuid");
     await axiosClient
       .get(`/getTeam/${teamUUID}`)
@@ -77,21 +64,17 @@ export default function Dashboard() {
   };
 
   const getBatch = async (teamuuid) => {
-
     await axiosClient
       .get(`/getBatch/${teamuuid}`)
       .then((res) => {
-
         setBatch(res.data.batchs);
       })
       .catch((err) => {
         console.log(err);
       });
-
   };
 
   const getScript = async (teamuuid) => {
-
     await axiosClient
       .get(`/getScript/${teamuuid}`)
       .then((res) => {
@@ -102,35 +85,32 @@ export default function Dashboard() {
       });
   };
 
-  
-
   const addNewBatch = (e) => {
-
     let team_uuid = localStorage.getItem("team_uuid");
 
-    axiosClient.post("/addNewBatch", {"uuid" : team_uuid})
-        .then((res) => {
-          getBatch(team_uuid);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-
+    axiosClient
+      .post("/addNewBatch", { uuid: team_uuid })
+      .then((res) => {
+        getBatch(team_uuid);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   const addNewScript = (e) => {
     let team_uuid = localStorage.getItem("team_uuid");
     let batch_uuid = e.target.id;
 
-    axiosClient.post("/addNewScript",{"uuid" : team_uuid,"batch_uuid":batch_uuid})
-    .then((res) => {
-          getScript(team_uuid);
+    axiosClient
+      .post("/addNewScript", { uuid: team_uuid, batch_uuid: batch_uuid })
+      .then((res) => {
+        getScript(team_uuid);
       })
       .catch((err) => {
         console.log(err);
       });
-
-  }
+  };
 
   const switchTeamEvent = (e) => {
     const TeamId = e.target.id;
@@ -138,50 +118,41 @@ export default function Dashboard() {
     localStorage.setItem("team_uuid", TeamId);
     getTeam();
     getAllTeam();
-    navigate(`/dashboard/${localStorage.getItem("team_uuid")}`)
-
+    navigate(`/dashboard/${localStorage.getItem("team_uuid")}`);
   };
 
-
-  const handleChildrenScripts = async(e) =>{
-
+  const handleChildrenScripts = async (e) => {
     let team_uuid = localStorage.getItem("team_uuid");
-    let batch_uuid = e.target.id
-    
+    let batch_uuid = e.target.id;
+
     await axiosClient
-    .get(`/getBatchAndScripts/${team_uuid}/${batch_uuid}`)
-    .then((res) => {
-      setChildScript(res.data.result);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-  }
- 
-  
+      .get(`/getBatchAndScripts/${team_uuid}/${batch_uuid}`)
+      .then((res) => {
+        setChildScript(res.data.result);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
-  const handleSave = () =>{
+  const handleSave = () => {
     console.log(data);
-      
-  }
+  };
 
-  const getValue =(data) =>{
+  const getValue = (data) => {
     setData(data);
-
-   }
+  };
 
   return (
     <div className="relative">
       <div className="flex bg-[#ECEDEF] ">
-
-
         {state ? (
           <SideNavLarge
             buttonClicked={handleClick}
             team={team}
             allTeams={allTeam}
             clickSwitch={switchTeamEvent}
-            addBatchEvent = {addNewBatch}
+            addBatchEvent={addNewBatch}
             scriptEvent={addNewScript}
             batches={batch}
             scripts={script}
@@ -189,86 +160,39 @@ export default function Dashboard() {
             childScript={childScript}
           />
         ) : (
-          <SideNav buttonClicked={handleClick} team={team} addBatchEvent = {addNewBatch} scriptEvent={addNewScript} />
+          <SideNav
+            buttonClicked={handleClick}
+            team={team}
+            addBatchEvent={addNewBatch}
+            scriptEvent={addNewScript}
+          />
         )}
 
         <div className="bg-[#F9FAFB] h-[80px] w-screen z-[10px] ">
-
-
-        
-
-
-
           {/* <EditHeader widths={state ? "w-[1040px]" : "w-[1200px]"} clickPublish={handleSave} /> 
           <EditPage widths={state ? "w-[800px]" : "w-[933px]"} marginEditor={state ?  "ml-[10px]" : "mr-[115px]"} getValue={getValue}/> */}
 
-
-            {/* <BatchHeader widths={state ? "w-[1000px]" : "w-[1160px]"} />
+          {/* <BatchHeader widths={state ? "w-[1000px]" : "w-[1160px]"} />
             <BatchLayouts widths={state ? "w-[1000px]" : "w-[1120px]"} /> */}
 
+          <Header widths={state ? "w-[1000px]" : "w-[1160px]"} team={team} />
 
-              <Header
-                widths={state ? "w-[1000px]" : "w-[1160px]"}
-                team={team}
-              />
-
-           <Main
+          <Main
             widths={state ? "w-[1000px]" : "w-[1120px]"}
-            team={team} batches={batch} scripts={script}
-            addBatchEvent = {addNewBatch} scriptEvent={addNewScript}
-          /> 
-
-
-
-          
-
-
-
-
-          
+            team={team}
+            batches={batch}
+            scripts={script}
+            addBatchEvent={addNewBatch}
+            scriptEvent={addNewScript}
+          />
         </div>
       </div>
     </div>
   );
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      {/* <div className="bg-primary opacity-[0.5] w-[1294px] h-[664px] absolute top-0 left-0"></div>
+{
+  /* <div className="bg-primary opacity-[0.5] w-[1294px] h-[664px] absolute top-0 left-0"></div>
       <div className=" absolute left-0 top-0 ">
         <div className="bg-white h-[300px] w-[600px] ml-[350px] mt-[150px] rounded">
           <div className="">
@@ -284,4 +208,5 @@ export default function Dashboard() {
           </div>
          
         </div>
-      </div> */}
+      </div> */
+}

@@ -1,5 +1,5 @@
 const db = require("../../utils/database");
-const { Op } = require('sequelize');
+const { Op } = require("sequelize");
 const User = db.users;
 const Team = db.teams;
 const Batch = db.batch;
@@ -12,10 +12,6 @@ const {
   createTypeSchema,
 } = require("../../utils/validations");
 
-
-
-
-
 const createTeams = async (req, res) => {
   try {
     const { error } = createTeamSchema.validate(req.body);
@@ -27,12 +23,10 @@ const createTeams = async (req, res) => {
     const teamExists = await Team.findOne({ where: { name: team_name } });
 
     if (teamExists) {
-
       return res
         .status(400)
         .send({ team_name: `${teamExists.name} Team Is Already Exists` });
-
-        } else {
+    } else {
       const newTeam = await Team.create({
         name: team_name,
         uuid: uuid.v4(),
@@ -41,7 +35,8 @@ const createTeams = async (req, res) => {
 
       if (newTeam) {
         return res.status(200).send({
-          Success: "Your Team Created Sucessfully",newTeam,
+          Success: "Your Team Created Sucessfully",
+          newTeam,
         });
       } else {
         return res.status(500).send({
@@ -58,7 +53,6 @@ const createTeams = async (req, res) => {
 
 const getTeam = async (req, res) => {
   try {
-
     const Teams = await Team.findAll({
       where: {
         [Op.and]: [{ uuid: req.params.uuid }, { user_uuid: req.user.id }],
@@ -66,16 +60,14 @@ const getTeam = async (req, res) => {
     });
 
     res.status(200).json(Teams);
-
   } catch (error) {
     res.status(500).json({ error: "Internal server error" });
   }
 };
 
 const addNewBatch = async (req, res) => {
-
   const team_uuid = req.body.uuid;
-    const batch = await Batch.create({  
+  const batch = await Batch.create({
     uuid: uuid.v4(),
     team_uuid: team_uuid,
   });
@@ -91,18 +83,14 @@ const addNewBatch = async (req, res) => {
   }
 };
 
-
 const addNewScripts = async (req, res) => {
-
   const team_uuid = req.body.uuid;
-  const batch_uuid = req.body.batch_uuid
+  const batch_uuid = req.body.batch_uuid;
 
-
-  const script = await Script.create({  
+  const script = await Script.create({
     uuid: uuid.v4(),
-    team_uuid : team_uuid,
+    team_uuid: team_uuid,
     batch_uuid: batch_uuid ? batch_uuid : null,
-
   });
   if (script) {
     return res.status(200).send({
@@ -113,37 +101,34 @@ const addNewScripts = async (req, res) => {
       Error: "Error Script Not Created",
     });
   }
-
-
 };
 
-
-const getBatch = async(req,res)=>{
+const getBatch = async (req, res) => {
   // console.log(req.params);
-  
-  const batchs = await Batch.findAll( {where: {
-    team_uuid: req.params.uuid
-  }});
-  return res.status(200).send({
-    batchs
+
+  const batchs = await Batch.findAll({
+    where: {
+      team_uuid: req.params.uuid,
+    },
   });
-}
+  return res.status(200).send({
+    batchs,
+  });
+};
 
+const switchTeam = async (req, res) => {
+  const selectedTeam = await Team.findOne({
+    where: {
+      uuid: req.params.uuid,
+    },
+  });
 
-const switchTeam = async(req,res)=>{
-
- 
-  const selectedTeam = await Team.findOne( {where: {
-    uuid: req.params.uuid
-  }});
-   
   return res.status(200).send({
     selectedTeam,
   });
-}
+};
 
-const getScript = async(req,res)=>{
-
+const getScript = async (req, res) => {
   const script = await Script.findAll( 
    {where: {
       [Op.and]: [{ team_uuid: req.params.uuid }, { batch_uuid: null }],
@@ -153,23 +138,22 @@ const getScript = async(req,res)=>{
   }
   
   );
-   
   return res.status(200).send({
     script,
   });
-}
+};
 
-const getAllTeam = async(req,res)=>{
-  const getAllTeam = await Team.findAll( {where: {
-    user_uuid: req.user.id
-  }});
-   
+const getAllTeam = async (req, res) => {
+  const getAllTeam = await Team.findAll({
+    where: {
+      user_uuid: req.user.id,
+    },
+  });
+
   return res.status(200).send({
     getAllTeam,
   });
 };
-
-
 
 const getBatchAndScripts = async (req, res) => {
   console.log(req.params.team_uuid);
@@ -191,25 +175,31 @@ const getBatchAndScripts = async (req, res) => {
         ],
       },
     ],
+
 })
  return res.status(200).json({result})
-// console.log(result);
+}
+
+const getPagesForScripts = async (req, res) => {
+  const script_uuid = req.params.script_uuid;
 };
 
 
+const addPageData = async ()=>{
+    
+}
 
-
-const addScriptTitle = (req,res)=>{
-
+const addScriptTitle = (req, res) => {
   const scriptTitleUpdate = Script.update(
     { title: req.query.inputValue },
     {
-      where: { uuid: req.query.queryParameter},
+      where: { uuid: req.query.queryParameter },
     }
-  )
+  );
   return res.status(200).json({ scriptTitleUpdate });
-  
-}
+};
+
+
 
 
 module.exports = {
@@ -222,5 +212,7 @@ module.exports = {
   getScript,
   getAllTeam,
   getBatchAndScripts,
-  addScriptTitle
+  getPagesForScripts,
+  addScriptTitle,
+  addPageData,
 };

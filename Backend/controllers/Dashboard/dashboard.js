@@ -5,8 +5,6 @@ const Team = db.teams;
 const Batch = db.batch;
 const Script = db.script;
 
-const {sequelize} = require('../../utils/database')
-
 const uuid = require("uuid");
 
 const {
@@ -77,7 +75,6 @@ const getTeam = async (req, res) => {
 const addNewBatch = async (req, res) => {
 
   const team_uuid = req.body.uuid;
-
     const batch = await Batch.create({  
     uuid: uuid.v4(),
     team_uuid: team_uuid,
@@ -93,7 +90,6 @@ const addNewBatch = async (req, res) => {
     });
   }
 };
-
 
 
 const addNewScripts = async (req, res) => {
@@ -166,9 +162,6 @@ const getAllTeam = async(req,res)=>{
     getAllTeam,
   });
 };
-
-
-
 
 
 

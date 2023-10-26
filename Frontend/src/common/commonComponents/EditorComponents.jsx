@@ -1,23 +1,42 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import EditorJS from "@editorjs/editorjs";
 import Header from '@editorjs/header'; 
 import List from '@editorjs/list';
 import ImageTool from '@editorjs/image';
 import Paragraph from '@editorjs/paragraph';
 
-export const EditorComponents = () => {
+export const EditorComponents = (props) => {
 
 
 
   const editorRef = useRef(null);
+  const editorInstance = useRef(null);
+  const [editor, setEditor] = useState(null);
+
+  const handleSave = async () => {
+    // editorInstance.save().then((outputData) => {
+
+    //     console.log('Article data: ', outputData)
+
+    //     props.getValue(outputData)
+    //   }).catch((error) => {
+    //     console.log('Saving failed: ', error)
+    //   });
+
+    if (editorInstance.current) {
+      const savedData = await editorInstance.current.save();
+      console.log(savedData);
+    }
+  };
 
   useEffect(() => {
-
-    editorRef.current = new EditorJS({
+    
+    if(editorRef.current && !editorInstance.current){
+    editorInstance.current = new EditorJS({
       holderId: "editorjs",
   
       tools: {
-        header: {
+        Header: {
           class: Header,
           inlineToolbar: true,
         },
@@ -46,25 +65,15 @@ export const EditorComponents = () => {
        */
       data: {},
     });
-
-    return () => {
-      if (editorRef.current) {
-        // Remove the editor content from the DOM
-        // const editorContainer = document.getElementById('editorjs');
-        // editorContainer.innerHTML = '';
-
-        // If you need to recreate the Editor.js instance, you can do so here
-        // editorRef.current = new EditorJS({
-        //   holder: 'editorjs-container',
-        //   tools: { header: Header, list: List, simpleImage: SimpleImage },
-        // });
-      }
-    };
+    setEditor(editorInstance)
+}
   }, [])
 
   return (
     <div>
-        <div id="editorjs" />
+        <div ref={editorRef} id="editorjs" data-gramm="false"/>
+        <button onClick={handleSave}>Save</button>
+        
     </div>
   )
 }

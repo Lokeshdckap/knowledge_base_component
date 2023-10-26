@@ -19,6 +19,7 @@ export default function EditHeader(props) {
           <button
             type="button"
             class="text-white bg-primary hover:bg-primary   font-medium rounded-lg text-sm h-9 w-24 mr-2 mb-2  focus:outline-none "
+            onClick={props.clickPublish}
           >
             Publish
           </button>

@@ -5,11 +5,15 @@ import { Link } from "react-router-dom";
 import Input from "./Input";
 import { useStateContext } from "../../../context/ContextProvider";
 import axiosClient from "../../../axios-client";
+import HashLoader from "react-spinners/HashLoader";
+
 
 export default function SigninComponents() {
   const [errors, setError] = useState({});
 
   const [PasswordVisible, setPasswordVisible] = useState(false);
+
+  const [loading, setLoading] = useState(false);
 
   const { setAuth } = useStateContext();
 
@@ -53,14 +57,21 @@ export default function SigninComponents() {
   };
 
   const handleSubmit = (event) => {
+
     event.preventDefault();
+    console.log("failed");
+
+
     if (validation()) {
+      setLoading(true);
       axiosClient.post("http://localhost:4000/login", formValues)
         .then(({ data }) => {
           setAuth({
             token: data.token,
             verify: data.verify,
           });
+        setLoading(false);
+
         })
         .catch((err) => {
           const response = err.response;
@@ -71,8 +82,10 @@ export default function SigninComponents() {
             let value = Object.values(response.data);
 
             error[keys] = value;
+            setLoading(false);
 
             setError(error);
+            
 
           } else {
             console.error("Error:", response.status);
@@ -183,6 +196,11 @@ export default function SigninComponents() {
             Signup
           </Link>
         </div>
+        {loading && (
+        <p className="absolute top-72 left-[600px]">
+          <HashLoader color="#3197e8" />
+        </p>
+      )}
       </div>
     </main>
   );

@@ -119,7 +119,7 @@ export default function SignupComponents() {
       .then(({ data }) => {
         setLoading(false);
 
-        console.log(data);
+        // console.log(data);
         setAuth({
           token: data.jwttoken,
           verify: data.verify,

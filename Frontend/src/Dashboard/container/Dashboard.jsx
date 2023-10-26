@@ -8,6 +8,9 @@ import axiosClient from "../../axios-client";
 import EditHeader from "../../common/commonLayouts/EditHeader";
 import EditPage from "../../common/commonLayouts/EditPage";
 import { useNavigate } from "react-router-dom";
+import { EditorComponents } from "../../common/commonComponents/EditorComponents";
+import { BatchHeader } from "../../common/commonLayouts/BatchHeader";
+import { BatchLayouts } from "../../common/commonLayouts/BatchLayouts";
 
 
 export default function Dashboard() {
@@ -27,6 +30,7 @@ export default function Dashboard() {
   const [allTeam, setAllTeam] = useState([]);
   const [batch, setBatch] = useState([]);
   const [script, setScript] = useState([]);
+  const [data, setData] = useState(null);
 
 //Event
   const handleClick = () => {
@@ -128,6 +132,15 @@ export default function Dashboard() {
 
   
 
+  const handleSave = () =>{
+    console.log(data);
+      
+  }
+
+  const getValue =(data) =>{
+    setData(data);
+
+   }
 
   return (
     <div className="relative">
@@ -144,24 +157,46 @@ export default function Dashboard() {
             scriptEvent={addNewScript}
             batches={batch}
             scripts={script}
-
           />
         ) : (
           <SideNav buttonClicked={handleClick} team={team} addBatchEvent = {addNewBatch} scriptEvent={addNewScript} />
         )}
 
         <div className="bg-[#F9FAFB] h-[80px] w-screen z-[10px] ">
-          {/* <Header
+
+
+        
+
+
+
+          <EditHeader widths={state ? "w-[1040px]" : "w-[1200px]"} clickPublish={handleSave} /> 
+          <EditPage widths={state ? "w-[800px]" : "w-[933px]"} marginEditor={state ?  "ml-[10px]" : "mr-[115px]"} getValue={getValue}/>
+
+
+            {/* <BatchHeader widths={state ? "w-[1000px]" : "w-[1160px]"} />
+            <BatchLayouts widths={state ? "w-[1000px]" : "w-[1120px]"} /> */}
+
+
+{/* 
+  <Header
             widths={state ? "w-[1000px]" : "w-[1160px]"}
             team={team}
-          /> */}
-          <EditHeader widths={state ? "w-[1040px]" : "w-[1200px]"} />
-          {/* <Main
+          />
+
+           <Main
             widths={state ? "w-[1000px]" : "w-[1120px]"}
             team={team} batches={batch} scripts={script}
             addBatchEvent = {addNewBatch} scriptEvent={addNewScript}
-          /> */}
-          <EditPage widths={state ? "w-[800px]" : "w-[933px]"} />
+          />  */}
+
+
+
+          
+
+
+
+
+          
         </div>
       </div>
     </div>

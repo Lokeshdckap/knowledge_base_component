@@ -13,8 +13,6 @@ export default function EditPage(props) {
 
 
 
-
-
   return (
     <div>
       <div className="mt-14 flex">
@@ -58,17 +56,16 @@ export default function EditPage(props) {
         </div>
         <div className={`bg-white h-[510px] ${props.widths} h-[700px] overflow-auto`}>
           <div>
-              <input className="text-2xl ml-[118px] mt-8 focus:outline-none text-textPrimary font-bold" placeholder="Page Name"/>
+              <input className="text-2xl ml-[80px] mt-8 focus:outline-none text-textPrimary font-bold" placeholder="Page Name"/>
           </div>
           <div>
-              <input className="text-2xl ml-[118px] mt-5 focus:outline-none text-textPrimary " placeholder="Page Description"/>
+              <input className="text-xl ml-[80px] mt-5 focus:outline-none text-textPrimary " placeholder="Page Description"/>
           </div>
-        
+        {console.log(props.marginEditor)}
 
-            <div className="pt-5 ">
-            <EditorComponents />
-            
-
+            <div className={`pt-5 ${props.marginEditor}`}>
+              <EditorComponents getValue = {props.getValue}/>
+              {/* <button onClick={cliked}>Save</button> */}
             </div>
         </div>
       </div>

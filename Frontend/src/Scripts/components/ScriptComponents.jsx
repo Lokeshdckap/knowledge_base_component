@@ -227,7 +227,7 @@ export const ScriptComponents = () => {
 
 
         <EditHeader widths={state ? "w-[1040px]" : "w-[1200px]"} clickPublish={handleSave} changeEvent={handleChange} stateValue={inputValue}/> 
-        <EditPage widths={state ? "w-[800px]" : "w-[933px]"} marginEditor={state ?  "ml-[10px]" : "mr-[115px]"} getValue={getValue}/>
+        <EditPage widths={state ? "w-[785px]" : "w-[933px]"} marginEditor={state ?  "ml-[10px]" : "mr-[115px]"} getValue={getValue}/>
 
 
           {/* <BatchHeader widths={state ? "w-[1000px]" : "w-[1160px]"} />

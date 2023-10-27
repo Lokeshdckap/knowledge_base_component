@@ -20,10 +20,11 @@ export default function Dashboard() {
   useEffect(() => {
     getTeam();
     getAllTeam();
+   
   }, []);
 
   //state
-  const [state, setState] = useState(false);
+  const [state, setState] = useState(localStorage.getItem("sidePopUp"));
   const [team, setTeam] = useState([]);
   const [allTeam, setAllTeam] = useState([]);
   const [batch, setBatch] = useState([]);
@@ -34,6 +35,10 @@ export default function Dashboard() {
   //Event
   const handleClick = () => {
     setState((prevState) => !prevState);
+    // console.log(localStorage);
+    // setState(localStorage.setItem("sidePopUp",true))
+    // console.log(state);
+    
   };
 
   //Api

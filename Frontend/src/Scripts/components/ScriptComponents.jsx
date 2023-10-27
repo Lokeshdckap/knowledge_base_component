@@ -5,11 +5,13 @@ import SideNavLarge from '../../common/commonLayouts/SideNavLarge';
 import { useNavigate, useParams } from 'react-router-dom';
 import EditHeader from '../../common/commonLayouts/EditHeader';
 import EditPage from '../../common/commonLayouts/EditPage';
+import { PageTree } from '../../common/commonComponents/PageTree';
 
 export const ScriptComponents = () => {
 
 
     const navigate = useNavigate();
+    
    //hooks
    
    useEffect(() => {
@@ -35,6 +37,8 @@ export const ScriptComponents = () => {
   const [childScript, setChildScript] = useState([]);
   const [inputValue, setInputValue] = useState('');
 
+  const [treeNode,setTreeNode] = useState([])
+
 
 
 //Event
@@ -48,11 +52,21 @@ export const ScriptComponents = () => {
 
 //Api
 
-  const getParticularScript = () =>{
-    console.log("hi");
-
-
+  const getParticularScript = async () =>{
+       let script_uuid = param.uuid
+      await axiosClient.get(`/getScriptAndPage/${script_uuid}`)
+       .then((res)=>{
+        // console.log(res);
+          setTreeNode(res.data)
+        // setInputValue(res.data.getScriptAndPages[0].title)
+       })
+       .catch((err) => {
+        console.log(err);
+      });
   }
+
+  // getParticularScript()
+
 
   const getTeam = async () => {
 
@@ -156,6 +170,7 @@ export const ScriptComponents = () => {
     .get(`/getBatchAndScripts/${team_uuid}/${batch_uuid}`)
     .then((res) => {
       setChildScript(res.data.result);
+
     })
     .catch((err) => {
       console.log(err);
@@ -178,20 +193,20 @@ export const ScriptComponents = () => {
 
    const handleChange = (event) => {
     const newValue = event.target.value;
-
-    console.log(newValue);
-    console.log("hi");
-    // setInputValue(newValue);
-    // let paraId = param.uuid;
+    
+    setInputValue(newValue);
+    let paraId = param.uuid;
    
-    // axiosClient.get(`/addScriptTitle?inputValue=${newValue}&queryParameter=${paraId}`)
-    //   .then((res) => {
-    //     // setResponseData(response.data);
-    //     console.log(res);
-    //   })
-    //   .catch((error) => {
-    //     console.error(error);
-    //   });
+    axiosClient.get(`/addScriptTitle?inputValue=${newValue}&queryParameter=${paraId}`)
+      .then((res) => {
+        // setResponseData(response.data);
+        
+        
+        console.log(res);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
 
    }
  
@@ -208,7 +223,7 @@ export const ScriptComponents = () => {
           team={team}
           allTeams={allTeam}
           clickSwitch={switchTeamEvent}
-          addBatchEvent = {addNewBatch}
+          addBaltchEvent = {addNewBatch}
           scriptEvent={addNewScript}
           batches={batch}
           scripts={script}
@@ -254,6 +269,11 @@ export const ScriptComponents = () => {
 
         
       </div>
+    </div>
+
+    <div>
+      <h1>Page Hierarchy</h1>
+      <PageTree pages={treeNode} />
     </div>
   </div>
   )

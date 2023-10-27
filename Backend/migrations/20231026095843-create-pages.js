@@ -1,47 +1,52 @@
-'use strict';
+"use strict";
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('pages', {
+    await queryInterface.createTable("pages", {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       uuid: {
-        type: Sequelize.UUID
+        type: Sequelize.UUID,
+        allowNull: false,
+        unique: true,
       },
       title: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        defaultValue: "Page Name",
       },
       description: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        defaultValue: "Page Description",
       },
       content: {
-        type: Sequelize.TEXT
+        type: Sequelize.TEXT,
       },
       script_uuid: {
         type: Sequelize.UUID,
         references: {
           model: "scripts", // This references the 'script' table
-          key: "uuid", // This references the 'uuid' column in the 'batch' table
+          key: "uuid", // This references the 'uuid' column in the 'script' table
         },
       },
       page_uuid: {
-        type: Sequelize.UUID
+        type: Sequelize.UUID,
+        unique:true,
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE
-      }
+        type: Sequelize.DATE,
+      },
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('pages');
-  }
+    await queryInterface.dropTable("pages");
+  },
 };

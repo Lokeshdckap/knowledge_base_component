@@ -7,8 +7,6 @@ import Paragraph from '@editorjs/paragraph';
 
 export const EditorComponents = (props) => {
 
-
-
   const editorRef = useRef(null);
   const editorInstance = useRef(null);
   const [editor, setEditor] = useState(null);
@@ -72,8 +70,7 @@ export const EditorComponents = (props) => {
   return (
     <div>
         <div ref={editorRef} id="editorjs" data-gramm="false"/>
-        <button onClick={handleSave}>Save</button>
-        
+        {/* <button onClick={handleSave}>Save</button> */}
     </div>
   )
 }

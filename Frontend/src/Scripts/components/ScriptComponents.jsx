@@ -61,7 +61,7 @@ export const ScriptComponents = () => {
        .then((res)=>{
         // console.log(res);
           setTreeNode(res.data)
-        // setInputValue(res.data.getScriptAndPages[0].title)
+        setInputValue(res.data.getScriptAndPages[0].title)
        })
        .catch((err) => {
         console.log(err);
@@ -290,10 +290,10 @@ export const ScriptComponents = () => {
       </div>
     </div>
 
-    <div>
+    {/* <div>
       <h1>Page Hierarchy</h1>
       <PageTree pages={treeNode} />
-    </div>
+    </div> */}
   </div>
   )
 }

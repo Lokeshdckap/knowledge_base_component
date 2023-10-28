@@ -9,7 +9,7 @@ export default function EditHeader(props) {
         className={`flex items-center justify-between m-auto ${props.widths} mt-3 space-y-2`}
       >
         {/* <div className="box-border bg-[#EEEEEE] h-11 w-72 pl-2 pt-1 border-[1px] rounded"> */}
-          <input className="text-primary font-bold text-2xl bg-[#EEEEEE] focus:outline-gray-300 w-80 h-11 pl-2 rounded"  onBlur={props.changeEvent}/>
+          <input className="text-primary font-bold text-2xl bg-[#EEEEEE] focus:outline-gray-300 w-80 h-11 pl-2 rounded" value={props.stateValue}  onChange={props.changeEvent}/>
         {/* </div> */}
         <div >
           <button

@@ -4,6 +4,7 @@ const User = db.users;
 const Team = db.teams;
 const Batch = db.batch;
 const Script = db.script;
+const Page = db.pages;
 
 const uuid = require("uuid");
 
@@ -129,15 +130,11 @@ const switchTeam = async (req, res) => {
 };
 
 const getScript = async (req, res) => {
-  const script = await Script.findAll( 
-   {where: {
+  const script = await Script.findAll({
+    where: {
       [Op.and]: [{ team_uuid: req.params.uuid }, { batch_uuid: null }],
     },
-    
-    
-  }
-  
-  );
+  });
   return res.status(200).send({
     script,
   });
@@ -156,8 +153,6 @@ const getAllTeam = async (req, res) => {
 };
 
 const getBatchAndScripts = async (req, res) => {
-  console.log(req.params.team_uuid);
-  console.log(req.params.batch_uuid);
   let result = await Script.findAll({
     include: [
       {
@@ -175,22 +170,90 @@ const getBatchAndScripts = async (req, res) => {
         ],
       },
     ],
-
-})
- return res.status(200).json({result})
-}
-
-const getPagesForScripts = async (req, res) => {
-  const script_uuid = req.params.script_uuid;
+  });
+  return res.status(200).json({ result });
 };
 
+const addPageData = async (req, res) => {
+  const script_uuid = req.params.script_uuid;
+  const pages_uuid = "3d090138-cf17-4e8e-b943-edd192b36ee1";
 
-const addPageData = async ()=>{
-    
-}
+  const Pages = await Page.create({
+    title: "Page Name",
+    description: "Page Description",
+    uuid: uuid.v4(),
+    script_uuid: script_uuid,
+    content: "<p>Hello DCKAP R&D</p>",
+    page_uuid: pages_uuid ? pages_uuid : null,
+  });
 
-const addScriptTitle = (req, res) => {
-  const scriptTitleUpdate = Script.update(
+  return res.status(200).json({ Pages });
+};
+
+const getScriptAndPage = async (req, res) => {
+  const script_uuid = req.params.script_uuid;
+
+  async function fetchPagesWithDynamicChildInclude() {
+    const rootPages = await Page.findAll({
+      where: { page_uuid: null }, // Fetch root-level pages
+      include: [
+        {
+          model: Script,
+          where: {
+            uuid: script_uuid, // WHERE condition for the Page model
+          },
+        },
+      ],
+    });
+
+    const hierarchy = await organizePagesInHierarchy(rootPages);
+
+    return hierarchy;
+  }
+
+  async function organizePagesInHierarchy(pages) {
+    const hierarchy = [];
+    for (const page of pages) {
+      const children = await Page.findAll({
+        where: { page_uuid: page.uuid },
+      });
+
+      page.dataValues.ChildPages = children;
+      if (children.length > 0) {
+        const nestedHierarchy = await organizePagesInHierarchy(children);
+        page.dataValues.ChildPages = nestedHierarchy;
+      }
+      hierarchy.push(page);
+    }
+
+    return hierarchy;
+  }
+
+  fetchPagesWithDynamicChildInclude()
+    .then((hierarchy) => {
+      return res.status(200).json(hierarchy);
+    })
+    .catch((error) => {
+      return res.status(500).json({ error: error.message });
+    });
+};
+// const getScriptAndPages = await Page.findAll({
+//   where: {
+//     [Op.or]: [{ page_uuid: "90da8035-bfd1-429b-89e6-6b5be702ea8e" }],
+// uuid: "90da8035-bfd1-429b-89e6-6b5be702ea8e",
+// },
+// include: [
+//   {
+//     model: Script,
+//     where: {
+//       uuid : script_uuid, // WHERE condition for the Page model
+//     },
+//   },
+// ],
+// });
+
+const addScriptTitle = async (req, res) => {
+  const scriptTitleUpdate = await Script.update(
     { title: req.query.inputValue },
     {
       where: { uuid: req.query.queryParameter },
@@ -198,9 +261,6 @@ const addScriptTitle = (req, res) => {
   );
   return res.status(200).json({ scriptTitleUpdate });
 };
-
-
-
 
 module.exports = {
   createTeams,
@@ -212,7 +272,7 @@ module.exports = {
   getScript,
   getAllTeam,
   getBatchAndScripts,
-  getPagesForScripts,
+  getScriptAndPage,
   addScriptTitle,
   addPageData,
 };

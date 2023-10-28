@@ -63,14 +63,20 @@ router.get(
 );
 
 router.get(
-  "/getPagesForScripts/:script_uuid",
+  "/getScriptAndPage/:script_uuid",
   verifyAuthMiddleware.verifyToken,
-  dashboardController.getPagesForScripts
+  dashboardController.getScriptAndPage
 );
 
 router.get(
   "/addScriptTitle",
   verifyAuthMiddleware.verifyToken,
   dashboardController.addScriptTitle
+);
+
+router.post(
+  "/addPageData/:script_uuid",
+  verifyAuthMiddleware.verifyToken,
+  dashboardController.addPageData
 );
 module.exports = router;

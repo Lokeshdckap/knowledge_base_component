@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import SideNav from '../../common/commonLayouts/SideNav';
 import axiosClient from '../../axios-client';
 import SideNavLarge from '../../common/commonLayouts/SideNavLarge';
@@ -36,9 +36,12 @@ export const ScriptComponents = () => {
   const [data, setData] = useState(null);
   const [childScript, setChildScript] = useState([]);
   const [inputValue, setInputValue] = useState('');
+  const [editorContent,setEditorContent] =  useState([]);
+  const [title,setTitle] = useState("");
+  const [description,setDescription] = useState("");
+
 
   const [treeNode,setTreeNode] = useState([])
-
 
 
 //Event
@@ -178,11 +181,41 @@ export const ScriptComponents = () => {
   }
 
 
+  
 
+
+//Editor functionality
   const handleSave = () =>{
-    console.log(data);
-      
+    console.log(title);
+    console.log(description);
+    console.log(editorContent);
+
+    const postData = 
+    [
+      {
+        "title" :title,
+        "description" : description,
+        "content":editorContent
+      }
+    ];   
+    
+    console.log(postData);
   }
+
+  const titleChange = (e) =>{
+    setTitle(e.target.value);
+    
+  }
+
+  const descriptionChange = (e) => {
+    setDescription(e.target.value)
+  }
+  //
+
+
+
+
+
 
   const getValue =(data) =>{
     setData(data);
@@ -236,38 +269,24 @@ export const ScriptComponents = () => {
 
       <div className="bg-[#F9FAFB] h-[80px] w-screen z-[10px] ">
 
+          <EditHeader 
+              widths={state ? "w-[1040px]" : "w-[1200px]"} 
+              clickPublish={handleSave} 
+              changeEvent={handleChange} 
+              stateValue={inputValue}
+          />           
 
-      
-
-
-
-        <EditHeader widths={state ? "w-[1040px]" : "w-[1200px]"} clickPublish={handleSave} changeEvent={handleChange} stateValue={inputValue}/> 
-        <EditPage widths={state ? "w-[785px]" : "w-[933px]"} marginEditor={state ?  "ml-[10px]" : "mr-[115px]"} getValue={getValue}/>
-
+          <EditPage
+              widths={state ? "w-[785px]" : "w-[933px]"} 
+              marginEditor={state ?  "ml-[10px]" : "mr-[115px]"} 
+              getValue={getValue}
+              editorContent={setEditorContent}
+              handleTitle = {titleChange}
+              handleDescription={descriptionChange}
+           />
 
           {/* <BatchHeader widths={state ? "w-[1000px]" : "w-[1160px]"} />
-          <BatchLayouts widths={state ? "w-[1000px]" : "w-[1120px]"} /> */}
-
-{/* 
-            <Header
-              widths={state ? "w-[1000px]" : "w-[1160px]"}
-              team={team}
-            />
-
-         <Main
-          widths={state ? "w-[1000px]" : "w-[1120px]"}
-          team={team} batches={batch} scripts={script}
-          addBatchEvent = {addNewBatch} scriptEvent={addNewScript}
-        />  */}
-
-
-
-        
-
-
-
-
-        
+          <BatchLayouts widths={state ? "w-[1000px]" : "w-[1120px]"} /> */}        
       </div>
     </div>
 

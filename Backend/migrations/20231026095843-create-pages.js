@@ -23,7 +23,7 @@ module.exports = {
         defaultValue: "Page Description",
       },
       content: {
-        type: Sequelize.TEXT,
+        type: Sequelize.JSON,
       },
       script_uuid: {
         type: Sequelize.UUID,

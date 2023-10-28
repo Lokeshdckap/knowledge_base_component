@@ -7,13 +7,37 @@ import ImageTool from "@editorjs/image";
 import Paragraph from "@editorjs/paragraph";
 
 export const EditorComponents = (props) => {
+
+
   const editorRef = useRef(null);
   const editorInstance = useRef(null);
 
+  // console.log(props.render.content);
   const [editor, setEditor] = useState(null);
   const [save, setSave] = useState([]);
+  const [content,setContent] = useState(null);
 
+  // console.log(props.render.title);
+
+
+  //  {blocks: [
+//     {
+//       type: 'list',
+//       data: {
+//         style: 'ordered', // 'ordered' for numbered list, 'unordered' for bulleted list
+//         items: ['Item 1', 'Item 2', 'Item 3'],
+//       },
+//     },
+//   ]
+// }
+// console.log(props.render.title);
+
+  // setContent(props.render);
   useEffect(() => {
+   
+
+
+  // let renderEditor = props.render;
     if (editorRef.current && !editorInstance.current) {
       editorInstance.current = new EditorJS({
         holderId: "editorjs",
@@ -57,11 +81,12 @@ export const EditorComponents = (props) => {
         /**
          * Previously saved data that should be rendered
          */
-        data: {},
+        data: {},     
       });
       setEditor(editorInstance);
+      
     }
-  }, []);
+  }, [editor]);
 
   return (
     <div>

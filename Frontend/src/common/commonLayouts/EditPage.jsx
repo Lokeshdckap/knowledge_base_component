@@ -18,7 +18,7 @@ export default function EditPage(props) {
 
 
   const treeNode = props.treeNode;
-
+  console.log(treeNode);
 
 const handleMouseEnter = (e) => {
   let targetId = e.target.id;

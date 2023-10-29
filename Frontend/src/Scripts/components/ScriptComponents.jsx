@@ -14,10 +14,6 @@ export const ScriptComponents = () => {
   const param = useParams();
 
   //hooks
-
-
-
-
   //state
   const [state, setState] = useState(false);
   const [team, setTeam] = useState([]);
@@ -59,20 +55,6 @@ export const ScriptComponents = () => {
   const getParticularScript = async (uuid) => {
 
     let script_uuid = uuid;
-
-
-//Api
-
-  const getParticularScript = async () =>{
-       let script_uuid = param.uuid
-      await axiosClient.get(`/getScriptAndPage/${script_uuid}`)
-       .then((res)=>{
-        // console.log(res);
-          setTreeNode(res.data)
-        setInputValue(res.data.getScriptAndPages[0].title)
-       })
-       .catch((err) => {
-
     await axiosClient
       .get(`/getScriptAndPage/${script_uuid}`)
       .then((res) => {
@@ -266,13 +248,12 @@ export const ScriptComponents = () => {
     //   .catch((err) => {
     //     console.log(err);
     //   });
+
     }
 
 
  const contentPage = (e) =>{
   // console.log(e.target.id);
-
-
   // console.log(e.target.id);
   setPageId(e.target.id);
   let pageId = e.target.id
@@ -282,7 +263,6 @@ export const ScriptComponents = () => {
   .then((res) => {
     setPageContent(res.data.pages[0]);
     setParticularTitle(res.data.pages[0].title);
-
 
   })
   .catch((err) => { 
@@ -336,20 +316,9 @@ export const ScriptComponents = () => {
               addPage={addPage}
               contentPage={contentPage}
               pageContent={pageContent}
-              particularTitle={particularTitle}
-       
-             
-              
-           />
-
-         
-
-          {/* <BatchHeader widths={state ? "w-[1000px]" : "w-[1160px]"} />
-          <BatchLayouts widths={state ? "w-[1000px]" : "w-[1120px]"} /> */}        
+           />    
         </div>
       </div>
-
-
     </div>
 
   )

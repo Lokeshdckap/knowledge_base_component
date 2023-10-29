@@ -86,13 +86,13 @@ export default function SideNavLarge(props) {
   }
 
   return (
-    <div className="bg-primary h-[632px] w-[280px] z-10">
-      <div>
+    <div className="bg-primary h-[664px] w-[280px] z-10">
+      <div className="">
         <img src={mainLogo} alt="" srcset="" className="max-w-md m-auto mt-4" />
       </div>
       <div className="bg-slate-300 h-6 w-6 rounded-full absolute mt-4 left-[219px]">
         <span
-          className="material-symbols-outlined cursor-pointer"
+          className="material-symbols-outlined cursor- pointer"
           onClick={props.buttonClicked}
         >
           chevron_left

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import mainLogo from "../../assets/images/mainlogo.png";
 import AddNew from "../commonComponents/AddNew";
 import { Link, useNavigate } from "react-router-dom";
@@ -11,7 +11,10 @@ export default function SideNavLarge(props) {
   const batchList = props.batches;
   const scriptList = props.scripts;
   const childScript = props.childScript
-  // console.log(childScript[0].batch_uuid);
+
+
+
+  
 
   const navigate = useNavigate();
 
@@ -20,6 +23,27 @@ export default function SideNavLarge(props) {
   const [overState, setOverState] = useState(null);
   const [overScriptState, setOverScriptState] = useState(null);
   const [popUp, setPopup] = useState(null);
+
+
+  //ref
+  const teamRef = useRef(null);
+  const iconRef = useRef(null);
+
+  //
+
+  useEffect(() => {
+    const closeOnOutsideClick = (e) => {
+      if(teamDropDown && !teamRef.current.contains(e.target) && e.target !== iconRef.current){
+          setteamDropDown(false)
+      }
+    };
+    window.addEventListener('click', closeOnOutsideClick);
+    return () => {
+      window.removeEventListener('click', closeOnOutsideClick);
+    };
+  },[teamDropDown])
+
+ 
 
   const handleMouseEnter = (e) => {
     let targetId = e.target.id;
@@ -53,10 +77,12 @@ export default function SideNavLarge(props) {
   const renderPage =(e) =>{
     let TargetScriptId = e.target.id;
     navigate(`/dashboard/${localStorage.getItem("team_uuid")}/s/${TargetScriptId}`);
-
     props.getParticularScript(TargetScriptId); 
+  }
 
-    
+  const handleBatch = (e) =>{
+    let TargetScriptId = e.target.id;
+    navigate(`/dashboard/${localStorage.getItem("team_uuid")}/b/${TargetScriptId}`);
   }
 
   return (
@@ -78,10 +104,12 @@ export default function SideNavLarge(props) {
           <p className="text-xl font-bold  text-white w-48 truncate ">
            <Link to={`/dashboard/${localStorage.getItem("team_uuid")}`}>{teamName} Tea...</Link> 
           </p>
+
           {teamDropDown ? (
             <i
               className="fa-solid fa-angle-up text-white cursor-pointer"
               onClick={() => setteamDropDown(false)}
+              ref={iconRef}
             ></i>
           ) : (
             <i
@@ -91,11 +119,11 @@ export default function SideNavLarge(props) {
           )}
         </div>
         {teamDropDown && (
-          <div className="box-border bg-white  w-52 p-4 border-[1px] rounded-xl shadow-lg absolute left-48 top-5 z-10">
+          <div className="box-border bg-white  w-52 p-4 border-[1px] rounded-xl shadow-lg absolute left-48 top-5 z-10" ref={teamRef}>
             <div>
               <p>Change Team</p>
               {AllTeams && (
-                <ul className="space-y-2 pt-1 h-[200px] overflow-auto">
+                <ul className="space-y-2 pt-1 h-[200px] overflow-auto" >
                   {AllTeams.map((team) => (
                     <li
                       key={team.uuid}
@@ -136,7 +164,6 @@ export default function SideNavLarge(props) {
           </div>
         )}
       </div>
-      {/* ${childScript.length > 0 && (childScript[0].batch_uuid == batch.uuid && "bg-cyan-950")} */}
       {
         <ul className="mt-5 space-y-1 h-[280px] overflow-auto ">
           {batchList.map((batch) => (
@@ -147,13 +174,11 @@ export default function SideNavLarge(props) {
                 className={`text-[#BCD1FF] pl-8 cursor-pointer hover:bg-cyan-950 pt-1 pb-1  -z-0 truncate relative `}
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}
-             
               >
                 {overState == batch.uuid ? (
                   <i
                     className="fa-solid fa-angle-down pr-3.5"
                     id={batch.uuid}
-
                     onClick={props.handleChildrenScripts}
                   ></i>
                 ) : (
@@ -162,13 +187,10 @@ export default function SideNavLarge(props) {
 
                   ) :(
                     <i className="fa-solid fa-folder pr-3" id={batch.uuid}></i>
-
                   )
                   )
-
-                  
                 }
-                <span> {batch.title}</span>
+                <span onClick={handleBatch} id={batch.uuid}> {batch.title}</span>
                 {overState == batch.uuid && (
                   <i
                     className="fa-solid fa-ellipsis-vertical text-[#BCD1FF] pl-[54px]"
@@ -183,7 +205,7 @@ export default function SideNavLarge(props) {
                           <li
                           key={child.id}
                           id={child.uuid}
-                          className="text-[#BCD1FF] pl-16 cursor-pointer hover:bg-cyan-950 pt-1 pb-1 truncate"
+                          className="text-[#BCD1FF] pl-12 cursor-pointer hover:bg-cyan-950 pt-1 pb-1 truncate"
                           onMouseEnter={handleScriptMouseEnter}
                           onMouseLeave={handleScriptMouseLeave}
                           onClick={renderPage}

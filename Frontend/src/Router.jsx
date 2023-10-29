@@ -21,14 +21,14 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/',
-        element: <Navigate to="/dashboard" />
+        element: <Navigate to={`/dashboard/${localStorage.getItem("ACCESS_TOKEN")}`} />
       },
       {
         path: "/dashboard/:uuid",
         element: <Dashboard />,
       },
       {
-        path: "/dashboard/:uuid/b",
+        path: "/dashboard/:uuid/b/:uuid",
         element: <Batch />,
       },
       {

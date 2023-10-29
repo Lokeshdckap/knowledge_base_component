@@ -12,7 +12,7 @@ export const ScriptComponents = () => {
   const param = useParams();
 
   //hooks
-
+  
   //state
   const [state, setState] = useState(false);
   const [team, setTeam] = useState([]);
@@ -52,7 +52,6 @@ export const ScriptComponents = () => {
 
   const getParticularScript = async (uuid) => {
     let script_uuid = uuid;
-
     await axiosClient
       .get(`/getScriptAndPage/${script_uuid}`)
       .then((res) => {
@@ -66,6 +65,7 @@ export const ScriptComponents = () => {
         
       })
       .catch((err) => {
+
         console.log(err);
       });
   };
@@ -220,11 +220,11 @@ let batch_uuid;
   
     } catch (err) {
       console.log(err);
-    }
-  };
+    });
+
+
+   }
     
-
-
   const contentPage = (e) => {
     setPageId(e.target.id);
     let pageId = e.target.id;
@@ -279,6 +279,7 @@ let batch_uuid;
           />
 
           <EditPage
+
             widths={state ? "w-[785px]" : "w-[933px]"}
             marginEditor={state ? "ml-[10px]" : "mr-[115px]"}
             editorContent={editorContent}
@@ -299,4 +300,5 @@ let batch_uuid;
       </div>
     </div>
   );
+
 };

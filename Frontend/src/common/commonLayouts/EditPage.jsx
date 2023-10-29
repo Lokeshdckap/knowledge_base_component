@@ -24,7 +24,6 @@ export default function EditPage(props) {
         props.setParticularTitle(props.particularTitle)
         props.setDescription(props.description)
     }, [props.particularTitle,props.description])
-    
 
 const handleMouseEnter = (e) => {
   let targetId = e.target.id;

@@ -21,7 +21,11 @@ export default function Dashboard() {
     getTeam();
     getAllTeam();
    
+   
   }, []);
+
+ 
+
 
   //state
   const [state, setState] = useState(localStorage.getItem("sidePopUp"));
@@ -34,11 +38,18 @@ export default function Dashboard() {
 
   //Event
   const handleClick = () => {
-    setState((prevState) => !prevState);
-    // console.log(localStorage);
-    // setState(localStorage.setItem("sidePopUp",true))
-    // console.log(state);
-    
+    // setState((prevState) => !prevState);    
+    if(state)
+    {
+      setState(localStorage.setItem("sidePopUp",true))
+    }
+    else{
+
+      // localStorage.setItem("sidePopUp",true);
+      setState(localStorage.setItem("sidePopUp",false))
+    }
+    // console.log(localStorage.setItem("sidePopUp",true));
+    console.log(state);
   };
 
   //Api
@@ -64,7 +75,7 @@ export default function Dashboard() {
         setAllTeam(res.data.getAllTeam);
       })
       .catch((err) => {
-        console.log(err);
+   
       });
   };
 
@@ -151,6 +162,8 @@ export default function Dashboard() {
   return (
     <div className="relative">
       <div className="flex bg-[#ECEDEF] ">
+
+       {console.log(state)}
         {state ? (
           <SideNavLarge
             buttonClicked={handleClick}
@@ -174,16 +187,11 @@ export default function Dashboard() {
         )}
 
         <div className="bg-[#F9FAFB] h-[80px] w-screen z-[10px] ">
-          {/* <EditHeader widths={state ? "w-[1040px]" : "w-[1200px]"} clickPublish={handleSave} /> 
-          <EditPage widths={state ? "w-[800px]" : "w-[933px]"} marginEditor={state ?  "ml-[10px]" : "mr-[115px]"} getValue={getValue}/> */}
-
-          {/* <BatchHeader widths={state ? "w-[1000px]" : "w-[1160px]"} />
-            <BatchLayouts widths={state ? "w-[1000px]" : "w-[1120px]"} /> */}
 
           <Header widths={state ? "w-[1000px]" : "w-[1160px]"} team={team} />
 
           <Main
-            widths={state ? "w-[1000px]" : "w-[1120px]"}
+            widths={state ? "w-[1010px]" : "w-[1120px]"}
             team={team}
             batches={batch}
             scripts={script}

@@ -8,8 +8,8 @@ export default function Main(props) {
   const addBatchEvent = props.addBatchEvent;
 
   return (
-    <div className="pt-16 h-[550px] overflow-auto z-0">
-      <div className="h-[550px] ">
+    <div className="pt-16 h-[520px]  overflow-y-auto z-0">
+      <div className="   ">
         <div className={`flex justify-between ${props.widths} m-auto  `}>
           <div className="flex space-x-3">
             <div className="rounded-full h-12 w-12 bg-[#DEE0E4]">
@@ -34,7 +34,7 @@ export default function Main(props) {
             class={`h-px my-8 bg-[#D5D7DA] border-0 dark:bg-gray-900 ${props.widths} m-auto`}
           />
         </div>
-        <div className={`${props.widths} m-auto flex flex-wrap gap-[40px] `}>
+        <div className={`${props.widths} m-auto flex flex-wrap gap-[30px] `}>
           {batchList.map((batch) => 
             <div className="bg-white w-[230px] h-[120px] rounded-[10px]">
               <div className="bg-gradient-to-r from-primary to-[#226576] w-[230px] h-[36px] rounded-t-lg text-end pt-px">
@@ -49,7 +49,7 @@ export default function Main(props) {
             </div>
           )}
         </div>
-        <div className={`${props.widths} m-auto flex flex-wrap gap-[40px] mt-10`}>
+        <div className={`${props.widths} m-auto flex flex-wrap gap-[30px] mt-10`}>
           {scriptList.map((script) => 
             <div className="bg-white w-[230px] h-[120px] rounded-[10px]">
               <div className="bg-gradient-to-r from-primary to-[#226576] w-[230px] h-[36px] rounded-t-lg text-end pt-px">

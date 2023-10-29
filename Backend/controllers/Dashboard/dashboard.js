@@ -232,10 +232,12 @@ const getScriptAndPage = async (req, res) => {
 
     return hierarchy;
   }
+
 const getScriptAndPages = await Script.findOne({
  where:{uuid: script_uuid},
 
 });
+
   fetchPagesWithDynamicChildInclude()
     .then((hierarchy) => {
       return res.status(200).json({hierarchy,getScriptAndPages});
@@ -290,6 +292,8 @@ const getPage = async (req,res)=>{
     where: { uuid: req.params.uuid }, // Fetch root-level pages
    
   });
+
+  // let data = JSON.parse(pages.content)
   return res.status(200).json({pages});
 
 

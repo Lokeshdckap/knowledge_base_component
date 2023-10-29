@@ -8,49 +8,25 @@ import Paragraph from "@editorjs/paragraph";
 
 export const EditorComponents = (props) => {
 
+//   useEffect(() => {
+//     props.editorState(props.editorValue)
+// }, [props.editorValue])
 
   const editorRef = useRef(null);
   const editorInstance = useRef(null);
 
   // console.log(props.render.content);
   const [editor, setEditor] = useState(null);
+
   const [save, setSave] = useState([]);
-  const [content,setContent] = useState(null);
 
-  // console.log(props.render.title);
+  const [content, setContent] = useState(null);
 
-
-  //  {blocks: [
-//     {
-//       type: 'list',
-//       data: {
-//         style: 'ordered', // 'ordered' for numbered list, 'unordered' for bulleted list
-//         items: ['Item 1', 'Item 2', 'Item 3'],
-//       },
-//     },
-//   ]
-// }
-// console.log(props.render.title);
-
-  // setContent(props.render);
   useEffect(() => {
-   
-
-
-  // let renderEditor = props.render;
     if (editorRef.current && !editorInstance.current) {
       editorInstance.current = new EditorJS({
         holderId: "editorjs",
-
         tools: {
-          // header: {
-          //   class: Header,
-          //   config: {
-          //     placeholder: 'Enter a header',
-          //     levels: [2, 3, 4],
-          //     defaultLevel: 3
-          //   }
-          // },
           header: Header,
           list: List,
           paragraph: Paragraph,
@@ -58,8 +34,8 @@ export const EditorComponents = (props) => {
             class: ImageTool,
             config: {
               endpoints: {
-                byFile: "http://localhost:4000/uploadFile", // Your backend file uploader endpoint
-                byUrl: "http://localhost:4000/fetchUrl", // Your endpoint that provides uploading by Url
+                byFile: "http://localhost:4000/uploadFile",
+                byUrl: "http://localhost:4000/fetchUrl",
               },
             },
           },
@@ -67,26 +43,20 @@ export const EditorComponents = (props) => {
         onReady: () => {
           console.log("Editor.js is ready to work!");
         },
-
-        // autofocus: true,
         placeholder: "Type here!",
-
         onChange: () => {
           editorInstance.current.save().then((outputData) => {
             // Handle changes here
             props.editorState(outputData);
           });
         },
-
-        /**
-         * Previously saved data that should be rendered
-         */
-        data: {},     
+        data: {
+          blocks:props.editorValue.blocks
+        }, // Pass the blocks directly from props
       });
       setEditor(editorInstance);
-      
     }
-  }, [editor]);
+  },[editor]);
 
   return (
     <div>

@@ -28,7 +28,7 @@ const router = createBrowserRouter([
         element: <Dashboard />,
       },
       {
-        path: "/dashboard/:uuid/b",
+        path: "/dashboard/:uuid/b/:uuid",
         element: <Batch />,
       },
       {

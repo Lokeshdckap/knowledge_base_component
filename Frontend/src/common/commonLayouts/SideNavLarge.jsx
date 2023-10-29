@@ -34,14 +34,10 @@ export default function SideNavLarge(props) {
   useEffect(() => {
     const closeOnOutsideClick = (e) => {
       if(teamDropDown && !teamRef.current.contains(e.target) && e.target !== iconRef.current){
-        
           setteamDropDown(false)
       }
-
     };
-
     window.addEventListener('click', closeOnOutsideClick);
-
     return () => {
       window.removeEventListener('click', closeOnOutsideClick);
     };
@@ -81,16 +77,17 @@ export default function SideNavLarge(props) {
   const renderPage =(e) =>{
     let TargetScriptId = e.target.id;
     navigate(`/dashboard/${localStorage.getItem("team_uuid")}/s/${TargetScriptId}`);
-
     props.getParticularScript(TargetScriptId); 
+  }
 
-    
+  const handleBatch = (e) =>{
+    let TargetScriptId = e.target.id;
+    navigate(`/dashboard/${localStorage.getItem("team_uuid")}/b/${TargetScriptId}`);
   }
 
   return (
     <div className="bg-primary h-[632px] w-[280px] z-10">
       <div>
-
         <img src={mainLogo} alt="" srcset="" className="max-w-md m-auto mt-4" />
       </div>
       <div className="bg-slate-300 h-6 w-6 rounded-full absolute mt-4 left-[219px]">
@@ -167,7 +164,6 @@ export default function SideNavLarge(props) {
           </div>
         )}
       </div>
-      {/* ${childScript.length > 0 && (childScript[0].batch_uuid == batch.uuid && "bg-cyan-950")} */}
       {
         <ul className="mt-5 space-y-1 h-[280px] overflow-auto ">
           {batchList.map((batch) => (
@@ -178,13 +174,11 @@ export default function SideNavLarge(props) {
                 className={`text-[#BCD1FF] pl-8 cursor-pointer hover:bg-cyan-950 pt-1 pb-1  -z-0 truncate relative `}
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}
-             
               >
                 {overState == batch.uuid ? (
                   <i
                     className="fa-solid fa-angle-down pr-3.5"
                     id={batch.uuid}
-
                     onClick={props.handleChildrenScripts}
                   ></i>
                 ) : (
@@ -193,13 +187,10 @@ export default function SideNavLarge(props) {
 
                   ) :(
                     <i className="fa-solid fa-folder pr-3" id={batch.uuid}></i>
-
                   )
                   )
-
-                  
                 }
-                <span> {batch.title}</span>
+                <span onClick={handleBatch} id={batch.uuid}> {batch.title}</span>
                 {overState == batch.uuid && (
                   <i
                     className="fa-solid fa-ellipsis-vertical text-[#BCD1FF] pl-[54px]"

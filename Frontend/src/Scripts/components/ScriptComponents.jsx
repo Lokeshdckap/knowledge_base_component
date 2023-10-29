@@ -60,6 +60,19 @@ export const ScriptComponents = () => {
 
     let script_uuid = uuid;
 
+
+//Api
+
+  const getParticularScript = async () =>{
+       let script_uuid = param.uuid
+      await axiosClient.get(`/getScriptAndPage/${script_uuid}`)
+       .then((res)=>{
+        // console.log(res);
+          setTreeNode(res.data)
+        setInputValue(res.data.getScriptAndPages[0].title)
+       })
+       .catch((err) => {
+
     await axiosClient
       .get(`/getScriptAndPage/${script_uuid}`)
       .then((res) => {
@@ -69,6 +82,7 @@ export const ScriptComponents = () => {
         setParticularTitle(res.data.hierarchy[0].title);
       })
       .catch((err) => {
+
         console.log(err);
       });
   };
@@ -335,6 +349,8 @@ export const ScriptComponents = () => {
         </div>
       </div>
 
+
     </div>
+
   )
 };

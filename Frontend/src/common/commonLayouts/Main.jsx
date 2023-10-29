@@ -8,8 +8,8 @@ export default function Main(props) {
   const addBatchEvent = props.addBatchEvent;
 
   return (
-    <div className="pt-16 h-[550px] overflow-auto z-0">
-      <div className="h-[550px] ">
+    <div className="pt-16 h-[520px]  overflow-y-auto z-0">
+      <div className="   ">
         <div className={`flex justify-between ${props.widths} m-auto  `}>
           <div className="flex space-x-3">
             <div className="rounded-full h-12 w-12 bg-[#DEE0E4]">

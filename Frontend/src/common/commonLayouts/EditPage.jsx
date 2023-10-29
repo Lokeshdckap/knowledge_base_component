@@ -11,14 +11,20 @@ import { MyTextareaComponent } from "../commonComponents/MyTextareaComponent";
 export default function EditPage(props) {
 
   
-
+  
   const [newPagePopup, setNewPagePopup] = useState(false);
+
   const [OverPage,setOverPage] = useState(null);
  
 
 
   const treeNode = props.treeNode;
-  console.log(treeNode);
+
+  useEffect(() => {
+        props.setParticularTitle(props.particularTitle)
+        props.setDescription(props.description)
+    }, [props.particularTitle,props.description])
+
 
 const handleMouseEnter = (e) => {
   let targetId = e.target.id;
@@ -48,7 +54,7 @@ const handleMouseLeave = () => {
       <h1 className="text-2xl font-bold mb-4">Page Hierarchy</h1>
           {treeNode.map((topLevelPage, index) => (
             <div key={topLevelPage.page_id} className="cursor-pointer" >
-              <PageTree node={topLevelPage} isLast={index ===  treeNode.length - 1} contentPage={props.contentPage} />
+              <PageTree node={topLevelPage} isLast={index ===  treeNode.length - 1}  contentPage={props.contentPage} />
             </div>
           ))}
     </div>
@@ -104,16 +110,13 @@ const handleMouseLeave = () => {
         </div>
         <div className={`bg-white h-[510px] ${props.widths} overflow-auto`}>
           <div>
-            {/* <p contentEditable="true">{pages}</p> */}
-              <input className="text-2xl ml-[80px] mt-8 focus:outline-none text-textPrimary font-bold" defaultValue={props.particularTitle}  onChange={props.handleTitle} placeholder="Page Name"/>
+              <input className="text-2xl ml-[80px] mt-8 focus:outline-none text-textPrimary font-bold" value={props.particularTitle}  onChange={(e)=>props.setParticularTitle(e.target.value)} placeholder="Page Name"/>
           </div>
           <div>
-          {/* <p contentEditable="true">{pages}</p> */}
-
-              {/* <input className="text-xl ml-[80px] mt-5 focus:outline-none text-textPrimary " placeholder="Page Description" defaultValue={pages ? pages.description : ""}  onChange={props.handleDescription}/> */}
+              <input className="text-xl ml-[80px] mt-5 focus:outline-none text-textPrimary " value={props.description} onChange={(e)=>props.setDescription(e.target.value)} placeholder="Page Description"/>
           </div>
             <div className={`pt-5 ${props.marginEditor}`}>
-              <EditorComponents getValue = {props.getValue} editorState={props.editorContent}   />
+              <EditorComponents editorState={props.setEditorContent} editorValue={props.editorContent}  />
               {/* <button onClick={cliked}>Save</button> */}
             </div>
 

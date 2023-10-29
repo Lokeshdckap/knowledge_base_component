@@ -94,8 +94,17 @@ const addNewScripts = async (req, res) => {
     batch_uuid: batch_uuid ? batch_uuid : null,
   });
   if (script) {
+    const Pages = await Page.create({
+      title: "Page Name",
+      description: "Page Description",
+      uuid: uuid.v4(),
+      script_uuid: script.uuid,
+      content: null,
+      page_uuid: null,
+    });
     return res.status(200).send({
       Success: "Your Script Created Sucessfully",
+      pages:Pages
     });
   } else {
     return res.status(500).send({
@@ -176,14 +185,14 @@ const getBatchAndScripts = async (req, res) => {
 
 const addPageData = async (req, res) => {
   const script_uuid = req.params.script_uuid;
-  const pages_uuid = "3d090138-cf17-4e8e-b943-edd192b36ee1";
+  const pages_uuid = req.params.page_uuid ?req.params.page_uuid :null ;
 
   const Pages = await Page.create({
     title: "Page Name",
     description: "Page Description",
     uuid: uuid.v4(),
     script_uuid: script_uuid,
-    content: "<p>Hello DCKAP R&D</p>",
+    content: null,
     page_uuid: pages_uuid ? pages_uuid : null,
   });
 
@@ -195,15 +204,10 @@ const getScriptAndPage = async (req, res) => {
 
   async function fetchPagesWithDynamicChildInclude() {
     const rootPages = await Page.findAll({
-      where: { page_uuid: null }, // Fetch root-level pages
-      include: [
-        {
-          model: Script,
-          where: {
-            uuid: script_uuid, // WHERE condition for the Page model
-          },
-        },
-      ],
+      // where: { page_uuid: null }, // Fetch root-level pages
+      where: {
+        [Op.and]: [{ page_uuid: null }, {script_uuid : script_uuid }],
+      },
     });
 
     const hierarchy = await organizePagesInHierarchy(rootPages);
@@ -228,10 +232,13 @@ const getScriptAndPage = async (req, res) => {
 
     return hierarchy;
   }
+const getScriptAndPages = await Script.findOne({
+ where:{uuid: script_uuid},
 
+});
   fetchPagesWithDynamicChildInclude()
     .then((hierarchy) => {
-      return res.status(200).json(hierarchy);
+      return res.status(200).json({hierarchy,getScriptAndPages});
     })
     .catch((error) => {
       return res.status(500).json({ error: error.message });
@@ -262,6 +269,31 @@ const addScriptTitle = async (req, res) => {
   return res.status(200).json({ scriptTitleUpdate });
 };
 
+const updatePageData = async (req,res)=>{
+  
+ const updateData =  await Page.update({
+    title: req.body.title,
+    description:  req.body.description,
+    content : JSON.stringify(req.body.content)
+  },
+  {
+    where: { uuid:req.body.id  },
+  }
+  );
+  return res.status(200).json({ updateData });
+
+}
+
+
+const getPage = async (req,res)=>{
+  const pages = await Page.findAll({
+    where: { uuid: req.params.uuid }, // Fetch root-level pages
+   
+  });
+  return res.status(200).json({pages});
+
+
+}
 module.exports = {
   createTeams,
   getTeam,
@@ -275,4 +307,6 @@ module.exports = {
   getScriptAndPage,
   addScriptTitle,
   addPageData,
+  updatePageData,
+  getPage
 };

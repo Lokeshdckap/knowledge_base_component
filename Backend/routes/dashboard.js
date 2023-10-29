@@ -79,4 +79,14 @@ router.post(
   verifyAuthMiddleware.verifyToken,
   dashboardController.addPageData
 );
+
+router.post(
+  "/updatePageData",
+  verifyAuthMiddleware.verifyToken,
+  dashboardController.updatePageData
+);
+
+router.get('/getPage/:uuid',
+verifyAuthMiddleware.verifyToken,
+dashboardController.getPage)
 module.exports = router;

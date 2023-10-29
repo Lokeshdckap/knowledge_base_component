@@ -1,3 +1,4 @@
+
 import React, { useEffect, useRef, useState } from 'react'
 import SideNav from '../../common/commonLayouts/SideNav';
 import axiosClient from '../../axios-client';
@@ -7,22 +8,12 @@ import EditHeader from '../../common/commonLayouts/EditHeader';
 import EditPage from '../../common/commonLayouts/EditPage';
 import { PageTree } from '../../common/commonComponents/PageTree';
 
+
 export const ScriptComponents = () => {
-
-
-    const navigate = useNavigate();
-    
-   //hooks
-   
-   useEffect(() => {
-    getTeam();
-    getAllTeam();
-    getParticularScript();
-
-  }, []);
-
+  const navigate = useNavigate();
   const param = useParams();
 
+  //hooks
 
 
 
@@ -37,20 +28,37 @@ export const ScriptComponents = () => {
   const [childScript, setChildScript] = useState([]);
   const [inputValue, setInputValue] = useState('');
   const [editorContent,setEditorContent] =  useState([]);
-  const [title,setTitle] = useState("");
+  const [titles,setTitle] = useState("");
   const [description,setDescription] = useState("");
+  const [pageId,setPageId] = useState(null);
+
+  const [treeNode, setTreeNode] = useState([]);
+  const [renderScript,setRenderScript] = useState([]);
+
+  const [pageContent,setPageContent] = useState(null);
+
+  const [particularTitle,setParticularTitle] = useState("");
 
 
-  const [treeNode,setTreeNode] = useState([])
 
+  useEffect(() => {
+    getTeam();
+    getAllTeam();
+    getParticularScript(param.uuid);
+    // console.log(param.uuid)
+  }, []);
 
 //Event
+
   const handleClick = () => {
     setState((prevState) => !prevState);
   };
 
+  //Api
 
+  const getParticularScript = async (uuid) => {
 
+    let script_uuid = uuid;
 
 
 //Api
@@ -64,15 +72,22 @@ export const ScriptComponents = () => {
         setInputValue(res.data.getScriptAndPages[0].title)
        })
        .catch((err) => {
+
+    await axiosClient
+      .get(`/getScriptAndPage/${script_uuid}`)
+      .then((res) => {
+        setPageContent(res.data.hierarchy[0]);
+        setTreeNode(res.data.hierarchy);
+        setRenderScript(res.data.getScriptAndPages);
+        setParticularTitle(res.data.hierarchy[0].title);
+      })
+      .catch((err) => {
+
         console.log(err);
       });
-  }
-
-  // getParticularScript()
-
+  };
 
   const getTeam = async () => {
-
     let teamUUID = localStorage.getItem("team_uuid");
     await axiosClient
       .get(`/getTeam/${teamUUID}`)
@@ -98,21 +113,17 @@ export const ScriptComponents = () => {
   };
 
   const getBatch = async (teamuuid) => {
-
     await axiosClient
       .get(`/getBatch/${teamuuid}`)
       .then((res) => {
-
         setBatch(res.data.batchs);
       })
       .catch((err) => {
         console.log(err);
       });
-
   };
 
   const getScript = async (teamuuid) => {
-
     await axiosClient
       .get(`/getScript/${teamuuid}`)
       .then((res) => {
@@ -123,35 +134,33 @@ export const ScriptComponents = () => {
       });
   };
 
-  
-
   const addNewBatch = (e) => {
-
     let team_uuid = localStorage.getItem("team_uuid");
 
-    axiosClient.post("/addNewBatch", {"uuid" : team_uuid})
-        .then((res) => {
-          getBatch(team_uuid);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-
+    axiosClient
+      .post("/addNewBatch", { uuid: team_uuid })
+      .then((res) => {
+        getBatch(team_uuid);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   const addNewScript = (e) => {
     let team_uuid = localStorage.getItem("team_uuid");
     let batch_uuid = e.target.id;
 
-    axiosClient.post("/addNewScript",{"uuid" : team_uuid,"batch_uuid":batch_uuid})
-    .then((res) => {
-          getScript(team_uuid);
+    axiosClient
+      .post("/addNewScript", { uuid: team_uuid, batch_uuid: batch_uuid })
+      .then((res) => {
+        getScript(team_uuid);
+        setPageContent(res.data.pages);
       })
       .catch((err) => {
         console.log(err);
       });
-
-  }
+  };
 
   const switchTeamEvent = (e) => {
     const TeamId = e.target.id;
@@ -159,25 +168,27 @@ export const ScriptComponents = () => {
     localStorage.setItem("team_uuid", TeamId);
     getTeam();
     getAllTeam();
-    navigate(`/dashboard/${localStorage.getItem("team_uuid")}`)
-
+    navigate(`/dashboard/${localStorage.getItem("team_uuid")}`);
   };
 
-
-  const handleChildrenScripts = async(e) =>{
-
+  const handleChildrenScripts = async (e) => {
+     
     let team_uuid = localStorage.getItem("team_uuid");
-    let batch_uuid = e.target.id
-    
+    let batch_uuid = e.target.id;
+
     await axiosClient
     .get(`/getBatchAndScripts/${team_uuid}/${batch_uuid}`)
     .then((res) => {
       setChildScript(res.data.result);
-
     })
     .catch((err) => {
       console.log(err);
     });
+  }
+
+
+  const scriptHandle = () => {
+    alert("jh")
   }
 
 
@@ -186,20 +197,22 @@ export const ScriptComponents = () => {
 
 //Editor functionality
   const handleSave = () =>{
-    console.log(title);
-    console.log(description);
-    console.log(editorContent);
-
+    console.log(pageId);
     const postData = 
-    [
       {
-        "title" :title,
+        "id" : pageId,
+        "title" :titles,
         "description" : description,
         "content":editorContent
       }
-    ];   
-    
-    console.log(postData);
+
+    axiosClient.post("/updatePageData",postData)
+    .then((res) => {
+     console.log(res);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
   }
 
   const titleChange = (e) =>{
@@ -210,7 +223,7 @@ export const ScriptComponents = () => {
   const descriptionChange = (e) => {
     setDescription(e.target.value)
   }
-  //
+//
 
 
 
@@ -224,48 +237,83 @@ export const ScriptComponents = () => {
 
 
 
-   const handleChange = (event) => {
-    const newValue = event.target.value;
-    
-    setInputValue(newValue);
-    let paraId = param.uuid;
+   const addPage = () =>{
    
-    axiosClient.get(`/addScriptTitle?inputValue=${newValue}&queryParameter=${paraId}`)
-      .then((res) => {
-        // setResponseData(response.data);
-        
-        
-        console.log(res);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    axiosClient.post(`/addPageData/${param.uuid}`)
+    .then((res) => {
+      getParticularScript(param.uuid)
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+
 
    }
+
+   const handleChange = (event) => {
  
-  
+    // const newValue = event.target.value;
+
+    // setInputValue(newValue);
+    // let paraId = param.uuid;
+   
+    // axiosClient.get(`/addScriptTitle?inputValue=${newValue}&queryParameter=${paraId}`)
+
+    //   .then((res) => {
+    //     setChildScript(res.data.result);
+    //     // console.log(res);
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   });
+    }
+
+
+ const contentPage = (e) =>{
+  // console.log(e.target.id);
+
+
+  // console.log(e.target.id);
+  setPageId(e.target.id);
+  let pageId = e.target.id
+
+
+  axiosClient.get(`/getPage/${pageId}`)
+  .then((res) => {
+    setPageContent(res.data.pages[0]);
+    setParticularTitle(res.data.pages[0].title);
+
+
+  })
+  .catch((err) => { 
+    console.log(err);
+  });
+ }
+
+
+
 
   return (
     <div className="relative">
-    <div className="flex bg-[#ECEDEF] ">
+      <div className="flex bg-[#ECEDEF] ">
+            {state ? (
+              <SideNavLarge
+                buttonClicked={handleClick}
+                team={team}
+                allTeams={allTeam}
+                clickSwitch={switchTeamEvent}
+                addBaltchEvent = {addNewBatch}
+                scriptEvent={addNewScript}
+                batches={batch}
+                scripts={script}
+                handleChildrenScripts={handleChildrenScripts}
+                childScript={childScript}
+                getParticularScript={getParticularScript}
 
-
-      {state ? (
-        <SideNavLarge
-          buttonClicked={handleClick}
-          team={team}
-          allTeams={allTeam}
-          clickSwitch={switchTeamEvent}
-          addBaltchEvent = {addNewBatch}
-          scriptEvent={addNewScript}
-          batches={batch}
-          scripts={script}
-          handleChildrenScripts={handleChildrenScripts}
-          childScript={childScript}
-        />
-      ) : (
-        <SideNav buttonClicked={handleClick} team={team} addBatchEvent = {addNewBatch} scriptEvent={addNewScript} />
-      )}
+              />
+            ) : (
+              <SideNav buttonClicked={handleClick} team={team} addBatchEvent = {addNewBatch} scriptEvent={addNewScript} />
+            )}
 
       <div className="bg-[#F9FAFB] h-[80px] w-screen z-[10px] ">
 
@@ -274,6 +322,7 @@ export const ScriptComponents = () => {
               clickPublish={handleSave} 
               changeEvent={handleChange} 
               stateValue={inputValue}
+              renderScript={renderScript}
           />           
 
           <EditPage
@@ -283,17 +332,25 @@ export const ScriptComponents = () => {
               editorContent={setEditorContent}
               handleTitle = {titleChange}
               handleDescription={descriptionChange}
+              treeNode={treeNode}
+              addPage={addPage}
+              contentPage={contentPage}
+              pageContent={pageContent}
+              particularTitle={particularTitle}
+       
+             
+              
            />
+
+         
 
           {/* <BatchHeader widths={state ? "w-[1000px]" : "w-[1160px]"} />
           <BatchLayouts widths={state ? "w-[1000px]" : "w-[1120px]"} /> */}        
+        </div>
       </div>
+
+
     </div>
 
-    {/* <div>
-      <h1>Page Hierarchy</h1>
-      <PageTree pages={treeNode} />
-    </div> */}
-  </div>
   )
-}
+};

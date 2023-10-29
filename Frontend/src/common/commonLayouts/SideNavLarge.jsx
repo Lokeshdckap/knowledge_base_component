@@ -79,8 +79,12 @@ export default function SideNavLarge(props) {
 
 
   const renderPage =(e) =>{
-    let TargetScriptId = e.target.id
-    navigate(`/dashboard/${localStorage.getItem("team_uuid")}/s/${TargetScriptId}`)
+    let TargetScriptId = e.target.id;
+    navigate(`/dashboard/${localStorage.getItem("team_uuid")}/s/${TargetScriptId}`);
+
+    props.getParticularScript(TargetScriptId); 
+
+    
   }
 
   return (
@@ -214,8 +218,9 @@ export default function SideNavLarge(props) {
                           onMouseEnter={handleScriptMouseEnter}
                           onMouseLeave={handleScriptMouseLeave}
                           onClick={renderPage}
+                        
                         >
-                          <i className="fa-solid fa-file pr-3"></i>
+                          <i className="fa-solid fa-file pr-3" onClick={renderPage}  id={child.uuid}></i>
                           {child.title}
                         </li>
                         )

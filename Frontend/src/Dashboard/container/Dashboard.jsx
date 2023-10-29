@@ -21,7 +21,11 @@ export default function Dashboard() {
     getTeam();
     getAllTeam();
    
+   
   }, []);
+
+ 
+
 
   //state
   const [state, setState] = useState(localStorage.getItem("sidePopUp"));
@@ -34,11 +38,18 @@ export default function Dashboard() {
 
   //Event
   const handleClick = () => {
-    setState((prevState) => !prevState);
-    // console.log(localStorage);
-    // setState(localStorage.setItem("sidePopUp",true))
-    // console.log(state);
-    
+    // setState((prevState) => !prevState);    
+    if(state)
+    {
+      setState(localStorage.setItem("sidePopUp",true))
+    }
+    else{
+
+      // localStorage.setItem("sidePopUp",true);
+      setState(localStorage.setItem("sidePopUp",false))
+    }
+    // console.log(localStorage.setItem("sidePopUp",true));
+    console.log(state);
   };
 
   //Api
@@ -64,7 +75,7 @@ export default function Dashboard() {
         setAllTeam(res.data.getAllTeam);
       })
       .catch((err) => {
-        console.log(err);
+   
       });
   };
 
@@ -151,6 +162,8 @@ export default function Dashboard() {
   return (
     <div className="relative">
       <div className="flex bg-[#ECEDEF] ">
+
+       {console.log(state)}
         {state ? (
           <SideNavLarge
             buttonClicked={handleClick}

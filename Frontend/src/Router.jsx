@@ -21,7 +21,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/',
-        element: <Navigate to="/dashboard" />
+        element: <Navigate to={`/dashboard/${localStorage.getItem("ACCESS_TOKEN")}`} />
       },
       {
         path: "/dashboard/:uuid",

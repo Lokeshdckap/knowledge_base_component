@@ -2,7 +2,7 @@ const db = require("../../utils/database");
 
 const bcrypt = require("bcrypt");
 
-const User = db.users;;
+const User = db.users;
 
 const Token = db.password_reset_token;
 
@@ -16,8 +16,7 @@ const path = require("path");
 
 const fs = require("fs");
 
-const {passwordResetSchema} = require("../../utils/validations");
-
+const { passwordResetSchema } = require("../../utils/validations");
 
 const forgotPassword = async (req, res) => {
   try {
@@ -52,13 +51,18 @@ const forgotPassword = async (req, res) => {
     }`;
 
     const emailTemplate = fs.readFileSync(
-      path.join(__dirname, "../../", "public", "emailTemplates/resetPassword.html"),
+      path.join(
+        __dirname,
+        "../../",
+        "public",
+        "emailTemplates/resetPassword.html"
+      ),
       "utf8"
     );
 
     const resetlink = emailTemplate.replace("{{link}}", link);
 
-    await sendEmail(user.email, "Password reset",resetlink);
+    await sendEmail(user.email, "Password reset", resetlink);
 
     res.send("password reset link sent to your email account");
   } catch (error) {
@@ -68,7 +72,6 @@ const forgotPassword = async (req, res) => {
 
 const resetPassword = async (req, res) => {
   try {
-      
     const { error } = passwordResetSchema.validate(req.body);
 
     if (error) return res.status(400).json({ error: "failed" });
@@ -83,7 +86,7 @@ const resetPassword = async (req, res) => {
       user_uuid: user.uuid,
       token: req.params.token,
     });
-     console.log(token,"ll");
+    console.log(token, "ll");
     if (token.expires_at < new Date()) {
       return res
         .status(400)
@@ -94,7 +97,7 @@ const resetPassword = async (req, res) => {
     }
 
     // Hash the new password and update user's password
-    
+
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
 
     user.password = hashedPassword;
@@ -104,8 +107,7 @@ const resetPassword = async (req, res) => {
     await token.destroy();
 
     res.status(200).json({ message: "Password reset successful" });
-  } 
-  catch (error) {
+  } catch (error) {
     res.send("An error occured");
   }
 };

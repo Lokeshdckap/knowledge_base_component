@@ -6,6 +6,7 @@ export default function Main(props) {
   const scriptList = props.scripts;
   const scriptEvent = props.scriptEvent;
   const addBatchEvent = props.addBatchEvent;
+  const scriptCount = props.scriptCount
 
   return (
     <div className="pt-16 h-[520px]  overflow-y-auto z-0">
@@ -35,7 +36,7 @@ export default function Main(props) {
           />
         </div>
         <div className={`${props.widths} m-auto flex flex-wrap gap-[30px] `}>
-          {batchList.map((batch) => 
+          {scriptCount.map((batch) => 
             <div className="bg-white w-[230px] h-[120px] rounded-[10px]">
               <div className="bg-gradient-to-r from-primary to-[#226576] w-[230px] h-[36px] rounded-t-lg text-end pt-px">
                 <span class="material-symbols-outlined text-white cursor-pointer text-2xl pr-1">
@@ -43,8 +44,8 @@ export default function Main(props) {
                 </span>
               </div>
               <div className="pl-5 pt-5">
-                <p>{batch.title}</p>
-                <p className="text-gray-500">0 scripts</p>
+                <p className="truncate">{batch.title}</p>
+                <p className="text-gray-500">{batch.script_count} Scripts</p>
               </div>
             </div>
           )}

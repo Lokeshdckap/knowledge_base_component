@@ -4,6 +4,9 @@ import { useParams } from "react-router-dom";
 export const BatchLayouts = (props) => {
   let param = useParams();
   let scripts = props.scripts;
+   let batch = props.batch
+
+   console.log(scripts);
 
   return (
     <div className="pt-16 h-[550px]  overflow-y-auto z-0">
@@ -13,13 +16,13 @@ export const BatchLayouts = (props) => {
             <div>
               <input
                 className="text-[40px] ml-5  mt-8 font-bold focus:outline-none bg-[#ECEDEF] focus:bg-slate-100 h-14"
-                placeholder="Page Name"
+                placeholder="Batch Name" name="title" value={props.batchTitle ? props.batchTitle:""} onChange={(e)=>props.changeEvent(e.target)} 
               />
             </div>
             <div className="mt-4">
               <input
                 className="text-2xl ml-5 mt-5 focus:outline-none  bg-[#ECEDEF] h-10"
-                placeholder="Page Description"
+                placeholder="Batch Description" name="descritpion"  value={props.batchDescription ? props.batchDescription: "" } onChange={(e)=>props.changeEvent(e.target)}
               />
             </div>
           </div>

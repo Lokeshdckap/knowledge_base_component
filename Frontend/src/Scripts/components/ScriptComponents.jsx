@@ -12,18 +12,18 @@ export const ScriptComponents = () => {
   const param = useParams();
 
   //hooks
-  
+
   //state
   const [state, setState] = useState(false);
   const [team, setTeam] = useState([]);
   const [allTeam, setAllTeam] = useState([]);
   const [batch, setBatch] = useState([]);
   const [script, setScript] = useState([]);
-  // const [data, setData] = useState(null);
+
   const [childScript, setChildScript] = useState([]);
   const [inputValue, setInputValue] = useState("");
   const [editorContent, setEditorContent] = useState([]);
-  // const [titles, setTitle] = useState("");
+
   const [description, setDescription] = useState("");
 
   const [pageId, setPageId] = useState(null);
@@ -55,6 +55,7 @@ export const ScriptComponents = () => {
     await axiosClient
       .get(`/getScriptAndPage/${script_uuid}`)
       .then((res) => {
+        console.log(res);
         setInputValue(res.data.getScriptAndPages.title);
         setPageContent(res.data.hierarchy[0]);
         setTreeNode(res.data.hierarchy);
@@ -62,10 +63,8 @@ export const ScriptComponents = () => {
         setParticularTitle(res.data.hierarchy[0].title);
         setDescription(res.data.hierarchy[0].description);
         setEditorContent(res.data.hierarchy[0].content);
-        
       })
       .catch((err) => {
-
         console.log(err);
       });
   };
@@ -154,7 +153,7 @@ export const ScriptComponents = () => {
     navigate(`/dashboard/${localStorage.getItem("team_uuid")}`);
   };
 
-let batch_uuid;
+  let batch_uuid;
 
   const handleChildrenScripts = async (e) => {
     let team_uuid = localStorage.getItem("team_uuid");
@@ -191,7 +190,6 @@ let batch_uuid;
     getParticularScript(param.uuid);
   };
 
-
   const addPage = () => {
     axiosClient
       .post(`/addPageData/${param.uuid}`)
@@ -204,27 +202,25 @@ let batch_uuid;
   };
 
   const handleChange = async (event) => {
-
     const inputValue = event;
 
     const encodedInputValue = encodeURIComponent(inputValue);
 
     setInputValue(inputValue); // Update the state with the current value
-  
+
     let paraId = param.uuid;
-  
+
     try {
-      const response = await axiosClient.get(`/addScriptTitle?inputValue=${encodedInputValue}&queryParameter=${paraId}`);
-      
+      const response = await axiosClient.get(
+        `/addScriptTitle?inputValue=${encodedInputValue}&queryParameter=${paraId}`
+      );
+
       console.log(response);
-  
     } catch (err) {
       console.log(err);
-    });
+    }
+  };
 
-
-   }
-    
   const contentPage = (e) => {
     setPageId(e.target.id);
     let pageId = e.target.id;
@@ -279,7 +275,6 @@ let batch_uuid;
           />
 
           <EditPage
-
             widths={state ? "w-[785px]" : "w-[933px]"}
             marginEditor={state ? "ml-[10px]" : "mr-[115px]"}
             editorContent={editorContent}
@@ -300,5 +295,4 @@ let batch_uuid;
       </div>
     </div>
   );
-
 };

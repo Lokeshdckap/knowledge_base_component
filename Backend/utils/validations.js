@@ -21,7 +21,6 @@ const createTeamSchema = Joi.object({
   team_name: Joi.string().required(),
 });
 
-
 const createTypeSchema = Joi.object({
   type: Joi.string().required(),
 });
@@ -31,5 +30,5 @@ module.exports = {
   loginSchema,
   passwordResetSchema,
   createTeamSchema,
-  createTypeSchema
+  createTypeSchema,
 };

@@ -3,7 +3,7 @@ import mainLogo from "../../assets/images/mainlogo.png";
 import AddNew from "../commonComponents/AddNew";
 import { Link, useNavigate } from "react-router-dom";
 
-export default function SideNavLarge(props) {
+export default function SideNavLarges(props) {
 
 
   const teamName = props.team.name;
@@ -81,24 +81,20 @@ export default function SideNavLarge(props) {
   }
 
   const handleBatch = (e) =>{
-    // alert('kk')
+
+    console.log(e.target.id);
     let TargetScriptId = e.target.id;
     navigate(`/dashboard/${localStorage.getItem("team_uuid")}/b/${TargetScriptId}`);
   }
 
   return (
-<<<<<<< HEAD
-    <div className="bg-primary h-[664px] overflow-y-auto w-[280px] z-10">
+    <div className="bg-primary h-[632px] w-[280px] z-10">
       <div>
-=======
-    <div className="bg-primary h-[664px] w-[280px] z-10">
-      <div className="">
->>>>>>> feature_script
         <img src={mainLogo} alt="" srcset="" className="max-w-md m-auto mt-4" />
       </div>
       <div className="bg-slate-300 h-6 w-6 rounded-full absolute mt-4 left-[219px]">
         <span
-          className="material-symbols-outlined cursor- pointer"
+          className="material-symbols-outlined cursor-pointer"
           onClick={props.buttonClicked}
         >
           chevron_left
@@ -196,7 +192,7 @@ export default function SideNavLarge(props) {
                   )
                   )
                 }
-                <span onClick={handleBatch} id={batch.uuid} className="truncate"> {batch.title}</span>
+                <span onClick={handleBatch} id={batch.uuid}> {batch.title}</span>
                 {overState == batch.uuid && (
                   <i
                     className="fa-solid fa-ellipsis-vertical text-[#BCD1FF] pl-[54px]"
@@ -317,3 +313,4 @@ export default function SideNavLarge(props) {
     </div>
   );
 }
+

@@ -42,6 +42,7 @@ const handleMouseLeave = () => {
 
 
 
+
   return (
     <div>
       
@@ -49,12 +50,15 @@ const handleMouseLeave = () => {
         <div className="bg-[#E4E8EC] w-[278px] h-[500px]">
           
           <div className="space-y-2 ml-4 mt-4">
+
           
           <div className="p-4 rounded-lg shadow">
       <h1 className="text-2xl font-bold mb-4">Page Hierarchy</h1>
           {treeNode.map((topLevelPage, index) => (
-            <div key={topLevelPage.page_id} className="cursor-pointer" >
-              <PageTree node={topLevelPage} isLast={index ===  treeNode.length - 1}  contentPage={props.contentPage} />
+            <div key={topLevelPage.page_id} id={topLevelPage.page_id} className="cursor-pointer bg-white h-10 mt-2 pt-1" 
+
+            >
+              <PageTree node={topLevelPage} isLast={index ===  treeNode.length - 1}  contentPage={props.contentPage}  handleScriptMouseLeave={props.handleScriptMouseLeave} handleScriptMouseEnter={props.handleScriptMouseEnter} hoverPageId={props.hoverPageId} handleMore={props.handleMore}/>
             </div>
           ))}
     </div>

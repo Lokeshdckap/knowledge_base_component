@@ -4,7 +4,7 @@ import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/solid';
 
 
 
-export const PageTree = ({ node, isLast,contentPage }) => {
+export const PageTree = ({ node, isLast,contentPage,handleScriptMouseEnter,handleScriptMouseLeave,hoverPageId,handleMore }) => {
   
 
   const [isOpen, setIsOpen] = useState(false);
@@ -13,10 +13,15 @@ export const PageTree = ({ node, isLast,contentPage }) => {
     setIsOpen(!isOpen);
   };
 
+
+
+
+
+
   return (
     <div className="mb-1">
       <div className="flex items-center">
-        <div className="w-4 h-4">
+        <div className="w-4 h-4   ">
           {/* {!isLast ? (
             <div className="border-l border-gray-500 absolute left-1 top-4 h-full"></div>
           ) : null} */}
@@ -28,12 +33,24 @@ export const PageTree = ({ node, isLast,contentPage }) => {
             <ChevronUpIcon className="w-4 h-4 text-gray-500" />
           )}
         </button>
-        <span className="text-lg font-semibold" onClick={contentPage} id={node.uuid}>{node.title}</span>
+        <span className="text-lg font-semibold" 
+          onMouseEnter={handleScriptMouseEnter}
+          onMouseLeave={handleScriptMouseLeave}
+          onClick={contentPage} id={node.uuid}
+        
+        >{node.title}
+        {hoverPageId == node.uuid && (
+
+                <i className="fa-solid fa-ellipsis-vertical text-[#BCD1FF] pl-6" id={node.uuid} onClick={handleMore}></i>
+              )}
+        
+        </span>
       </div>
       {isOpen && node.ChildPages && node.ChildPages.length > 0 && (
         <ul className="ml-4">
           {node.ChildPages.map((child, index) => (
-            <li key={child.page_id} onClick={contentPage}>
+            <li key={child.page_id}  onClick={contentPage} className="" 
+            >
               <PageTree node={child} isLast={index === node.ChildPages.length - 1} />
             </li>
           ))}

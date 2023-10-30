@@ -81,7 +81,7 @@ router.get(
 );
 
 router.post(
-  "/addPageData/:script_uuid",
+  "/addPageData/:script_uuid/:uuid",
   verifyAuthMiddleware.verifyToken,
   dashboardController.addPageData
 );

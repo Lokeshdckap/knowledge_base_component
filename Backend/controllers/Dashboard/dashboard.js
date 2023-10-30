@@ -211,10 +211,16 @@ const getBatchAndScripts = async (req, res) => {
 };
 
 const addPageData = async (req, res) => {
+<<<<<<< HEAD
 
   const script_uuid = req.params.script_uuid;
   
   const pages_uuid = req.params.page_uuid ? req.params.page_uuid : null;
+=======
+  // console.log(req.params);
+  const script_uuid = req.params.script_uuid;
+  const pages_uuid = req.params.uuid ? req.params.uuid :null ;
+>>>>>>> feature_script
 
   const Pages = await Page.create({
     title: "Page Name",

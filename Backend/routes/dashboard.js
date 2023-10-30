@@ -74,8 +74,20 @@ router.get(
   dashboardController.addScriptTitle
 );
 
+router.get(
+  "/addBatchTitleAndDescription",
+  verifyAuthMiddleware.verifyToken,
+  dashboardController.addBatchTitleAndDescription
+);
+
 router.post(
   "/addPageData/:script_uuid",
+  verifyAuthMiddleware.verifyToken,
+  dashboardController.addPageData
+);
+
+router.post(
+  "/addPageData/:script_uuid/:page_uuid",
   verifyAuthMiddleware.verifyToken,
   dashboardController.addPageData
 );
@@ -86,7 +98,9 @@ router.post(
   dashboardController.updatePageData
 );
 
-router.get('/getPage/:uuid',
-verifyAuthMiddleware.verifyToken,
-dashboardController.getPage)
+router.get(
+  "/getPage/:uuid",
+  verifyAuthMiddleware.verifyToken,
+  dashboardController.getPage
+);
 module.exports = router;

@@ -81,12 +81,13 @@ export default function SideNavLarge(props) {
   }
 
   const handleBatch = (e) =>{
+    // alert('kk')
     let TargetScriptId = e.target.id;
     navigate(`/dashboard/${localStorage.getItem("team_uuid")}/b/${TargetScriptId}`);
   }
 
   return (
-    <div className="bg-primary h-[632px] w-[280px] z-10">
+    <div className="bg-primary h-[664px] overflow-y-auto w-[280px] z-10">
       <div>
         <img src={mainLogo} alt="" srcset="" className="max-w-md m-auto mt-4" />
       </div>
@@ -190,7 +191,7 @@ export default function SideNavLarge(props) {
                   )
                   )
                 }
-                <span onClick={handleBatch} id={batch.uuid}> {batch.title}</span>
+                <span onClick={handleBatch} id={batch.uuid} className="truncate"> {batch.title}</span>
                 {overState == batch.uuid && (
                   <i
                     className="fa-solid fa-ellipsis-vertical text-[#BCD1FF] pl-[54px]"

@@ -4,7 +4,7 @@ export const BatchHeader = (props) => {
   return (
     <div className={`flex justify-between items-center ${props.widths} m-auto mt-[18px]`}>
         <div>
-            Lokesh/
+           {props.batchTitle}
 
         </div>
          <button

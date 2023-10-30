@@ -44,7 +44,6 @@ const register = async (req, res) => {
       }).save();
 
       if (setToken) {
-        
         const link = `http://localhost:3000/email-verify/${user.uuid}/${setToken.token}`;
 
         const emailTemplate = fs.readFileSync(
@@ -55,8 +54,6 @@ const register = async (req, res) => {
         const emailink = emailTemplate.replace("{{link}}", link);
 
         await sendEmail(user.email, "Email Verification", emailink);
-
-
       } else {
         return res.status(400).send("token not created");
       }

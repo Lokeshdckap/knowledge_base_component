@@ -32,24 +32,25 @@ export default function Dashboard() {
   const [team, setTeam] = useState([]);
   const [allTeam, setAllTeam] = useState([]);
   const [batch, setBatch] = useState([]);
+  const [scriptCount, setScriptCount] = useState([]);
   const [script, setScript] = useState([]);
   const [data, setData] = useState(null);
   const [childScript, setChildScript] = useState([]);
 
   //Event
   const handleClick = () => {
-    // setState((prevState) => !prevState);    
-    if(state)
-    {
-      setState(localStorage.setItem("sidePopUp",true))
-    }
-    else{
+    setState((prevState) => !prevState);    
+    // if(state)
+    // {
+    //   setState(localStorage.setItem("sidePopUp",true))
+    // }
+    // else{
 
-      // localStorage.setItem("sidePopUp",true);
-      setState(localStorage.setItem("sidePopUp",false))
-    }
-    // console.log(localStorage.setItem("sidePopUp",true));
-    console.log(state);
+    //   // localStorage.setItem("sidePopUp",true);
+    //   setState(localStorage.setItem("sidePopUp",false))
+    // }
+    // // console.log(localStorage.setItem("sidePopUp",true));
+    // console.log(state);
   };
 
   //Api
@@ -83,7 +84,9 @@ export default function Dashboard() {
     await axiosClient
       .get(`/getBatch/${teamuuid}`)
       .then((res) => {
+        console.log(res);
         setBatch(res.data.batchs);
+        setScriptCount(res.data.results)
       })
       .catch((err) => {
         console.log(err);
@@ -194,6 +197,7 @@ export default function Dashboard() {
             widths={state ? "w-[1010px]" : "w-[1120px]"}
             team={team}
             batches={batch}
+            scriptCount={scriptCount}
             scripts={script}
             addBatchEvent={addNewBatch}
             scriptEvent={addNewScript}

@@ -61,18 +61,20 @@ db.script.hasMany(db.pages, { foreignKey: "script_uuid", targetKey: "uuid" });
 
 db.pages.belongsTo(db.script, { foreignKey: "script_uuid", targetKey: "uuid" });
 
+// db.batch.hasMany(db.script, { foreignKey: 'batch_uuid',targetKey:"uuid" });
 
+// db.script.belongsTo(db.batch, { foreignKey: 'batch_uuid',sourceKey:"uuid" });
 
 db.pages.belongsTo(db.pages, {
-  as: 'ParentPage',
-  foreignKey: 'page_uuid', // Define the join condition
-  targetKey: 'uuid',
+  as: "ParentPage",
+  foreignKey: "page_uuid", // Define the join condition
+  targetKey: "uuid",
 });
 
 db.pages.hasMany(db.pages, {
-  as: 'ChildPage',
-  foreignKey: 'page_uuid', // Define the join condition
-  sourceKey: 'uuid',
+  as: "ChildPage",
+  foreignKey: "page_uuid", // Define the join condition
+  sourceKey: "uuid",
 });
 
 //exporting the module

@@ -1,5 +1,6 @@
 const db = require("../../utils/database");
 const { Op } = require("sequelize");
+const { sequelize } = require("../../utils/database");
 const User = db.users;
 const Team = db.teams;
 const Batch = db.batch;
@@ -104,7 +105,7 @@ const addNewScripts = async (req, res) => {
     });
     return res.status(200).send({
       Success: "Your Script Created Sucessfully",
-      pages:Pages
+      pages: Pages,
     });
   } else {
     return res.status(500).send({
@@ -114,16 +115,40 @@ const addNewScripts = async (req, res) => {
 };
 
 const getBatch = async (req, res) => {
-  // console.log(req.params);
+  const team_uuid = req.params.uuid;
 
   const batchs = await Batch.findAll({
     where: {
       team_uuid: req.params.uuid,
     },
   });
-  return res.status(200).send({
-    batchs,
+
+  const joinQuery = `
+  SELECT batches.title, COUNT(*) as script_count
+  FROM batches
+  INNER JOIN scripts ON scripts.batch_uuid = batches.uuid where batches.team_uuid = :team_uuid
+  GROUP BY batches.title`;
+
+  const [results] = await sequelize.query(joinQuery, {
+    replacements: { team_uuid },
   });
+  // const results = await Batch.findAll({
+  //   attributes: [
+  //     'title',
+  //     [db.Sequelize.fn('count', db.Sequelize.col('scripts.uuid')), 'script_count'],
+  //   ],
+  //   include: [
+  //     {
+  //       model: Script,
+  //       attributes: [],
+  //     },
+  //   ],
+  //   where: {
+  //     team_uuid: req.params.uuid,
+  //   },
+  //   group: ['batch.id','batch.title'], // Use 'title' directly without an alias
+  // });
+  return res.status(200).send({ batchs, results });
 };
 
 const switchTeam = async (req, res) => {
@@ -161,6 +186,7 @@ const getAllTeam = async (req, res) => {
   });
 };
 
+
 const getBatchAndScripts = async (req, res) => {
   let result = await Script.findAll({
     include: [
@@ -169,6 +195,7 @@ const getBatchAndScripts = async (req, res) => {
         where: {
           uuid: req.params.batch_uuid, // WHERE condition for the Batch model
         },
+
         include: [
           {
             model: Team,
@@ -184,8 +211,10 @@ const getBatchAndScripts = async (req, res) => {
 };
 
 const addPageData = async (req, res) => {
+
   const script_uuid = req.params.script_uuid;
-  const pages_uuid = req.params.page_uuid ?req.params.page_uuid :null ;
+  
+  const pages_uuid = req.params.page_uuid ? req.params.page_uuid : null;
 
   const Pages = await Page.create({
     title: "Page Name",
@@ -199,6 +228,8 @@ const addPageData = async (req, res) => {
   return res.status(200).json({ Pages });
 };
 
+
+
 const getScriptAndPage = async (req, res) => {
   const script_uuid = req.params.script_uuid;
 
@@ -206,7 +237,7 @@ const getScriptAndPage = async (req, res) => {
     const rootPages = await Page.findAll({
       // where: { page_uuid: null }, // Fetch root-level pages
       where: {
-        [Op.and]: [{ page_uuid: null }, {script_uuid : script_uuid }],
+        [Op.and]: [{ page_uuid: null }, { script_uuid: script_uuid }],
       },
     });
 
@@ -233,14 +264,13 @@ const getScriptAndPage = async (req, res) => {
     return hierarchy;
   }
 
-const getScriptAndPages = await Script.findOne({
- where:{uuid: script_uuid},
-
-});
+  const getScriptAndPages = await Script.findOne({
+    where: { uuid: script_uuid },
+  });
 
   fetchPagesWithDynamicChildInclude()
     .then((hierarchy) => {
-      return res.status(200).json({hierarchy,getScriptAndPages});
+      return res.status(200).json({ hierarchy, getScriptAndPages });
     })
     .catch((error) => {
       return res.status(500).json({ error: error.message });
@@ -271,33 +301,62 @@ const addScriptTitle = async (req, res) => {
   return res.status(200).json({ scriptTitleUpdate });
 };
 
-const updatePageData = async (req,res)=>{
-  
- const updateData =  await Page.update({
-    title: req.body.title,
-    description:  req.body.description,
-    content : JSON.stringify(req.body.content)
-  },
-  {
-    where: { uuid:req.body.id  },
-  }
+const updatePageData = async (req, res) => {
+  const updateData = await Page.update(
+    {
+      title: req.body.title,
+      description: req.body.description,
+      content: JSON.stringify(req.body.content),
+    },
+    {
+      where: { uuid: req.body.id },
+    }
   );
   return res.status(200).json({ updateData });
+};
 
-}
-
-
-const getPage = async (req,res)=>{
+const getPage = async (req, res) => {
   const pages = await Page.findAll({
     where: { uuid: req.params.uuid }, // Fetch root-level pages
-   
   });
 
   // let data = JSON.parse(pages.content)
-  return res.status(200).json({pages});
+  return res.status(200).json({ pages });
+};
 
+const addBatchTitleAndDescription = async (req, res) => {
 
-}
+  const param1 = req.query.param1 ? req.query.param1 : null;
+
+  const param2 = req.query.param2 ? req.query.param2 : null;
+
+  const queryParameter = req.query.queryParameter;
+
+  const updateData = {};
+
+  if (param1) {
+    updateData.title = param1;
+  }
+
+  if (param2) {
+    updateData.description = param2;
+  }
+
+  try {
+    const [numUpdated] = await Batch.update(updateData, {
+      where: { uuid: queryParameter },
+    });
+
+    if (numUpdated > 0) {
+      return res.status(200).json({ message: "Update successful" });
+    } else {
+      return res.status(404).json({ error: "Record not found" });
+    }
+  } catch (error) {
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
+
 module.exports = {
   createTeams,
   getTeam,
@@ -312,5 +371,6 @@ module.exports = {
   addScriptTitle,
   addPageData,
   updatePageData,
-  getPage
+  getPage,
+  addBatchTitleAndDescription,
 };

@@ -34,7 +34,6 @@ module.exports = {
       },
       page_uuid: {
         type: Sequelize.UUID,
-        unique:true,
       },
       createdAt: {
         allowNull: false,

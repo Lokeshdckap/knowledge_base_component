@@ -36,10 +36,15 @@ export const ScriptComponents = () => {
 
   const [particularTitle, setParticularTitle] = useState("");
 
+  const [hoverPageId,setHoverPageId] = useState(null);
+
+  const [particularPageId,setParticularPageId] = useState(null);
+
   useEffect(() => {
     getTeam();
     getAllTeam();
     getParticularScript(param.uuid);
+
   }, []);
 
   //Event
@@ -193,6 +198,7 @@ let batch_uuid;
 
 
   const addPage = () => {
+    
     axiosClient
       .post(`/addPageData/${param.uuid}`)
       .then((res) => {
@@ -202,6 +208,20 @@ let batch_uuid;
         console.log(err);
       });
   };
+
+  const addChildPage = (uuid) => {
+    console.log(uuid,"ll");
+    let page_uuid = uuid;
+    axiosClient
+    .post(`/addPageData/${param.uuid}/${page_uuid}`)
+    .then((res) => {
+      // getParticularScript(param.uuid);
+      console.log(res.data);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  }
 
   const handleChange = async (event) => {
 
@@ -220,7 +240,7 @@ let batch_uuid;
   
     } catch (err) {
       console.log(err);
-    });
+    };
 
 
    }
@@ -241,6 +261,23 @@ let batch_uuid;
         console.log(err);
       });
   };
+
+
+    const handleScriptMouseEnter = (e) =>{
+      setHoverPageId(e.target.id);
+      console.log("ehe");
+    }
+
+    const handleScriptMouseLeave = (e) => {
+      setHoverPageId(null);
+    }
+
+    const handleMore = (e) =>{
+      setParticularPageId(e.target.id);
+      addChildPage(e.target.id);
+    }
+
+
 
   return (
     <div className="relative">
@@ -292,6 +329,10 @@ let batch_uuid;
             setParticularTitle={setParticularTitle}
             description={description}
             setDescription={setDescription}
+            handleScriptMouseEnter={handleScriptMouseEnter}
+            handleScriptMouseLeave={handleScriptMouseLeave}
+            hoverPageId={hoverPageId}
+            handleMore={handleMore}
           />
 
           {/* <BatchHeader widths={state ? "w-[1000px]" : "w-[1160px]"} />

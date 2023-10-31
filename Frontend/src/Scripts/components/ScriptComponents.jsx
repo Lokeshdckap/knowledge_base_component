@@ -40,6 +40,7 @@ export const ScriptComponents = () => {
 
   const [particularPageId,setParticularPageId] = useState(null);
 
+  const [editorValue,setEditorValue] = useState([]);
   
 
   useEffect(() => {
@@ -61,7 +62,7 @@ export const ScriptComponents = () => {
     await axiosClient
       .get(`/getScriptAndPage/${script_uuid}`)
       .then((res) => {
-        console.log(res);
+        // console.log(res.data);
         setInputValue(res.data.getScriptAndPages.title);
         setPageContent(res.data.hierarchy[0]);
         setTreeNode(res.data.hierarchy);
@@ -69,6 +70,7 @@ export const ScriptComponents = () => {
         setParticularTitle(res.data.hierarchy[0].title);
         setDescription(res.data.hierarchy[0].description);
         setEditorContent(res.data.hierarchy[0].content);
+        console.log(res.data.hierarchy[0].content);
       })
       .catch((err) => {
         console.log(err);
@@ -258,7 +260,7 @@ export const ScriptComponents = () => {
         setPageContent(res.data.pages[0]);
         setParticularTitle(res.data.pages[0].title);
         setDescription(res.data.pages[0].description);
-        setEditorContent(res.data.pages[0].content);
+        setEditorValue(res.data.pages[0].content);
       })
       .catch((err) => {
         console.log(err);
@@ -283,6 +285,19 @@ export const ScriptComponents = () => {
     }
 
   
+      const onDragEnd = (result) => {
+    // Handle the drag-and-drop logic here
+    if (!result.destination) {
+      return;
+    }
+    // Update your treeData based on the drag-and-drop result
+    const updatedTree = [...treeNode];
+    const [movedNode] = updatedTree.splice(result.source.index, 1);
+    updatedTree.splice(result.destination.index, 0, movedNode);
+  
+    setTreeNode(updatedTree);
+    // setTreeData(/* Updated tree data */);
+  };
 
 
 
@@ -321,11 +336,11 @@ export const ScriptComponents = () => {
             setInputValue={setInputValue}
             renderScript={renderScript}
           />
-
+{console.log(editorValue)}
           <EditPage
             widths={state ? "w-[785px]" : "w-[933px]"}
             marginEditor={state ? "ml-[10px]" : "mr-[115px]"}
-            editorContent={editorContent}
+            editorContent={editorValue}
             setEditorContent={setEditorContent}
             treeNode={treeNode}
             addPage={addPage}
@@ -340,6 +355,7 @@ export const ScriptComponents = () => {
             hoverPageId={hoverPageId}
             handleMore={handleMore}
             handleSave={handleSave}
+            onDragEnd={onDragEnd}
           />
 
           {/* <BatchHeader widths={state ? "w-[1000px]" : "w-[1160px]"} />

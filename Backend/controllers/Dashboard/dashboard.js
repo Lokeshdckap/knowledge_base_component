@@ -16,10 +16,10 @@ const {
 
 
 
-const slugify = require('slugify');
-const documentTitle = 'My Document Title';
+// const slugify = require('slugify');
+// const documentTitle = 'My Document Title';
 
-const slug = slugify(documentTitle, { lower: true });
+// const slug = slugify(documentTitle, { lower: true });
 
 const createTeams = async (req, res) => {
   try {
@@ -237,14 +237,14 @@ const addPageData = async (req, res) => {
 
   // return res.status(200).json({ Pages });
 
-  const newDocument = await Page.create({
-  title: 'My Document Title',
-  description:"NEW Page",
-  uuid: uuid.v4(),
-  content: JSON.stringify('The content of your document goes here.'),
-  slug: slug,
-  script_uuid : "2832e73c-eadb-4252-92ca-52b07d957d4a"
-});
+  // const newDocument = await Page.create({
+  // title: 'My Document Title',
+  // description:"NEW Page",
+  // uuid: uuid.v4(),
+  // content: JSON.stringify('The content of your document goes here.'),
+  // slug: slug,
+  // script_uuid : "2832e73c-eadb-4252-92ca-52b07d957d4a"
+// });
   return res.status(200).json({ newDocument });
   
 };

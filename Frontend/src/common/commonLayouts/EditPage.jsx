@@ -40,9 +40,6 @@ const handleMouseLeave = () => {
     setNewPagePopup((prevState) => !prevState);
   }
 
-
-
-
   return (
     <div>
       
@@ -55,9 +52,7 @@ const handleMouseLeave = () => {
           <div className="p-4 rounded-lg shadow">
       <h1 className="text-2xl font-bold mb-4">Page Hierarchy</h1>
           {treeNode.map((topLevelPage, index) => (
-            <div key={topLevelPage.page_id} id={topLevelPage.page_id} className="" 
-
-            >
+            <div key={topLevelPage.page_id} id={topLevelPage.page_id} className="">
               <PageTree node={topLevelPage} 
              hasSibling={index < treeNode.length - 1}
                hasParent={false}

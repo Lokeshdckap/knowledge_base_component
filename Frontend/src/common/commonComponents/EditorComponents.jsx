@@ -489,6 +489,7 @@ export const EditorComponents = (props) => {
             props.editorState(content);
             console.log(content);
           },
+
           tools: {
             header: Header,
             list: List,
@@ -515,4 +516,5 @@ export const EditorComponents = (props) => {
         </>
       );
     };
+
 

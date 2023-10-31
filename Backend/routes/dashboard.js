@@ -81,16 +81,17 @@ router.get(
 );
 
 router.post(
-  "/addPageData/:script_uuid/:uuid",
+  "/addChildPage/:script_uuid/:uuid",
+  verifyAuthMiddleware.verifyToken,
+  dashboardController.addChildPage
+);
+
+router.post(
+  "/addPageData/:script_uuid",
   verifyAuthMiddleware.verifyToken,
   dashboardController.addPageData
 );
 
-router.post(
-  "/addPageData",
-  verifyAuthMiddleware.verifyToken,
-  dashboardController.addPageData
-);
 
 router.post(
   "/updatePageData",

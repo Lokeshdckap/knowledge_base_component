@@ -218,9 +218,12 @@ const getBatchAndScripts = async (req, res) => {
 };
 
 const addPageData = async (req, res) => {
+
+
   // console.log(req.params);
-  // const script_uuid = req.params.script_uuid;
-  // const pages_uuid = req.params.uuid ? req.params.uuid :null ;
+  const script_uuid = req.params.script_uuid;
+  const pages_uuid = req.params.uuid ? req.params.uuid :null ;
+
 
 
   // const Pages = await Page.create({
@@ -246,6 +249,25 @@ const addPageData = async (req, res) => {
   
 };
 
+
+const addChildPage = async (req, res) => {
+
+  // console.log(req.params);
+  const script_uuid = req.params.script_uuid;
+  const pages_uuid = req.params.uuid ? req.params.uuid :null ;
+
+
+  const Pages = await Page.create({
+    title: "Page Name",
+    description: "Page Description",
+    uuid: uuid.v4(),
+    script_uuid: script_uuid,
+    content: null,
+    page_uuid: pages_uuid ? pages_uuid : null,
+  });
+
+  return res.status(200).json({ Pages });
+};
 
 
 const getScriptAndPage = async (req, res) => {
@@ -409,5 +431,7 @@ module.exports = {
   updatePageData,
   getPage,
   addBatchTitleAndDescription,
+  addChildPage,
   newDocuments,
+
 };

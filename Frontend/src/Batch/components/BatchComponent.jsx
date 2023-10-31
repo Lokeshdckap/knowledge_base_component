@@ -26,7 +26,7 @@ export const BatchComponent = () => {
   }, [param.uuid]);
 
   //state
-  const [state, setState] = useState(localStorage.getItem("sidePopUp"));
+  const [state, setState] = useState(true);
   const [team, setTeam] = useState([]);
   const [allTeam, setAllTeam] = useState([]);
   const [batch, setBatch] = useState([]);

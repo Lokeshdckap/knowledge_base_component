@@ -22,7 +22,7 @@ export const BatchLayouts = (props) => {
             <div className="mt-4">
               <input
                 className="text-2xl ml-5 mt-5 focus:outline-none  bg-[#ECEDEF] h-10"
-                placeholder="Batch Description" name="descritpion"  value={props.batchDescription ? props.batchDescription: "" } onChange={(e)=>props.changeEvent(e.target)}
+                placeholder="Batch Description" name="descritpion"  value={props.batchDescription ? props.batchDescription: "Enter the description" } onChange={(e)=>props.changeEvent(e.target)}
               />
             </div>
           </div>

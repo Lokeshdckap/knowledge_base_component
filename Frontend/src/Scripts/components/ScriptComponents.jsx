@@ -14,7 +14,7 @@ export const ScriptComponents = () => {
   //hooks
 
   //state
-  const [state, setState] = useState(false);
+  const [state, setState] = useState(true);
   const [team, setTeam] = useState([]);
   const [allTeam, setAllTeam] = useState([]);
   const [batch, setBatch] = useState([]);
@@ -40,11 +40,12 @@ export const ScriptComponents = () => {
 
   const [particularPageId,setParticularPageId] = useState(null);
 
+  
+
   useEffect(() => {
     getTeam();
     getAllTeam();
     getParticularScript(param.uuid);
-
   }, []);
 
   //Event
@@ -176,13 +177,16 @@ export const ScriptComponents = () => {
 
   //Editor functionality
 
-  const handleSave = () => {
+  const handleSave = (editorValue) => {
+    console.log(editorValue);
+    // setEditorContent(editorContentData);
     const postData = {
       id: pageId,
       title: particularTitle,
       description: description,
       content: editorContent,
     };
+
 
     axiosClient
       .post("/updatePageData", postData)
@@ -208,13 +212,15 @@ export const ScriptComponents = () => {
   };
 
   const addChildPage = (uuid) => {
-    console.log(uuid,"ll");
+    // console.log(uuid,"ll");
+    console.log(uuid);
     let page_uuid = uuid;
     axiosClient
-    .post(`/addPageData/${param.uuid}/${page_uuid}`)
+    .post(`/addChildPage/${param.uuid}/${page_uuid}`)
     .then((res) => {
       // getParticularScript(param.uuid);
       console.log(res.data);
+      getParticularScript(param.uuid)
     })
     .catch((err) => {
       console.log(err);
@@ -262,7 +268,6 @@ export const ScriptComponents = () => {
 
     const handleScriptMouseEnter = (e) =>{
       setHoverPageId(e.target.id);
-      console.log("ehe");
     }
 
     const handleScriptMouseLeave = (e) => {
@@ -272,7 +277,12 @@ export const ScriptComponents = () => {
     const handleMore = (e) =>{
       setParticularPageId(e.target.id);
       addChildPage(e.target.id);
+
+     
+      
     }
+
+  
 
 
 
@@ -329,6 +339,7 @@ export const ScriptComponents = () => {
             handleScriptMouseLeave={handleScriptMouseLeave}
             hoverPageId={hoverPageId}
             handleMore={handleMore}
+            handleSave={handleSave}
           />
 
           {/* <BatchHeader widths={state ? "w-[1000px]" : "w-[1160px]"} />

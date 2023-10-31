@@ -7,6 +7,7 @@ import List from "@editorjs/list";
 import ImageTool from "@editorjs/image";
 import Paragraph from "@editorjs/paragraph";
 
+
 export const EditorComponents = (props) => {
   // const editorRef = useRef(null);
   // const editorInstance = useRef(null);
@@ -511,9 +512,44 @@ const initEditor = () => {
     },
   });
   
-};
+=======
+const DEFAULT_INITIAL_DATA =  {
+  "time": new Date().getTime(),
+  "blocks": [
+    {
+      "type": "header",
+      "data": {
+        "text": "This is my awesome editor!",
+        "level": 1
+      }
+    },
+  ]
+}
 
-// This will run only once
+export const EditorComponents = (props) => {
+
+  const ejInstance = useRef();
+
+  const initEditor = () => {
+     const editor = new EditorJS({
+        holder: 'editorjs',
+        onReady: () => {
+          ejInstance.current = editor;
+        },
+        autofocus: true,
+        data: DEFAULT_INITIAL_DATA,
+        onChange: async () => {
+          let content = await editor.saver.save();
+
+          console.log(content);
+        },
+        tools: { 
+          header: Header, 
+        },
+      });
+    };
+
+    // This will run only once
 useEffect(() => {
   if (ejInstance.current === null) {
     initEditor();
@@ -523,11 +559,11 @@ useEffect(() => {
     ejInstance?.current?.destroy();
     ejInstance.current = null;
   };
-}, [props.editorValue]);
+}, []);
 
-return (
-  <div>
-    <div ref={editorRef}></div>
-  </div>
-);
-}
+  return  <><div id='editorjs'></div></>;
+
+};
+
+
+

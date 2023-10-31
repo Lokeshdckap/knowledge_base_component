@@ -88,6 +88,7 @@ export default function SideNavLarge(props) {
   };
 
   return (
+
     <div className="bg-primary h-[664px] overflow-y-auto w-[280px] z-10 ">
       <div>
         <img src={mainLogo} alt="" srcset="" className="max-w-md m-auto mt-4" />
@@ -164,7 +165,7 @@ export default function SideNavLarge(props) {
             <hr
               className={`h-px  bg-[#D5D7DA] border-0 dark:bg-gray-900 mt-2`}
             />
-            <div className="mt-2 flex items-center mb-2">
+            <div className="mt-2 flex items-center mb-2 cursor-pointer" onClick={props.handleCreate}>
               <i className="fa-solid fa-plus"></i>
               <p className="pl-1">Create Team</p>
             </div>
@@ -341,5 +342,5 @@ export default function SideNavLarge(props) {
         </div>
       </div>
     </div>
-  );
-}
+);
+        }

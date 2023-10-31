@@ -3,14 +3,9 @@ import Header from "../../common/commonLayouts/Header";
 import SideNav from "../../common/commonLayouts/SideNav";
 import SideNavLarge from "../../common/commonLayouts/SideNavLarge";
 import Main from "../../common/commonLayouts/Main";
-
 import axiosClient from "../../axios-client";
-import EditHeader from "../../common/commonLayouts/EditHeader";
-import EditPage from "../../common/commonLayouts/EditPage";
 import { useNavigate } from "react-router-dom";
-import { EditorComponents } from "../../common/commonComponents/EditorComponents";
-import { BatchHeader } from "../../common/commonLayouts/BatchHeader";
-import { BatchLayouts } from "../../common/commonLayouts/BatchLayouts";
+import { ModelPopup } from "../../common/commonComponents/ModelPopup";
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -20,12 +15,7 @@ export default function Dashboard() {
   useEffect(() => {
     getTeam();
     getAllTeam();
-   
-   
   }, []);
-
- 
-
 
   //state
   const [state, setState] = useState(true);
@@ -37,9 +27,21 @@ export default function Dashboard() {
   const [data, setData] = useState(null);
   const [childScript, setChildScript] = useState([]);
 
+
+  //create Team state
+  const [teamPopup,setTeamPopup] = useState(false);
+  const [formValues, setFormValues] = useState({
+
+  });
+  const [errors, setError] = useState({});
+
+    
+  
+  //
+
   //Event
   const handleClick = () => {
-    setState((prevState) => !prevState);    
+    setState((prevState) => !prevState);
     // if(state)
     // {
     //   setState(localStorage.setItem("sidePopUp",true))
@@ -75,9 +77,7 @@ export default function Dashboard() {
       .then((res) => {
         setAllTeam(res.data.getAllTeam);
       })
-      .catch((err) => {
-   
-      });
+      .catch((err) => {});
   };
 
   const getBatch = async (teamuuid) => {
@@ -86,7 +86,7 @@ export default function Dashboard() {
       .then((res) => {
         console.log(res);
         setBatch(res.data.batchs);
-        setScriptCount(res.data.results)
+        setScriptCount(res.data.results);
       })
       .catch((err) => {
         console.log(err);
@@ -162,11 +162,75 @@ export default function Dashboard() {
     setData(data);
   };
 
+  // create team
+
+  const handleCancel = () =>{
+    setTeamPopup(false);
+  
+  }
+
+  const handleCreate = () =>{
+    setTeamPopup(true);
+  }
+
+  const HandleChange = (e) => {
+    const { name, value } = e.target;
+    console.log(e.target.value);
+    setFormValues({ ...formValues, [name]: value });
+    delete errors[name];
+  };
+
+
+
+  const createTeam = () => {
+    // alert("je")
+
+    const validationErrors = {};
+
+    if (!formValues.team_name) {
+      validationErrors.team_name = "Team is required";
+    }
+      
+  setError(validationErrors);
+  if (Object.keys(validationErrors).length === 0) {
+
+      axiosClient.post("/team",formValues)
+      .then((res) => {
+
+        })
+        .catch((err) => {
+          const response = err.response;
+          if (response && response.status === 400) {
+
+            // console.log(response);
+            let error = {};
+            let keys = Object.keys(response.data);
+            let value = Object.values(response.data);
+            console.log(value);
+
+            error[keys] = value;
+
+            setError(error);
+
+          } 
+          else {
+
+            console.error("Error:", response.status);
+          }
+        });
+    
+  }
+}
+
+
+
+
+
+
   return (
     <div className="relative">
       <div className="flex bg-[#ECEDEF] ">
-
-       {console.log(state)}
+        {console.log(state)}
         {state ? (
           <SideNavLarge
             buttonClicked={handleClick}
@@ -179,6 +243,7 @@ export default function Dashboard() {
             scripts={script}
             handleChildrenScripts={handleChildrenScripts}
             childScript={childScript}
+            handleCreate={handleCreate}
           />
         ) : (
           <SideNav
@@ -190,7 +255,6 @@ export default function Dashboard() {
         )}
 
         <div className="bg-[#F9FAFB] h-[80px] w-screen z-[10px] ">
-
           <Header widths={state ? "w-[1000px]" : "w-[1160px]"} team={team} />
 
           <Main
@@ -203,27 +267,11 @@ export default function Dashboard() {
             scriptEvent={addNewScript}
           />
         </div>
+          {teamPopup &&
+            <ModelPopup click={handleCancel}  HandleChange={HandleChange} createTeam={createTeam} columnName={"team_name"} error={errors}/>
+          }
+          
       </div>
     </div>
   );
-}
-
-{
-  /* <div className="bg-primary opacity-[0.5] w-[1294px] h-[664px] absolute top-0 left-0"></div>
-      <div className=" absolute left-0 top-0 ">
-        <div className="bg-white h-[300px] w-[600px] ml-[350px] mt-[150px] rounded">
-          <div className="">
-            <i className="fa-solid fa-xmark text-red-500 pt-3 float-right text-2xl cursor-pointer text-end"></i>
-          </div>
-          <div className="flex pt-20 items-center space-x-2">
-            <i class="fa-solid fa-user-plus"></i>
-            <p>Create Team</p>
-          </div>
-          <p>Teamwork makes what's impossible to do alone possible.</p>
-          <div>
-            <input type="text" className="border h-[33px] dark:placeholder-gray-400 bg-gray-50 rounded-sm " placeholder="Create team"/>
-          </div>
-         
-        </div>
-      </div> */
 }

@@ -104,4 +104,8 @@ router.get(
   verifyAuthMiddleware.verifyToken,
   dashboardController.getPage
 );
+
+// router.get('/documents/:slug',
+// dashboardController.newDocuments
+// );
 module.exports = router;

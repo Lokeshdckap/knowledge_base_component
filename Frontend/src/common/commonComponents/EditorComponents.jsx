@@ -7,8 +7,8 @@ import List from "@editorjs/list";
 import ImageTool from "@editorjs/image";
 import Paragraph from "@editorjs/paragraph";
 
-
 export const EditorComponents = (props) => {
+  console.log(props.editorValue);
   // const editorRef = useRef(null);
   // const editorInstance = useRef(null);
 
@@ -414,11 +414,9 @@ export const EditorComponents = (props) => {
   //   </div>
   // );
 
- 
-
   const DEFAULT_INITIAL_DATA = props.editorValue;
   // const ejInstance = useRef();
-  
+
   // const initEditor = () => {
   //   const editor = new EditorJS({
   //     holder: "editorjs",
@@ -448,123 +446,75 @@ export const EditorComponents = (props) => {
   //     },
   //   });
   // };
-  
+
   // // This will run only once
   // useEffect(() => {
   //   if (ejInstance.current === null) {
   //     initEditor();
   //   }
-  
+
   //   return () => {
   //     ejInstance?.current?.destroy();
   //     ejInstance.current = null;
   //     // useEffect(() => {
   //       // props.editorState(props.editorValue)
-  //   // }, [props.editorValue]); 
+  //   // }, [props.editorValue]);
   //   };
   // }, [props.editorValue]);
 
-  
   // return (
   //   <>
   //     <div id="editorjs"></div>
   //   </>
   // )
 
-
-
   const editorRef = useRef(null);
-const ejInstance = useRef();
-// const [scrollPosition, setScrollPosition] = useState(0);
-const [editorValue, setEditorValue] = useState(DEFAULT_INITIAL_DATA);
-
-
-
-
-
-
-const initEditor = () => {
-  const editor = new EditorJS({
-    holder: editorRef.current,
-    onReady: () => {
-      ejInstance.current = editor;
-    },
-    autofocus: false,
-    data: DEFAULT_INITIAL_DATA,
-    onChange: async () => {
-            const content = await editor.saver.save();
-              props.editorState(content);
-    
-          },
-    tools: {
-      header: Header,
-      list: List,
-      paragraph: Paragraph,
-      image: {
-        class: ImageTool,
-        config: {
-          endpoints: {
-            byFile: "http://localhost:4000/uploadFile",
-            byUrl: "http://localhost:4000/fetchUrl",
-          },
-        },
-      },
-    },
-  });
-
-// =======
-// const DEFAULT_INITIAL_DATA =  {
-//   "time": new Date().getTime(),
-//   "blocks": [
-//     {
-//       "type": "header",
-//       "data": {
-//         "text": "This is my awesome editor!",
-//         "level": 1
-//       }
-//     },
-//   ]
-// }
-
-// export const EditorComponents = (props) => {
-
   const ejInstance = useRef();
+  // const [scrollPosition, setScrollPosition] = useState(0);
+  const [editorValue, setEditorValue] = useState(DEFAULT_INITIAL_DATA);
 
-  const initEditor = () => {
-     const editor = new EditorJS({
-        holder: 'editorjs',
-        onReady: () => {
-          ejInstance.current = editor;
-        },
-        autofocus: true,
-        data: DEFAULT_INITIAL_DATA,
-        onChange: async () => {
-          let content = await editor.saver.save();
 
-          console.log(content);
-        },
-        tools: { 
-          header: Header, 
-        },
-      });
+      const initEditor = () => {
+        const editor = new EditorJS({
+          holder: "editorjs",
+          onReady: () => {
+            ejInstance.current = editor;
+          },
+          readOnly: true,
+          autofocus: false,
+          placeholder: 'Let`s write an awesome story!',
+          data: DEFAULT_INITIAL_DATA,
+          onChange: async () => {
+            let content = await editor.saver.save();
+            props.editorState(content);
+            console.log(content);
+          },
+
+          tools: {
+            header: Header,
+            list: List,
+            paragraph: Paragraph,
+          },
+        });
+      };
+
+      // This will run only once
+      useEffect(() => {
+        if (ejInstance.current === null) {
+          initEditor();
+        }
+
+        return () => {
+          ejInstance?.current?.destroy();
+          ejInstance.current = null;
+        };
+      }, [props.editorValue]);
+
+      return (
+        <>
+          <div id="editorjs"></div>
+        </>
+      );
     };
 
-    // This will run only once
-useEffect(() => {
-  if (ejInstance.current === null) {
-    initEditor();
-  }
 
-  return () => {
-    ejInstance?.current?.destroy();
-    ejInstance.current = null;
-  };
-}, []);
-
-  return  <><div id='editorjs'></div></>;
-
-};
-
-
-
-}

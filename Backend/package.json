@@ -28,6 +28,7 @@
     "pg-hstore": "^2.3.4",
     "pg-promise": "^11.5.4",
     "sequelize": "^6.33.0",
+    "slugify": "^1.6.6",
     "uuid": "^9.0.1"
   },
   "devDependencies": {

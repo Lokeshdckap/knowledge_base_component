@@ -87,7 +87,7 @@ router.post(
 );
 
 router.post(
-  "/addPageData/:script_uuid/:page_uuid",
+  "/addPageData",
   verifyAuthMiddleware.verifyToken,
   dashboardController.addPageData
 );
@@ -103,4 +103,8 @@ router.get(
   verifyAuthMiddleware.verifyToken,
   dashboardController.getPage
 );
+
+// router.get('/documents/:slug',
+// dashboardController.newDocuments
+// );
 module.exports = router;

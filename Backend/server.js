@@ -44,6 +44,12 @@ app.use("/", require("./routes/authentication"));
 
 app.use("/", require("./routes/dashboard"));
 
+app.set('view engine', 'pug');
+
+app.set('views', path.join(__dirname, 'views'));
+
 //listening to server connection
+
+
 
 app.listen(PORT, () => console.log(`Serpassportver running server on port ${PORT}`));

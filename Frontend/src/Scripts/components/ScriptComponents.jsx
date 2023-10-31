@@ -238,12 +238,10 @@ export const ScriptComponents = () => {
       console.log(response);
     } catch (err) {
       console.log(err);
-<<<<<<< HEAD
+
     }
   };
-=======
-    };
->>>>>>> feature_script
+
 
   const contentPage = (e) => {
     setPageId(e.target.id);

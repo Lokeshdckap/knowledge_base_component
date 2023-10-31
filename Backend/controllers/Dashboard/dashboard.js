@@ -14,6 +14,13 @@ const {
   createTypeSchema,
 } = require("../../utils/validations");
 
+
+
+const slugify = require('slugify');
+const documentTitle = 'My Document Title';
+
+const slug = slugify(documentTitle, { lower: true });
+
 const createTeams = async (req, res) => {
   try {
     const { error } = createTeamSchema.validate(req.body);
@@ -211,27 +218,32 @@ const getBatchAndScripts = async (req, res) => {
 };
 
 const addPageData = async (req, res) => {
-<<<<<<< HEAD
-
-  const script_uuid = req.params.script_uuid;
-  
-  const pages_uuid = req.params.page_uuid ? req.params.page_uuid : null;
-=======
   // console.log(req.params);
-  const script_uuid = req.params.script_uuid;
-  const pages_uuid = req.params.uuid ? req.params.uuid :null ;
->>>>>>> feature_script
+  // const script_uuid = req.params.script_uuid;
+  // const pages_uuid = req.params.uuid ? req.params.uuid :null ;
 
-  const Pages = await Page.create({
-    title: "Page Name",
-    description: "Page Description",
-    uuid: uuid.v4(),
-    script_uuid: script_uuid,
-    content: null,
-    page_uuid: pages_uuid ? pages_uuid : null,
-  });
 
-  return res.status(200).json({ Pages });
+  // const Pages = await Page.create({
+  //   title: "Page Name",
+  //   description: "Page Description",
+  //   uuid: uuid.v4(),
+  //   script_uuid: script_uuid,
+  //   content: null,
+  //   page_uuid: pages_uuid ? pages_uuid : null,
+  // });
+
+  // return res.status(200).json({ Pages });
+
+  const newDocument = await Page.create({
+  title: 'My Document Title',
+  description:"NEW Page",
+  uuid: uuid.v4(),
+  content: JSON.stringify('The content of your document goes here.'),
+  slug: slug,
+  script_uuid : "2832e73c-eadb-4252-92ca-52b07d957d4a"
+});
+  return res.status(200).json({ newDocument });
+  
 };
 
 
@@ -361,7 +373,25 @@ const addBatchTitleAndDescription = async (req, res) => {
   } catch (error) {
     return res.status(500).json({ error: "Internal server error" });
   }
+
+
+  
 };
+
+
+const newDocuments =  async (req, res) => {
+  const title = req.params.slug;
+  const document = await Page.findOne({ where: { title } });
+    console.log(document);
+  // if (!document) {
+  //   return res.status(404).send('Document not found');
+  // }
+
+   return res.render('document', { document });
+}
+
+
+
 
 module.exports = {
   createTeams,
@@ -379,4 +409,5 @@ module.exports = {
   updatePageData,
   getPage,
   addBatchTitleAndDescription,
+  newDocuments,
 };

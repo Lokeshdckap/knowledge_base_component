@@ -50,19 +50,19 @@ export default function SideNav(props) {
 
         <div>
           <i
-            class="fa-regular fa-bell ml-7 text-xl text-slate-100 cursor-pointer"
+            className="fa-regular fa-bell ml-7 text-xl text-slate-100 cursor-pointer"
             title="notification"
           ></i>
         </div>
         <div>
           <i
-            class="fa-regular fa-trash-can ml-7 text-xl text-slate-100 cursor-pointer"
+            className="fa-regular fa-trash-can ml-7 text-xl text-slate-100 cursor-pointer"
             title="trash"
           ></i>
         </div>
         <div>
           <i
-            class="fa-solid fa-gear ml-7 text-xl text-slate-100 cursor-pointer"
+            className="fa-solid fa-gear ml-7 text-xl text-slate-100 cursor-pointer"
             title="settings"
           ></i>
         </div>

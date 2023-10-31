@@ -55,38 +55,18 @@ const handleMouseLeave = () => {
           <div className="p-4 rounded-lg shadow">
       <h1 className="text-2xl font-bold mb-4">Page Hierarchy</h1>
           {treeNode.map((topLevelPage, index) => (
-            <div key={topLevelPage.page_id} id={topLevelPage.page_id} className="cursor-pointer bg-white h-10 mt-2 pt-1" 
+            <div key={topLevelPage.page_id} id={topLevelPage.page_id} className="" 
 
             >
-              <PageTree node={topLevelPage} isLast={index ===  treeNode.length - 1}  contentPage={props.contentPage}  handleScriptMouseLeave={props.handleScriptMouseLeave} handleScriptMouseEnter={props.handleScriptMouseEnter} hoverPageId={props.hoverPageId} handleMore={props.handleMore}/>
+              <PageTree node={topLevelPage} 
+             hasSibling={index < treeNode.length - 1}
+               hasParent={false}
+              
+              contentPage={props.contentPage}  handleScriptMouseLeave={props.handleScriptMouseLeave} handleScriptMouseEnter={props.handleScriptMouseEnter} hoverPageId={props.hoverPageId} handleMore={props.handleMore}/>
             </div>
           ))}
     </div>
             </div>
-            {/* {renderscript &&
-              renderscript.map((page) => 
-               <div 
-               className="bg-white w-[240px] h-10 text-xl text-primary pl-2 pt-1  cursor-pointer m-auto " 
-               onMouseEnter={handleMouseEnter}
-               onMouseLeave={handleMouseLeave}
-               id={page.id}
-               >
-                  <p id={page.id} className="flex justify-between">
-                    <span>{page.title}</span>
-                    {OverPage == page.id &&
-                   <i
-                    className="fa-solid fa-ellipsis-vertical text-slate-400 pr-4 pt-[6px]"
-                    id={page.id}
-                  ></i>
-                }
-                  </p>
-               
-               
-              </div> 
-
-              )
-            }  */}
-          {/* </div> */}
           <hr
             className={`h-px w-[250px] bg-[#D5D7DA] border-0 m-auto dark:bg-gray-900 mt-4`}
           />
@@ -120,7 +100,7 @@ const handleMouseLeave = () => {
               <input className="text-xl ml-[80px] mt-5 focus:outline-none text-textPrimary " value={props.description} onChange={(e)=>props.setDescription(e.target.value)} placeholder="Page Description"/>
           </div>
             <div className={`pt-5 ${props.marginEditor}`}>
-              <EditorComponents editorState={props.setEditorContent} editorValue={props.editorContent}  />
+              <EditorComponents handleSave={props.handleSave} editorState={props.setEditorContent} editorValue={props.editorContent}  />
               {/* <button onClick={cliked}>Save</button> */}
             </div>
 

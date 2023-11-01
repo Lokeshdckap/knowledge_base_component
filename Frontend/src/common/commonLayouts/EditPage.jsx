@@ -95,7 +95,7 @@ const handleMouseLeave = () => {
               <input className="text-xl ml-[80px] mt-5 focus:outline-none text-textPrimary " value={props.description} onChange={(e)=>props.setDescription(e.target.value)} placeholder="Page Description"/>
           </div>
             <div className={`pt-5 ${props.marginEditor}`}>
-              <EditorComponents handleSave={props.handleSave} editorState={props.setEditorContent} editorValue={props.editorContent}  />
+              <EditorComponents handleSave={props.handleSave} editorState={props.setEditorContent} editorValue={props.editorContent} editorContents={props.editorContents} />
               {/* <button onClick={cliked}>Save</button> */}
             </div>
 

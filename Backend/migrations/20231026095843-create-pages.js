@@ -35,6 +35,9 @@ module.exports = {
       page_uuid: {
         type: Sequelize.UUID,
       },
+      path:{
+        type: Sequelize.TEXT,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

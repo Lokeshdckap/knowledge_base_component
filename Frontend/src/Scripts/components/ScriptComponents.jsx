@@ -62,7 +62,7 @@ export const ScriptComponents = () => {
     await axiosClient
       .get(`/getScriptAndPage/${script_uuid}`)
       .then((res) => {
-        // console.log(res.data);
+        console.log(res.data.hierarchy[0].content);
         setInputValue(res.data.getScriptAndPages.title);
         setPageContent(res.data.hierarchy[0]);
         setTreeNode(res.data.hierarchy);
@@ -70,7 +70,8 @@ export const ScriptComponents = () => {
         setParticularTitle(res.data.hierarchy[0].title);
         setDescription(res.data.hierarchy[0].description);
         setEditorContent(res.data.hierarchy[0].content);
-        console.log(res.data.hierarchy[0].content);
+        setEditorValue(res.data.hierarchy[0].content);
+        localStorage.setItem('myData', JSON.stringify(res.data.hierarchy[0]));
       })
       .catch((err) => {
         console.log(err);
@@ -179,17 +180,17 @@ export const ScriptComponents = () => {
 
   //Editor functionality
 
-  const handleSave = (editorValue) => {
-    console.log(editorValue);
+  const handleSave = () => {
+    // console.log(editorValue);
     // setEditorContent(editorContentData);
     const postData = {
       id: pageId,
-      title: particularTitle,
-      description: description,
+      title: particularTitle ? particularTitle : "Page Name",
+      description: description ? description : "Page Description",
       content: editorContent,
     };
 
-
+  console.log(postData);
     axiosClient
       .post("/updatePageData", postData)
       .then((res) => {
@@ -261,6 +262,8 @@ export const ScriptComponents = () => {
         setParticularTitle(res.data.pages[0].title);
         setDescription(res.data.pages[0].description);
         setEditorValue(res.data.pages[0].content);
+        setEditorContent(res.data.pages[0].content);
+
       })
       .catch((err) => {
         console.log(err);
@@ -336,7 +339,6 @@ export const ScriptComponents = () => {
             setInputValue={setInputValue}
             renderScript={renderScript}
           />
-{console.log(editorValue)}
           <EditPage
             widths={state ? "w-[785px]" : "w-[933px]"}
             marginEditor={state ? "ml-[10px]" : "mr-[115px]"}
@@ -355,6 +357,7 @@ export const ScriptComponents = () => {
             hoverPageId={hoverPageId}
             handleMore={handleMore}
             handleSave={handleSave}
+            editorContents={editorContent}
             onDragEnd={onDragEnd}
           />
 

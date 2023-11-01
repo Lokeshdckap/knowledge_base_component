@@ -34,15 +34,9 @@ export const PageTree = ({ node, hasSibling,contentPage,handleScriptMouseEnter,h
 
     <div className="mb-1">
     <div className={`flex items-center `}>
-    {renderLines()}
+    {/* {renderLines()} */}
    
-      <button className="text-sm mr-2" onClick={toggleOpen}>
-        {isOpen ? (
-          <ChevronDownIcon className="w-4 h-4 text-gray-500" />
-        ) : (
-          <ChevronUpIcon className="w-4 h-4 text-gray-500" />
-        )}
-      </button>
+
       <span className="text-[16px] font-semibold cursor-pointer"
                onMouseEnter={handleScriptMouseEnter}
                   onMouseLeave={handleScriptMouseLeave}
@@ -50,13 +44,20 @@ export const PageTree = ({ node, hasSibling,contentPage,handleScriptMouseEnter,h
       >{node.title}
       {hoverPageId == node.uuid && (
 
-            <i className="fa-solid fa-ellipsis-vertical text-[#BCD1FF] pl-6" id={node.uuid} onClick={handleMore}></i>
+            <i className="fa-solid fa-ellipsis-vertical text-[#57595c] pl-6" id={node.uuid} onClick={handleMore}></i>
           )}
       
       </span>
+      <button className="text-sm mr-2" onClick={toggleOpen}>
+        {isOpen ? (
+          <ChevronDownIcon className="w-4 h-4 text-gray-500" />
+        ) : (
+          <ChevronUpIcon className="w-4 h-4 text-gray-500 rotate-90" />
+        )}
+      </button>
     </div>
     {isOpen && node.ChildPages && node.ChildPages.length > 0 && (
-      <ul className="ml-3 mt-1 pl-1">
+      <ul className="ml-3 mt-1 pl-1 border-l-[1px] border-gray-400">
         {node.ChildPages.map((child,index) => (
           <li key={child.page_id}
           className="cursor-pointer"

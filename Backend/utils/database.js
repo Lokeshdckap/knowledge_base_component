@@ -5,11 +5,12 @@ const { Sequelize, DataTypes } = require("sequelize");
 //Database connection with dialect of postgres specifying the database we are using
 
 const sequelize = new Sequelize(
-  `postgres://dckap:admin@localhost:5432/knowledge_base`,
+  `postgres://dckap:admin@localhost:5432/knowledge_base_app`,
   { dialect: "postgres" }
 );
 
 //checking if connection is done
+
 
 sequelize
   .authenticate()

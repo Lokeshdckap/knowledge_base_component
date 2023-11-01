@@ -6,7 +6,7 @@ const Team = db.teams;
 const Batch = db.batch;
 const Script = db.script;
 const Page = db.pages;
-
+const he = require('he')
 const uuid = require("uuid");
 
 const {
@@ -226,14 +226,14 @@ const addPageData = async (req, res) => {
 
 
 
-  // const Pages = await Page.create({
-  //   title: "Page Name",
-  //   description: "Page Description",
-  //   uuid: uuid.v4(),
-  //   script_uuid: script_uuid,
-  //   content: null,
-  //   page_uuid: pages_uuid ? pages_uuid : null,
-  // });
+  const Pages = await Page.create({
+    title: "Page Name",
+    description: "Page Description",
+    uuid: uuid.v4(),
+    script_uuid: script_uuid,
+    content: null,
+    page_uuid: pages_uuid ? pages_uuid : null,
+  });
 
   // return res.status(200).json({ Pages });
 
@@ -245,7 +245,7 @@ const addPageData = async (req, res) => {
   // slug: slug,
   // script_uuid : "2832e73c-eadb-4252-92ca-52b07d957d4a"
 // });
-  return res.status(200).json({ newDocument });
+  return res.status(200).json({ Pages });
   
 };
 
@@ -264,6 +264,8 @@ const addChildPage = async (req, res) => {
     script_uuid: script_uuid,
     content: null,
     page_uuid: pages_uuid ? pages_uuid : null,
+    path:null
+
   });
 
   return res.status(200).json({ Pages });
@@ -342,11 +344,17 @@ const addScriptTitle = async (req, res) => {
 };
 
 const updatePageData = async (req, res) => {
+
+  const paths = "/" + (req.body.title).split(" ").filter(Boolean).join("").toLowerCase();
+
+    console.log(paths);
+
   const updateData = await Page.update(
     {
       title: req.body.title,
       description: req.body.description,
       content: JSON.stringify(req.body.content),
+      path: paths
     },
     {
       where: { uuid: req.body.id },
@@ -402,14 +410,15 @@ const addBatchTitleAndDescription = async (req, res) => {
 
 
 const newDocuments =  async (req, res) => {
-  const title = req.params.slug;
-  const document = await Page.findOne({ where: { title } });
+  const uuid = req.params.slug;
+  const document = await Page.findOne({ where: { uuid } });
     console.log(document);
   // if (!document) {
   //   return res.status(404).send('Document not found');
   // }
+    return res.status(200).send(document)
 
-   return res.render('document', { document });
+  //  return res.render('document', { document });
 }
 
 

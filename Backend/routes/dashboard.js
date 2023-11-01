@@ -105,7 +105,7 @@ router.get(
   dashboardController.getPage
 );
 
-// router.get('/documents/:slug',
-// dashboardController.newDocuments
-// );
+router.get('/documents/:slug',
+dashboardController.newDocuments
+);
 module.exports = router;

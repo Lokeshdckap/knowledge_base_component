@@ -12,6 +12,7 @@ import Dashboard from "./Dashboard/container/Dashboard";
 import TeamPage from "./Dashboard/components/TeamPage";
 import { Batch } from "./Batch/container/Batch";
 import { Scripts } from "./Scripts/container/Scripts";
+import { UrlPage } from "./common/commonLayouts/UrlPage";
 
 
 const router = createBrowserRouter([
@@ -39,6 +40,11 @@ const router = createBrowserRouter([
         path: "/teampage",
         element: <TeamPage />,
       },
+      {
+        path: "/share",
+        element: <TeamPage />,
+      },
+
     ],
 
   },
@@ -70,6 +76,10 @@ const router = createBrowserRouter([
         path: "/email-verify/:uuid/:token",
         element: <SignupContainer />,
       },
+      {
+        path: "/dashboard/url",
+        element: <UrlPage />,
+      }
     ],
   },
 

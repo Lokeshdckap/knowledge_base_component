@@ -92,10 +92,6 @@ export const EditorComponents = (props) => {
   //     ejInstance.current = null;
   //   };
   // }, [props.editorValue]);
-
-  // return (
-  //   <div id="editorjs"></div>
-  // );
-  
     };
+
 

@@ -35,10 +35,11 @@ const handleMouseLeave = () => {
   setOverPage(null);
 };
 
-
   const handlePopupPage = () =>{
     setNewPagePopup((prevState) => !prevState);
   }
+
+  
 
   return (
     <div>

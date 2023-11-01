@@ -1,3 +1,4 @@
+import Link from "antd/es/typography/Link";
 import React, { useEffect } from "react";
 // import axiosClient from "../../axios-client";
 // import { useParams } from "react-router-dom";
@@ -16,23 +17,19 @@ export default function EditHeader(props) {
         <div >
           <button
             type="button"
-            class="text-white bg-primary hover:bg-primary   font-medium rounded-lg text-sm h-9 w-20 mr-2 mb-2  focus:outline-none "
-          >
-            Copy
-          </button>
-          <button
-            type="button"
-            class="text-white bg-primary hover:bg-primary   font-medium rounded-lg text-sm h-9 w-24 mr-2 mb-2  focus:outline-none "
+            class="text-white bg-primary hover:bg-primary pb-1  font-medium rounded-lg text-lg h-9 w-24 mr-2 mb-2  focus:outline-none "
             onClick={props.clickPublish}
           >
-            Publish
+            Save
           </button>
-          <button
-            type="button"
-            class="text-textPrimary border-[1px] border-gray-400 font-medium rounded-lg text-sm h-9 w-24 mr-2 mb-2 "
-          >
-            Share
-          </button>
+            <Link to={`dashboard/${localStorage.getItem("ACCESS_TOKEN")}/*`} >
+                <button
+                  type="button"
+                  class="text-textPrimary border-[1px] border-gray-400 font-medium rounded-lg text-sm h-9 w-24 mr-2 mb-2 "
+                >
+                  Share
+                </button>
+          </Link>
         </div>
       </div>
     </div>

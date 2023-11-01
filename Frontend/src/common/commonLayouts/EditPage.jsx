@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { EditorComponents } from "../commonComponents/EditorComponents";
 import { PageTree } from "../commonComponents/PageTree";
-import { MyTextareaComponent } from "../commonComponents/MyTextareaComponent";
+import { PublishPopup } from "../commonComponents/PublishPopup";
 // import EditorJS from "@editorjs/editorjs";
 // import Header from '@editorjs/header'; 
 // import List from '@editorjs/list';
@@ -45,10 +45,7 @@ const handleMouseLeave = () => {
       
       <div className="mt-14 flex">
         <div className="bg-[#E4E8EC] w-[278px] h-[500px]">
-          
           <div className="space-y-2 ml-4 mt-4">
-
-          
           <div className="p-4 rounded-lg shadow">
       <h1 className="text-2xl font-bold mb-4">Page Hierarchy</h1>
           {treeNode.map((topLevelPage, index) => (
@@ -102,6 +99,7 @@ const handleMouseLeave = () => {
         </div>
       </div>
 
+      {/* <PublishPopup /> */}
 
 
     </div>

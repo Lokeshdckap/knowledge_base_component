@@ -205,11 +205,8 @@ export default function SideNavLarge(props) {
                   onClick={handleBatch}
                   id={batch.uuid}
                   className="truncate max-w-[20px] pr-20"
-
                 >
-                  {" "}
                   {batch.title.slice(0, 7) + (batch.title.length > 6 ? '..' : '')}
-                  {/* {batch.title} */}
                 </span>
                 {overState == batch.uuid && (
                   <i
@@ -295,19 +292,30 @@ export default function SideNavLarge(props) {
       <hr
         class={`h-px  bg-textPrimary border-0 dark:bg-gray-900 m-auto mt-2`}
       />
-
-      <div className="space-y-4 pt-3 ">
-        <div className="bg-white h-8 w-8 rounded-full cursor-pointer  ml-24">
+      <div className="mt-2 ml-7 mb-4">
+      
+          <p className=" text-[#b8bdc5] pl-[8px] pt-[2px]  ">
+              <i class="fa-solid fa-trash  text-lg pr-3 text-[#b8bdc5] "></i>
+              Trash
+            </p>
+      </div>
+      <div className=" flex items-center  justify-around w-[200px] m-auto " >
+      <div className="bg-white h-8 w-8 rounded-full cursor-pointer  ">
+            <p className=" text-primary pl-[8px] pt-[2px]  ">
+              <i class="fa-solid fa-bell text-lg"></i>
+            </p>
+          </div>
+        <div className="bg-white h-8 w-8 rounded-full cursor-pointer">
           {AddNewMenu ? (
             <p
-              className=" text-primary pl-[9px] pt-[2px]  "
+              className=" text-primary pl-[9px] pt-[2px]"
               onClick={() => setAddNewMenu(false)}
             >
               <i class="fa-solid fa-x text-lg"></i>
             </p>
           ) : (
             <p
-              className="  text-primary pl-[7px] pt-[3px]  "
+              className="  text-primary pl-[7px] pt-[3px]"
               onClick={() => setAddNewMenu(true)}
             >
               <i className="fa-regular fa-plus hover:text-primary text-xl"></i>
@@ -322,24 +330,20 @@ export default function SideNavLarge(props) {
             />
           </div>
         )}
-        <div className="flex justify-around">
+        
           <div className="bg-white h-8 w-8 rounded-full cursor-pointer  ">
             <p className=" text-primary pl-[7px] pt-[2px]  ">
               <i class="fa-solid fa-gear text-lg text-primary"></i>
             </p>
           </div>
-          <div className="bg-white h-8 w-8 rounded-full cursor-pointer  ">
-            <p className=" text-primary pl-[8px] pt-[2px]  ">
-              <i class="fa-solid fa-bell text-lg"></i>
-            </p>
-          </div>
-        </div>
+      
+        
 
-        <div className="bg-white h-8 w-8 rounded-full cursor-pointer ml-24 ">
+        {/* <div className="bg-white h-8 w-8 rounded-full cursor-pointer ml-24 ">
           <p className=" text-primary pl-[8px] pt-[2px]  ">
             <i class="fa-solid fa-right-from-bracket text-lg"></i>
           </p>
-        </div>
+        </div> */}
       </div>
     </div>
 );

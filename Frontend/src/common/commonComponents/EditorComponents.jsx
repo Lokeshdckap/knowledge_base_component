@@ -480,7 +480,7 @@ export const EditorComponents = (props) => {
           onReady: () => {
             ejInstance.current = editor;
           },
-          readOnly: true,
+          // readOnly: true,
           autofocus: false,
           placeholder: 'Let`s write an awesome story!',
           data: DEFAULT_INITIAL_DATA,

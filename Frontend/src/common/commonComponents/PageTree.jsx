@@ -44,7 +44,7 @@ export const PageTree = ({ node, hasSibling,contentPage,handleScriptMouseEnter,h
       >{node.title}
       {hoverPageId == node.uuid && (
 
-            <i className="fa-solid fa-ellipsis-vertical text-[#57595c] pl-6" id={node.uuid} onClick={handleMore}></i>
+            <i className="fa-solid fa-plus text-[#57595c] pl-6" id={node.uuid} onClick={handleMore}></i>
           )}
       
       </span>

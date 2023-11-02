@@ -26,6 +26,9 @@ module.exports = {
           key: "uuid", // This references the 'uuid' column in the 'teams' table
         },
       },
+      path:{
+        type: Sequelize.TEXT,
+      },
       batch_uuid: {
         type: Sequelize.UUID,
         references: {

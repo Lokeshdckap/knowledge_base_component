@@ -99,8 +99,13 @@ const handleMouseLeave = () => {
 
         </div>
       </div>
+      {props.shareState && (
+          <PublishPopup setShareState={props.setShareState}/>
+      )
 
-      {/* <PublishPopup /> */}
+      }
+
+     
 
 
     </div>

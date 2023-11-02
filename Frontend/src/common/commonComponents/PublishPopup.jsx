@@ -1,6 +1,6 @@
 import React from "react";
 import { Switch } from "antd";
-export const PublishPopup = () => {
+export const PublishPopup = (props) => {
   const onChange = (checked) => {
     console.log(`switch to ${checked}`);
   };
@@ -22,7 +22,7 @@ export const PublishPopup = () => {
             </div>
             <div className="bg-[#e5e8f1] w-[650px] h-[500px] rounded-r-lg">
               <div className="">
-                <i className="fa-solid fa-xmark text-[#8f97aa] pt-2 float-right text-2xl cursor-pointer mr-5"></i>
+                <i className="fa-solid fa-xmark text-[#8f97aa] pt-2 float-right text-2xl cursor-pointer mr-5" onClick={() => {props.setShareState(false)}}></i>
               </div>
               <div className="w-[580px] m-auto mt-9 space-y-2">
                 <p className="text-2xl font-semibold text-textPrimary">

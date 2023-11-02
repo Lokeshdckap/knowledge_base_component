@@ -6,6 +6,7 @@ import React, { useEffect } from "react";
 export default function EditHeader(props) {
 
 
+
   return (
     <div className="">
       <div
@@ -26,6 +27,7 @@ export default function EditHeader(props) {
                 <button
                   type="button"
                   class="text-textPrimary border-[1px] border-gray-400 font-medium rounded-lg text-sm h-9 w-24 mr-2 mb-2 "
+                  onClick={props.HandleShare}
                 >
                   Share
                 </button>

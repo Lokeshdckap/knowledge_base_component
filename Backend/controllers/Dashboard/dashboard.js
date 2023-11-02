@@ -6,7 +6,6 @@ const Team = db.teams;
 const Batch = db.batch;
 const Script = db.script;
 const Page = db.pages;
-const he = require('he')
 const uuid = require("uuid");
 
 const {
@@ -334,8 +333,11 @@ const getScriptAndPage = async (req, res) => {
 // });
 
 const addScriptTitle = async (req, res) => {
+  const paths = "/" + (req.query.inputValue).split(" ").filter(Boolean).join("").toLowerCase();
+
   const scriptTitleUpdate = await Script.update(
-    { title: req.query.inputValue },
+    
+    { title: req.query.inputValue,path:paths},
     {
       where: { uuid: req.query.queryParameter },
     }

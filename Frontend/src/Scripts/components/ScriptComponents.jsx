@@ -40,7 +40,10 @@ export const ScriptComponents = () => {
 
   const [particularPageId,setParticularPageId] = useState(null);
 
+
   const [editorValue,setEditorValue] = useState([]);
+
+  const [shareState,setShareState] = useState(false);
   
 
   useEffect(() => {
@@ -62,7 +65,7 @@ export const ScriptComponents = () => {
     await axiosClient
       .get(`/getScriptAndPage/${script_uuid}`)
       .then((res) => {
-        console.log(res.data.hierarchy[0].content);
+  
         setInputValue(res.data.getScriptAndPages.title);
         setPageContent(res.data.hierarchy[0]);
         setTreeNode(res.data.hierarchy);
@@ -72,6 +75,7 @@ export const ScriptComponents = () => {
         setEditorContent(res.data.hierarchy[0].content);
         setEditorValue(res.data.hierarchy[0].content);
         localStorage.setItem('myData', JSON.stringify(res.data.hierarchy[0]));
+        
       })
       .catch((err) => {
         console.log(err);
@@ -304,6 +308,11 @@ export const ScriptComponents = () => {
 
 
 
+  const HandleShare = () =>{
+      setShareState(true)
+  }
+
+
   return (
     <div className="relative">
       <div className="flex bg-[#ECEDEF] ">
@@ -338,6 +347,8 @@ export const ScriptComponents = () => {
             inputValue={inputValue}
             setInputValue={setInputValue}
             renderScript={renderScript}
+            HandleShare={HandleShare}
+            
           />
           <EditPage
             widths={state ? "w-[785px]" : "w-[933px]"}
@@ -359,8 +370,9 @@ export const ScriptComponents = () => {
             handleSave={handleSave}
             editorContents={editorContent}
             onDragEnd={onDragEnd}
+            shareState={shareState}
+            setShareState={setShareState}
           />
-
           {/* <BatchHeader widths={state ? "w-[1000px]" : "w-[1160px]"} />
           <BatchLayouts widths={state ? "w-[1000px]" : "w-[1120px]"} /> */}
         </div>

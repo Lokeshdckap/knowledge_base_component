@@ -412,8 +412,8 @@ const addBatchTitleAndDescription = async (req, res) => {
 
 
 const newDocuments =  async (req, res) => {
-  const uuid = req.params.slug;
-  const document = await Page.findOne({ where: { uuid } });
+  const script_uuid = req.params.slug;
+  const document = await Page.findAll({ where: { script_uuid } });
     console.log(document);
   // if (!document) {
   //   return res.status(404).send('Document not found');

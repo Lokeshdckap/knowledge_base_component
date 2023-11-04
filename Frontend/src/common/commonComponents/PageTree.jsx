@@ -13,31 +13,13 @@ export const PageTree = ({ node, hasSibling,contentPage,handleScriptMouseEnter,h
     setIsOpen(!isOpen);
   };
 
-  const renderLines = () => {
-    const lines = [];
-    let parentNode = node;
 
-    while (parentNode) {
-      lines.unshift(
-        <div
-          key={parentNode.page_id}
-          className={`w-6 border-l border-gray-500 ${hasSibling ? 'h-4' : 'h-6'}`}
-        />
-      );
-      parentNode = parentNode.parentPage; // Assuming your model has a reference to the parent page
-    }
-
-    return lines;
-  };
 
   return (
 
-    <div className="mb-1">
-    <div className={`flex items-center `}>
-    {/* {renderLines()} */}
-   
-
-      <span className="text-[16px] font-semibold cursor-pointer"
+    <div className="">
+    <div className={`flex items-center hover:bg-slate-300  hover:rounded pl-2`}>
+      <span className="text-[18px]  cursor-pointer pt-1 pb-1 w-[100%]"
                onMouseEnter={handleScriptMouseEnter}
                   onMouseLeave={handleScriptMouseLeave}
                   onClick={contentPage} id={node.uuid}
@@ -49,28 +31,30 @@ export const PageTree = ({ node, hasSibling,contentPage,handleScriptMouseEnter,h
       
       </span>
       <button className="text-sm mr-2" onClick={toggleOpen}>
-        {isOpen ? (
-          <ChevronDownIcon className="w-4 h-4 text-gray-500" />
+      {isOpen ? (
+            <i
+            className="fa-solid fa-angle-down cursor-pointer "
+          ></i>
         ) : (
-          <ChevronUpIcon className="w-4 h-4 text-gray-500 rotate-90" />
+          <i
+              className="fa-solid fa-angle-up cursor-pointer rotate-90"
+            ></i>
         )}
       </button>
     </div>
     {isOpen && node.ChildPages && node.ChildPages.length > 0 && (
-      <ul className="ml-3 mt-1 pl-1 border-l-[1px] border-gray-400">
+      <ul className=" mt-1 ml-2 border-l-[1px] border-gray-400">
         {node.ChildPages.map((child,index) => (
           <li key={child.page_id}
-          className="cursor-pointer"
+          className="cursor-pointer pl-2"
           id={child.uuid}
           >
             <PageTree node={child} hasSibling={index < node.ChildPages.length - 1} hasParent={true} handleScriptMouseEnter={handleScriptMouseEnter} handleScriptMouseLeave={handleScriptMouseLeave} hoverPageId={hoverPageId}  contentPage={contentPage} handleMore={handleMore} />
           </li>
         ))}
-
       </ul>
     )}
   </div>
-
 
 
     // <div className="mb-1">

@@ -35,30 +35,33 @@ export default function EditPage(props) {
 
   return (
     <div>
-      <div className="mt-14 flex ">
-        <div className="bg-[#E4E8EC] w-[278px] h-[540px] pr-2 overflow-auto">
-          <div className="">
-            <div className="space-y-2 ml-4 mt-4 ">
-              <div className="">
-                {treeNode.map((topLevelPage, index) => (
-                  <div
-                    key={topLevelPage.page_id}
-                    id={topLevelPage.page_id}
-                    className=""
-                  >
-                    <PageTree
-                      node={topLevelPage}
-                      hasSibling={index < treeNode.length - 1}
-                      hasParent={false}
-                      contentPage={props.contentPage}
-                      handleScriptMouseLeave={props.handleScriptMouseLeave}
-                      handleScriptMouseEnter={props.handleScriptMouseEnter}
-                      hoverPageId={props.hoverPageId}
-                      handleMore={props.handleMore}
-                    />
-                  </div>
-                ))}
-              </div>
+
+      
+      <div className="mt-14 flex">
+        <div className="bg-[#E4E8EC] w-[278px] h-[500px]">
+          <div className="space-y-2 ml-4 mt-4">
+          <div className="p-4 rounded-lg shadow">
+      <h1 className="text-2xl font-bold mb-4">DOCUMENTS</h1>
+          {treeNode.map((topLevelPage, index) => (
+            <div key={topLevelPage.page_id} id={topLevelPage.page_id} className="">
+              <PageTree node={topLevelPage} 
+             hasSibling={index < treeNode.length - 1}
+               hasParent={false}
+              
+              contentPage={props.contentPage}  handleScriptMouseLeave={props.handleScriptMouseLeave} handleScriptMouseEnter={props.handleScriptMouseEnter} hoverPageId={props.hoverPageId} handleMore={props.handleMore}/>
+            </div>
+          ))}
+    </div>
+            </div>
+          <hr
+            className={`h-px w-[250px] bg-[#D5D7DA] border-0 m-auto dark:bg-gray-900 mt-4`}
+          />
+          <div>
+            <div >
+              <p className="text-xl cursor-pointer text-[#90979D] pl-5 pt-3" onClick={handlePopupPage}>
+              <i class="fa-regular fa-file" onClick={handlePopupPage}></i> New Page
+              </p>
+
             </div>
             <hr
               className={`h-px w-[250px] bg-[#D5D7DA] border-0 m-auto dark:bg-gray-900 mt-4`}
@@ -124,7 +127,11 @@ export default function EditPage(props) {
           </div>
         </div>
       </div>
-      {props.shareState && <PublishPopup setShareState={props.setShareState} />}
+      {props.shareState && (
+          <PublishPopup setShareState={props.setShareState} onChange={props.onChange} publish={props.publish}/>
+      )
+
+      }
     </div>
   );
 }

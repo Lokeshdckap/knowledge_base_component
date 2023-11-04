@@ -44,6 +44,8 @@ export const ScriptComponents = () => {
   const [editorValue,setEditorValue] = useState([]);
 
   const [shareState,setShareState] = useState(false);
+
+  const [publish,setPublish] = useState([]);
   
 
   useEffect(() => {
@@ -309,9 +311,25 @@ export const ScriptComponents = () => {
 
 
   const HandleShare = () =>{
-      setShareState(true)
+      setShareState(true);
+
   }
 
+
+  const onChange = (checked) => {
+      console.log(param.uuid);
+      axiosClient.get(`/scripts/${param.uuid}`)
+      .then((res) => {
+        setPublish(res)
+        // console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+      
+
+  };
 
   return (
     <div className="relative">
@@ -372,6 +390,8 @@ export const ScriptComponents = () => {
             onDragEnd={onDragEnd}
             shareState={shareState}
             setShareState={setShareState}
+            onChange={onChange}
+            publish={publish}
           />
           {/* <BatchHeader widths={state ? "w-[1000px]" : "w-[1160px]"} />
           <BatchLayouts widths={state ? "w-[1000px]" : "w-[1120px]"} /> */}

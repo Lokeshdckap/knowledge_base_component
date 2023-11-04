@@ -23,6 +23,7 @@ module.exports = (sequelize, DataTypes) => {
     team_uuid: DataTypes.UUID,
     batch_uuid: DataTypes.UUID,
     deleted_at: DataTypes.DATE,
+    is_published:DataTypes.INTEGER,
     path:DataTypes.TEXT
   }, {
     sequelize,

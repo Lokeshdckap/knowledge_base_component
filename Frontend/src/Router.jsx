@@ -75,18 +75,19 @@ const router = createBrowserRouter([
       {
         path: "/email-verify/:uuid/:token",
         element: <SignupContainer />,
-      },
-      {
-        path: "/dashboard/url",
-        element: <UrlPage />,
       }
     ],
   },
 
+  // {
+  //   path: "*",
+  //   element: <Error />,
+  // },
   {
-    path: "*",
-    element: <Error />,
-  },
+    path: "/:slug/*",
+    element: <UrlPage />,
+
+  }
 ]);
 
 export default router;

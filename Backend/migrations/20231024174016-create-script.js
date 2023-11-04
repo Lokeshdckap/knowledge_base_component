@@ -17,7 +17,7 @@ module.exports = {
       },
       title: {
         type: Sequelize.STRING,
-        defaultValue:"Untitled Content"
+        defaultValue:"Untitled"
       },
       team_uuid: {
         type: Sequelize.UUID,
@@ -38,6 +38,11 @@ module.exports = {
       },
       deleted_at: {
         type: Sequelize.DATE,
+      },
+      is_published:{
+        type: Sequelize.INTEGER,
+        defaultValue:0
+
       },
       createdAt: {
         allowNull: false,

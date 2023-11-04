@@ -16,7 +16,7 @@ module.exports = {
       },
       title: {
         type: Sequelize.STRING,
-        defaultValue: "Page Name",
+        defaultValue: "Page",
       },
       description: {
         type: Sequelize.STRING,

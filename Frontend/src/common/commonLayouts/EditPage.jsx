@@ -48,7 +48,7 @@ const handleMouseLeave = () => {
         <div className="bg-[#E4E8EC] w-[278px] h-[500px]">
           <div className="space-y-2 ml-4 mt-4">
           <div className="p-4 rounded-lg shadow">
-      <h1 className="text-2xl font-bold mb-4">Page Hierarchy</h1>
+      <h1 className="text-2xl font-bold mb-4">DOCUMENTS</h1>
           {treeNode.map((topLevelPage, index) => (
             <div key={topLevelPage.page_id} id={topLevelPage.page_id} className="">
               <PageTree node={topLevelPage} 
@@ -100,7 +100,7 @@ const handleMouseLeave = () => {
         </div>
       </div>
       {props.shareState && (
-          <PublishPopup setShareState={props.setShareState}/>
+          <PublishPopup setShareState={props.setShareState} onChange={props.onChange} publish={props.publish}/>
       )
 
       }

@@ -108,4 +108,12 @@ router.get(
 router.get('/documents/:slug',
 dashboardController.newDocuments
 );
+
+router.get('/scripts/:slug',
+dashboardController.publicUrls
+);
+router.get('/pages/:slug/*',
+dashboardController.particularPageRender
+);
+
 module.exports = router;

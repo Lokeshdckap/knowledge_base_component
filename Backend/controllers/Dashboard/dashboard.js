@@ -6,7 +6,6 @@ const Team = db.teams;
 const Batch = db.batch;
 const Script = db.script;
 const Page = db.pages;
-const he = require('he')
 const uuid = require("uuid");
 
 const {
@@ -14,9 +13,7 @@ const {
   createTypeSchema,
 } = require("../../utils/validations");
 
-
-
-// const slugify = require('slugify');
+const slugify = require("slugify");
 // const documentTitle = 'My Document Title';
 
 // const slug = slugify(documentTitle, { lower: true });
@@ -93,15 +90,50 @@ const addNewBatch = async (req, res) => {
 };
 
 const addNewScripts = async (req, res) => {
+  const title = "untitled";
+
+  const originalSlug = slugify(title, { lower: true });
+
+  let slug = originalSlug;
+
   const team_uuid = req.body.uuid;
-  const batch_uuid = req.body.batch_uuid;
+  const batch_uuid = req.body.batch_uuid ? req.body.batch_uuid : null;
 
   const script = await Script.create({
     uuid: uuid.v4(),
     team_uuid: team_uuid,
     batch_uuid: batch_uuid ? batch_uuid : null,
   });
+  const existingDocument = await Script.findAll({
+    where: {
+      [Op.and]: [{ team_uuid: team_uuid }, { batch_uuid: batch_uuid }],
+    },
+  });
+
+  console.log(existingDocument);
+  if (existingDocument) {
+    slug = `${originalSlug}-${existingDocument.length}`;
+  }
+
+  const pathUpdate = await Script.update(
+    { path: slug },
+    {
+      where: { uuid: script.uuid },
+    }
+  );
+
+  const findOne = await Script.findOne({
+    where: {
+      uuid: script.uuid,
+    },
+  });
+
   if (script) {
+    const title = "page";
+    const originalSlug = slugify(title, { lower: true });
+    let slug = originalSlug;
+    let script_paths = findOne.path;
+
     const Pages = await Page.create({
       title: "Page Name",
       description: "Page Description",
@@ -110,6 +142,23 @@ const addNewScripts = async (req, res) => {
       content: null,
       page_uuid: null,
     });
+
+    const existPage = await Page.findAll({
+      where: { script_uuid: script.uuid },
+    });
+
+    if (existPage) {
+      slug = `${script_paths}/${originalSlug}-${existPage.length}`;
+    }
+    const pathUpdate = await Page.update(
+      { path: slug },
+      {
+        where: {
+          [Op.and]: [{ uuid: Pages.uuid }, { script_uuid: script.uuid }],
+        },
+      }
+    );
+
     return res.status(200).send({
       Success: "Your Script Created Sucessfully",
       pages: Pages,
@@ -193,7 +242,6 @@ const getAllTeam = async (req, res) => {
   });
 };
 
-
 const getBatchAndScripts = async (req, res) => {
   let result = await Script.findAll({
     include: [
@@ -218,13 +266,30 @@ const getBatchAndScripts = async (req, res) => {
 };
 
 const addPageData = async (req, res) => {
-
-
-  // console.log(req.params);
   const script_uuid = req.params.script_uuid;
-  const pages_uuid = req.params.uuid ? req.params.uuid :null ;
 
+  const pages_uuid = req.params.uuid ? req.params.uuid : null;
 
+  const script = await Script.findOne({
+    where: {
+      uuid: script_uuid,
+    },
+  });
+  const title = "page";
+  const originalSlug = slugify(title, { lower: true });
+  let slug = originalSlug;
+
+  const existingPage = await Page.findAll({
+    where: {
+      script_uuid: script_uuid,
+    },
+  });
+
+  if (existingPage) {
+    slug = `/${originalSlug}-${existingPage.length + 1}`;
+  }
+
+  const paths = script.path + slug;
 
   const Pages = await Page.create({
     title: "Page Name",
@@ -233,29 +298,39 @@ const addPageData = async (req, res) => {
     script_uuid: script_uuid,
     content: null,
     page_uuid: pages_uuid ? pages_uuid : null,
+    path: paths,
   });
 
-  // return res.status(200).json({ Pages });
-
-  // const newDocument = await Page.create({
-  // title: 'My Document Title',
-  // description:"NEW Page",
-  // uuid: uuid.v4(),
-  // content: JSON.stringify('The content of your document goes here.'),
-  // slug: slug,
-  // script_uuid : "2832e73c-eadb-4252-92ca-52b07d957d4a"
-// });
   return res.status(200).json({ Pages });
-  
 };
-
 
 const addChildPage = async (req, res) => {
-
-  // console.log(req.params);
   const script_uuid = req.params.script_uuid;
-  const pages_uuid = req.params.uuid ? req.params.uuid :null ;
 
+  const pages_uuid = req.params.uuid;
+
+  const title = "page";
+  const originalSlug = slugify(title, { lower: true });
+  let slug = originalSlug;
+
+  const existingPage = await Page.findOne({
+    where: {
+      uuid: pages_uuid,
+    },
+  });
+
+  const countQuery = `SELECT COUNT(*) FROM pages where script_uuid = :page_uuid`;
+  let page_uuid = script_uuid;
+  const [results] = await sequelize.query(countQuery, {
+    replacements: { page_uuid },
+  });
+
+  let count = Number(results[0].count);
+  console.log(count + 1);
+
+  if (existingPage) {
+    slug = `${existingPage.path}/${originalSlug}-${count + 1}`;
+  }
 
   const Pages = await Page.create({
     title: "Page Name",
@@ -263,14 +338,12 @@ const addChildPage = async (req, res) => {
     uuid: uuid.v4(),
     script_uuid: script_uuid,
     content: null,
-    page_uuid: pages_uuid ? pages_uuid : null,
-    path:null
-
+    page_uuid: pages_uuid,
+    path: slug,
   });
 
   return res.status(200).json({ Pages });
 };
-
 
 const getScriptAndPage = async (req, res) => {
   const script_uuid = req.params.script_uuid;
@@ -318,6 +391,7 @@ const getScriptAndPage = async (req, res) => {
       return res.status(500).json({ error: error.message });
     });
 };
+
 // const getScriptAndPages = await Page.findAll({
 //   where: {
 //     [Op.or]: [{ page_uuid: "90da8035-bfd1-429b-89e6-6b5be702ea8e" }],
@@ -334,8 +408,12 @@ const getScriptAndPage = async (req, res) => {
 // });
 
 const addScriptTitle = async (req, res) => {
+  const paths =
+    "/" +
+    req.query.inputValue.split(" ").filter(Boolean).join("").toLowerCase();
+
   const scriptTitleUpdate = await Script.update(
-    { title: req.query.inputValue },
+    { title: req.query.inputValue, path: paths },
     {
       where: { uuid: req.query.queryParameter },
     }
@@ -344,17 +422,44 @@ const addScriptTitle = async (req, res) => {
 };
 
 const updatePageData = async (req, res) => {
+  let paths;
+  const page = await Page.findOne({
+    where: {
+      uuid: req.body.id,
+    },
+  });
 
-  const paths = "/" + (req.body.title).split(" ").filter(Boolean).join("").toLowerCase();
+  const script = await Script.findOne({
+    where: {
+      uuid: page.script_uuid,
+    },
+  });
+  console.log(script.path);
 
-    console.log(paths);
+  if (page.page_uuid) {
+    const parentPage = await Page.findOne({
+      where: {
+        uuid: page.page_uuid,
+      },
+    });
+
+    paths =
+      parentPage.path +
+      "/" +
+      req.body.title.split(" ").filter(Boolean).join("").toLowerCase();
+  } else {
+    paths =
+      script.path +
+      "/" +
+      req.body.title.split(" ").filter(Boolean).join("").toLowerCase();
+  }
 
   const updateData = await Page.update(
     {
       title: req.body.title,
       description: req.body.description,
       content: JSON.stringify(req.body.content),
-      path: paths
+      path: paths,
     },
     {
       where: { uuid: req.body.id },
@@ -373,7 +478,6 @@ const getPage = async (req, res) => {
 };
 
 const addBatchTitleAndDescription = async (req, res) => {
-
   const param1 = req.query.param1 ? req.query.param1 : null;
 
   const param2 = req.query.param2 ? req.query.param2 : null;
@@ -403,26 +507,112 @@ const addBatchTitleAndDescription = async (req, res) => {
   } catch (error) {
     return res.status(500).json({ error: "Internal server error" });
   }
-
-
-  
 };
 
+const newDocuments = async (req, res) => {
+  const script_uuid = "/" + req.params.slug;
 
-const newDocuments =  async (req, res) => {
-  const uuid = req.params.slug;
-  const document = await Page.findOne({ where: { uuid } });
-    console.log(document);
-  // if (!document) {
-  //   return res.status(404).send('Document not found');
-  // }
-    return res.status(200).send(document)
+  const script = await Script.findOne({
+    where: { path: script_uuid },
+  });
 
-  //  return res.render('document', { document });
-}
+  async function fetchPagesWithDynamicChildInclude() {
+    const rootPages = await Page.findAll({
+      // where: { page_uuid: null }, // Fetch root-level pages
+      where: {
+        [Op.and]: [{ page_uuid: null }, { script_uuid: script.uuid }],
+      },
+    });
 
+    const hierarchy = await organizePagesInHierarchy(rootPages);
 
+    return hierarchy;
+  }
 
+  async function organizePagesInHierarchy(pages) {
+    const hierarchy = [];
+    for (const page of pages) {
+      const children = await Page.findAll({
+        where: { page_uuid: page.uuid },
+      });
+
+      page.dataValues.ChildPages = children;
+      if (children.length > 0) {
+        const nestedHierarchy = await organizePagesInHierarchy(children);
+        page.dataValues.ChildPages = nestedHierarchy;
+      }
+      hierarchy.push(page);
+    }
+
+    return hierarchy;
+  }
+  fetchPagesWithDynamicChildInclude()
+    .then((hierarchy) => {
+      return res.status(200).json({ hierarchy, script });
+    })
+    .catch((error) => {
+      return res.status(500).json({ error: error.message });
+    });
+};
+
+const publicUrls = async (req, res) => {
+  const script_uuid = req.params.slug;
+
+  const is_publishedCheck = await Script.findOne({
+    where: { uuid: script_uuid },
+  });
+
+  // console.log(is_publishedCheck.is_published);
+
+  if (is_publishedCheck.is_published) {
+    const updateData = { is_published: 0 };
+
+    try {
+      await Script.update(updateData, {
+        where: { uuid: script_uuid },
+        returning: true,
+      });
+      const publicUrl = await Page.findAll({
+        where: { script_uuid },
+        include: [{ model: Script, attributes: ["path", "is_published"] }], // Include the associated script with the 'script_name' attribute
+      });
+      return res.status(200).send(publicUrl);
+    } catch (error) {
+      return res
+        .status(500)
+        .json({ message: "Error updating data", error: error.message });
+    }
+  } else {
+    const updateData = { is_published: 1 };
+
+    try {
+      await Script.update(updateData, {
+        where: { uuid: script_uuid },
+        returning: true,
+      });
+      const publicUrl = await Page.findAll({
+        where: { script_uuid },
+        include: [{ model: Script, attributes: ["path", "is_published"] }], // Include the associated script with the 'script_name' attribute
+      });
+      return res.status(200).send(publicUrl);
+    } catch (error) {
+      return res
+        .status(500)
+        .json({ message: "Error updating data", error: error.message });
+    }
+  }
+};
+
+const particularPageRender = async (req, res) => {
+  const { slug } = req.params;
+  const wildcardValue = req.params[0];
+  const path = `/${slug}/${wildcardValue}`;
+
+  const publicUrl = await Page.findOne({
+    where: { path: path },
+  });
+  return res.status(200).json({ publicUrl });
+};
 
 module.exports = {
   createTeams,
@@ -442,5 +632,6 @@ module.exports = {
   addBatchTitleAndDescription,
   addChildPage,
   newDocuments,
-
+  publicUrls,
+  particularPageRender,
 };

@@ -22,7 +22,9 @@ module.exports = (sequelize, DataTypes) => {
     title: DataTypes.STRING,
     team_uuid: DataTypes.UUID,
     batch_uuid: DataTypes.UUID,
-    deleted_at: DataTypes.DATE
+    deleted_at: DataTypes.DATE,
+    is_published:DataTypes.INTEGER,
+    path:DataTypes.TEXT
   }, {
     sequelize,
     modelName: 'script',

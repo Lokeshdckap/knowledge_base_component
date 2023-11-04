@@ -1,9 +1,12 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Switch } from "antd";
-export const PublishPopup = () => {
-  const onChange = (checked) => {
-    console.log(`switch to ${checked}`);
-  };
+export const PublishPopup = (props) => {
+    console.log(props.publish);
+    const [publishUrl,setPublishUrl] = useState(props.publish)
+
+    useEffect(() => {
+      setPublishUrl(props.publish)
+    },[props.publish])
   return (
     <div>
       <div className="bg-primary opacity-[0.5] w-[1289px] h-[664px] absolute top-0 left-0  z-10"></div>
@@ -22,7 +25,7 @@ export const PublishPopup = () => {
             </div>
             <div className="bg-[#e5e8f1] w-[650px] h-[500px] rounded-r-lg">
               <div className="">
-                <i className="fa-solid fa-xmark text-[#8f97aa] pt-2 float-right text-2xl cursor-pointer mr-5"></i>
+                <i className="fa-solid fa-xmark text-[#8f97aa] pt-2 float-right text-2xl cursor-pointer mr-5" onClick={() => {props.setShareState(false)}}></i>
               </div>
               <div className="w-[580px] m-auto mt-9 space-y-2">
                 <p className="text-2xl font-semibold text-textPrimary">
@@ -49,11 +52,18 @@ export const PublishPopup = () => {
                         </p>
                       </div>
                       <div className="pt-5">
-                        <Switch default onChange={onChange} className="bg-gray-400"/>
+                        <Switch default onChange={props.onChange} className="bg-gray-400"/>
                       </div>
                     </div>
                   </div>
+                  
                 </div>
+              </div>
+              
+              <div>
+               {console.log(publishUrl.data)}
+               <p>{Object.keys(publishUrl).length == 0 ? "" : `http://localhost:3000${publishUrl.data[0].script.path}`}</p>
+                {/* <p>{publishUrl.length > 0 ? `http://localhost:3000${props.publish.data[0].script.path}` : ""}</p> */}
               </div>
             </div>
           </div>

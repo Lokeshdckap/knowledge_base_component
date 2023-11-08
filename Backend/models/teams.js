@@ -16,7 +16,6 @@ module.exports = (sequelize, DataTypes) => {
   }
   teams.init(
     {
-      user_uuid: DataTypes.UUID,
       name: DataTypes.STRING,
       uuid: DataTypes.UUID,
     },

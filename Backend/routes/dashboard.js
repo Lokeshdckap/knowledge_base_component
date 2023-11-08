@@ -112,6 +112,7 @@ dashboardController.newDocuments
 router.get('/scripts/:slug/:checked',
 dashboardController.publicUrls
 );
+
 router.get('/pages/:slug/*',
 dashboardController.particularPageRender
 );
@@ -126,5 +127,11 @@ router.get('/getAciveUsers/:uuid',
 verifyAuthMiddleware.verifyToken,
 dashboardController.getActiveUsersForTeam
 );
+
+router.post('/inviteUsers',
+verifyAuthMiddleware.verifyToken,
+dashboardController.inviteTeams
+);
+
 
 module.exports = router;

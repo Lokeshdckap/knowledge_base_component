@@ -6,8 +6,11 @@ const Team = db.teams;
 const Batch = db.batch;
 const Script = db.script;
 const Page = db.pages;
-const uuid = require("uuid");
+const Invite = db.invites;
+const Roles = db.roles_type;
+const UserTeams = db.user_team_members;
 
+const uuid = require("uuid");
 const {
   createTeamSchema,
   createTypeSchema,
@@ -36,7 +39,13 @@ const createTeams = async (req, res) => {
       const newTeam = await Team.create({
         name: team_name,
         uuid: uuid.v4(),
+      });
+
+      await UserTeams.create({
         user_uuid: req.user.id,
+        uuid: uuid.v4(),
+        team_uuid: newTeam.uuid,
+        role_id: "1",
       });
 
       if (newTeam) {
@@ -60,12 +69,14 @@ const createTeams = async (req, res) => {
 const getTeam = async (req, res) => {
   try {
     const Teams = await Team.findAll({
-      where: {
-        [Op.and]: [{ uuid: req.params.uuid }, { user_uuid: req.user.id }],
-      },
+      where: { uuid: req.params.uuid },
     });
+<<<<<<< HEAD
 
    return res.status(200).json(Teams);
+=======
+    res.status(200).json(Teams);
+>>>>>>> feature_batch
   } catch (error) {
    return res.status(500).json({ error: "Internal server error" });
   }
@@ -123,13 +134,53 @@ const getActiveUsersForTeam = async (req, res) => {
 };
 
 
+const teamNameUpdate = async (req, res) => {
+  try {
+    const team_uuid = req.body.uuid;
+    const updateName = req.body.name;
+    const updateData = {};
+
+    updateData.name = updateName;
+
+    await Team.update(updateData, {
+      where: { uuid: team_uuid },
+    });
+
+    return res.status(200).send({
+      Success: "Your Team Name Sucessfully Changed",
+    });
+  } catch (err) {
+    return res.status(400).send({
+      Error: "Your Team Name Cannot Changed",
+    });
+  }
+};
+
+const getActiveUsersForTeam = async (req, res) => {
+  try {
+    const team_uuid = req.params.uuid;
+    const userDetail = await User.findAll({
+      attributes: ["username", "isAdmin", "email"],
+      include: {
+        model: UserTeams,
+        where: { team_uuid: team_uuid }, // Filter by team_uuid
+      },
+    });
+    return res.status(200).json({
+      userDetail,
+    });
+  } catch (error) {
+    console.error("Error executing the query:", error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
 const addNewBatch = async (req, res) => {
   const team_uuid = req.body.uuid;
   const batch = await Batch.create({
     uuid: uuid.v4(),
     team_uuid: team_uuid,
   });
-  // console.log(batch)
   if (batch) {
     return res.status(200).send({
       Success: "Your Batch Created Sucessfully",
@@ -162,7 +213,7 @@ const addNewScripts = async (req, res) => {
     },
   });
 
-  console.log(existingDocument);
+  // console.log(existingDocument);
   if (existingDocument) {
     slug = `${originalSlug}-${existingDocument.length}`;
   }
@@ -283,12 +334,13 @@ const getScript = async (req, res) => {
 };
 
 const getAllTeam = async (req, res) => {
-  const getAllTeam = await Team.findAll({
-    where: {
-      user_uuid: req.user.id,
-    },
-  });
+  const user = req.user.id;
+  const query = `select * from user_team_members inner join teams on user_team_members.team_uuid = teams.uuid inner join users on user_team_members.user_uuid = users.uuid where users.uuid = :user`;
 
+  const [getAllTeam] = await sequelize.query(query, {
+    replacements: { user },
+  });
+  console.log(getAllTeam);
   return res.status(200).send({
     getAllTeam,
   });
@@ -475,6 +527,7 @@ const addScriptTitle = async (req, res) => {
 
 const updatePageData = async (req, res) => {
   let paths;
+
   const page = await Page.findOne({
     where: {
       uuid: req.body.id,
@@ -486,7 +539,6 @@ const updatePageData = async (req, res) => {
       uuid: page.script_uuid,
     },
   });
-  console.log(script.path);
 
   if (page.page_uuid) {
     const parentPage = await Page.findOne({
@@ -517,6 +569,47 @@ const updatePageData = async (req, res) => {
       where: { uuid: req.body.id },
     }
   );
+
+  async function updateChildPagePaths(parentPath, parentId) {
+    const childpages = await Page.findAll({
+      where: {
+        page_uuid: parentId,
+      },
+    });
+
+    for (let childpage of childpages) {
+      console.log(childpage.path.split("/"));
+
+      let lo = childpage.path.replace(childpage.path, parentPath);
+
+      //  await Page.update(
+      //   {
+      //     path: lo,
+      //   },
+      //   {
+      //     where: { page_uuid: req.body.id },
+      //   }
+
+      // );
+
+      await updateChildPagePaths(parentPath, childpage.uuid);
+    }
+  }
+
+  const parentPage = await Page.findOne({
+    where: {
+      uuid: req.body.id,
+    },
+  });
+
+  if (parentPage) {
+    const parentPath = parentPage.path;
+
+    await updateChildPagePaths(parentPath, parentPage.uuid);
+  } else {
+    console.log("Parent page not found");
+  }
+
   return res.status(200).json({ updateData });
 };
 
@@ -686,6 +779,70 @@ const particularPageRender = async (req, res) => {
   return res.status(200).json({ publicUrl });
 };
 
+const inviteTeams = async (req, res) => {
+  const email = req.body.email;
+  const is_progress = req.body.is_progress;
+  const team_uuid = req.body.team_uuid;
+
+  const exitsInviteUsers = await Invite.findOne({
+    where: { email: email },
+  });
+  if (exitsInviteUsers) {
+    return res.status(400).json(`${email} this email already sended invite`);
+  } else {
+    await Invite.create({
+      email: email,
+      is_progess: is_progress,
+      uuid: uuid.v4(),
+      team_uuid: team_uuid,
+    });
+     
+    const exitsUsers = await User.findOne({
+      where: { email: email },
+    });
+    let link;
+    if(exitsUsers){
+       link = `http://localhost:3000/email-verify/${user.uuid}/${setToken.token}`;
+    }
+    else{
+      
+    }
+
+
+    const emailTemplate = fs.readFileSync(
+      path.join(__dirname, "../../", "public", "emailTemplates/invite.html"),
+      "utf8"
+    );
+
+    const emailink = emailTemplate.replace("{{link}}", link);
+
+    await sendEmail(email, "Invite Notification", emailink);
+
+    return res.status(200).json(`Invite Sended Sucucessfully to this ${email}`);
+  }
+};
+
+// Roles creation by bulk seeding
+const blukCreation = async () => {
+  const existsRoles = await Roles.findAll({});
+  if (existsRoles.length === 0) {
+    await Roles.bulkCreate([
+      { name: "admin" },
+      { name: "viewer" },
+      { name: "editor" },
+    ])
+      .then(() => {
+        console.log("Default roles inserted successfully.");
+      })
+      .catch((error) => {
+        console.error("Error inserting default roles:", error);
+      });
+  } else {
+    console.log("Roles already exist.");
+  }
+};
+blukCreation();
+
 module.exports = {
   createTeams,
   getTeam,
@@ -708,4 +865,8 @@ module.exports = {
   particularPageRender,
   teamNameUpdate,
   getActiveUsersForTeam,
+<<<<<<< HEAD
+=======
+  inviteTeams,
+>>>>>>> feature_batch
 };

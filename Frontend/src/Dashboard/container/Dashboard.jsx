@@ -80,6 +80,7 @@ export default function Dashboard() {
       .get(`/getAllTeam`)
       .then((res) => {
         setAllTeam(res.data.getAllTeam);
+     
       })
       .catch((err) => {});
   };

@@ -135,7 +135,7 @@ export default function SideNavLarge(props) {
                   {AllTeams.map((team) => (
                     <li
                       key={team.uuid}
-                      id={team.uuid}
+                      id={team.team_uuid}
                       onClick={props.clickSwitch}
                       className="text-base cursor-pointer hover:text-purple-400 "
                     >

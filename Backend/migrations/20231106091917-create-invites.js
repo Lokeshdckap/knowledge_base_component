@@ -2,22 +2,30 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('teams', {
+    await queryInterface.createTable('invites', {
       id: {
         allowNull: false,
         autoIncrement: true,
-        type: Sequelize.INTEGER,
         primaryKey: true,
-
-      },
-      name: {
-        type: Sequelize.STRING
+        type: Sequelize.INTEGER
       },
       uuid: {
+        type: Sequelize.UUID
+      },
+      email: {
+        type: Sequelize.STRING
+      },
+      is_progess: {
+        type: Sequelize.INTEGER,
         allowNull: false,
+
+      },
+      team_uuid: {
         type: Sequelize.UUID,
-        unique:true,
-        
+        references: {
+          model: "teams", // This references the 'teams' table
+          key: "uuid", // This references the 'uuid' column in the 'teams' table
+        },
       },
       createdAt: {
         allowNull: false,
@@ -30,6 +38,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('teams');
+    await queryInterface.dropTable('invites');
   }
 };

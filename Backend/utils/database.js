@@ -11,7 +11,6 @@ const sequelize = new Sequelize(
 
 //checking if connection is done
 
-
 sequelize
   .authenticate()
   .then(() => {
@@ -46,6 +45,35 @@ db.script = require("../models/script")(sequelize, DataTypes);
 
 db.pages = require("../models/pages")(sequelize, DataTypes);
 
+db.invites = require("../models/invites")(sequelize, DataTypes);
+
+db.roles_type = require("../models/roles_type")(sequelize, DataTypes);
+
+db.user_team_members = require("../models/user_team_members")(
+  sequelize,
+  DataTypes
+);
+
+db.users.hasMany(db.user_team_members, {
+  foreignKey: "user_uuid",
+  sourceKey: "uuid",
+});
+
+db.user_team_members.belongsTo(db.users, {
+  foreignKey: "user_uuid",
+  sourceKey: "uuid",
+});
+
+db.teams.hasMany(db.user_team_members, {
+  foreignKey: "team_uuid",
+  sourceKey: "uuid",
+});
+
+db.user_team_members.belongsTo(db.teams, {
+  foreignKey: "team_uuid",
+  sourceKey: "uuid",
+});
+
 db.teams.hasMany(db.batch, { foreignKey: "team_uuid", targetKey: "uuid" });
 
 db.batch.belongsTo(db.teams, { foreignKey: "team_uuid", targetKey: "uuid" });
@@ -61,10 +89,6 @@ db.script.belongsTo(db.batch, { foreignKey: "batch_uuid", targetKey: "uuid" });
 db.script.hasMany(db.pages, { foreignKey: "script_uuid", targetKey: "uuid" });
 
 db.pages.belongsTo(db.script, { foreignKey: "script_uuid", targetKey: "uuid" });
-
-// db.batch.hasMany(db.script, { foreignKey: 'batch_uuid',targetKey:"uuid" });
-
-// db.script.belongsTo(db.batch, { foreignKey: 'batch_uuid',sourceKey:"uuid" });
 
 db.pages.belongsTo(db.pages, {
   as: "ParentPage",

@@ -13,6 +13,7 @@ import TeamPage from "./Dashboard/components/TeamPage";
 import { Batch } from "./Batch/container/Batch";
 import { Scripts } from "./Scripts/container/Scripts";
 import { UrlPage } from "./common/commonLayouts/UrlPage";
+import { Team } from "./Team/container/Team.jsx";
 
 
 const router = createBrowserRouter([
@@ -22,7 +23,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/',
-        element: <Navigate to={`/dashboard/${localStorage.getItem("ACCESS_TOKEN")}`} />
+        element: <Navigate to={`/dashboard/${localStorage.getItem("team_uuid")}`} />
       },
       {
         path: "/dashboard/:uuid",
@@ -43,6 +44,10 @@ const router = createBrowserRouter([
       {
         path: "/share",
         element: <TeamPage />,
+      },
+      {
+        path: `/dashboard/:uuid/:slug`,
+        element: <Team />
       },
 
     ],

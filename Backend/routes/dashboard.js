@@ -109,11 +109,22 @@ router.get('/documents/:slug',
 dashboardController.newDocuments
 );
 
-router.get('/scripts/:slug',
+router.get('/scripts/:slug/:checked',
 dashboardController.publicUrls
 );
 router.get('/pages/:slug/*',
 dashboardController.particularPageRender
+);
+
+
+router.post('/updateTeamName',
+verifyAuthMiddleware.verifyToken,
+dashboardController.teamNameUpdate
+);
+
+router.get('/getAciveUsers/:uuid',
+verifyAuthMiddleware.verifyToken,
+dashboardController.getActiveUsersForTeam
 );
 
 module.exports = router;

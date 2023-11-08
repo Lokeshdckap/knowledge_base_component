@@ -65,11 +65,63 @@ const getTeam = async (req, res) => {
       },
     });
 
-    res.status(200).json(Teams);
+   return res.status(200).json(Teams);
   } catch (error) {
-    res.status(500).json({ error: "Internal server error" });
+   return res.status(500).json({ error: "Internal server error" });
   }
 };
+const teamNameUpdate = async (req, res) => {
+  try {
+    const team_uuid = req.body.uuid;
+    const updateName = req.body.name;
+    const updateData = {};
+
+    updateData.name = updateName;
+
+    await Team.update(updateData, {
+      where: { uuid: team_uuid },
+    });
+
+    return res.status(200).send({
+      Success: "Your Team Name Sucessfully Changed",
+    });
+  } catch (err) {
+    return res.status(400).send({
+      Error: "Your Team Name Cannot Changed",
+    });
+  }
+};
+
+
+
+const getActiveUsersForTeam = async (req, res) => {
+
+  try {
+    const team_uuid = req.params.uuid;
+    const userDetail = await Team.findAll(
+      // { attributes: ["username", "isAdmin","email"] },
+      {
+
+        include: [
+          {
+            model: User,
+            where: { uuid: team_uuid },
+
+            // [Op.and]: [{ uuid: team_uuid }, { user_uuid: req.user.id }],
+          },
+        ],
+      }
+    );
+    return res.status(200).send({
+      userDetail,
+    });
+  } catch (err) {
+    return res.status(400).send({
+      Error: "Not Found User Data",
+    });
+  }
+};
+
 
 const addNewBatch = async (req, res) => {
   const team_uuid = req.body.uuid;
@@ -557,51 +609,71 @@ const newDocuments = async (req, res) => {
 
 const publicUrls = async (req, res) => {
   const script_uuid = req.params.slug;
+  const checked = req.params.checked;
+
+
 
   const is_publishedCheck = await Script.findOne({
     where: { uuid: script_uuid },
   });
 
-  // console.log(is_publishedCheck.is_published);
+  let value = checked == "true" ? 1:0
+ 
 
-  if (is_publishedCheck.is_published) {
-    const updateData = { is_published: 0 };
-
+    // if(is_publishedCheck.is_published){
     try {
-      await Script.update(updateData, {
-        where: { uuid: script_uuid },
-        returning: true,
+      await Script.update(
+        {
+          is_published : value
+        },
+        {
+        where: { uuid: script_uuid }},
+
+        );
+        const publicUrl = await Script.findOne({
+        where: { uuid:script_uuid },
       });
-      const publicUrl = await Page.findAll({
-        where: { script_uuid },
-        include: [{ model: Script, attributes: ["path", "is_published"] }], // Include the associated script with the 'script_name' attribute
-      });
-      return res.status(200).send(publicUrl);
+    return res.status(200).json({publicUrl});
+      // const publicUrl = await Page.findAll({
+      //   where: { script_uuid },
+      //   include: [{ model: Script, attributes: ["path", "is_published"] }], // Include the associated script with the 'script_name' attribute
+      // });
+      // return res.status(200).send(publicUrl);
     } catch (error) {
       return res
         .status(500)
         .json({ message: "Error updating data", error: error.message });
     }
-  } else {
-    const updateData = { is_published: 1 };
+  // }
+//   else {
+//     try {
+//       await Script.update(
+//         {
+//           is_published : value
+//         },
+//         {
+//         where: { uuid: script_uuid }},
 
-    try {
-      await Script.update(updateData, {
-        where: { uuid: script_uuid },
-        returning: true,
-      });
-      const publicUrl = await Page.findAll({
-        where: { script_uuid },
-        include: [{ model: Script, attributes: ["path", "is_published"] }], // Include the associated script with the 'script_name' attribute
-      });
-      return res.status(200).send(publicUrl);
-    } catch (error) {
-      return res
-        .status(500)
-        .json({ message: "Error updating data", error: error.message });
-    }
-  }
-};
+//         );
+      
+      
+//         const publicUrl = await Script.findOne({
+//         where: { uuid:script_uuid },
+//       });
+//     return res.status(200).json({publicUrl});
+//       // const publicUrl = await Page.findAll({
+//       //   where: { script_uuid },
+//       //   include: [{ model: Script, attributes: ["path", "is_published"] }], // Include the associated script with the 'script_name' attribute
+//       // });
+//       // return res.status(200).send(publicUrl);
+//     } catch (error) {
+//       return res
+//         .status(500)
+//         .json({ message: "Error updating data", error: error.message });
+//     }
+//   // }
+// };
+}
 
 const particularPageRender = async (req, res) => {
   const { slug } = req.params;
@@ -634,4 +706,6 @@ module.exports = {
   newDocuments,
   publicUrls,
   particularPageRender,
+  teamNameUpdate,
+  getActiveUsersForTeam,
 };

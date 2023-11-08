@@ -1,12 +1,38 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Switch } from "antd";
+import ClipboardJS from "clipboard";
+import { ToastContainer, toast } from "react-toastify";
 export const PublishPopup = (props) => {
-    console.log(props.publish);
-    const [publishUrl,setPublishUrl] = useState(props.publish)
+  const textToCopyRef = useRef(null);
+  const buttonRef = useRef(null);
+  let clipboard = null;
 
-    useEffect(() => {
-      setPublishUrl(props.publish)
-    },[props.publish])
+  // const [publishUrl, setPublishUrl] = useState(null);
+
+  const showToastMessage = (data) => {
+    toast.success(data, {
+      position: toast.POSITION.TOP_RIGHT,
+    });
+  };
+
+  useEffect(() => {
+    console.log(props.renderScript);
+
+    clipboard = new ClipboardJS(buttonRef.current, {
+      text: () => textToCopyRef.current.innerText,
+    });
+    clipboard.on("success", (e) => {
+      e.clearSelection(); // Deselect the text
+      showToastMessage("Text copied to clipboard!");
+    });
+
+    return () => {
+      if (clipboard) {
+        clipboard.destroy();
+      }
+    };
+  }, [props.renderScript]);
+
   return (
     <div>
       <div className="bg-primary opacity-[0.5] w-[1289px] h-[664px] absolute top-0 left-0  z-10"></div>
@@ -57,16 +83,15 @@ export const PublishPopup = (props) => {
                         </p>
                       </div>
                       <div className="pt-5">
-
-                        <Switch default onChange={props.onChange} className="bg-gray-400"/>
-
+                        <Switch
+                          checked={props.renderScript.is_published}
+                          onChange={props.onChange}
+                          className="bg-gray-400"
+                        />
                       </div>
                     </div>
                   </div>
-                  
                 </div>
-
-                {/* {
                 <div className="box-border border-[#c5ccd8] h-32 w-full border-[1px] rounded bg-white">
                   <div className="w-[500px] m-auto">
                     <div className="flex justify-between mt-4 items-center">
@@ -80,10 +105,17 @@ export const PublishPopup = (props) => {
                     </div>
                     <div className="box-border border-[#c5ccd8] h-10 w-full border-[1px] rounded bg-sky-100 mt-4 ">
                       <div className="flex justify-between w-[450px] items-center m-auto">
-                        <p className="">http://localhost:3000/title</p>
-
+                        <p ref={textToCopyRef}>
+                          {!props.renderScript.is_published
+                            ? ""
+                            : `http://localhost:3000${props.renderScript.path}`}
+                        </p>
                         <div className="box-border border-[#c5ccd8] h-8 w-24 border-[1px] rounded bg-white flex space-x-2 mt-0.5 hover:bg-sky-200 cursor-pointer">
-                          <p className="text-lg text-gray-400">
+                          <p
+                            className="text-lg text-gray-400"
+                            ref={buttonRef}
+                            data-clipboard-text="Copy Text"
+                          >
                             <i class="fa-regular fa-copy pl-5 text-sm pr-2 text-gray-400"></i>
                             copy
                           </p>
@@ -92,19 +124,12 @@ export const PublishPopup = (props) => {
                     </div>
                   </div>
                 </div>
-
-                } */}
-              </div>
-              
-              <div>
-               {console.log(publishUrl.data)}
-               <p>{Object.keys(publishUrl).length == 0 ? "" : `http://localhost:3000${publishUrl.data[0].script.path}`}</p>
-                {/* <p>{publishUrl.length > 0 ? `http://localhost:3000${props.publish.data[0].script.path}` : ""}</p> */}
               </div>
             </div>
           </div>
         </div>
       </div>
+      <ToastContainer />
     </div>
   );
 };

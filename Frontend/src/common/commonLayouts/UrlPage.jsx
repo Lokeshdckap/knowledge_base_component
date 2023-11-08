@@ -20,12 +20,12 @@ export const UrlPage = () => {
   const [loadPage, setLoadPage] = useState({});
 
   useEffect(() => {
+    console.log(slug);
+    console.log(wildcardValue);
     if (wildcardValue) {
       axiosClient
         .get(`/pages/${slug}/${wildcardValue}`)
         .then((res) => {
-          // setPages(res.data);
-          // setScript(res.data.script);
           setLoadPage(res.data.publicUrl);
           setEditorValue(res.data.publicUrl.content);
         })
@@ -34,24 +34,25 @@ export const UrlPage = () => {
         });
     }
 
-    axiosClient
+       axiosClient
       .get(`/documents/${slug}`)
       .then((res) => {
+        if (!res.data.script.is_published) {
+          navigate("/");
+        }
         setPages(res.data.hierarchy);
         setScript(res.data.script);
       })
       .catch((err) => {
         console.log(err);
       });
-  }, [wildcardValue]);
-  // console.log(loadPage.title);
 
-  // const editorRef = useRef(null);
+
+   
+  }, [wildcardValue]);
+
   const ejInstance = useRef();
 
-  // const DEFAULT_INITIAL_DATA = "";
-
-  // const [scrollPosition, setScrollPosition] = useState(0);
   const [editorValue, setEditorValue] = useState(null);
 
   const contentPage = (e) => {
@@ -117,11 +118,11 @@ export const UrlPage = () => {
               className=""
             >
               <PageTree
+              
                 node={topLevelPage}
                 hasSibling={index < page.length - 1}
                 hasParent={false}
                 contentPage={contentPage}
-
               />
             </div>
           ))}

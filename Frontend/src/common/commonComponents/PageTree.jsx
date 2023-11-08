@@ -25,7 +25,7 @@ export const PageTree = ({
   return (
     <div className="mb-1">
       <div
-        className={`flex items-center hover:bg-slate-300   ${"/"+slug+"/"+wildcardValue == node.path ? "bg-slate-300 " : "" } rounded hover:rounded pl-2`}
+        className={`flex items-center hover:bg-slate-300   ${"/"+slug+"/"+wildcardValue == node.path ? "bg-slate-300 " : "" }  rounded hover:rounded pl-2`}
         data-set={node.path}
       >
         <span

@@ -7,6 +7,7 @@ import axiosClient from "../../axios-client";
 import { useNavigate } from "react-router-dom";
 import { ModelPopup } from "../../common/commonComponents/ModelPopup";
 import { PublishPopup } from "../../common/commonComponents/PublishPopup";
+import { InviteUsers } from "../../common/commonLayouts/InviteUsers";
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -36,6 +37,8 @@ export default function Dashboard() {
   });
   const [errors, setError] = useState({});
 
+
+  const [invitePopup,setInvitePopup] = useState(false);
     
   
   //
@@ -245,6 +248,7 @@ export default function Dashboard() {
             handleChildrenScripts={handleChildrenScripts}
             childScript={childScript}
             handleCreate={handleCreate}
+            setInvitePopup={setInvitePopup}
           />
         ) : (
           <SideNav
@@ -271,6 +275,13 @@ export default function Dashboard() {
           {teamPopup &&
             <ModelPopup click={handleCancel}  HandleChange={HandleChange} createTeam={createTeam} columnName={"team_name"} error={errors}/>
           }
+          {invitePopup && 
+              <InviteUsers
+               invitePopup={invitePopup}
+               setInvitePopup={setInvitePopup}
+              /> 
+          }
+        
       </div>
     </div>
   );

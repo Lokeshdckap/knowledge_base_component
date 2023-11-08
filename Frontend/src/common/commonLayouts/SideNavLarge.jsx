@@ -154,12 +154,12 @@ export default function SideNavLarge(props) {
             <div className="mt-2">
               <div className="flex items-center mb-2">
                 <i className="fa-solid fa-sliders"></i>
-                <p className="pl-1">Team setting</p>
+                <p className="pl-1">< Link to={`/dashboard/${localStorage.getItem("team_uuid")}/teamsetting`}>Team setting</Link></p>
               </div>
 
-              <div className="flex items-center mb-2">
-                <i className="fa-solid fa-user-plus"></i>
-                <p className="pl-1">Invite Teamates</p>
+              <div className="flex items-center mb-2" onClick={(() => props.setInvitePopup(true))}>
+                <i className="fa-solid fa-user-plus cursor-pointer"></i>
+                <p className="pl-1 cursor-pointer">Invite Teamates</p>
               </div>
             </div>
             <hr

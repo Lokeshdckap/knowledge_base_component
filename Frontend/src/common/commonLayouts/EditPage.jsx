@@ -9,6 +9,7 @@ import { PublishPopup } from "../commonComponents/PublishPopup";
 // import ImageTool from '@editorjs/image';
 
 export default function EditPage(props) {
+  // console.log(props.renderScript.is_published);
   const [newPagePopup, setNewPagePopup] = useState(false);
 
   const [OverPage, setOverPage] = useState(null);
@@ -67,15 +68,7 @@ export default function EditPage(props) {
               className={`h-px w-[250px] bg-[#D5D7DA] border-0 m-auto dark:bg-gray-900 mt-4`}
             />
             <div>
-              <div>
-                <p
-                  className="text-xl cursor-pointer text-[#90979D] pl-5 pt-3"
-                  onClick={handlePopupPage}
-                >
-                  <i class="fa-regular fa-file" onClick={handlePopupPage}></i>{" "}
-                  New Page
-                </p>
-              </div>
+              
               {newPagePopup && (
                 <div className="box-border bg-white h-28 w-56 p-4 mt-1 border-[1px] m-auto rounded shadow-lg ">
                   <p
@@ -128,7 +121,7 @@ export default function EditPage(props) {
         </div>
       </div>
       {props.shareState && (
-          <PublishPopup setShareState={props.setShareState} onChange={props.onChange} publish={props.publish}/>
+          <PublishPopup setShareState={props.setShareState} onChange={props.onChange} publish={props.publish} renderScript={props.renderScript}/>
       )
 
       }

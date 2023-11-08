@@ -6,6 +6,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import EditHeader from "../../common/commonLayouts/EditHeader";
 import EditPage from "../../common/commonLayouts/EditPage";
 import { PageTree } from "../../common/commonComponents/PageTree";
+import { InviteUsers } from "../../common/commonLayouts/InviteUsers";
 
 export const ScriptComponents = () => {
   const navigate = useNavigate();
@@ -48,10 +49,14 @@ export const ScriptComponents = () => {
   const [publish,setPublish] = useState([]);
   
 
+  const [invitePopup,setInvitePopup] = useState(false);
+
+
   useEffect(() => {
     getTeam();
     getAllTeam();
     getParticularScript(param.uuid);
+
   }, []);
 
   //Event
@@ -64,10 +69,10 @@ export const ScriptComponents = () => {
 
   const getParticularScript = async (uuid) => {
     let script_uuid = uuid;
+    console.log(script_uuid);
     await axiosClient
       .get(`/getScriptAndPage/${script_uuid}`)
-      .then((res) => {
-  
+      .then((res) => {       
         setInputValue(res.data.getScriptAndPages.title);
         setPageContent(res.data.hierarchy[0]);
         setTreeNode(res.data.hierarchy);
@@ -76,6 +81,7 @@ export const ScriptComponents = () => {
         setDescription(res.data.hierarchy[0].description);
         setEditorContent(res.data.hierarchy[0].content);
         setEditorValue(res.data.hierarchy[0].content);
+        setPublish(res.data.getScriptAndPages)
         localStorage.setItem('myData', JSON.stringify(res.data.hierarchy[0]));
         
       })
@@ -125,6 +131,7 @@ export const ScriptComponents = () => {
       .get(`/getScript/${teamuuid}`)
       .then((res) => {
         setScript(res.data.script);
+        console.log(res,"here");
       })
       .catch((err) => {
         console.log(err);
@@ -227,8 +234,6 @@ export const ScriptComponents = () => {
     axiosClient
     .post(`/addChildPage/${param.uuid}/${page_uuid}`)
     .then((res) => {
-      // getParticularScript(param.uuid);
-      console.log(res.data);
       getParticularScript(param.uuid)
     })
     .catch((err) => {
@@ -317,18 +322,15 @@ export const ScriptComponents = () => {
 
 
   const onChange = (checked) => {
-      console.log(param.uuid);
-      axiosClient.get(`/scripts/${param.uuid}`)
+
+      axiosClient.get(`/scripts/${param.uuid}/${checked}`)
       .then((res) => {
-        setPublish(res)
-        // console.log(res);
+        setRenderScript(res.data.publicUrl)
+        console.log(res);
       })
       .catch((err) => {
         console.log(err);
-      });
-
-      
-
+      });     
   };
 
   return (
@@ -392,10 +394,19 @@ export const ScriptComponents = () => {
             setShareState={setShareState}
             onChange={onChange}
             publish={publish}
+            renderScript={renderScript}
+
           />
           {/* <BatchHeader widths={state ? "w-[1000px]" : "w-[1160px]"} />
           <BatchLayouts widths={state ? "w-[1000px]" : "w-[1120px]"} /> */}
         </div>
+        {/* {invitePopup && 
+              <InviteUsers
+
+               invitePopup={invitePopup}
+               setInvitePopup={setInvitePopup}
+              /> 
+          } */}
       </div>
     </div>
   );

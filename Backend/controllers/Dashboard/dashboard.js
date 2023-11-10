@@ -7,7 +7,7 @@ const Batch = db.batch;
 const Script = db.script;
 const Page = db.pages;
 const Invite = db.invites;
-const Roles = db.roles_type;
+const Roles = db.roles_type
 const UserTeams = db.user_team_members;
 const path = require("path");
 const fs = require("fs");
@@ -57,7 +57,9 @@ const createTeams = async (req, res) => {
           Success: "Your Team Created Sucessfully",
           newTeam,
         });
+
       }       else {
+h
         return res.status(500).send({
           Error: "Error Team Not Created",
         });
@@ -75,12 +77,15 @@ const getTeam = async (req, res) => {
     const Teams = await Team.findAll({
       where: { uuid: req.params.uuid },
     });
+
    return  res.status(200).json(Teams);
+
 
   } catch (error) {
    return res.status(500).json({ error: "Internal server error" });
   }
 };
+
 
 
 
@@ -105,6 +110,7 @@ const teamNameUpdate = async (req, res) => {
     });
   }
 };
+
 
 const getActiveUsersForTeam = async (req, res) => {
   try {
@@ -290,7 +296,6 @@ const getAllTeam = async (req, res) => {
   const [getAllTeam] = await sequelize.query(query, {
     replacements: { user },
   });
-  console.log(getAllTeam);
   return res.status(200).send({
     getAllTeam,
   });
@@ -757,10 +762,12 @@ const inviteTeams = async (req, res) => {
     let link;
 
     if(exitsUsers){
+
        link = `http://localhost:3000/signin/${team_uuid}/${role}`;
     }
     else{
        link = `http://localhost:3000/signup/${team_uuid}/${role}`;
+
       
     }
 
@@ -841,5 +848,6 @@ module.exports = {
   getActiveUsersForTeam,
   inviteTeams,
   updateInvite,
+
 
 };

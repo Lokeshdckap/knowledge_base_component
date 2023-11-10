@@ -45,20 +45,17 @@ export const ScriptComponents = () => {
 
   const [particularTitle, setParticularTitle] = useState("");
 
-  const [hoverPageId,setHoverPageId] = useState(null);
+  const [hoverPageId, setHoverPageId] = useState(null);
 
-  const [particularPageId,setParticularPageId] = useState(null);
+  const [particularPageId, setParticularPageId] = useState(null);
 
+  const [editorValue, setEditorValue] = useState([]);
 
-  const [editorValue,setEditorValue] = useState([]);
+  const [shareState, setShareState] = useState(false);
 
-  const [shareState,setShareState] = useState(false);
+  const [publish, setPublish] = useState([]);
 
-  const [publish,setPublish] = useState([]);
-  
-
-  const [invitePopup,setInvitePopup] = useState(false);
-
+  const [invitePopup, setInvitePopup] = useState(false);
 
   useEffect(() => {
     getTeam();
@@ -80,7 +77,7 @@ export const ScriptComponents = () => {
     let script_uuid = params.slug;
     await axiosClient
       .get(`/getScriptAndPage/${script_uuid}`)
-      .then((res) => {       
+      .then((res) => {
         setInputValue(res.data.getScriptAndPages.title);
         setPageContent(res.data.hierarchy[0]);
         setTreeNode(res.data.hierarchy);
@@ -90,6 +87,7 @@ export const ScriptComponents = () => {
         setEditorContent(res.data.hierarchy[0].content);
         setEditorValue(res.data.hierarchy[0].content);
         setPublish(res.data.getScriptAndPages)        
+
       })
       .catch((err) => {
         console.log(err);
@@ -219,7 +217,6 @@ export const ScriptComponents = () => {
   };
 
   const addPage = () => {
-    
     axiosClient
       .post(`/addPageData/${params.slug}`)
       .then((res) => {
@@ -234,6 +231,7 @@ export const ScriptComponents = () => {
 
     let page_uuid = uuid;
     axiosClient
+
     .post(`/addChildPage/${params.slug}/${page_uuid}`)
     .then((res) => {
       getParticularScript()
@@ -242,6 +240,7 @@ export const ScriptComponents = () => {
       console.log(err);
     });
   }
+
 
   const handleChange = async (event) => {
 
@@ -264,8 +263,8 @@ export const ScriptComponents = () => {
         console.log(err);
       });
     
-  };
 
+  };
 
   const contentPage = (e) => {
     setPageId(e.target.id);
@@ -278,33 +277,27 @@ export const ScriptComponents = () => {
         setDescription(res.data.pages[0].description);
         setEditorValue(res.data.pages[0].content);
         setEditorContent(res.data.pages[0].content);
-
       })
       .catch((err) => {
         console.log(err);
       });
   };
 
+  const handleScriptMouseEnter = (e) => {
+    setHoverPageId(e.target.id);
+  };
 
-    const handleScriptMouseEnter = (e) =>{
-      setHoverPageId(e.target.id);
-    }
+  const handleScriptMouseLeave = (e) => {
+    setHoverPageId(null);
+  };
 
-    const handleScriptMouseLeave = (e) => {
-      setHoverPageId(null);
-    }
+  const handleMore = (e) => {
+    setParticularPageId(e.target.id);
+    addChildPage(e.target.id);
+  };
 
-    const handleMore = (e) =>{
-      setParticularPageId(e.target.id);
-      addChildPage(e.target.id);
+  const onDragEnd = (result) => {
 
-
-     
-      
-    }
-
-  
-      const onDragEnd = (result) => {
     // Handle the drag-and-drop logic here
     if (!result.destination) {
       return;
@@ -313,18 +306,14 @@ export const ScriptComponents = () => {
     const updatedTree = [...treeNode];
     const [movedNode] = updatedTree.splice(result.source.index, 1);
     updatedTree.splice(result.destination.index, 0, movedNode);
-  
+
     setTreeNode(updatedTree);
     // setTreeData(/* Updated tree data */);
   };
 
-
-
-  const HandleShare = () =>{
-      setShareState(true);
-
-  }
-
+  const HandleShare = () => {
+    setShareState(true);
+  };
 
   const handleCreate = () =>{
     setTeamPopup(true);
@@ -345,15 +334,14 @@ export const ScriptComponents = () => {
     delete errors[name];
   };
   const onChange = (checked) => {
-
       axiosClient.get(`/scripts/${params.slug}/${checked}`)
       .then((res) => {
-        setRenderScript(res.data.publicUrl)
+        setRenderScript(res.data.publicUrl);
         console.log(res);
       })
       .catch((err) => {
         console.log(err);
-      });     
+      });
   };
 
 
@@ -433,7 +421,6 @@ export const ScriptComponents = () => {
             setInputValue={setInputValue}
             renderScript={renderScript}
             HandleShare={HandleShare}
-            
           />
           <EditPage
             widths={state ? "w-[785px]" : "w-[933px]"}
@@ -460,7 +447,6 @@ export const ScriptComponents = () => {
             onChange={onChange}
             publish={publish}
             renderScript={renderScript}
-
           />
             {teamPopup &&
             <ModelPopup click={handleCancel}  HandleChange={HandleChange} createTeam={createTeam} columnName={"team_name"} error={errors}/>

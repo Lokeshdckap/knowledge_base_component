@@ -18,7 +18,7 @@ export default function EditHeader(props) {
         <div >
           <button
             type="button"
-            class="text-white bg-primary hover:bg-primary pb-1  font-medium rounded-lg text-lg h-9 w-24 mr-2 mb-2  focus:outline-none "
+            className="text-white bg-primary hover:bg-primary pb-1  font-medium rounded-lg text-lg h-9 w-24 mr-2 mb-2  focus:outline-none "
             onClick={props.clickPublish}
           >
             Save
@@ -26,7 +26,7 @@ export default function EditHeader(props) {
             <Link to={`dashboard/${localStorage.getItem("ACCESS_TOKEN")}/*`} >
                 <button
                   type="button"
-                  class="text-textPrimary border-[1px] border-gray-400 font-medium rounded-lg text-sm h-9 w-24 mr-2 mb-2 "
+                  className="text-textPrimary border-[1px] border-gray-400 font-medium rounded-lg text-sm h-9 w-24 mr-2 mb-2 "
                   onClick={props.HandleShare}
                 >
                   Share

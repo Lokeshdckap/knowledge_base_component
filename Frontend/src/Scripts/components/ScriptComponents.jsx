@@ -7,19 +7,27 @@ import EditHeader from "../../common/commonLayouts/EditHeader";
 import EditPage from "../../common/commonLayouts/EditPage";
 import { PageTree } from "../../common/commonComponents/PageTree";
 import { InviteUsers } from "../../common/commonLayouts/InviteUsers";
+import { ModelPopup } from "../../common/commonComponents/ModelPopup";
 
 export const ScriptComponents = () => {
   const navigate = useNavigate();
-  const param = useParams();
+  const params = useParams();
 
   //hooks
 
   //state
+
+  const [formValues, setFormValues] = useState({
+
+  });
+  const [errors, setError] = useState({});
   const [state, setState] = useState(true);
   const [team, setTeam] = useState([]);
   const [allTeam, setAllTeam] = useState([]);
   const [batch, setBatch] = useState([]);
   const [script, setScript] = useState([]);
+  const [teamPopup,setTeamPopup] = useState(false);
+
 
   const [childScript, setChildScript] = useState([]);
   const [inputValue, setInputValue] = useState("");
@@ -55,9 +63,10 @@ export const ScriptComponents = () => {
   useEffect(() => {
     getTeam();
     getAllTeam();
-    getParticularScript(param.uuid);
+    getParticularScript();
 
-  }, []);
+
+  }, [params.slug]);
 
   //Event
 
@@ -67,9 +76,8 @@ export const ScriptComponents = () => {
 
   //Api
 
-  const getParticularScript = async (uuid) => {
-    let script_uuid = uuid;
-    console.log(script_uuid);
+  const getParticularScript = async () => {
+    let script_uuid = params.slug;
     await axiosClient
       .get(`/getScriptAndPage/${script_uuid}`)
       .then((res) => {       
@@ -81,9 +89,7 @@ export const ScriptComponents = () => {
         setDescription(res.data.hierarchy[0].description);
         setEditorContent(res.data.hierarchy[0].content);
         setEditorValue(res.data.hierarchy[0].content);
-        setPublish(res.data.getScriptAndPages)
-        localStorage.setItem('myData', JSON.stringify(res.data.hierarchy[0]));
-        
+        setPublish(res.data.getScriptAndPages)        
       })
       .catch((err) => {
         console.log(err);
@@ -91,7 +97,8 @@ export const ScriptComponents = () => {
   };
 
   const getTeam = async () => {
-    let teamUUID = localStorage.getItem("team_uuid");
+    let teamUUID = params.uuid;
+
     await axiosClient
       .get(`/getTeam/${teamUUID}`)
       .then((res) => {
@@ -131,7 +138,6 @@ export const ScriptComponents = () => {
       .get(`/getScript/${teamuuid}`)
       .then((res) => {
         setScript(res.data.script);
-        console.log(res,"here");
       })
       .catch((err) => {
         console.log(err);
@@ -139,7 +145,7 @@ export const ScriptComponents = () => {
   };
 
   const addNewBatch = (e) => {
-    let team_uuid = localStorage.getItem("team_uuid");
+    let team_uuid = params.uuid;
 
     axiosClient
       .post("/addNewBatch", { uuid: team_uuid })
@@ -152,7 +158,7 @@ export const ScriptComponents = () => {
   };
 
   const addNewScript = (e) => {
-    let team_uuid = localStorage.getItem("team_uuid");
+    let team_uuid = params.uuid;
     let batch_uuid = e.target.id;
 
     axiosClient
@@ -168,22 +174,22 @@ export const ScriptComponents = () => {
 
   const switchTeamEvent = (e) => {
     const TeamId = e.target.id;
-    localStorage.removeItem("team_uuid");
-    localStorage.setItem("team_uuid", TeamId);
     getTeam();
     getAllTeam();
-    navigate(`/dashboard/${localStorage.getItem("team_uuid")}`);
+    navigate(`/dashboard/${TeamId}`);
   };
+
 
   let batch_uuid;
 
   const handleChildrenScripts = async (e) => {
-    let team_uuid = localStorage.getItem("team_uuid");
+    let team_uuid = params.uuid;
     batch_uuid = e.target.id;
 
     await axiosClient
       .get(`/getBatchAndScripts/${team_uuid}/${batch_uuid}`)
       .then((res) => {
+        console.log(res);
         setChildScript(res.data.result);
       })
       .catch((err) => {
@@ -194,8 +200,6 @@ export const ScriptComponents = () => {
   //Editor functionality
 
   const handleSave = () => {
-    // console.log(editorValue);
-    // setEditorContent(editorContentData);
     const postData = {
       id: pageId,
       title: particularTitle ? particularTitle : "Page Name",
@@ -203,24 +207,23 @@ export const ScriptComponents = () => {
       content: editorContent,
     };
 
-  console.log(postData);
     axiosClient
       .post("/updatePageData", postData)
       .then((res) => {
-        console.log(res);
+        // console.log(res);
       })
       .catch((err) => {
         console.log(err);
       });
-    getParticularScript(param.uuid);
+    getParticularScript();
   };
 
   const addPage = () => {
     
     axiosClient
-      .post(`/addPageData/${param.uuid}`)
+      .post(`/addPageData/${params.slug}`)
       .then((res) => {
-        getParticularScript(param.uuid);
+        getParticularScript();
       })
       .catch((err) => {
         console.log(err);
@@ -228,13 +231,12 @@ export const ScriptComponents = () => {
   };
 
   const addChildPage = (uuid) => {
-    // console.log(uuid,"ll");
-    console.log(uuid);
+
     let page_uuid = uuid;
     axiosClient
-    .post(`/addChildPage/${param.uuid}/${page_uuid}`)
+    .post(`/addChildPage/${params.slug}/${page_uuid}`)
     .then((res) => {
-      getParticularScript(param.uuid)
+      getParticularScript()
     })
     .catch((err) => {
       console.log(err);
@@ -242,24 +244,26 @@ export const ScriptComponents = () => {
   }
 
   const handleChange = async (event) => {
+
+    console.log(event);
     const inputValue = event;
 
     const encodedInputValue = encodeURIComponent(inputValue);
 
     setInputValue(inputValue); // Update the state with the current value
 
-    let paraId = param.uuid;
-
-    try {
-      const response = await axiosClient.get(
+    let paraId = params.slug;
+    console.log(paraId);
+    axiosClient.get(
         `/addScriptTitle?inputValue=${encodedInputValue}&queryParameter=${paraId}`
-      );
-
-      console.log(response);
-    } catch (err) {
-      console.log(err);
-
-    }
+      )
+      .then((res) => {
+       console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    
   };
 
 
@@ -294,6 +298,7 @@ export const ScriptComponents = () => {
       setParticularPageId(e.target.id);
       addChildPage(e.target.id);
 
+
      
       
     }
@@ -321,9 +326,27 @@ export const ScriptComponents = () => {
   }
 
 
+  const handleCreate = () =>{
+    setTeamPopup(true);
+  }
+
+
+  const handleCancel = () =>{
+    setTeamPopup(false);
+  
+  
+  }
+
+
+  const HandleChange = (e) => {
+    const { name, value } = e.target;
+    console.log(e.target.value);
+    setFormValues({ ...formValues, [name]: value });
+    delete errors[name];
+  };
   const onChange = (checked) => {
 
-      axiosClient.get(`/scripts/${param.uuid}/${checked}`)
+      axiosClient.get(`/scripts/${params.slug}/${checked}`)
       .then((res) => {
         setRenderScript(res.data.publicUrl)
         console.log(res);
@@ -332,6 +355,47 @@ export const ScriptComponents = () => {
         console.log(err);
       });     
   };
+
+
+  const createTeam = () => {
+    // alert("je")
+
+    const validationErrors = {};
+
+    if (!formValues.team_name) {
+      validationErrors.team_name = "Team is required";
+    }
+      
+  setError(validationErrors);
+  if (Object.keys(validationErrors).length === 0) {
+
+      axiosClient.post("/team",formValues)
+      .then((res) => {
+
+        })
+        .catch((err) => {
+          const response = err.response;
+          if (response && response.status === 400) {
+
+            // console.log(response);
+            let error = {};
+            let keys = Object.keys(response.data);
+            let value = Object.values(response.data);
+            console.log(value);
+
+            error[keys] = value;
+
+            setError(error);
+
+          } 
+          else {
+
+            console.error("Error:", response.status);
+          }
+        });
+    
+  }
+}
 
   return (
     <div className="relative">
@@ -349,6 +413,7 @@ export const ScriptComponents = () => {
             handleChildrenScripts={handleChildrenScripts}
             childScript={childScript}
             getParticularScript={getParticularScript}
+            handleCreate={handleCreate}
           />
         ) : (
           <SideNav
@@ -397,6 +462,9 @@ export const ScriptComponents = () => {
             renderScript={renderScript}
 
           />
+            {teamPopup &&
+            <ModelPopup click={handleCancel}  HandleChange={HandleChange} createTeam={createTeam} columnName={"team_name"} error={errors}/>
+          }
           {/* <BatchHeader widths={state ? "w-[1000px]" : "w-[1160px]"} />
           <BatchLayouts widths={state ? "w-[1000px]" : "w-[1120px]"} /> */}
         </div>

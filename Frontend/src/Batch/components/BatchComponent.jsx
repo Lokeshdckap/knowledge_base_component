@@ -11,21 +11,21 @@ import { useNavigate, useParams } from "react-router-dom";
 import { EditorComponents } from "../../common/commonComponents/EditorComponents";
 import { BatchHeader } from "../../common/commonLayouts/BatchHeader";
 import { BatchLayouts } from "../../common/commonLayouts/BatchLayouts";
+import { ModelPopup } from "../../common/commonComponents/ModelPopup";
 
 export const BatchComponent = () => {
   const navigate = useNavigate();
-  const param = useParams();
+  const params = useParams();
 
   //hooks
 
-  useEffect(() => {
-    getTeam();
-    getAllTeam();
-    getScripts();
-    console.log("hello");
-  }, [param.uuid]);
 
   //state
+  const [formValues, setFormValues] = useState({
+
+  });
+  const [errors, setError] = useState({});
+  const [teamPopup,setTeamPopup] = useState(false);
   const [state, setState] = useState(true);
   const [team, setTeam] = useState([]);
   const [allTeam, setAllTeam] = useState([]);
@@ -37,29 +37,36 @@ export const BatchComponent = () => {
   const [batchTitle, setBatchTitle] = useState("");
   const [batchDescription, setbatchDescription] = useState("");
 
+
+  useEffect(() => {
+    getTeam();
+    getAllTeam();
+    getScripts();
+
+  }, [params.slug,batchTitle]);
   //Event
   const handleClick = () => {
     // setState((prevState) => !prevState);
     if (state) {
       setState(localStorage.setItem("sidePopUp", true));
     } else {
-      // localStorage.setItem("sidePopUp",true);
+
       setState(localStorage.setItem("sidePopUp", false));
     }
-    // console.log(localStorage.setItem("sidePopUp",true));
-    console.log(state);
+
   };
 
   //Api
 
   const getTeam = async () => {
-    let teamUUID = localStorage.getItem("team_uuid");
+
     await axiosClient
-      .get(`/getTeam/${teamUUID}`)
+      .get(`/getTeam/${params.uuid}`)
       .then((res) => {
         setTeam(res.data[0]);
-        getBatch(teamUUID);
-        getScript(teamUUID);
+
+        getBatch(params.uuid);
+        getScript(params.uuid);
       })
       .catch((err) => {
         console.log(err);
@@ -67,8 +74,8 @@ export const BatchComponent = () => {
   };
 
   const getAllTeam = () => {
-    axiosClient
-      .get(`/getAllTeam`)
+
+    axiosClient.get("/getAllTeam")
       .then((res) => {
         setAllTeam(res.data.getAllTeam);
       })
@@ -79,7 +86,6 @@ export const BatchComponent = () => {
     await axiosClient
       .get(`/getBatch/${teamuuid}`)
       .then((res) => {
-        console.log(res);
         setBatch(res.data.batchs);
       })
       .catch((err) => {
@@ -99,7 +105,7 @@ export const BatchComponent = () => {
   };
 
   const addNewBatch = (e) => {
-    let team_uuid = localStorage.getItem("team_uuid");
+    let team_uuid = params.uuid;
     axiosClient
       .post("/addNewBatch", { uuid: team_uuid })
       .then((res) => {
@@ -111,7 +117,7 @@ export const BatchComponent = () => {
   };
 
   const addNewScript = (e) => {
-    let team_uuid = localStorage.getItem("team_uuid");
+    let team_uuid = params.uuid;
     let batch_uuid = e.target.id;
 
     axiosClient
@@ -127,15 +133,13 @@ export const BatchComponent = () => {
 
   const switchTeamEvent = (e) => {
     const TeamId = e.target.id;
-    localStorage.removeItem("team_uuid");
-    localStorage.setItem("team_uuid", TeamId);
     getTeam();
     getAllTeam();
-    navigate(`/dashboard/${localStorage.getItem("team_uuid")}`);
+    navigate(`/dashboard/${TeamId}`);
   };
 
   const handleChildrenScripts = async (e) => {
-    let team_uuid = localStorage.getItem("team_uuid");
+    let team_uuid = params.uuid;
     let batch_uuid = e.target.id;
     await axiosClient
       .get(`/getBatchAndScripts/${team_uuid}/${batch_uuid}`)
@@ -149,13 +153,14 @@ export const BatchComponent = () => {
   };
 
   const getScripts = async () => {
-    let team_uuid = localStorage.getItem("team_uuid");
-    let batch_uuid = param.uuid;
-    // console.log(batch_uuid,"scr");
+    let team_uuid = params.uuid;
+    let batch_uuid = params.slug;
 
     await axiosClient
       .get(`/getBatchAndScripts/${team_uuid}/${batch_uuid}`)
       .then((res) => {
+        // console.log(res.data.result[0].batch.title);
+        // console.log(res.data.result[0].batch.description);
         setBatchTitle(res.data.result[0].batch.title);
         setbatchDescription(res.data.result[0].batch.description);
         setScripts(res.data.result);
@@ -165,13 +170,13 @@ export const BatchComponent = () => {
         console.log(err);
       });
   };
-  const handleSave = () => {
-    console.log(data);
-  };
+  // const handleSave = () => {
+  //   console.log(data);
+  // };
 
   const AddScript = () => {
-    let team_uuid = localStorage.getItem("team_uuid");
-    let batch_uuid = param.uuid;
+    let team_uuid = params.uuid;
+    let batch_uuid = params.slug;
     axiosClient
       .post("/addNewScript", { uuid: team_uuid, batch_uuid: batch_uuid })
       .then((res) => {
@@ -189,10 +194,10 @@ export const BatchComponent = () => {
       setBatchTitle(batchTitle);
       await axiosClient
         .get(
-          `/addBatchTitleAndDescription?param1=${batchTitle}&param2=${batchDescription}&queryParameter=${param.uuid}`
+          `/addBatchTitleAndDescription?param1=${batchTitle}&param2=${batchDescription}&queryParameter=${params.slug}`
         )
         .then((res) => {
-          console.log(res);
+          getScripts();
         })
         .catch((err) => {
           console.log(err);
@@ -202,7 +207,7 @@ export const BatchComponent = () => {
       setbatchDescription(batchDescription);
       await axiosClient
         .get(
-          `/addBatchTitleAndDescription?param1=${batchTitle}&param2=${batchDescription}&queryParameter=${param.uuid}`
+          `/addBatchTitleAndDescription?param1=${batchTitle}&param2=${batchDescription}&queryParameter=${params.slug}`
         )
         .then((res) => {
           console.log(res);
@@ -213,10 +218,73 @@ export const BatchComponent = () => {
     }
   };
 
+
+
+
+  const handleCancel = () =>{
+    setTeamPopup(false);
+  
+  }
+
+  const handleCreate = () =>{
+    setTeamPopup(true);
+  }
+
+  const HandleChange = (e) => {
+    const { name, value } = e.target;
+    console.log(e.target.value);
+    setFormValues({ ...formValues, [name]: value });
+    delete errors[name];
+  };
+
+
+
+  const createTeam = () => {
+    // alert("je")
+
+    const validationErrors = {};
+
+    if (!formValues.team_name) {
+      validationErrors.team_name = "Team is required";
+    }
+      
+  setError(validationErrors);
+  if (Object.keys(validationErrors).length === 0) {
+
+      axiosClient.post("/team",formValues)
+      .then((res) => {
+
+        })
+        .catch((err) => {
+          const response = err.response;
+          if (response && response.status === 400) {
+
+            // console.log(response);
+            let error = {};
+            let keys = Object.keys(response.data);
+            let value = Object.values(response.data);
+            console.log(value);
+
+            error[keys] = value;
+
+            setError(error);
+
+          } 
+          else {
+
+            console.error("Error:", response.status);
+          }
+        });
+    
+  }
+}
+
+
+
   return (
     <div className="relative">
-      <div className="flex bg-[#ECEDEF] ">
-        {console.log(state)}
+
+       <div className="flex bg-[#ECEDEF] ">
         {state ? (
           <SideNavLarge
             buttonClicked={handleClick}
@@ -229,6 +297,7 @@ export const BatchComponent = () => {
             scripts={script}
             handleChildrenScripts={handleChildrenScripts}
             childScript={childScript}
+            handleCreate={handleCreate}
           />
         ) : (
           <SideNav
@@ -256,7 +325,10 @@ export const BatchComponent = () => {
             batch={batch}
           />
         </div>
-      </div>
+        {teamPopup &&
+            <ModelPopup click={handleCancel}  HandleChange={HandleChange} createTeam={createTeam} columnName={"team_name"} error={errors}/>
+          }
+      </div> 
     </div>
   );
 };

@@ -9,6 +9,9 @@ const Page = db.pages;
 const Invite = db.invites;
 const Roles = db.roles_type;
 const UserTeams = db.user_team_members;
+const path = require("path");
+const fs = require("fs");
+const sendEmail = require("../../utils/sendEmails");
 
 const uuid = require("uuid");
 const {
@@ -17,6 +20,7 @@ const {
 } = require("../../utils/validations");
 
 const slugify = require("slugify");
+const user_team_members = require("../../models/user_team_members");
 // const documentTitle = 'My Document Title';
 
 // const slug = slugify(documentTitle, { lower: true });
@@ -53,7 +57,7 @@ const createTeams = async (req, res) => {
           Success: "Your Team Created Sucessfully",
           newTeam,
         });
-      } else {
+      }       else {
         return res.status(500).send({
           Error: "Error Team Not Created",
         });
@@ -71,67 +75,13 @@ const getTeam = async (req, res) => {
     const Teams = await Team.findAll({
       where: { uuid: req.params.uuid },
     });
-<<<<<<< HEAD
+   return  res.status(200).json(Teams);
 
-   return res.status(200).json(Teams);
-=======
-    res.status(200).json(Teams);
->>>>>>> feature_batch
   } catch (error) {
    return res.status(500).json({ error: "Internal server error" });
   }
 };
-const teamNameUpdate = async (req, res) => {
-  try {
-    const team_uuid = req.body.uuid;
-    const updateName = req.body.name;
-    const updateData = {};
 
-    updateData.name = updateName;
-
-    await Team.update(updateData, {
-      where: { uuid: team_uuid },
-    });
-
-    return res.status(200).send({
-      Success: "Your Team Name Sucessfully Changed",
-    });
-  } catch (err) {
-    return res.status(400).send({
-      Error: "Your Team Name Cannot Changed",
-    });
-  }
-};
-
-
-
-const getActiveUsersForTeam = async (req, res) => {
-
-  try {
-    const team_uuid = req.params.uuid;
-    const userDetail = await Team.findAll(
-      // { attributes: ["username", "isAdmin","email"] },
-      {
-
-        include: [
-          {
-            model: User,
-            where: { uuid: team_uuid },
-
-            // [Op.and]: [{ uuid: team_uuid }, { user_uuid: req.user.id }],
-          },
-        ],
-      }
-    );
-    return res.status(200).send({
-      userDetail,
-    });
-  } catch (err) {
-    return res.status(400).send({
-      Error: "Not Found User Data",
-    });
-  }
-};
 
 
 const teamNameUpdate = async (req, res) => {
@@ -347,6 +297,7 @@ const getAllTeam = async (req, res) => {
 };
 
 const getBatchAndScripts = async (req, res) => {
+
   let result = await Script.findAll({
     include: [
       {
@@ -366,6 +317,7 @@ const getBatchAndScripts = async (req, res) => {
       },
     ],
   });
+  // console.log(result,"result");
   return res.status(200).json({ result });
 };
 
@@ -430,7 +382,7 @@ const addChildPage = async (req, res) => {
   });
 
   let count = Number(results[0].count);
-  console.log(count + 1);
+  // console.log(count + 1);
 
   if (existingPage) {
     slug = `${existingPage.path}/${originalSlug}-${count + 1}`;
@@ -781,8 +733,9 @@ const particularPageRender = async (req, res) => {
 
 const inviteTeams = async (req, res) => {
   const email = req.body.email;
-  const is_progress = req.body.is_progress;
+  const is_progress = 0;
   const team_uuid = req.body.team_uuid;
+  const role = req.body.role
 
   const exitsInviteUsers = await Invite.findOne({
     where: { email: email },
@@ -800,11 +753,14 @@ const inviteTeams = async (req, res) => {
     const exitsUsers = await User.findOne({
       where: { email: email },
     });
+
     let link;
+
     if(exitsUsers){
-       link = `http://localhost:3000/email-verify/${user.uuid}/${setToken.token}`;
+       link = `http://localhost:3000/signin/${team_uuid}/${role}`;
     }
     else{
+       link = `http://localhost:3000/signup/${team_uuid}/${role}`;
       
     }
 
@@ -820,7 +776,8 @@ const inviteTeams = async (req, res) => {
 
     return res.status(200).json(`Invite Sended Sucucessfully to this ${email}`);
   }
-};
+}
+
 
 // Roles creation by bulk seeding
 const blukCreation = async () => {
@@ -842,6 +799,23 @@ const blukCreation = async () => {
   }
 };
 blukCreation();
+
+
+const updateInvite = async (req,res) =>{
+  const team_uuid = req.body.team_uuid;
+  const role = req.body.role
+
+  const invitedData = await UserTeams.create({
+    team_uuid: team_uuid,
+    role_id: role,
+    uuid: uuid.v4(),
+    user_uuid: req.user.id
+    });
+
+    console.log(invitedData);
+    return res.status(200).json({invitedData});
+
+} 
 
 module.exports = {
   createTeams,
@@ -865,8 +839,7 @@ module.exports = {
   particularPageRender,
   teamNameUpdate,
   getActiveUsersForTeam,
-<<<<<<< HEAD
-=======
   inviteTeams,
->>>>>>> feature_batch
+  updateInvite,
+
 };

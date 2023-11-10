@@ -8,6 +8,16 @@ export default function Main(props) {
   const addBatchEvent = props.addBatchEvent;
   const scriptCount = props.scriptCount
 
+
+  const handleScripts = (e) => {
+   
+    let TargetScriptId = e.target.id;
+    alert(TargetScriptId)
+    // navigate(
+    //   `/dashboard/${props.team.uuid}/s/${TargetScriptId}`
+    // );
+  };
+
   return (
     <div className="pt-16 h-[520px]  overflow-y-auto z-0">
       <div className="   ">
@@ -32,14 +42,14 @@ export default function Main(props) {
         </div>
         <div className="mt-14">
           <hr
-            class={`h-px my-8 bg-[#D5D7DA] border-0 dark:bg-gray-900 ${props.widths} m-auto`}
+            className={`h-px my-8 bg-[#D5D7DA] border-0 dark:bg-gray-900 ${props.widths} m-auto`}
           />
         </div>
-        <div className={`${props.widths} m-auto flex flex-wrap gap-[30px] `}>
+        {/* <div className={`${props.widths} m-auto flex flex-wrap gap-[30px] `}>
           {scriptCount.map((batch) => 
             <div className="bg-white w-[230px] h-[120px] rounded-[10px]">
               <div className="bg-gradient-to-r from-primary to-[#226576] w-[230px] h-[36px] rounded-t-lg text-end pt-px">
-                <span class="material-symbols-outlined text-white cursor-pointer text-2xl pr-1">
+                <span className="material-symbols-outlined text-white cursor-pointer text-2xl pr-1">
                   more_vert
                 </span>
               </div>
@@ -49,18 +59,33 @@ export default function Main(props) {
               </div>
             </div>
           )}
+        </div> */}
+        <div className={`${props.widths} m-auto flex flex-wrap gap-[30px] mt-10`}>
+          {batchList.map((batch) => 
+            <div className="bg-white w-[230px] h-[120px] rounded-[10px]">
+              <div className="bg-gradient-to-r from-primary to-[#226576] w-[230px] h-[36px] rounded-t-lg text-end pt-px ">
+                <span className="material-symbols-outlined text-white cursor-pointer text-2xl pr-1">
+                  more_vert
+                </span>
+              </div>
+              <div className="pl-5 pt-5 cursor-pointer" id={batch.uuid} onClick={handleScripts}>
+                <p>{batch.title}</p>
+                <p className="text-gray-500">0 script</p>
+              </div>
+            </div>
+          )}
         </div>
         <div className={`${props.widths} m-auto flex flex-wrap gap-[30px] mt-10`}>
           {scriptList.map((script) => 
             <div className="bg-white w-[230px] h-[120px] rounded-[10px]">
-              <div className="bg-gradient-to-r from-primary to-[#226576] w-[230px] h-[36px] rounded-t-lg text-end pt-px">
-                <span class="material-symbols-outlined text-white cursor-pointer text-2xl pr-1">
+              <div className="bg-gradient-to-r from-primary to-[#226576] w-[230px] h-[36px] rounded-t-lg text-end pt-px ">
+                <span className="material-symbols-outlined text-white cursor-pointer text-2xl pr-1">
                   more_vert
                 </span>
               </div>
-              <div className="pl-5 pt-5">
+              <div className="pl-5 pt-5 cursor-pointer" id={script.uuid} onClick={handleScripts}>
                 <p>{script.title}</p>
-                <p className="text-gray-500">0 Pages</p>
+                <p className="text-gray-500">0 page</p>
               </div>
             </div>
           )}

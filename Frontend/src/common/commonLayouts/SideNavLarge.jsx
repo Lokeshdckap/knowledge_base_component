@@ -11,6 +11,7 @@ export default function SideNavLarge(props) {
   const childScript = props.childScript;
 
   const navigate = useNavigate();
+  const params = useParams();
 
   const [AddNewMenu, setAddNewMenu] = useState(false);
   const [teamDropDown, setteamDropDown] = useState(false);
@@ -71,27 +72,25 @@ export default function SideNavLarge(props) {
   };
 
   const renderPage = (e) => {
+   
     let TargetScriptId = e.target.id;
-    setScriptColor(e.target.id);
     navigate(
-      `/dashboard/${localStorage.getItem("team_uuid")}/s/${TargetScriptId}`
+      `/dashboard/${props.team.uuid}/s/${TargetScriptId}`
     );
-    // props.getParticularScript(TargetScriptId);
   };
 
   const handleBatch = (e) => {
-    // alert('kk')
     let TargetScriptId = e.target.id;
     navigate(
-      `/dashboard/${localStorage.getItem("team_uuid")}/b/${TargetScriptId}`
+      `/dashboard/${props.team.uuid}/b/${TargetScriptId}`
     );
+
   };
 
   return (
-
-    <div className="bg-primary h-[664px] overflow-y-auto w-[280px] z-10 ">
+    <div className="bg-primary h-screen overflow-hidden w-[280px] z-10 ">
       <div>
-        <img src={mainLogo} alt="" srcset="" className="max-w-md m-auto mt-4" />
+        <img src={mainLogo} alt="" className="max-w-md m-auto mt-4" />
       </div>
       <div className="bg-slate-300 h-6 w-6 rounded-full absolute mt-4 left-[219px]">
         <span
@@ -105,7 +104,7 @@ export default function SideNavLarge(props) {
         <div className="mt-8 w-[200px] m-auto flex items-center space-x-4 ">
           <span className="material-symbols-outlined text-white">group</span>
           <p className="text-xl font-bold  text-white w-48 truncate ">
-            <Link to={`/dashboard/${localStorage.getItem("team_uuid")}`}>
+            <Link to={`/dashboard/${props.team.uuid}`}>
               {teamName} Tea...
             </Link>
           </p>
@@ -154,7 +153,7 @@ export default function SideNavLarge(props) {
             <div className="mt-2">
               <div className="flex items-center mb-2">
                 <i className="fa-solid fa-sliders"></i>
-                <p className="pl-1">< Link to={`/dashboard/${localStorage.getItem("team_uuid")}/teamsetting`}>Team setting</Link></p>
+                <p className="pl-1">< Link to={`/dashboard/${params.uuid}/teamsetting`}>Team setting</Link></p>
               </div>
 
               <div className="flex items-center mb-2" onClick={(() => props.setInvitePopup(true))}>
@@ -172,6 +171,7 @@ export default function SideNavLarge(props) {
           </div>
         )}
       </div>
+  
       {
         <ul className="mt-5 space-y-1 h-[360px] overflow-auto ">
           {batchList.map((batch) => (
@@ -180,7 +180,7 @@ export default function SideNavLarge(props) {
                 key={batch.id}
                 id={batch.uuid}
                 className={`text-[#BCD1FF] pl-8 cursor-pointer hover:bg-cyan-950 pt-1 pb-1 ${
-                  param.uuid == batch.uuid ? "bg-cyan-950" : ""
+                  param.slug == batch.uuid ? "bg-cyan-950" : ""
                 } 
                 -z-0 truncate relative `}
                 onMouseEnter={handleMouseEnter}
@@ -190,16 +190,17 @@ export default function SideNavLarge(props) {
                   <i
                     className="fa-solid fa-angle-down pr-3.5"
                     id={batch.uuid}
-                    onClick={props.handleChildrenScripts}
+                    onClick={handleBatch}
                   ></i>
                 ) : childScript.length > 0 &&
                   childScript[0].batch_uuid == batch.uuid ? (
                   <i
                     className="fa-solid fa-angle-down pr-3"
                     id={batch.uuid}
+                    
                   ></i>
                 ) : (
-                  <i className="fa-solid fa-folder pr-3" id={batch.uuid}></i>
+                  <i className="fa-solid fa-folder pr-3" id={batch.uuid} ></i>
                 )}
                 <span
                   onClick={handleBatch}
@@ -290,19 +291,19 @@ export default function SideNavLarge(props) {
       }
 
       <hr
-        class={`h-px  bg-textPrimary border-0 dark:bg-gray-900 m-auto mt-2`}
+        className={`h-px  bg-textPrimary border-0 dark:bg-gray-900 m-auto mt-2`}
       />
       <div className="mt-2 ml-7 mb-4">
       
           <p className=" text-[#b8bdc5] pl-[8px] pt-[2px]  ">
-              <i class="fa-solid fa-trash  text-lg pr-3 text-[#b8bdc5] "></i>
+              <i className="fa-solid fa-trash  text-lg pr-3 text-[#b8bdc5] "></i>
               Trash
             </p>
       </div>
       <div className=" flex items-center  justify-around w-[200px] m-auto " >
       <div className="bg-white h-8 w-8 rounded-full cursor-pointer  ">
             <p className=" text-primary pl-[8px] pt-[2px]  ">
-              <i class="fa-solid fa-bell text-lg"></i>
+              <i className="fa-solid fa-bell text-lg"></i>
             </p>
           </div>
         <div className="bg-white h-8 w-8 rounded-full cursor-pointer">
@@ -311,7 +312,7 @@ export default function SideNavLarge(props) {
               className=" text-primary pl-[9px] pt-[2px]"
               onClick={() => setAddNewMenu(false)}
             >
-              <i class="fa-solid fa-x text-lg"></i>
+              <i className="fa-solid fa-x text-lg"></i>
             </p>
           ) : (
             <p
@@ -333,7 +334,7 @@ export default function SideNavLarge(props) {
         
           <div className="bg-white h-8 w-8 rounded-full cursor-pointer  ">
             <p className=" text-primary pl-[7px] pt-[2px]  ">
-              <i class="fa-solid fa-gear text-lg text-primary"></i>
+              <i className="fa-solid fa-gear text-lg text-primary"></i>
             </p>
           </div>
       
@@ -341,10 +342,11 @@ export default function SideNavLarge(props) {
 
         {/* <div className="bg-white h-8 w-8 rounded-full cursor-pointer ml-24 ">
           <p className=" text-primary pl-[8px] pt-[2px]  ">
-            <i class="fa-solid fa-right-from-bracket text-lg"></i>
+            <i className="fa-solid fa-right-from-bracket text-lg"></i>
           </p>
         </div> */}
       </div>
+  
     </div>
 );
         }

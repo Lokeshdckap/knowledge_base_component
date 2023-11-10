@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 export const InviteUsers = (props) => {
+
   const [changeState, setChangeState] = useState("invite");
 
 
@@ -33,27 +34,31 @@ export const InviteUsers = (props) => {
               </p>
             </div>
             {changeState == "invite" ? (
-              <div class="mt-6">
-                <div class="relative">
+              <div className="mt-6">
+                <div className="relative">
                   <input
                     type="text"
                     id="default-input"
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg  focus:outline-primary block w-full p-4 pl-5 "
                     placeholder="invite teammates"
+                    value={props.inviteEmail}
+                    onChange={((e) => props.setInviteEmail(e.target.value))}
                   />
                   <select
                     id="countries"
                     className="bg-gray-50 border absolute right-2.5 bottom-2.5 border-gray-300 text-gray-900 text-sm rounded-lg block w-20 p-1.5  "
+                    onChange={((e) => props.setRole(e.target.value))}
                   >
                     <option selected>select</option>
-                    <option value="ad">Admin</option>
-                    <option value="CA">Creator</option>
-                    <option value="FR">Viewer</option>
+                    <option value="1">Admin</option>
+                    <option value="2">Viewer</option>
+                    <option value="3">Editor</option>
                   </select>
                 </div>
                 <button
                   type="button"
                   className="text-white bg-primary font-medium rounded-lg text-sm px-12 py-3 text-center mt-5 ml-[150px] mr-2 mb-2"
+                  onClick={props.handleInviteUsers}
                 >
                   Send Invite
                 </button>

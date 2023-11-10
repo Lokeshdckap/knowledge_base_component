@@ -4,20 +4,21 @@ import SideNav from "../../common/commonLayouts/SideNav";
 import SideNavLarge from "../../common/commonLayouts/SideNavLarge";
 import Main from "../../common/commonLayouts/Main";
 import axiosClient from "../../axios-client";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { ModelPopup } from "../../common/commonComponents/ModelPopup";
 import { PublishPopup } from "../../common/commonComponents/PublishPopup";
 import { InviteUsers } from "../../common/commonLayouts/InviteUsers";
 
 export default function Dashboard() {
   const navigate = useNavigate();
+  const params = useParams();
 
   //hooks
 
   useEffect(() => {
     getTeam();
     getAllTeam();
-  }, []);
+  }, [params.uuid]);
 
   //state
   const [state, setState] = useState(true);
@@ -39,7 +40,6 @@ export default function Dashboard() {
 
 
   const [invitePopup,setInvitePopup] = useState(false);
-    
   
   //
 
@@ -62,13 +62,13 @@ export default function Dashboard() {
   //Api
 
   const getTeam = async () => {
-    let teamUUID = localStorage.getItem("team_uuid");
+   
     await axiosClient
-      .get(`/getTeam/${teamUUID}`)
+      .get(`/getTeam/${params.uuid}`)
       .then((res) => {
         setTeam(res.data[0]);
-        getBatch(teamUUID);
-        getScript(teamUUID);
+        getBatch(params.uuid);
+        getScript(params.uuid);
       })
       .catch((err) => {
         console.log(err);
@@ -79,8 +79,7 @@ export default function Dashboard() {
     axiosClient
       .get(`/getAllTeam`)
       .then((res) => {
-        setAllTeam(res.data.getAllTeam);
-     
+        setAllTeam(res.data.getAllTeam);     
       })
       .catch((err) => {});
   };
@@ -89,7 +88,6 @@ export default function Dashboard() {
     await axiosClient
       .get(`/getBatch/${teamuuid}`)
       .then((res) => {
-        console.log(res);
         setBatch(res.data.batchs);
         setScriptCount(res.data.results);
       })
@@ -110,12 +108,12 @@ export default function Dashboard() {
   };
 
   const addNewBatch = (e) => {
-    let team_uuid = localStorage.getItem("team_uuid");
+    
 
     axiosClient
-      .post("/addNewBatch", { uuid: team_uuid })
+      .post("/addNewBatch", { uuid: params.uuid })
       .then((res) => {
-        getBatch(team_uuid);
+        getBatch(params.uuid);
       })
       .catch((err) => {
         console.log(err);
@@ -123,13 +121,12 @@ export default function Dashboard() {
   };
 
   const addNewScript = (e) => {
-    let team_uuid = localStorage.getItem("team_uuid");
     let batch_uuid = e.target.id;
 
     axiosClient
-      .post("/addNewScript", { uuid: team_uuid, batch_uuid: batch_uuid })
+      .post("/addNewScript", { uuid: params.uuid, batch_uuid: batch_uuid })
       .then((res) => {
-        getScript(team_uuid);
+        getScript(params.uuid);
       })
       .catch((err) => {
         console.log(err);
@@ -138,19 +135,18 @@ export default function Dashboard() {
 
   const switchTeamEvent = (e) => {
     const TeamId = e.target.id;
-    localStorage.removeItem("team_uuid");
-    localStorage.setItem("team_uuid", TeamId);
+  
     getTeam();
     getAllTeam();
-    navigate(`/dashboard/${localStorage.getItem("team_uuid")}`);
+    navigate(`/dashboard/${TeamId}`);
   };
 
   const handleChildrenScripts = async (e) => {
-    let team_uuid = localStorage.getItem("team_uuid");
+   
     let batch_uuid = e.target.id;
 
     await axiosClient
-      .get(`/getBatchAndScripts/${team_uuid}/${batch_uuid}`)
+      .get(`/getBatchAndScripts/${params.uuid}/${batch_uuid}`)
       .then((res) => {
         setChildScript(res.data.result);
       })
@@ -235,7 +231,6 @@ export default function Dashboard() {
   return (
     <div className="relative">
       <div className="flex bg-[#ECEDEF] ">
-        {console.log(state)}
         {state ? (
           <SideNavLarge
             buttonClicked={handleClick}
@@ -262,7 +257,6 @@ export default function Dashboard() {
 
         <div className="bg-[#F9FAFB] h-[80px] w-screen z-[10px] ">
           <Header widths={state ? "w-[1000px]" : "w-[1160px]"} team={team} />
-
           <Main
             widths={state ? "w-[1010px]" : "w-[1120px]"}
             team={team}

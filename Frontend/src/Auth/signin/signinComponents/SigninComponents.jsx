@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from "react";
 import logo from "../../../assets/images/onboard.png";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import Input from "./Input";
 import { useStateContext } from "../../../context/ContextProvider";
 import axiosClient from "../../../axios-client";
@@ -9,6 +9,16 @@ import HashLoader from "react-spinners/HashLoader";
 
 
 export default function SigninComponents() {
+
+  const params = useParams();
+  // console.log(params);
+
+
+
+
+
+  console.log(params);
+
   const [errors, setError] = useState({});
 
   const [PasswordVisible, setPasswordVisible] = useState(false);
@@ -69,6 +79,7 @@ export default function SigninComponents() {
           setAuth({
             token: data.token,
             verify: data.verify,
+            state: true
           });
         setLoading(false);
 

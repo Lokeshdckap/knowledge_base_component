@@ -5,19 +5,21 @@ import axiosClient from '../../axios-client';
 
 export const Team = () => {
 
+  
+
     const [teamName,setTeamName] = useState("");
     const [message,setMessage] = useState("");
-
+    const [teamMembers,setTeamMembers] = useState([]);
 
 
 
     const [invitePopup,setInvitePopup] = useState(false);
-
+    const [inviteEmail,setInviteEmail] = useState("");
+    const [role,setRole] = useState("");
     const params = useParams();
     useEffect(() => {
       team();
       allUsers();
-      
       }, [params]);
 
 
@@ -35,13 +37,13 @@ export const Team = () => {
 
       const allUsers = () =>{
         // console.log(params.uuid);
-        // axiosClient.get(`/getAciveUsers/${params.uuid}`)
-        //   .then((res) => {
-        //     console.log(res.data.userDetail);
-        //   })
-        //   .catch((err) => {
-        //     console.log(err);
-        //   });
+        axiosClient.get(`/getAciveUsers/${params.uuid}`)
+          .then((res) => {
+            setTeamMembers(res.data.userDetail);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
         
       }
 
@@ -72,6 +74,21 @@ export const Team = () => {
         setInvitePopup(true)
       }
 
+      const handleInviteUsers = () => {
+
+        axiosClient.post("/inviteUsers",{
+          "email" : inviteEmail,
+          "role":role,
+          "team_uuid" : params.uuid
+        })
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      }
+
   return (
     <div>
         <TeamComponents 
@@ -82,7 +99,12 @@ export const Team = () => {
             handleInvite={handleInvite}
             invitePopup={invitePopup}
             setInvitePopup={setInvitePopup}
+            teamMember={teamMembers}
+            handleInviteUsers={handleInviteUsers}
+            setInviteEmail={setInviteEmail}
+            setRole={setRole}
         />
-    </div>
+
+    </div>  
   )
 }

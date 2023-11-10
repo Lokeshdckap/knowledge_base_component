@@ -21,7 +21,7 @@ export const TeamSideNav = (props) => {
               Team Setting
             </p>
             <Link
-              to={`/dashboard/${localStorage.getItem("team_uuid")}/teamsetting`}
+              to={`/dashboard/${params.uuid}/teamsetting`}
             >
               <div
                 className={`flex space-x-2 items-center mt-2 p-2 hover:bg-[#e5e8f1] cursor-pointer rounded ${
@@ -33,7 +33,7 @@ export const TeamSideNav = (props) => {
               </div>
             </Link>
             <Link
-              to={`/dashboard/${localStorage.getItem("team_uuid")}/activeusers`}
+              to={`/dashboard/${params.uuid}/activeusers`}
             >
               <div
                 className={`flex space-x-2 items-center p-2 mt-2 hover:bg-[#e5e8f1] cursor-pointer rounded ${

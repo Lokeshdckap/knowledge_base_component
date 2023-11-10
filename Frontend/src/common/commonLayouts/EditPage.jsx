@@ -60,7 +60,7 @@ export default function EditPage(props) {
           <div>
             <div >
               <p className="text-xl cursor-pointer text-[#90979D] pl-5 pt-3" onClick={handlePopupPage}>
-              <i class="fa-regular fa-file" onClick={handlePopupPage}></i> New Page
+              <i className="fa-regular fa-file" onClick={handlePopupPage}></i> New Page
               </p>
 
             </div>
@@ -116,7 +116,6 @@ export default function EditPage(props) {
               editorValue={props.editorContent}
               editorContents={props.editorContents}
             />
-            {/* <button onClick={cliked}>Save</button> */}
           </div>
         </div>
       </div>

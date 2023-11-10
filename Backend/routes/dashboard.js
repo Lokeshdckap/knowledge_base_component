@@ -134,4 +134,11 @@ dashboardController.inviteTeams
 );
 
 
+router.post("/updateInvite" ,
+verifyAuthMiddleware.verifyToken,
+dashboardController.updateInvite
+);
+
+
+
 module.exports = router;

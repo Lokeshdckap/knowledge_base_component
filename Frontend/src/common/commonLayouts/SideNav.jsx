@@ -17,7 +17,7 @@ export default function SideNav(props) {
       </div>
       <div className="bg-slate-300 h-6 w-6 rounded-full ml-[58px]">
         <span
-          class="material-symbols-outlined cursor-pointer"
+          className="material-symbols-outlined cursor-pointer"
           onClick={props.buttonClicked}
         >
           chevron_right
@@ -31,12 +31,12 @@ export default function SideNav(props) {
         <div className="bg-white h-8 w-8 rounded-full ml-5 cursor-pointer relative">
           {AddNewMenu ? (
             <i
-              class="fa-solid fa-x text-lg pl-[9px] pt-[2px]  text-textPrimary cursor-pointer"
+              className="fa-solid fa-x text-lg pl-[9px] pt-[2px]  text-textPrimary cursor-pointer"
               onClick={() => setAddNewMenu(false)}
             ></i>
           ) : (
             <i
-              class="fa-solid fa-plus text-xl pl-[7px] pt-[2px]  text-textPrimary cursor-pointer"
+              className="fa-solid fa-plus text-xl pl-[7px] pt-[2px]  text-textPrimary cursor-pointer"
               title="Add new"
               onClick={() => setAddNewMenu(true)}
             ></i>

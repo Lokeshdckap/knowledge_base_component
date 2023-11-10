@@ -14,6 +14,8 @@ import { Batch } from "./Batch/container/Batch";
 import { Scripts } from "./Scripts/container/Scripts";
 import { UrlPage } from "./common/commonLayouts/UrlPage";
 import { Team } from "./Team/container/Team.jsx";
+import { Invited } from "./Invited.jsx";
+import { Dashboards } from "./Dashboard/container/Dashboards.jsx";
 
 
 const router = createBrowserRouter([
@@ -23,18 +25,22 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/',
-        element: <Navigate to={`/dashboard/${localStorage.getItem("team_uuid")}`} />
+        element: <Navigate to={`/dashboard`} />
+      },
+      {
+        path: "/dashboard",
+        element: <Dashboards />,
       },
       {
         path: "/dashboard/:uuid",
         element: <Dashboard />,
       },
       {
-        path: "/dashboard/:uuid/b/:uuid",
+        path: "/dashboard/:uuid/b/:slug",
         element: <Batch />,
       },
       {
-        path: "/dashboard/:uuid/s/:uuid",
+        path: "/dashboard/:uuid/s/:slug",
         element: <Scripts />,
       },
       {
@@ -49,7 +55,10 @@ const router = createBrowserRouter([
         path: `/dashboard/:uuid/:slug`,
         element: <Team />
       },
-
+      {
+        path: "/signin/:uuid/:id",
+        element: <Invited />,
+      },
     ],
 
   },
@@ -60,6 +69,7 @@ const router = createBrowserRouter([
       {
         path: "/signin",
         element: <SigninContainer />,
+
       },
       {
         path: "/signup",

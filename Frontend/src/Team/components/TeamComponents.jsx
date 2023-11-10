@@ -6,7 +6,7 @@ import { ActiveUsers } from "../../common/commonLayouts/ActiveUsers";
 
 export const TeamComponents = (props) => {
     const params = useParams();
-
+    
   return (
     <div className="flex bg-[#F4F4F4]">
       <TeamSideNav
@@ -30,6 +30,10 @@ export const TeamComponents = (props) => {
           handleInvite={props.handleInvite}
           invitePopup={props.invitePopup}
           setInvitePopup={props.setInvitePopup}
+          teamMember={props.teamMember}
+          handleInviteUsers={props.handleInviteUsers}
+          setInviteEmail={props.setInviteEmail}
+          setRole={props.setRole}
           />
         )}
       </div>

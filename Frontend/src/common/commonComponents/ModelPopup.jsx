@@ -15,7 +15,7 @@ export const ModelPopup = (props) => {
             </div>
             <div className="w-[480px] m-auto">
               <div className="flex pt-16 items-center space-x-2">
-                <i class="fa-solid fa-user-plus text-2xl " ></i>
+                <i className="fa-solid fa-user-plus text-2xl " ></i>
                 <p className="text-2xl text-textPrimary">Create Team</p>
               </div>
               <p className="pt-3">

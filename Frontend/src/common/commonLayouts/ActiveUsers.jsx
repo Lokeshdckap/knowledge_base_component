@@ -2,8 +2,7 @@ import React from "react";
 import { InviteUsers } from "./InviteUsers";
 
 export const ActiveUsers = (props) => {
-
-
+  let users = props.teamMember;
   return (
     <div>
       <div className="bg-white w-[900px] h-[550px] shadow-md mt-5 overflow-auto">
@@ -53,53 +52,51 @@ export const ActiveUsers = (props) => {
                 </tr>
               </thead>
               <tbody>
-                <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                  <th
-                    scope="row"
-                    className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                  >
-                    Gokul
-                  </th>
-                  <td className="px-6 py-4">gokulakrishnanddckap@gmail.com</td>
-                  <td className="px-6 py-4">Viewer</td>
-                  <td className="px-6 py-4">
-                    <a
-                      href="#"
-                      className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                    >
-                      Remove{" "}
-                    </a>
-                  </td>
-                </tr>
-                <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                  <th
-                    scope="row"
-                    className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                  >
-                    Microsoft Surface Pro
-                  </th>
-                  <td className="px-6 py-4">White</td>
-                  <td className="px-6 py-4">Laptop PC</td>
-                  <td className="px-6 py-4">
-                    <a
-                      href="#"
-                      className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                    >
-                      Remove
-                    </a>
-                  </td>
-                </tr>
+                {console.log(users)}
+                {users &&
+                  users.map((user) => (
+                    <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                      <th
+                        scope="row"
+                        className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                      >
+                        {user.username}
+                      </th>
+                      <td className="px-6 py-4">{user.email}</td>
+                      {user.user_team_members &&
+                        user.user_team_members.map((member) => {
+                          if (member.role_id == 1) {
+                            return <td className="px-6 py-4">admin</td>;
+                          } else if (member.role_id == 2) {
+                            return <td className="px-6 py-4">Viewer</td>;
+                          } else {
+                            return <td className="px-6 py-4">editor</td>;
+                          }
+                        })}
+                      <td className="px-6 py-4">
+                        <a
+                          href="#"
+                          className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                        >
+                          Remove{" "}
+                        </a>
+                      </td>
+                    </tr>
+                  ))}
               </tbody>
             </table>
           </div>
         </div>
       </div>
-      {props.invitePopup && 
-       <InviteUsers 
-       setInvitePopup={props.setInvitePopup}
-       teamname={props.teamname}
-      />}
-    
+      {props.invitePopup && (
+        <InviteUsers
+          setInvitePopup={props.setInvitePopup}
+          teamname={props.teamname}
+          handleInviteUsers={props.handleInviteUsers}
+          setInviteEmail={props.setInviteEmail}
+          setRole={props.setRole}
+        />
+      )}
     </div>
   );
 };

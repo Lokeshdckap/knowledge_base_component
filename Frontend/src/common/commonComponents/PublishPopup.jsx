@@ -69,7 +69,7 @@ export const PublishPopup = (props) => {
                   <div className="flex w-[530px] m-auto space-x-5 mt-3.5">
                     <div>
                       <div className="rounded-full h-8 w-8 bg-primary mt-5">
-                        <i class="fa-solid fa-globe text-lg pl-1.5 pt-[0.5px] text-white"></i>
+                        <i className="fa-solid fa-globe text-lg pl-1.5 pt-[0.5px] text-white"></i>
                       </div>
                     </div>
                     <div className="flex space-x-16 ">
@@ -98,7 +98,7 @@ export const PublishPopup = (props) => {
                       <p className="text-xl">Script Title</p>
                       <div className="box-border border-[#c5ccd8] h-10 w-28 border-[1px] rounded-lg bg-primary flex space-x-2">
                         <p>
-                          <i class="fa-solid fa-up-right-from-square pl-2 pt-2.5 text-white "></i>
+                          <i className="fa-solid fa-up-right-from-square pl-2 pt-2.5 text-white "></i>
                         </p>
                         <p className="pt-1.5  text-white ">Visit Site</p>
                       </div>
@@ -116,7 +116,7 @@ export const PublishPopup = (props) => {
                             ref={buttonRef}
                             data-clipboard-text="Copy Text"
                           >
-                            <i class="fa-regular fa-copy pl-5 text-sm pr-2 text-gray-400"></i>
+                            <i className="fa-regular fa-copy pl-5 text-sm pr-2 text-gray-400"></i>
                             copy
                           </p>
                         </div>

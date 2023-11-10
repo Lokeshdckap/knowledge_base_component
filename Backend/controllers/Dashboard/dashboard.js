@@ -7,8 +7,11 @@ const Batch = db.batch;
 const Script = db.script;
 const Page = db.pages;
 const Invite = db.invites;
-const Roles = db.roles_type;
+const Roles = db.roles_type
 const UserTeams = db.user_team_members;
+const path = require("path");
+const fs = require("fs");
+const sendEmail = require("../../utils/sendEmails");
 
 const uuid = require("uuid");
 const {
@@ -53,7 +56,8 @@ const createTeams = async (req, res) => {
           Success: "Your Team Created Sucessfully",
           newTeam,
         });
-      } else {
+      } 
+      else {
         return res.status(500).send({
           Error: "Error Team Not Created",
         });
@@ -71,12 +75,8 @@ const getTeam = async (req, res) => {
     const Teams = await Team.findAll({
       where: { uuid: req.params.uuid },
     });
-<<<<<<< HEAD
-
-   return res.status(200).json(Teams);
-=======
     res.status(200).json(Teams);
->>>>>>> feature_batch
+
   } catch (error) {
    return res.status(500).json({ error: "Internal server error" });
   }
@@ -103,58 +103,6 @@ const teamNameUpdate = async (req, res) => {
   }
 };
 
-
-
-const getActiveUsersForTeam = async (req, res) => {
-
-  try {
-    const team_uuid = req.params.uuid;
-    const userDetail = await Team.findAll(
-      // { attributes: ["username", "isAdmin","email"] },
-      {
-
-        include: [
-          {
-            model: User,
-            where: { uuid: team_uuid },
-
-            // [Op.and]: [{ uuid: team_uuid }, { user_uuid: req.user.id }],
-          },
-        ],
-      }
-    );
-    return res.status(200).send({
-      userDetail,
-    });
-  } catch (err) {
-    return res.status(400).send({
-      Error: "Not Found User Data",
-    });
-  }
-};
-
-
-const teamNameUpdate = async (req, res) => {
-  try {
-    const team_uuid = req.body.uuid;
-    const updateName = req.body.name;
-    const updateData = {};
-
-    updateData.name = updateName;
-
-    await Team.update(updateData, {
-      where: { uuid: team_uuid },
-    });
-
-    return res.status(200).send({
-      Success: "Your Team Name Sucessfully Changed",
-    });
-  } catch (err) {
-    return res.status(400).send({
-      Error: "Your Team Name Cannot Changed",
-    });
-  }
-};
 
 const getActiveUsersForTeam = async (req, res) => {
   try {
@@ -340,7 +288,6 @@ const getAllTeam = async (req, res) => {
   const [getAllTeam] = await sequelize.query(query, {
     replacements: { user },
   });
-  console.log(getAllTeam);
   return res.status(200).send({
     getAllTeam,
   });
@@ -783,6 +730,7 @@ const inviteTeams = async (req, res) => {
   const email = req.body.email;
   const is_progress = req.body.is_progress;
   const team_uuid = req.body.team_uuid;
+  const role = 1
 
   const exitsInviteUsers = await Invite.findOne({
     where: { email: email },
@@ -800,11 +748,14 @@ const inviteTeams = async (req, res) => {
     const exitsUsers = await User.findOne({
       where: { email: email },
     });
+
     let link;
+
     if(exitsUsers){
-       link = `http://localhost:3000/email-verify/${user.uuid}/${setToken.token}`;
+       link = `http://localhost:3000/sigin/${team_uuid}/${role}`;
     }
     else{
+       link = `http://localhost:3000/sigup/${team_uuid}/${role}`;
       
     }
 
@@ -865,8 +816,6 @@ module.exports = {
   particularPageRender,
   teamNameUpdate,
   getActiveUsersForTeam,
-<<<<<<< HEAD
-=======
   inviteTeams,
->>>>>>> feature_batch
+
 };

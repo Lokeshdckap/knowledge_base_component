@@ -19,16 +19,18 @@ export default function SideNavLarge(props) {
   const [overScriptState, setOverScriptState] = useState(null);
   const [popUp, setPopup] = useState(null);
 
-  const [scriptColor,setScriptColor] = useState(null);
-
   //ref
   const teamRef = useRef(null);
   const iconRef = useRef(null);
+
+  const AddNewRef = useRef(null);
+  const AddIconRef = useRef(null);
 
   //
   const param = useParams();
 
   useEffect(() => {
+    setOverState(props.overStates);
     const closeOnOutsideClick = (e) => {
       if (
         teamDropDown &&
@@ -37,12 +39,20 @@ export default function SideNavLarge(props) {
       ) {
         setteamDropDown(false);
       }
+      if (
+        AddNewMenu &&
+        !AddNewRef.current.contains(e.target) &&
+        e.target !== AddIconRef.current
+      ) {
+        setAddNewMenu(false);
+      }
+      
     };
     window.addEventListener("click", closeOnOutsideClick);
     return () => {
       window.removeEventListener("click", closeOnOutsideClick);
     };
-  }, [teamDropDown]);
+  }, [teamDropDown,AddNewMenu,props.overStates]);
 
   const handleMouseEnter = (e) => {
     let targetId = e.target.id;
@@ -72,23 +82,17 @@ export default function SideNavLarge(props) {
   };
 
   const renderPage = (e) => {
-   
     let TargetScriptId = e.target.id;
-    navigate(
-      `/dashboard/${props.team.uuid}/s/${TargetScriptId}`
-    );
+    navigate(`/dashboard/${props.team.uuid}/s/${TargetScriptId}`);
   };
 
   const handleBatch = (e) => {
     let TargetScriptId = e.target.id;
-    navigate(
-      `/dashboard/${props.team.uuid}/b/${TargetScriptId}`
-    );
-
+    navigate(`/dashboard/${props.team.uuid}/b/${TargetScriptId}`);
   };
 
   return (
-    <div className="bg-primary h-screen overflow-hidden w-[280px] z-10 ">
+    <div className="bg-primary h-[632px] sm:h-[664px] overflow-hidden w-[280px] z-10 ">
       <div>
         <img src={mainLogo} alt="" className="max-w-md m-auto mt-4" />
       </div>
@@ -104,9 +108,7 @@ export default function SideNavLarge(props) {
         <div className="mt-8 w-[200px] m-auto flex items-center space-x-4 ">
           <span className="material-symbols-outlined text-white">group</span>
           <p className="text-xl font-bold  text-white w-48 truncate ">
-            <Link to={`/dashboard/${props.team.uuid}`}>
-              {teamName} Tea...
-            </Link>
+            <Link to={`/dashboard/${props.team.uuid}`}>{teamName} Tea...</Link>
           </p>
 
           {teamDropDown ? (
@@ -153,10 +155,17 @@ export default function SideNavLarge(props) {
             <div className="mt-2">
               <div className="flex items-center mb-2">
                 <i className="fa-solid fa-sliders"></i>
-                <p className="pl-1">< Link to={`/dashboard/${params.uuid}/teamsetting`}>Team setting</Link></p>
+                <p className="pl-1">
+                  <Link to={`/dashboard/${params.uuid}/teamsetting`}>
+                    Team setting
+                  </Link>
+                </p>
               </div>
 
-              <div className="flex items-center mb-2" onClick={(() => props.setInvitePopup(true))}>
+              <div
+                className="flex items-center mb-2"
+                onClick={() => props.setInvitePopup(true)}
+              >
                 <i className="fa-solid fa-user-plus cursor-pointer"></i>
                 <p className="pl-1 cursor-pointer">Invite Teamates</p>
               </div>
@@ -164,14 +173,17 @@ export default function SideNavLarge(props) {
             <hr
               className={`h-px  bg-[#D5D7DA] border-0 dark:bg-gray-900 mt-2`}
             />
-            <div className="mt-2 flex items-center mb-2 cursor-pointer" onClick={props.handleCreate}>
+            <div
+              className="mt-2 flex items-center mb-2 cursor-pointer"
+              onClick={props.handleCreate}
+            >
               <i className="fa-solid fa-plus"></i>
               <p className="pl-1">Create Team</p>
             </div>
           </div>
         )}
       </div>
-  
+
       {
         <ul className="mt-5 space-y-1 h-[360px] overflow-auto ">
           {batchList.map((batch) => (
@@ -179,7 +191,7 @@ export default function SideNavLarge(props) {
               <li
                 key={batch.id}
                 id={batch.uuid}
-                className={`text-[#BCD1FF] pl-8 cursor-pointer hover:bg-cyan-950 pt-1 pb-1 ${
+                className={`text-[#BCD1FF] pl-8 cursor-pointer hover:bg-cyan-950 pt-1 pb-1  ${
                   param.slug == batch.uuid ? "bg-cyan-950" : ""
                 } 
                 -z-0 truncate relative `}
@@ -197,21 +209,21 @@ export default function SideNavLarge(props) {
                   <i
                     className="fa-solid fa-angle-down pr-3"
                     id={batch.uuid}
-                    
                   ></i>
                 ) : (
-                  <i className="fa-solid fa-folder pr-3" id={batch.uuid} ></i>
+                  <i className="fa-solid fa-folder pr-3" id={batch.uuid}></i>
                 )}
                 <span
                   onClick={handleBatch}
                   id={batch.uuid}
-                  className="truncate max-w-[20px] pr-20"
+                  className="truncate max-w-[20px]"
                 >
-                  {batch.title.slice(0, 7) + (batch.title.length > 6 ? '..' : '')}
+                  {batch.title.slice(0, 7) +
+                    (batch.title.length > 6 ? ".." : "")}
                 </span>
                 {overState == batch.uuid && (
                   <i
-                    className="fa-solid fa-ellipsis-vertical text-[#BCD1FF]  "
+                    className="fa-solid fa-ellipsis-vertical text-[#BCD1FF]  pl-14"
                     id={batch.uuid}
                     onClick={addPopUp}
                   ></i>
@@ -224,7 +236,7 @@ export default function SideNavLarge(props) {
                       <li
                         key={child.id}
                         id={child.uuid}
-                        className={`text-[#BCD1FF] pl-12 cursor-pointer hover:bg-cyan-950 pt-1 pb-1 truncate  `}
+                        className={`text-[#BCD1FF] pl-12 cursor-pointer hover:bg-cyan-950 ${params.slug == child.uuid && "bg-cyan-950"} pt-1 pb-1 truncate  `}
                         onMouseEnter={handleScriptMouseEnter}
                         onMouseLeave={handleScriptMouseLeave}
                         onClick={renderPage}
@@ -270,21 +282,19 @@ export default function SideNavLarge(props) {
               )}
             </div>
           ))}
-
           {scriptList.map((script) => (
             <li
               key={script.id}
               id={script.uuid}
-              className={`text-[#BCD1FF] pl-8 cursor-pointer hover:bg-cyan-950 pt-1 pb-1 truncate ${scriptColor == script.uuid && "bg-cyan-950" } `}
+              className={`text-[#BCD1FF] pl-8 cursor-pointer hover:bg-cyan-950 pt-1 pb-1 truncate ${
+                params.slug == script.uuid && "bg-cyan-950"
+              } `}
               onMouseEnter={handleScriptMouseEnter}
               onMouseLeave={handleScriptMouseLeave}
               onClick={renderPage}
             >
               <i className="fa-solid fa-file pr-3"></i>
               {script.title}
-              {overScriptState == script.uuid && (
-                <i className="fa-solid fa-ellipsis-vertical text-[#BCD1FF] pl-6"></i>
-              )}
             </li>
           ))}
         </ul>
@@ -293,26 +303,21 @@ export default function SideNavLarge(props) {
       <hr
         className={`h-px  bg-textPrimary border-0 dark:bg-gray-900 m-auto mt-2`}
       />
-      <div className="mt-2 ml-7 mb-4">
-      
-          <p className=" text-[#b8bdc5] pl-[8px] pt-[2px]  ">
-              <i className="fa-solid fa-trash  text-lg pr-3 text-[#b8bdc5] "></i>
-              Trash
-            </p>
-      </div>
-      <div className=" flex items-center  justify-around w-[200px] m-auto " >
-      <div className="bg-white h-8 w-8 rounded-full cursor-pointer  ">
-            <p className=" text-primary pl-[8px] pt-[2px]  ">
-              <i className="fa-solid fa-bell text-lg"></i>
-            </p>
-          </div>
+      <div className=" flex items-center  justify-around w-[200px] m-auto  mt-10">
+        <div className="bg-white h-8 w-8 rounded-full cursor-pointer  ">
+          <p className=" text-primary pl-[8px] pt-[3px]  ">
+            <i className="fa-solid fa-trash pr-[5px]"></i>
+          </p>
+        </div>
         <div className="bg-white h-8 w-8 rounded-full cursor-pointer">
           {AddNewMenu ? (
             <p
               className=" text-primary pl-[9px] pt-[2px]"
               onClick={() => setAddNewMenu(false)}
             >
-              <i className="fa-solid fa-x text-lg"></i>
+              <i className="fa-solid fa-x text-lg" 
+              ref={AddIconRef}
+              ></i>
             </p>
           ) : (
             <p
@@ -324,21 +329,19 @@ export default function SideNavLarge(props) {
           )}
         </div>
         {AddNewMenu && (
-          <div className="absolute left-28 bottom-36   ">
+          <div className="absolute left-28 bottom-20   " ref={AddNewRef}>
             <AddNew
               click={props.addBatchEvent}
               scriptEvent={props.scriptEvent}
             />
           </div>
         )}
-        
-          <div className="bg-white h-8 w-8 rounded-full cursor-pointer  ">
-            <p className=" text-primary pl-[7px] pt-[2px]  ">
-              <i className="fa-solid fa-gear text-lg text-primary"></i>
-            </p>
-          </div>
-      
-        
+
+        <div className="bg-white h-8 w-8 rounded-full cursor-pointer  ">
+          <p className=" text-primary pl-[7px] pt-[2px]  ">
+            <i className="fa-solid fa-gear text-lg text-primary"></i>
+          </p>
+        </div>
 
         {/* <div className="bg-white h-8 w-8 rounded-full cursor-pointer ml-24 ">
           <p className=" text-primary pl-[8px] pt-[2px]  ">
@@ -346,7 +349,6 @@ export default function SideNavLarge(props) {
           </p>
         </div> */}
       </div>
-  
     </div>
-);
-        }
+  );
+}

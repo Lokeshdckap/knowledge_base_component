@@ -140,5 +140,10 @@ dashboardController.updateInvite
 );
 
 
+router.get('/getScripts/:uuid/:slug',
+verifyAuthMiddleware.verifyToken,
+dashboardController.getScripts
+);
+
 
 module.exports = router;

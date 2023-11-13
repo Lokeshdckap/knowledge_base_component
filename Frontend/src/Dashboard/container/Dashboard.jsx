@@ -30,17 +30,13 @@ export default function Dashboard() {
   const [data, setData] = useState(null);
   const [childScript, setChildScript] = useState([]);
 
-
   //create Team state
-  const [teamPopup,setTeamPopup] = useState(false);
-  const [formValues, setFormValues] = useState({
-
-  });
+  const [teamPopup, setTeamPopup] = useState(false);
+  const [formValues, setFormValues] = useState({});
   const [errors, setError] = useState({});
 
+  const [invitePopup, setInvitePopup] = useState(false);
 
-  const [invitePopup,setInvitePopup] = useState(false);
-  
   //
 
   //Event
@@ -62,7 +58,6 @@ export default function Dashboard() {
   //Api
 
   const getTeam = async () => {
-   
     await axiosClient
       .get(`/getTeam/${params.uuid}`)
       .then((res) => {
@@ -79,7 +74,7 @@ export default function Dashboard() {
     axiosClient
       .get(`/getAllTeam`)
       .then((res) => {
-        setAllTeam(res.data.getAllTeam);     
+        setAllTeam(res.data.getAllTeam);
       })
       .catch((err) => {});
   };
@@ -108,8 +103,6 @@ export default function Dashboard() {
   };
 
   const addNewBatch = (e) => {
-    
-
     axiosClient
       .post("/addNewBatch", { uuid: params.uuid })
       .then((res) => {
@@ -135,14 +128,14 @@ export default function Dashboard() {
 
   const switchTeamEvent = (e) => {
     const TeamId = e.target.id;
-  
+    setTeamPopup(false);
+
     getTeam();
     getAllTeam();
     navigate(`/dashboard/${TeamId}`);
   };
 
   const handleChildrenScripts = async (e) => {
-   
     let batch_uuid = e.target.id;
 
     await axiosClient
@@ -165,14 +158,13 @@ export default function Dashboard() {
 
   // create team
 
-  const handleCancel = () =>{
+  const handleCancel = () => {
     setTeamPopup(false);
-  
-  }
+  };
 
-  const handleCreate = () =>{
+  const handleCreate = () => {
     setTeamPopup(true);
-  }
+  };
 
   const HandleChange = (e) => {
     const { name, value } = e.target;
@@ -180,8 +172,6 @@ export default function Dashboard() {
     setFormValues({ ...formValues, [name]: value });
     delete errors[name];
   };
-
-
 
   const createTeam = () => {
     // alert("je")
@@ -191,18 +181,18 @@ export default function Dashboard() {
     if (!formValues.team_name) {
       validationErrors.team_name = "Team is required";
     }
-      
-  setError(validationErrors);
-  if (Object.keys(validationErrors).length === 0) {
 
-      axiosClient.post("/team",formValues)
-      .then((res) => {
-
+    setError(validationErrors);
+    if (Object.keys(validationErrors).length === 0) {
+      axiosClient
+        .post("/team", formValues)
+        .then((res) => {
+          setTeamPopup(false);
+          getAllTeam();
         })
         .catch((err) => {
           const response = err.response;
           if (response && response.status === 400) {
-
             // console.log(response);
             let error = {};
             let keys = Object.keys(response.data);
@@ -212,21 +202,12 @@ export default function Dashboard() {
             error[keys] = value;
 
             setError(error);
-
-          } 
-          else {
-
+          } else {
             console.error("Error:", response.status);
           }
         });
-    
-  }
-}
-
-
-
-
-
+    }
+  };
 
   return (
     <div className="relative">
@@ -267,16 +248,21 @@ export default function Dashboard() {
             scriptEvent={addNewScript}
           />
         </div>
-          {teamPopup &&
-            <ModelPopup click={handleCancel}  HandleChange={HandleChange} createTeam={createTeam} columnName={"team_name"} error={errors}/>
-          }
-          {invitePopup && 
-              <InviteUsers
-               invitePopup={invitePopup}
-               setInvitePopup={setInvitePopup}
-              /> 
-          }
-        
+        {teamPopup && (
+          <ModelPopup
+            click={handleCancel}
+            HandleChange={HandleChange}
+            createTeam={createTeam}
+            columnName={"team_name"}
+            error={errors}
+          />
+        )}
+        {invitePopup && (
+          <InviteUsers
+            invitePopup={invitePopup}
+            setInvitePopup={setInvitePopup}
+          />
+        )}
       </div>
     </div>
   );

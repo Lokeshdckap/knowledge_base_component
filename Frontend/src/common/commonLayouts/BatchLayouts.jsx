@@ -1,10 +1,21 @@
 import React from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 export const BatchLayouts = (props) => {
-  let param = useParams();
+
+  const navigate = useNavigate()
+  let params = useParams();
   let scripts = props.scripts;
    let batch = props.batch
+
+
+
+   const handleScripts = (e) => {
+    let TargetScriptId = e.target.id;
+    navigate(
+      `/dashboard/${params.uuid}/s/${TargetScriptId}`
+    );
+  };
 
 
   return (
@@ -53,9 +64,9 @@ export const BatchLayouts = (props) => {
                     more_vert
                   </span>
                 </div>
-                <div className="pl-5 pt-5">
-                  <p>{script.title}</p>
-                  <p className="text-gray-500">0 Pages</p>
+                <div className="pl-5 pt-5 cursor-pointer" id={script.uuid} onClick={handleScripts}>
+                  <p id={script.uuid} onClick={handleScripts}>{script.title}</p>
+                  <p  id={script.uuid} onClick={handleScripts} className="text-gray-500">0 Pages</p>
                 </div>
               </div>
             )}

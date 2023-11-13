@@ -49,7 +49,7 @@ export const ScriptComponents = () => {
 
   const [particularPageId, setParticularPageId] = useState(null);
 
-  const [editorValue, setEditorValue] = useState([]);
+  // const [editorValue, setEditorValue] = useState([]);
 
   const [shareState, setShareState] = useState(false);
 
@@ -57,13 +57,16 @@ export const ScriptComponents = () => {
 
   const [invitePopup, setInvitePopup] = useState(false);
 
+
+  const [overStates,setOverStates] = useState(null);
+
   useEffect(() => {
     getTeam();
     getAllTeam();
     getParticularScript();
-
-
+    getScripts();
   }, [params.slug]);
+
 
   //Event
 
@@ -73,11 +76,13 @@ export const ScriptComponents = () => {
 
   //Api
 
+
   const getParticularScript = async () => {
     let script_uuid = params.slug;
     await axiosClient
       .get(`/getScriptAndPage/${script_uuid}`)
       .then((res) => {
+        console.log(res,"first");
         setInputValue(res.data.getScriptAndPages.title);
         setPageContent(res.data.hierarchy[0]);
         setTreeNode(res.data.hierarchy);
@@ -85,14 +90,24 @@ export const ScriptComponents = () => {
         setParticularTitle(res.data.hierarchy[0].title);
         setDescription(res.data.hierarchy[0].description);
         setEditorContent(res.data.hierarchy[0].content);
-        setEditorValue(res.data.hierarchy[0].content);
-        setPublish(res.data.getScriptAndPages)        
+        // setEditorValue(res.data.hierarchy[0].content);
+        setPublish(res.data.getScriptAndPages) 
+
 
       })
       .catch((err) => {
         console.log(err);
       });
   };
+
+  const getScripts = () =>{
+    axiosClient.get(`/getScripts/${params.uuid}/${params.slug}`)
+    .then((res) => {
+      setOverStates(res.data.script_batch.batch_uuid);
+      setChildScript(res.data.result)
+    })
+
+  }
 
   const getTeam = async () => {
     let teamUUID = params.uuid;
@@ -174,6 +189,7 @@ export const ScriptComponents = () => {
     const TeamId = e.target.id;
     getTeam();
     getAllTeam();
+    setTeamPopup(false);
     navigate(`/dashboard/${TeamId}`);
   };
 
@@ -187,7 +203,6 @@ export const ScriptComponents = () => {
     await axiosClient
       .get(`/getBatchAndScripts/${team_uuid}/${batch_uuid}`)
       .then((res) => {
-        console.log(res);
         setChildScript(res.data.result);
       })
       .catch((err) => {
@@ -204,11 +219,10 @@ export const ScriptComponents = () => {
       description: description ? description : "Page Description",
       content: editorContent,
     };
-
     axiosClient
       .post("/updatePageData", postData)
       .then((res) => {
-        // console.log(res);
+        // console.log(res.data);
       })
       .catch((err) => {
         console.log(err);
@@ -252,7 +266,7 @@ export const ScriptComponents = () => {
     setInputValue(inputValue); // Update the state with the current value
 
     let paraId = params.slug;
-    console.log(paraId);
+  
     axiosClient.get(
         `/addScriptTitle?inputValue=${encodedInputValue}&queryParameter=${paraId}`
       )
@@ -275,7 +289,7 @@ export const ScriptComponents = () => {
         setPageContent(res.data.pages[0]);
         setParticularTitle(res.data.pages[0].title);
         setDescription(res.data.pages[0].description);
-        setEditorValue(res.data.pages[0].content);
+        // setEditorValue(res.data.pages[0].content);
         setEditorContent(res.data.pages[0].content);
       })
       .catch((err) => {
@@ -359,7 +373,8 @@ export const ScriptComponents = () => {
 
       axiosClient.post("/team",formValues)
       .then((res) => {
-
+        setTeamPopup(false);
+        getAllTeam();
         })
         .catch((err) => {
           const response = err.response;
@@ -402,6 +417,8 @@ export const ScriptComponents = () => {
             childScript={childScript}
             getParticularScript={getParticularScript}
             handleCreate={handleCreate}
+            setInvitePopup={setInvitePopup}
+            overStates={overStates}
           />
         ) : (
           <SideNav
@@ -425,7 +442,6 @@ export const ScriptComponents = () => {
           <EditPage
             widths={state ? "w-[785px]" : "w-[933px]"}
             marginEditor={state ? "ml-[10px]" : "mr-[115px]"}
-            editorContent={editorValue}
             setEditorContent={setEditorContent}
             treeNode={treeNode}
             addPage={addPage}
@@ -440,7 +456,7 @@ export const ScriptComponents = () => {
             hoverPageId={hoverPageId}
             handleMore={handleMore}
             handleSave={handleSave}
-            editorContents={editorContent}
+            editorContent={editorContent}
             onDragEnd={onDragEnd}
             shareState={shareState}
             setShareState={setShareState}
@@ -451,6 +467,12 @@ export const ScriptComponents = () => {
             {teamPopup &&
             <ModelPopup click={handleCancel}  HandleChange={HandleChange} createTeam={createTeam} columnName={"team_name"} error={errors}/>
           }
+                  {invitePopup && (
+          <InviteUsers
+            invitePopup={invitePopup}
+            setInvitePopup={setInvitePopup}
+          />
+        )}
           {/* <BatchHeader widths={state ? "w-[1000px]" : "w-[1160px]"} />
           <BatchLayouts widths={state ? "w-[1000px]" : "w-[1120px]"} /> */}
         </div>
@@ -462,6 +484,9 @@ export const ScriptComponents = () => {
               /> 
           } */}
       </div>
+      {/* {console.log(editorContent,"welcome")} */}
+      
+      {/* {console.log(particularTitle)} */}
     </div>
   );
 };

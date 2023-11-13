@@ -21,11 +21,10 @@ export const Dashboards = () => {
 
 
   const getAllTeam = () => {
-    console.log("hj");
     axiosClient
       .get(`/getAllTeam`)
       .then((res) => {
-        console.log(res);
+        console.log(res.data);
         navigate(`/dashboard/${res.data.getAllTeam[0].team_uuid}`);
      
       })

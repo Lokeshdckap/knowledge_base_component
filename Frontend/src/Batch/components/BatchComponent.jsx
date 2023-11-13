@@ -12,6 +12,7 @@ import { EditorComponents } from "../../common/commonComponents/EditorComponents
 import { BatchHeader } from "../../common/commonLayouts/BatchHeader";
 import { BatchLayouts } from "../../common/commonLayouts/BatchLayouts";
 import { ModelPopup } from "../../common/commonComponents/ModelPopup";
+import { InviteUsers } from "../../common/commonLayouts/InviteUsers";
 
 export const BatchComponent = () => {
   const navigate = useNavigate();
@@ -19,13 +20,10 @@ export const BatchComponent = () => {
 
   //hooks
 
-
   //state
-  const [formValues, setFormValues] = useState({
-
-  });
+  const [formValues, setFormValues] = useState({});
   const [errors, setError] = useState({});
-  const [teamPopup,setTeamPopup] = useState(false);
+  const [teamPopup, setTeamPopup] = useState(false);
   const [state, setState] = useState(true);
   const [team, setTeam] = useState([]);
   const [allTeam, setAllTeam] = useState([]);
@@ -37,29 +35,27 @@ export const BatchComponent = () => {
   const [batchTitle, setBatchTitle] = useState("");
   const [batchDescription, setbatchDescription] = useState("");
 
+  const [invitePopup, setInvitePopup] = useState(false);
+
 
   useEffect(() => {
     getTeam();
     getAllTeam();
     getScripts();
-
-  }, [params.slug,batchTitle]);
+  }, [params.slug, batchTitle]);
   //Event
   const handleClick = () => {
     // setState((prevState) => !prevState);
     if (state) {
       setState(localStorage.setItem("sidePopUp", true));
     } else {
-
       setState(localStorage.setItem("sidePopUp", false));
     }
-
   };
 
   //Api
 
   const getTeam = async () => {
-
     await axiosClient
       .get(`/getTeam/${params.uuid}`)
       .then((res) => {
@@ -74,8 +70,8 @@ export const BatchComponent = () => {
   };
 
   const getAllTeam = () => {
-
-    axiosClient.get("/getAllTeam")
+    axiosClient
+      .get("/getAllTeam")
       .then((res) => {
         setAllTeam(res.data.getAllTeam);
       })
@@ -135,6 +131,7 @@ export const BatchComponent = () => {
     const TeamId = e.target.id;
     getTeam();
     getAllTeam();
+    setTeamPopup(false);
     navigate(`/dashboard/${TeamId}`);
   };
 
@@ -218,17 +215,13 @@ export const BatchComponent = () => {
     }
   };
 
-
-
-
-  const handleCancel = () =>{
+  const handleCancel = () => {
     setTeamPopup(false);
-  
-  }
+  };
 
-  const handleCreate = () =>{
+  const handleCreate = () => {
     setTeamPopup(true);
-  }
+  };
 
   const HandleChange = (e) => {
     const { name, value } = e.target;
@@ -236,8 +229,6 @@ export const BatchComponent = () => {
     setFormValues({ ...formValues, [name]: value });
     delete errors[name];
   };
-
-
 
   const createTeam = () => {
     // alert("je")
@@ -247,18 +238,18 @@ export const BatchComponent = () => {
     if (!formValues.team_name) {
       validationErrors.team_name = "Team is required";
     }
-      
-  setError(validationErrors);
-  if (Object.keys(validationErrors).length === 0) {
 
-      axiosClient.post("/team",formValues)
-      .then((res) => {
-
+    setError(validationErrors);
+    if (Object.keys(validationErrors).length === 0) {
+      axiosClient
+        .post("/team", formValues)
+        .then((res) => {
+          setTeamPopup(false);
+          getAllTeam();
         })
         .catch((err) => {
           const response = err.response;
           if (response && response.status === 400) {
-
             // console.log(response);
             let error = {};
             let keys = Object.keys(response.data);
@@ -268,23 +259,16 @@ export const BatchComponent = () => {
             error[keys] = value;
 
             setError(error);
-
-          } 
-          else {
-
+          } else {
             console.error("Error:", response.status);
           }
         });
-    
-  }
-}
-
-
+    }
+  };
 
   return (
     <div className="relative">
-
-       <div className="flex bg-[#ECEDEF] ">
+      <div className="flex bg-[#ECEDEF] ">
         {state ? (
           <SideNavLarge
             buttonClicked={handleClick}
@@ -298,6 +282,7 @@ export const BatchComponent = () => {
             handleChildrenScripts={handleChildrenScripts}
             childScript={childScript}
             handleCreate={handleCreate}
+            setInvitePopup={setInvitePopup}
           />
         ) : (
           <SideNav
@@ -325,10 +310,22 @@ export const BatchComponent = () => {
             batch={batch}
           />
         </div>
-        {teamPopup &&
-            <ModelPopup click={handleCancel}  HandleChange={HandleChange} createTeam={createTeam} columnName={"team_name"} error={errors}/>
-          }
-      </div> 
+        {teamPopup && (
+          <ModelPopup
+            click={handleCancel}
+            HandleChange={HandleChange}
+            createTeam={createTeam}
+            columnName={"team_name"}
+            error={errors}
+          />
+        )}
+                {invitePopup && (
+          <InviteUsers
+            invitePopup={invitePopup}
+            setInvitePopup={setInvitePopup}
+          />
+        )}
+      </div>
     </div>
   );
 };

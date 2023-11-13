@@ -824,6 +824,47 @@ const updateInvite = async (req,res) =>{
 
 } 
 
+
+
+const getScripts = async (req,res) =>{
+
+  const TeamId = req.params.uuid
+  const scriptId = req.params.slug
+
+
+  const script_batch = await Script.findOne({
+    where: {
+      [Op.and]: [{ team_uuid: TeamId }, { uuid: scriptId }],
+    },
+    });
+
+
+    let result = await Script.findAll({
+      include: [
+        {
+          model: Batch,
+          where: {
+            uuid: script_batch.batch_uuid, // WHERE condition for the Batch model
+          },
+  
+          include: [
+            {
+              model: Team,
+              where: {
+                uuid: TeamId, // WHERE condition for the Team model
+              },
+            },
+          ],
+        },
+      ],
+    });
+
+  // console.log(script_batch.batch_uuid,"here");
+  return res.status(200).json({script_batch,result});
+
+
+}
+
 module.exports = {
   createTeams,
   getTeam,
@@ -848,6 +889,7 @@ module.exports = {
   getActiveUsersForTeam,
   inviteTeams,
   updateInvite,
+  getScripts,
 
 
 };

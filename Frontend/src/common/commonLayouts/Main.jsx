@@ -1,6 +1,10 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function Main(props) {
+
+
+  const navigate = useNavigate()
   const teamName =props.team.name;
   const batchList = props.batches;
   const scriptList = props.scripts;
@@ -9,14 +13,21 @@ export default function Main(props) {
   const scriptCount = props.scriptCount
 
 
-  const handleScripts = (e) => {
+
+  const handleBatch = (e) => {
    
     let TargetScriptId = e.target.id;
-    alert(TargetScriptId)
-    // navigate(
-    //   `/dashboard/${props.team.uuid}/s/${TargetScriptId}`
-    // );
+    navigate(
+      `/dashboard/${props.team.uuid}/b/${TargetScriptId}`
+    );
   };
+  const handleScripts = (e) => {
+    let TargetScriptId = e.target.id;
+    navigate(
+      `/dashboard/${props.team.uuid}/s/${TargetScriptId}`
+    );
+  };
+  
 
   return (
     <div className="pt-16 h-[520px]  overflow-y-auto z-0">
@@ -68,9 +79,9 @@ export default function Main(props) {
                   more_vert
                 </span>
               </div>
-              <div className="pl-5 pt-5 cursor-pointer" id={batch.uuid} onClick={handleScripts}>
-                <p>{batch.title}</p>
-                <p className="text-gray-500">0 script</p>
+              <div className="pl-5 pt-5 cursor-pointer" id={batch.uuid} onClick={handleBatch}>
+                <p id={batch.uuid} onClick={handleBatch}>{batch.title}</p>
+                <p id={batch.uuid} onClick={handleBatch} className="text-gray-500">0 script</p>
               </div>
             </div>
           )}
@@ -84,8 +95,8 @@ export default function Main(props) {
                 </span>
               </div>
               <div className="pl-5 pt-5 cursor-pointer" id={script.uuid} onClick={handleScripts}>
-                <p>{script.title}</p>
-                <p className="text-gray-500">0 page</p>
+                <p id={script.uuid} onClick={handleScripts}>{script.title}</p>
+                <p id={script.uuid}  onClick={handleScripts} className="text-gray-500">0 page</p>
               </div>
             </div>
           )}

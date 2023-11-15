@@ -16,7 +16,6 @@ export default function EditPage(props) {
 
   const treeNode = props.treeNode;
   useEffect(() => {
-    // console.log(props.editorContent);
     props.setParticularTitle(props.particularTitle);
     props.setDescription(props.description);
     
@@ -38,10 +37,9 @@ export default function EditPage(props) {
   return (
     <div>
       <div className="mt-14 flex">
-        <div className="bg-[#E4E8EC] w-[278px] h-[500px]">
+        <div className="bg-[#E4E8EC] w-[278px] h-[490px] overflow-auto">
           <div className="space-y-2 ml-4 mt-4">
             <div className="p-4 rounded-lg shadow">
-              <h1 className="text-2xl font-bold mb-4">DOCUMENTS</h1>
               {treeNode.map((topLevelPage, index) => (
                 <div
                   key={topLevelPage.page_id}
@@ -77,9 +75,6 @@ export default function EditPage(props) {
                 New Page
               </p>
             </div>
-            <hr
-              className={`h-px w-[250px] bg-[#D5D7DA] border-0 m-auto dark:bg-gray-900 mt-4`}
-            />
             <div>
               {newPagePopup && (
                 <div className="box-border bg-white h-28 w-56 p-4 mt-1 border-[1px] m-auto rounded shadow-lg ">
@@ -111,6 +106,7 @@ export default function EditPage(props) {
               value={props.particularTitle}
               onChange={(e) => props.setParticularTitle(e.target.value)}
               placeholder="Page Name"
+
             />
           </div>
           <div>

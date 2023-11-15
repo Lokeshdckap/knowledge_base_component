@@ -7,9 +7,11 @@ export const JoinTeam  =  () =>  {
 
     const params =  useParams();
     const navigate = useNavigate();
-    // console.log(params.token);
+    // // console.log(params.token);
     const [decodedToken, setDecodedToken] = useState(null);
-    useEffect(async () => {
+    let hasEffectRun = false;
+    useEffect( () => {
+      if (!hasEffectRun) {
       const decoded = jwtDecode(params.token);
       let payLoad = {
         "id":decoded.id,
@@ -23,28 +25,29 @@ export const JoinTeam  =  () =>  {
           "team_uuid":decoded.team_uuid,
           "role":decoded.role
         }
-        await axiosClient.post("/updateInvite",payLoad)
+         axiosClient.post("/updateInvite",payLoad)
         .then((res) => {
           console.log(res);
-          // navigate("/signin")
+          navigate("/dashboard")
         })
         .catch((err) => {
           console.log(err);
         });
       }
       else{
+
         localStorage.setItem("inviteInfo",JSON.stringify(decoded))
         navigate("/signup")
       }
+      hasEffectRun = true;
+    }
     },[])
 
 
 
   return (
     <div>
-      {/* {console.log(decodedToken)} */}
         Loading....
-
     </div>
   )
 }

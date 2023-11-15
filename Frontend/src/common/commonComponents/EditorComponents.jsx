@@ -1,8 +1,6 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import EditorJS from "@editorjs/editorjs";
-import Header from "@editorjs/header";
-
 import List from "@editorjs/list";
 import Table from "@editorjs/table";
 import Header from "@editorjs/header";
@@ -18,29 +16,32 @@ export const EditorComponents = (props) => {
   const ejInstance = useRef();
   const [imageUrl, setImageUrl] = useState('');
 
-  // const handleUpload = async (file) => {
-  //   console.log(file);
-  //   // const formData = new FormData()
+  const handleUpload = async (file) => {
+    console.log(file);
+    const formData = new FormData()
 
-  //   // formData.append('image', file);
-  //   // console.log(formData);
+    formData.append('image', file);
+    console.log(formData.getAll("image"));
 
-  //   try {
-  //     const response = await axiosClient.post('/uploadImage', file,{
-  //       headers:{
-  //         "Content-Type":"multipart/form-data",
-  //       },
-  //     });
-  //     // console.log(formData);
-  //     console.log(response);
-  //     setImageUrl(response.data.imageUrl);
-  //   } catch (error) {
-  //     console.error('Error uploading image:', error);
-  //   }
-  // };
+    try {
+      const response = await axiosClient.post('/uploadImage', file,{
+        headers:{
+          "Content-Type":"multipart/form-data",
+        },
+      });
+      // console.log(formData);
+      console.log(response);
+      setImageUrl(response.data.imageUrl);
+    } catch (error) {
+      console.error('Error uploading image:', error);
+    }
+  };
 
   useEffect(() => {
     let isMounted = true;
+    console.log(props.editorValue);
+
+
     const initEditor = async (datas) => {
       if (isMounted && !ejInstance.current) {
         const editor = new EditorJS({
@@ -48,7 +49,6 @@ export const EditorComponents = (props) => {
           onReady: async () => {
           
             ejInstance.current = editor;
-
             // let content = await editor.saver.save();
               
             // props.editorState(content);
@@ -72,10 +72,10 @@ export const EditorComponents = (props) => {
             }
             else{
               if(editor){
-                 let content = await editor.saver.save();
-              props.editorState(content);
+                let content = await editor.saver.save();
+                 console.log(content);
+                props.editorState(content);
               }
-             
             }
           },
           autofocus: true,
@@ -90,17 +90,17 @@ export const EditorComponents = (props) => {
               },
             },
             image: SimpleImage,
-            // image: {
-            //   class: ImageTool,
-            //   inlineToolbar: true,
-            //   config: {
-            //     uploader: {
-            //       uploadByFile(file) {
-            //         return handleUpload(file); // This function should be defined in your component
-            //       },
-            //     },
-            //   },
-            // },
+            image: {
+              class: ImageTool,
+              inlineToolbar: true,
+              config: {
+                uploader: {
+                  uploadByFile(file) {
+                    return handleUpload(file); // This function should be defined in your component
+                  },
+                },
+              },
+            },
             table: {
               class: Table,
               inlineToolbar: true,

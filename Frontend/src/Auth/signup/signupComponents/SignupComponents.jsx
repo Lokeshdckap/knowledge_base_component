@@ -7,7 +7,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { useStateContext } from "../../../context/ContextProvider";
 import axiosClient from "../../../axios-client";
 import HashLoader from "react-spinners/HashLoader";
-import Cookies from 'js-cookie';
+import Cookies from "js-cookie";
 
 export default function SignupComponents() {
   const [errors, setError] = useState({});
@@ -68,12 +68,11 @@ export default function SignupComponents() {
     // setLoading(false)
 
     if (Object.keys(validationErrors).length === 0) {
-
       setLoading(true);
 
-      Cookies.set('userEmail',formValues.email,{ expires: 7 });
-      
-      axiosClient.post("http://localhost:4000/register",formValues)
+      Cookies.set("userEmail", formValues.email, { expires: 7 });
+      axiosClient
+        .post("http://localhost:4000/register", formValues)
         .then(({ data }) => {
           setLoading(false);
           navigate("/emailverify");
@@ -100,7 +99,17 @@ export default function SignupComponents() {
   const HandleChange = (e) => {
     const { name, value } = e.target;
 
-    setFormValues({ ...formValues, [name]: value });
+    let inviteDetail = JSON.parse(localStorage.getItem("inviteInfo"));
+    if (inviteDetail) {
+      setFormValues({
+        ...formValues,
+        [name]: value,
+        team_uuid: inviteDetail.team_uuid,
+        role: inviteDetail.role,
+      });
+    } else {
+      setFormValues({ ...formValues, [name]: value });
+    }
     delete errors[name];
   };
 
@@ -112,18 +121,26 @@ export default function SignupComponents() {
       });
   };
 
-
   useEffect(() => {
     axiosClient
       .get(`http://localhost:4000/verify-email/${params.uuid}/${params.token}`)
       .then(({ data }) => {
+        // console.log(data.userTeamAvailable);
+        console.log("jhk");
+        if (data.userTeamAvailable) {
+          setAuth({
+            token: data.jwttoken,
+            verify: data.verify,
+            state: true
+          });
+        } else {
+          setAuth({
+            token: data.jwttoken,
+            verify: data.verify,
+          });
+        }
         setLoading(false);
 
-        // console.log(data);
-        setAuth({
-          token: data.jwttoken,
-          verify: data.verify,
-        });
       })
       .catch((err) => {
         // debugger;

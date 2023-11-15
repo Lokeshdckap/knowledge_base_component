@@ -13,20 +13,14 @@ export const Dashboards = () => {
   //hooks
 
   useEffect(() => {
-    
-
     getAllTeam();
   }, []);
-
-
 
   const getAllTeam = () => {
     axiosClient
       .get(`/getAllTeam`)
       .then((res) => {
-        console.log(res.data);
         navigate(`/dashboard/${res.data.getAllTeam[0].team_uuid}`);
-     
       })
       .catch((err) => {});
   };

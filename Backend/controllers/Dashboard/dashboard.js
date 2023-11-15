@@ -73,6 +73,7 @@ const createTeams = async (req, res) => {
         role_id: "1",
       });
 
+
       if (newTeam && usersTeam) {
         return res.status(200).send({
           Success: "Your Team Created Sucessfully",
@@ -560,17 +561,17 @@ const updatePageData = async (req, res) => {
       req.body.title.split(" ").filter(Boolean).join("").toLowerCase();
   }
 
-  // const updateData = await Page.update(
-  //   {
-  //     title: req.body.title,
-  //     description: req.body.description,
-  //     content: JSON.stringify(req.body.content),
-  //     path: paths,
-  //   },
-  //   {
-  //     where: { uuid: req.body.id },
-  //   }
-  // );
+  const updateData = await Page.update(
+    {
+      title: req.body.title,
+      description: req.body.description,
+      content: JSON.stringify(req.body.content),
+      path: paths,
+    },
+    {
+      where: { uuid: req.body.id },
+    }
+  );
 
   async function updateChildPagePaths(parentPath, parentId) {
     const childpages = await Page.findAll({
@@ -831,8 +832,7 @@ const inviteTeams = async (req, res) => {
       path.join(__dirname, "../../", "public", "emailTemplates/invite.html"),
       "utf8"
     );
-    _
-
+    
     const emailink = emailTemplate.replace("{{link}}", link);
 
     await sendEmail(email, "Invite Notification", emailink);

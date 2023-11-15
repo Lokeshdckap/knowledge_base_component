@@ -35,13 +35,16 @@ const register = async (req, res) => {
       password: await bcrypt.hash(password, 15),
       uuid: uuid.v4(),
     });
+ 
+    if(req.body.team_uuid){
+      const UserTeam = await UserTeams.create({
+        user_uuid : user.uuid,
+        team_uuid : req.body.team_uuid,
+        role : req.body.role,
+        uuid: uuid.v4(),
+      })
+    }
 
-    const UserTeam = await UserTeams.create({
-    user_uuid : user.uuid,
-    team_uuid : req.body.team_uuid,
-    role : req.body.role,
-    uuid: uuid.v4(),
-  })
 
     if (user) {
       const expiresAt = new Date(Date.now() + 3600000);
@@ -119,6 +122,8 @@ const login = async (req, res) => {
 const verifyEmail = async (req, res) => {
   try {
     const token = req.params.token;
+    console.log(req.params);
+    console.log(req.params.uuid);
 
     //find user by token using the where clause
     const usertoken = await emailVerificationToken.findOne({
@@ -127,6 +132,13 @@ const verifyEmail = async (req, res) => {
         user_uuid: req.params.uuid,
       },
     });
+
+    const userTeamAvailable = await UserTeams.findOne({
+      where: {
+        user_uuid: req.params.uuid,
+      },
+    });
+
 
     //if token doesnt exist, send status of 400
     if (usertoken.expires_at < new Date()) {
@@ -151,7 +163,7 @@ const verifyEmail = async (req, res) => {
       } else if (user.isVerified) {
         let jwttoken = generateAuthToken(user);
         // JWT TokeN
-        return res.status(200).send({ verify: user.isVerified, jwttoken });
+        return res.status(200).send({ verify: user.isVerified, jwttoken,userTeamAvailable });
 
         //if user is not verified, change the verified to true by updating the field
       } else {

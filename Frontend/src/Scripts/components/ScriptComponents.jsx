@@ -17,17 +17,14 @@ export const ScriptComponents = () => {
 
   //state
 
-  const [formValues, setFormValues] = useState({
-
-  });
+  const [formValues, setFormValues] = useState({});
   const [errors, setError] = useState({});
   const [state, setState] = useState(true);
   const [team, setTeam] = useState([]);
   const [allTeam, setAllTeam] = useState([]);
   const [batch, setBatch] = useState([]);
   const [script, setScript] = useState([]);
-  const [teamPopup,setTeamPopup] = useState(false);
-
+  const [teamPopup, setTeamPopup] = useState(false);
 
   const [childScript, setChildScript] = useState([]);
   const [inputValue, setInputValue] = useState("");
@@ -49,7 +46,7 @@ export const ScriptComponents = () => {
 
   const [particularPageId, setParticularPageId] = useState(null);
 
-  // const [editorValue, setEditorValue] = useState([]);
+  const [editorValue, setEditorValue] = useState([]);
 
   const [shareState, setShareState] = useState(false);
 
@@ -57,13 +54,11 @@ export const ScriptComponents = () => {
 
   const [invitePopup, setInvitePopup] = useState(false);
 
+  const [overStates, setOverStates] = useState(null);
 
-  const [overStates,setOverStates] = useState(null);
-
-
-
-  const [inviteEmail,setInviteEmail] = useState("");
-  const [role,setRole] = useState("null");
+  const [inviteEmail, setInviteEmail] = useState("");
+  const [role, setRole] = useState("null");
+  const [index, setIndex] = useState("null");
 
   useEffect(() => {
     getTeam();
@@ -72,7 +67,6 @@ export const ScriptComponents = () => {
     getScripts();
   }, [params.slug]);
 
-
   //Event
 
   const handleClick = () => {
@@ -80,7 +74,6 @@ export const ScriptComponents = () => {
   };
 
   //Api
-
 
   const getParticularScript = async () => {
     let script_uuid = params.slug;
@@ -95,23 +88,20 @@ export const ScriptComponents = () => {
         setDescription(res.data.hierarchy[0].description);
         setEditorContent(res.data.hierarchy[0].content);
         setEditorValue(res.data.hierarchy[0].content);
-        setPublish(res.data.getScriptAndPages) 
-
-
+        setPublish(res.data.getScriptAndPages);
+        console.log(res.data);
       })
       .catch((err) => {
         console.log(err);
       });
   };
 
-  const getScripts = () =>{
-    axiosClient.get(`/getScripts/${params.uuid}/${params.slug}`)
-    .then((res) => {
+  const getScripts = () => {
+    axiosClient.get(`/getScripts/${params.uuid}/${params.slug}`).then((res) => {
       setOverStates(res.data.script_batch.batch_uuid);
-      setChildScript(res.data.result)
-    })
-
-  }
+      setChildScript(res.data.result);
+    });
+  };
 
   const getTeam = async () => {
     let teamUUID = params.uuid;
@@ -197,7 +187,6 @@ export const ScriptComponents = () => {
     navigate(`/dashboard/${TeamId}`);
   };
 
-
   let batch_uuid;
 
   const handleChildrenScripts = async (e) => {
@@ -219,20 +208,20 @@ export const ScriptComponents = () => {
   const handleSave = () => {
     const postData = {
       id: pageId,
-      index:index,
       title: particularTitle ? particularTitle : "Page Name",
       description: description ? description : "Page Description",
       content: editorContent,
     };
+
     axiosClient
       .post("/updatePageData", postData)
       .then((res) => {
-        // console.log(res.data);
+        console.log(res.data);
       })
       .catch((err) => {
         console.log(err);
       });
-    getParticularScript();
+    // getParticularScript();
   };
 
   const addPage = () => {
@@ -247,23 +236,19 @@ export const ScriptComponents = () => {
   };
 
   const addChildPage = (uuid) => {
-
     let page_uuid = uuid;
     axiosClient
 
-    .post(`/addChildPage/${params.slug}/${page_uuid}`)
-    .then((res) => {
-      getParticularScript();
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-  }
-
+      .post(`/addChildPage/${params.slug}/${page_uuid}`)
+      .then((res) => {
+        getParticularScript();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   const handleChange = async (event) => {
-
-
     const inputValue = event;
 
     const encodedInputValue = encodeURIComponent(inputValue);
@@ -271,22 +256,21 @@ export const ScriptComponents = () => {
     setInputValue(inputValue); // Update the state with the current value
 
     let paraId = params.slug;
-  
-    axiosClient.get(
+
+    axiosClient
+      .get(
         `/addScriptTitle?inputValue=${encodedInputValue}&queryParameter=${paraId}`
       )
       .then((res) => {
-       console.log(res);
+        console.log(res);
       })
       .catch((err) => {
         console.log(err);
       });
-    
-
   };
 
   const contentPage = (e) => {
-    setIndex(e.target.attributes[3].value);
+
     setPageId(e.target.id);
     let pageId = e.target.id;
     axiosClient
@@ -305,7 +289,6 @@ export const ScriptComponents = () => {
 
   const handleScriptMouseEnter = (e) => {
     setHoverPageId(e.target.id);
-
   };
 
   const handleScriptMouseLeave = (e) => {
@@ -313,13 +296,12 @@ export const ScriptComponents = () => {
   };
 
   const handleMore = (e) => {
-
     setParticularPageId(e.target.id);
     addChildPage(e.target.id);
+
   };
 
   const onDragEnd = (result) => {
-
     // Handle the drag-and-drop logic here
     if (!result.destination) {
       return;
@@ -337,17 +319,13 @@ export const ScriptComponents = () => {
     setShareState(true);
   };
 
-  const handleCreate = () =>{
+  const handleCreate = () => {
     setTeamPopup(true);
-  }
+  };
 
-
-  const handleCancel = () =>{
+  const handleCancel = () => {
     setTeamPopup(false);
-  
-  
-  }
-
+  };
 
   const HandleChange = (e) => {
     const { name, value } = e.target;
@@ -356,7 +334,8 @@ export const ScriptComponents = () => {
     delete errors[name];
   };
   const onChange = (checked) => {
-      axiosClient.get(`/scripts/${params.slug}/${checked}`)
+    axiosClient
+      .get(`/scripts/${params.slug}/${checked}`)
       .then((res) => {
         setRenderScript(res.data.publicUrl);
         console.log(res);
@@ -366,67 +345,52 @@ export const ScriptComponents = () => {
       });
   };
 
-
   const createTeam = () => {
-    // alert("je")
-
     const validationErrors = {};
-
     if (!formValues.team_name) {
       validationErrors.team_name = "Team is required";
     }
-      
-  setError(validationErrors);
-  if (Object.keys(validationErrors).length === 0) {
-
-      axiosClient.post("/team",formValues)
-      .then((res) => {
-        setTeamPopup(false);
-        getAllTeam();
+    setError(validationErrors);
+    if (Object.keys(validationErrors).length === 0) {
+      axiosClient
+        .post("/team", formValues)
+        .then((res) => {
+          setTeamPopup(false);
+          getAllTeam();
         })
         .catch((err) => {
           const response = err.response;
           if (response && response.status === 400) {
-
-            // console.log(response);
             let error = {};
             let keys = Object.keys(response.data);
             let value = Object.values(response.data);
-            console.log(value);
-
             error[keys] = value;
-
             setError(error);
-
-          } 
-          else {
-
+          } else {
             console.error("Error:", response.status);
           }
         });
-    
-  }
-}
+    }
+  };
 
-const handleInviteUsers = () => {
-
-  axiosClient.post("/inviteUsers",{
-    "email" : inviteEmail,
-    "role":role,
-    "team_uuid" : params.uuid
-  })
-  .then((res) => {
-    console.log(res);
-  })
-  .catch((err) => {
-    console.log(err);
-  });
-}
-
+  const handleInviteUsers = () => {
+    axiosClient
+      .post("/inviteUsers", {
+        email: inviteEmail,
+        role: role,
+        team_uuid: params.uuid,
+      })
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   return (
     <div className="relative">
-      <div className="flex bg-[#ECEDEF] ">
+      <div className="flex bg-[#ECEDEF] h-screen overflow-auto ">
         {state ? (
           <SideNavLarge
             buttonClicked={handleClick}
@@ -489,19 +453,25 @@ const handleInviteUsers = () => {
             editorValue={editorValue}
             renderScript={renderScript}
           />
-            {teamPopup &&
-            <ModelPopup click={handleCancel}  HandleChange={HandleChange} createTeam={createTeam} columnName={"team_name"} error={errors}/>
-          }
-                  {invitePopup && (
-          <InviteUsers
-            invitePopup={invitePopup}
-            setInvitePopup={setInvitePopup}
-            inviteEmail={inviteEmail}
-            setRole={setRole}
-            handleInviteUsers={handleInviteUsers}
-          />
-        )}
-        
+          {teamPopup && (
+            <ModelPopup
+              click={handleCancel}
+              HandleChange={HandleChange}
+              createTeam={createTeam}
+              columnName={"team_name"}
+              error={errors}
+            />
+          )}
+          {invitePopup && (
+            <InviteUsers
+              invitePopup={invitePopup}
+              setInvitePopup={setInvitePopup}
+              inviteEmail={inviteEmail}
+              setInviteEmail={setInviteEmail}
+              setRole={setRole}
+              handleInviteUsers={handleInviteUsers}
+            />
+          )}
         </div>
         {/* {invitePopup && 
               <InviteUsers
@@ -509,8 +479,8 @@ const handleInviteUsers = () => {
                setInvitePopup={setInvitePopup}
               /> 
           } */}
-      </div>   
-
+        {console.log(editorValue)}
+      </div>
     </div>
   );
 };

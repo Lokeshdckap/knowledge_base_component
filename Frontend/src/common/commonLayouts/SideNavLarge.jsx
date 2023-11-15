@@ -92,11 +92,7 @@ export default function SideNavLarge(props) {
   };
 
   return (
-<<<<<<< HEAD
     <div className="bg-primary h-screen  overflow-auto w-[280px] z-10 ">
-=======
-    <div className="bg-primary h-screen overflow-auto w-[280px] z-10 ">
->>>>>>> feature_batch
       <div>
         <img src={mainLogo} alt="" className="max-w-md m-auto mt-4" />
       </div>

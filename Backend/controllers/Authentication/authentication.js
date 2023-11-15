@@ -9,6 +9,7 @@ const crypto = require("crypto");
 const generateAuthToken = require("../../utils/generateAuthToken");
 const sendEmail = require("../../utils/sendEmails");
 const uuid = require("uuid");
+const UserTeams = db.user_team_members;
 const { registrationSchema, loginSchema } = require("../../utils/validations");
 
 const register = async (req, res) => {
@@ -35,6 +36,13 @@ const register = async (req, res) => {
       uuid: uuid.v4(),
     });
 
+    const UserTeam = await UserTeams.create({
+    user_uuid : user.uuid,
+    team_uuid : req.body.team_uuid,
+    role : req.body.role,
+    uuid: uuid.v4(),
+  })
+
     if (user) {
       const expiresAt = new Date(Date.now() + 3600000);
       let setToken = await new emailVerificationToken({
@@ -54,11 +62,12 @@ const register = async (req, res) => {
         const emailink = emailTemplate.replace("{{link}}", link);
 
         await sendEmail(user.email, "Email Verification", emailink);
-      } else {
+      } 
+      
+      else {
         return res.status(400).send("token not created");
       }
       return res.status(200).send({ verify: user.isVerified });
-      // return res.status(302).send('Please Verify Your Email')
     } else {
       return res.status(409).send("Details are not correct");
     }

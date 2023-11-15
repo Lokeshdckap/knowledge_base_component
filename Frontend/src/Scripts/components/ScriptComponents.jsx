@@ -49,6 +49,7 @@ export const ScriptComponents = () => {
 
   const [particularPageId, setParticularPageId] = useState(null);
 
+  const [index,setIndex] = useState(null);
   // const [editorValue, setEditorValue] = useState([]);
 
   const [shareState, setShareState] = useState(false);
@@ -213,8 +214,10 @@ export const ScriptComponents = () => {
   //Editor functionality
 
   const handleSave = () => {
+  
     const postData = {
       id: pageId,
+      index:index,
       title: particularTitle ? particularTitle : "Page Name",
       description: description ? description : "Page Description",
       content: editorContent,
@@ -281,6 +284,7 @@ export const ScriptComponents = () => {
   };
 
   const contentPage = (e) => {
+    setIndex(e.target.attributes[3].value);
     setPageId(e.target.id);
     let pageId = e.target.id;
     axiosClient

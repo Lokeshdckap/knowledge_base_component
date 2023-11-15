@@ -57,6 +57,8 @@
     "@editorjs/inline-code": "^1.4.0",
     "@editorjs/paragraph": "^2.11.3",
     "@editorjs/simple-image": "^1.5.1",
+    "@editorjs/header": "^2.8.1",
+    "@editorjs/list": "^1.9.0",
     "editorjs-table": "^1.4.10",
     "tailwindcss": "^3.3.3"
   }

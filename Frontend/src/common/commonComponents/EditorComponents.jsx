@@ -1,8 +1,9 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import EditorJS from "@editorjs/editorjs";
-import Header from "@editorjs/header";
+// import EditorJS from "@editorjs/editorjs";
+import EditorJS from '@editorjs/editorjs';
 import List from "@editorjs/list";
 import Table from "@editorjs/table";
+import Header from "@editorjs/header";
 import InlineCode from "@editorjs/inline-code";
 import Underline from '@editorjs/underline';
 

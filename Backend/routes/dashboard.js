@@ -145,5 +145,9 @@ verifyAuthMiddleware.verifyToken,
 dashboardController.getScripts
 );
 
+// router.post('/inviteChecking',
+// dashboardController.checkingInviteUser
+// );
+
 
 module.exports = router;

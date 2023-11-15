@@ -913,14 +913,6 @@ const getScripts = async (req, res) => {
   return res.status(200).json({ script_batch, result });
 };
 
-
-const checkingInviteUser = async(req,res)  =>{
-    
-}
-
-
-
-
 const uploadImage =  (req, res) => {
   console.log(req);
   // upload.single('image')
@@ -931,6 +923,27 @@ const uploadImage =  (req, res) => {
   //     res.status(400).json({ success: false, message: 'File upload failed.' });
   //   }
   }
+  
+
+  const globalSearch = async (req,res) =>{
+    const { q } = req.query;
+
+    const whereClause = {
+      title: {
+        [Op.iLike]: `%${q}%`,
+      },
+    };
+    try {
+      const scripts = await Script.findAll({
+        where: whereClause,
+      });
+     return res.status(200).json(scripts);
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ error: 'Internal Server Error' });
+    }
+  };
+     
 
 module.exports = {
   createTeams,
@@ -958,6 +971,5 @@ module.exports = {
   updateInvite,
   getScripts,
   uploadImage,
-  checkingInviteUser
-
+  globalSearch
 };

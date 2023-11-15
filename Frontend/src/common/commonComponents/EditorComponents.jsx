@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef, useState } from "react";
 import EditorJS from "@editorjs/editorjs";
 import List from "@editorjs/list";

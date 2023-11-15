@@ -57,7 +57,9 @@ export const ScriptComponents = () => {
   const [overStates, setOverStates] = useState(null);
 
   const [inviteEmail, setInviteEmail] = useState("");
+  
   const [role, setRole] = useState("null");
+
   const [index, setIndex] = useState("null");
 
   useEffect(() => {

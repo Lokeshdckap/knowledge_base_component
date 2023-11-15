@@ -150,10 +150,16 @@ dashboardController.getScripts
 // );
 
 
+
 router.post('/uploadImage',
 verifyAuthMiddleware.verifyToken,
 dashboardController.uploadImage
 );
+
+router.get("/search/items",
+verifyAuthMiddleware.verifyToken,
+dashboardController.globalSearch
+)
 
 
 

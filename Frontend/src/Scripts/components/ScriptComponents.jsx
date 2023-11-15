@@ -49,7 +49,7 @@ export const ScriptComponents = () => {
 
   const [particularPageId, setParticularPageId] = useState(null);
 
-  // const [editorValue, setEditorValue] = useState([]);
+  const [editorValue, setEditorValue] = useState([]);
 
   const [shareState, setShareState] = useState(false);
 
@@ -57,6 +57,7 @@ export const ScriptComponents = () => {
 
   const [invitePopup, setInvitePopup] = useState(false);
 
+  const [index, setIndex] = useState(null);
 
   const [overStates,setOverStates] = useState(null);
 

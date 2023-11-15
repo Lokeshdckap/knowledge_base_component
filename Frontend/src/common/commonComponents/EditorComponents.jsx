@@ -1,8 +1,5 @@
-
 import React, { useEffect, useRef, useState } from "react";
 import EditorJS from "@editorjs/editorjs";
-import Header from "@editorjs/header";
-
 import List from "@editorjs/list";
 import Table from "@editorjs/table";
 import Header from "@editorjs/header";

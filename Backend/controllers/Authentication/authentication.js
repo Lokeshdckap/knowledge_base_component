@@ -35,13 +35,14 @@ const register = async (req, res) => {
       password: await bcrypt.hash(password, 15),
       uuid: uuid.v4(),
     });
-
-    const UserTeam = await UserTeams.create({
-    user_uuid : user.uuid,
-    team_uuid : req.body.team_uuid,
-    role : req.body.role,
-    uuid: uuid.v4(),
-  })
+    if (req.body.team_uuid) {
+      const UserTeam = await UserTeams.create({
+        user_uuid: user.uuid,
+        team_uuid: req.body.team_uuid,
+        role: req.body.role,
+        uuid: uuid.v4(),
+      });
+    }
 
     if (user) {
       const expiresAt = new Date(Date.now() + 3600000);
@@ -62,9 +63,7 @@ const register = async (req, res) => {
         const emailink = emailTemplate.replace("{{link}}", link);
 
         await sendEmail(user.email, "Email Verification", emailink);
-      } 
-      
-      else {
+      } else {
         return res.status(400).send("token not created");
       }
       return res.status(200).send({ verify: user.isVerified });
@@ -75,7 +74,6 @@ const register = async (req, res) => {
     return res.status(500).send("Error in registering user");
   }
 };
-
 
 const login = async (req, res) => {
   try {

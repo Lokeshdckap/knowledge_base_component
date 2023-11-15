@@ -831,6 +831,7 @@ const inviteTeams = async (req, res) => {
       path.join(__dirname, "../../", "public", "emailTemplates/invite.html"),
       "utf8"
     );
+    _
 
     const emailink = emailTemplate.replace("{{link}}", link);
 

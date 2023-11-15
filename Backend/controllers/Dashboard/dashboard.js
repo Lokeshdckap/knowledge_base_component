@@ -7,11 +7,13 @@ const Batch = db.batch;
 const Script = db.script;
 const Page = db.pages;
 const Invite = db.invites;
-const Roles = db.roles_type
+const Roles = db.roles_type;
 const UserTeams = db.user_team_members;
 const path = require("path");
 const fs = require("fs");
 const sendEmail = require("../../utils/sendEmails");
+const jwt = require("jsonwebtoken");
+
 
 const uuid = require("uuid");
 const {
@@ -32,42 +34,61 @@ const createTeams = async (req, res) => {
     if (error) return res.status(409).json({ error: error.details[0].message });
 
     const team_name = req.body.team_name;
+    // console.log(team_name);
+    const user = req.user.id; 
 
-    const teamExists = await Team.findOne({ where: { name: team_name } });
+    // const teamExists = await Team.findOne(
+    //   {
+    //     where: {
+    //       [Op.and]: [{ name: team_name }, { uuid: scriptId }],
+    //     },
+    //     }
+    // );
 
-    if (teamExists) {
+
+    const teamExists = `select teams.name from user_team_members inner join teams on user_team_members.team_uuid = teams.uuid inner join users on user_team_members.user_uuid = users.uuid where users.uuid = :user and teams.name = :team_name `;
+
+    const [results] = await sequelize.query(teamExists, {
+      replacements: { user,team_name},
+    });
+
+    if (results.length) {
       return res
         .status(400)
-        .send({ team_name: `${teamExists.name} Team Is Already Exists` });
-    } else {
+        .send({ team_name: `${results[0].name} Team Is Already Exists` });
+    } 
+
+
+    else {
+
       const newTeam = await Team.create({
         name: team_name,
         uuid: uuid.v4(),
       });
 
-      await UserTeams.create({
+      const usersTeam = await UserTeams.create({
         user_uuid: req.user.id,
         uuid: uuid.v4(),
         team_uuid: newTeam.uuid,
         role_id: "1",
       });
 
-      if (newTeam) {
+      if (newTeam && usersTeam) {
         return res.status(200).send({
           Success: "Your Team Created Sucessfully",
           newTeam,
         });
-
-      }       else {
-h
+      }
+       else {
         return res.status(500).send({
-          Error: "Error Team Not Created",
+          Error: "Error Team Not Created ll",
         });
       }
     }
-  } catch (err) {
+  } 
+  catch (err) {
     return res.status(500).send({
-      Error: "Error Team Not Created",
+      Error: err.message,
     });
   }
 };
@@ -78,16 +99,11 @@ const getTeam = async (req, res) => {
       where: { uuid: req.params.uuid },
     });
 
-   return  res.status(200).json(Teams);
-
-
+    return res.status(200).json(Teams);
   } catch (error) {
-   return res.status(500).json({ error: "Internal server error" });
+    return res.status(500).json({ error: "Internal server error" });
   }
 };
-
-
-
 
 const teamNameUpdate = async (req, res) => {
   try {
@@ -110,7 +126,6 @@ const teamNameUpdate = async (req, res) => {
     });
   }
 };
-
 
 const getActiveUsersForTeam = async (req, res) => {
   try {
@@ -171,7 +186,7 @@ const addNewScripts = async (req, res) => {
 
   // console.log(existingDocument);
   if (existingDocument) {
-    slug = `${originalSlug}-${existingDocument.length}`;
+    slug = `/${originalSlug}-${existingDocument.length}`;
   }
 
   const pathUpdate = await Script.update(
@@ -229,6 +244,7 @@ const addNewScripts = async (req, res) => {
   }
 };
 
+
 const getBatch = async (req, res) => {
   const team_uuid = req.params.uuid;
 
@@ -263,7 +279,7 @@ const getBatch = async (req, res) => {
   //   },
   //   group: ['batch.id','batch.title'], // Use 'title' directly without an alias
   // });
-  return res.status(200).send({ batchs, results });
+  return res.status(200).json({ batchs, results });
 };
 
 const switchTeam = async (req, res) => {
@@ -302,7 +318,6 @@ const getAllTeam = async (req, res) => {
 };
 
 const getBatchAndScripts = async (req, res) => {
-
   let result = await Script.findAll({
     include: [
       {
@@ -350,7 +365,7 @@ const addPageData = async (req, res) => {
     slug = `/${originalSlug}-${existingPage.length + 1}`;
   }
 
-  const paths = script.path + slug;
+  const paths = `${script.path}${slug}`;
 
   const Pages = await Page.create({
     title: "Page Name",
@@ -479,18 +494,47 @@ const addScriptTitle = async (req, res) => {
       where: { uuid: req.query.queryParameter },
     }
   );
+
+
+  const updatePath = await Page.findAll({
+    where: { script_uuid: req.query.queryParameter },
+  });
+  
+
+  const updateAllPages = async () => {
+    for (const scriptPaths of updatePath) {
+      let oldPath = scriptPaths.path.split("/")[1];
+      let replaceTheNew = oldPath.replace(oldPath, req.query.inputValue);
+  
+      const pathArray = scriptPaths.path.split("/");
+      pathArray.splice(1, 1, replaceTheNew);
+      const updatedPath = pathArray.join("/");
+  
+      console.log(updatedPath);
+  
+      // Update the current row with its corresponding updatedPath
+      scriptPaths.path = updatedPath;
+      await scriptPaths.save();
+    }
+  };
+  
+  updateAllPages();
+
   return res.status(200).json({ scriptTitleUpdate });
 };
 
+
+
 const updatePageData = async (req, res) => {
   let paths;
+
+  console.log(req.body);
 
   const page = await Page.findOne({
     where: {
       uuid: req.body.id,
     },
   });
-
   const script = await Script.findOne({
     where: {
       uuid: page.script_uuid,
@@ -508,24 +552,25 @@ const updatePageData = async (req, res) => {
       parentPage.path +
       "/" +
       req.body.title.split(" ").filter(Boolean).join("").toLowerCase();
-  } else {
+  } 
+  else {
     paths =
       script.path +
       "/" +
       req.body.title.split(" ").filter(Boolean).join("").toLowerCase();
   }
 
-  const updateData = await Page.update(
-    {
-      title: req.body.title,
-      description: req.body.description,
-      content: JSON.stringify(req.body.content),
-      path: paths,
-    },
-    {
-      where: { uuid: req.body.id },
-    }
-  );
+  // const updateData = await Page.update(
+  //   {
+  //     title: req.body.title,
+  //     description: req.body.description,
+  //     content: JSON.stringify(req.body.content),
+  //     path: paths,
+  //   },
+  //   {
+  //     where: { uuid: req.body.id },
+  //   }
+  // );
 
   async function updateChildPagePaths(parentPath, parentId) {
     const childpages = await Page.findAll({
@@ -534,7 +579,11 @@ const updatePageData = async (req, res) => {
       },
     });
 
+    // console.log(childpages);
+    
+
     for (let childpage of childpages) {
+
       console.log(childpage.path.split("/"));
 
       let lo = childpage.path.replace(childpage.path, parentPath);
@@ -567,8 +616,11 @@ const updatePageData = async (req, res) => {
     console.log("Parent page not found");
   }
 
-  return res.status(200).json({ updateData });
+  return res.status(200).json({  });
 };
+
+
+
 
 const getPage = async (req, res) => {
   const pages = await Page.findAll({
@@ -578,6 +630,9 @@ const getPage = async (req, res) => {
   // let data = JSON.parse(pages.content)
   return res.status(200).json({ pages });
 };
+
+
+
 
 const addBatchTitleAndDescription = async (req, res) => {
   const param1 = req.query.param1 ? req.query.param1 : null;
@@ -661,69 +716,65 @@ const publicUrls = async (req, res) => {
   const script_uuid = req.params.slug;
   const checked = req.params.checked;
 
-
-
   const is_publishedCheck = await Script.findOne({
     where: { uuid: script_uuid },
   });
 
-  let value = checked == "true" ? 1:0
- 
+  let value = checked == "true" ? 1 : 0;
 
-    // if(is_publishedCheck.is_published){
-    try {
-      await Script.update(
-        {
-          is_published : value
-        },
-        {
-        where: { uuid: script_uuid }},
-
-        );
-        const publicUrl = await Script.findOne({
-        where: { uuid:script_uuid },
-      });
-    return res.status(200).json({publicUrl});
-      // const publicUrl = await Page.findAll({
-      //   where: { script_uuid },
-      //   include: [{ model: Script, attributes: ["path", "is_published"] }], // Include the associated script with the 'script_name' attribute
-      // });
-      // return res.status(200).send(publicUrl);
-    } catch (error) {
-      return res
-        .status(500)
-        .json({ message: "Error updating data", error: error.message });
-    }
+  // if(is_publishedCheck.is_published){
+  try {
+    await Script.update(
+      {
+        is_published: value,
+      },
+      {
+        where: { uuid: script_uuid },
+      }
+    );
+    const publicUrl = await Script.findOne({
+      where: { uuid: script_uuid },
+    });
+    return res.status(200).json({ publicUrl });
+    // const publicUrl = await Page.findAll({
+    //   where: { script_uuid },
+    //   include: [{ model: Script, attributes: ["path", "is_published"] }], // Include the associated script with the 'script_name' attribute
+    // });
+    // return res.status(200).send(publicUrl);
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: "Error updating data", error: error.message });
+  }
   // }
-//   else {
-//     try {
-//       await Script.update(
-//         {
-//           is_published : value
-//         },
-//         {
-//         where: { uuid: script_uuid }},
+  //   else {
+  //     try {
+  //       await Script.update(
+  //         {
+  //           is_published : value
+  //         },
+  //         {
+  //         where: { uuid: script_uuid }},
 
-//         );
-      
-      
-//         const publicUrl = await Script.findOne({
-//         where: { uuid:script_uuid },
-//       });
-//     return res.status(200).json({publicUrl});
-//       // const publicUrl = await Page.findAll({
-//       //   where: { script_uuid },
-//       //   include: [{ model: Script, attributes: ["path", "is_published"] }], // Include the associated script with the 'script_name' attribute
-//       // });
-//       // return res.status(200).send(publicUrl);
-//     } catch (error) {
-//       return res
-//         .status(500)
-//         .json({ message: "Error updating data", error: error.message });
-//     }
-//   // }
-// };
-}
+  //         );
+
+  //         const publicUrl = await Script.findOne({
+  //         where: { uuid:script_uuid },
+  //       });
+  //     return res.status(200).json({publicUrl});
+  //       // const publicUrl = await Page.findAll({
+  //       //   where: { script_uuid },
+  //       //   include: [{ model: Script, attributes: ["path", "is_published"] }], // Include the associated script with the 'script_name' attribute
+  //       // });
+  //       // return res.status(200).send(publicUrl);
+  //     } catch (error) {
+  //       return res
+  //         .status(500)
+  //         .json({ message: "Error updating data", error: error.message });
+  //     }
+  //   // }
+  // };
+};
 
 const particularPageRender = async (req, res) => {
   const { slug } = req.params;
@@ -736,46 +787,51 @@ const particularPageRender = async (req, res) => {
   return res.status(200).json({ publicUrl });
 };
 
+
 const inviteTeams = async (req, res) => {
+
   const email = req.body.email;
   const is_progress = 0;
   const team_uuid = req.body.team_uuid;
-  const role = req.body.role
+  const role = req.body.role;
 
   const exitsInviteUsers = await Invite.findOne({
     where: { email: email },
   });
   if (exitsInviteUsers) {
     return res.status(400).json(`${email} this email already sended invite`);
-  } else {
+  } 
+  else {
     await Invite.create({
       email: email,
       is_progess: is_progress,
       uuid: uuid.v4(),
       team_uuid: team_uuid,
     });
-     
+
     const exitsUsers = await User.findOne({
       where: { email: email },
+    });  
+
+    let userId = exitsUsers ? exitsUsers.uuid : null
+
+    let payload = {id:userId,
+                  team_uuid:team_uuid,
+                  role:role} 
+
+    let inviteToken = jwt.sign(payload, process.env.secretKey, {
+      expiresIn: 1 * 24 * 60 * 60 * 1000,
     });
 
-    let link;
+     let  link = `http://localhost:3000/join/${inviteToken}`;
 
-    if(exitsUsers){
-
-       link = `http://localhost:3000/signin/${team_uuid}/${role}`;
-    }
-    else{
-       link = `http://localhost:3000/signup/${team_uuid}/${role}`;
-
-      
-    }
-
+     console.log(link);
 
     const emailTemplate = fs.readFileSync(
       path.join(__dirname, "../../", "public", "emailTemplates/invite.html"),
       "utf8"
     );
+    _
 
     const emailink = emailTemplate.replace("{{link}}", link);
 
@@ -783,7 +839,7 @@ const inviteTeams = async (req, res) => {
 
     return res.status(200).json(`Invite Sended Sucucessfully to this ${email}`);
   }
-}
+};
 
 
 // Roles creation by bulk seeding
@@ -807,63 +863,61 @@ const blukCreation = async () => {
 };
 blukCreation();
 
-
-const updateInvite = async (req,res) =>{
+const updateInvite = async (req, res) => {
   const team_uuid = req.body.team_uuid;
-  const role = req.body.role
+  const role = req.body.role;
 
   const invitedData = await UserTeams.create({
     team_uuid: team_uuid,
     role_id: role,
     uuid: uuid.v4(),
-    user_uuid: req.user.id
-    });
+    user_uuid: req.body.id,
+  });
 
-    console.log(invitedData);
-    return res.status(200).json({invitedData});
-
-} 
-
+  // console.log(invitedData);
+  return res.status(200).json({ invitedData });
+};
 
 
-const getScripts = async (req,res) =>{
 
-  const TeamId = req.params.uuid
-  const scriptId = req.params.slug
 
+const getScripts = async (req, res) => {
+  const TeamId = req.params.uuid;
+  const scriptId = req.params.slug;
 
   const script_batch = await Script.findOne({
     where: {
       [Op.and]: [{ team_uuid: TeamId }, { uuid: scriptId }],
-    },
-    });
+    }
+  });
 
-
-    let result = await Script.findAll({
-      include: [
-        {
-          model: Batch,
-          where: {
-            uuid: script_batch.batch_uuid, // WHERE condition for the Batch model
-          },
-  
-          include: [
-            {
-              model: Team,
-              where: {
-                uuid: TeamId, // WHERE condition for the Team model
-              },
-            },
-          ],
+  let result = await Script.findAll({
+    include: [
+      {
+        model: Batch,
+        where: {
+          uuid: script_batch.batch_uuid, // WHERE condition for the Batch model
         },
-      ],
-    });
 
-  // console.log(script_batch.batch_uuid,"here");
-  return res.status(200).json({script_batch,result});
+        include: [
+          {
+            model: Team,
+            where: {
+              uuid: TeamId, // WHERE condition for the Team model
+            },
+          },
+        ],
+      },
+    ],
+  });
+  return res.status(200).json({ script_batch, result });
+};
 
 
+const checkingInviteUser = async(req,res)  =>{
+    
 }
+
 
 
 
@@ -904,5 +958,6 @@ module.exports = {
   updateInvite,
   getScripts,
   uploadImage,
+  checkingInviteUser
 
 };

@@ -11,7 +11,10 @@ export const PageTree = ({
   hoverPageId,
   handleMore,
   hasParent,
+  index,
 }) => {
+
+
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleOpen = () => {
@@ -35,6 +38,7 @@ export const PageTree = ({
           onClick={contentPage}
           id={node.uuid}
           data-set={node.path}
+          index={node.id}
           key={node.id}
         >
           {node.title}
@@ -57,9 +61,10 @@ export const PageTree = ({
       {isOpen && node.ChildPages && node.ChildPages.length > 0 && (
         <ul className="ml-3 mt-1 pl-1 border-l-[1px] border-gray-400">
           {node.ChildPages.map((child, index) => (
-            <li key={child.page_id} className="cursor-pointer" id={child.uuid}>
+            <li key={child.page_id} className="cursor-pointer" data-id={index}  id={child.uuid}>
               <PageTree
                 node={child}
+                index={index}
                 hasSibling={index < node.ChildPages.length - 1}
                 hasParent={true}
                 handleScriptMouseEnter={handleScriptMouseEnter}
@@ -68,7 +73,13 @@ export const PageTree = ({
                 contentPage={contentPage}
                 handleMore={handleMore}
               />
+          {/* <p>{index}</p>  */}
+
             </li>
+   
+
+
+
           ))}
         </ul>
       )}

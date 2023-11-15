@@ -145,6 +145,10 @@ verifyAuthMiddleware.verifyToken,
 dashboardController.getScripts
 );
 
+// router.post('/inviteChecking',
+// dashboardController.checkingInviteUser
+// );
+
 
 router.post('/uploadImage',
 verifyAuthMiddleware.verifyToken,

@@ -47,9 +47,11 @@ export default function EditPage(props) {
                   key={topLevelPage.page_id}
                   id={topLevelPage.page_id}
                   className=""
+                  
                 >
                   <PageTree
                     node={topLevelPage}
+                    index={index}
                     hasSibling={index < treeNode.length - 1}
                     hasParent={false}
                     contentPage={props.contentPage}

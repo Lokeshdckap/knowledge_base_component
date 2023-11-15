@@ -49,7 +49,7 @@ export const ScriptComponents = () => {
 
   const [particularPageId, setParticularPageId] = useState(null);
 
-  // const [editorValue, setEditorValue] = useState([]);
+  const [editorValue, setEditorValue] = useState([]);
 
   const [shareState, setShareState] = useState(false);
 
@@ -59,6 +59,11 @@ export const ScriptComponents = () => {
 
 
   const [overStates,setOverStates] = useState(null);
+
+
+
+  const [inviteEmail,setInviteEmail] = useState("");
+  const [role,setRole] = useState("null");
 
   useEffect(() => {
     getTeam();
@@ -82,7 +87,6 @@ export const ScriptComponents = () => {
     await axiosClient
       .get(`/getScriptAndPage/${script_uuid}`)
       .then((res) => {
-        console.log(res,"first");
         setInputValue(res.data.getScriptAndPages.title);
         setPageContent(res.data.hierarchy[0]);
         setTreeNode(res.data.hierarchy);
@@ -90,7 +94,7 @@ export const ScriptComponents = () => {
         setParticularTitle(res.data.hierarchy[0].title);
         setDescription(res.data.hierarchy[0].description);
         setEditorContent(res.data.hierarchy[0].content);
-        // setEditorValue(res.data.hierarchy[0].content);
+        setEditorValue(res.data.hierarchy[0].content);
         setPublish(res.data.getScriptAndPages) 
 
 
@@ -213,6 +217,7 @@ export const ScriptComponents = () => {
   //Editor functionality
 
   const handleSave = () => {
+    console.log(editorContent,"js");
     const postData = {
       id: pageId,
       title: particularTitle ? particularTitle : "Page Name",
@@ -248,7 +253,7 @@ export const ScriptComponents = () => {
 
     .post(`/addChildPage/${params.slug}/${page_uuid}`)
     .then((res) => {
-      getParticularScript()
+      getParticularScript();
     })
     .catch((err) => {
       console.log(err);
@@ -258,7 +263,7 @@ export const ScriptComponents = () => {
 
   const handleChange = async (event) => {
 
-    console.log(event);
+
     const inputValue = event;
 
     const encodedInputValue = encodeURIComponent(inputValue);
@@ -289,7 +294,7 @@ export const ScriptComponents = () => {
         setPageContent(res.data.pages[0]);
         setParticularTitle(res.data.pages[0].title);
         setDescription(res.data.pages[0].description);
-        // setEditorValue(res.data.pages[0].content);
+        setEditorValue(res.data.pages[0].content);
         setEditorContent(res.data.pages[0].content);
       })
       .catch((err) => {
@@ -299,6 +304,7 @@ export const ScriptComponents = () => {
 
   const handleScriptMouseEnter = (e) => {
     setHoverPageId(e.target.id);
+
   };
 
   const handleScriptMouseLeave = (e) => {
@@ -306,6 +312,7 @@ export const ScriptComponents = () => {
   };
 
   const handleMore = (e) => {
+
     setParticularPageId(e.target.id);
     addChildPage(e.target.id);
   };
@@ -400,6 +407,22 @@ export const ScriptComponents = () => {
   }
 }
 
+const handleInviteUsers = () => {
+
+  axiosClient.post("/inviteUsers",{
+    "email" : inviteEmail,
+    "role":role,
+    "team_uuid" : params.uuid
+  })
+  .then((res) => {
+    console.log(res);
+  })
+  .catch((err) => {
+    console.log(err);
+  });
+}
+
+
   return (
     <div className="relative">
       <div className="flex bg-[#ECEDEF] ">
@@ -462,6 +485,7 @@ export const ScriptComponents = () => {
             setShareState={setShareState}
             onChange={onChange}
             publish={publish}
+            editorValue={editorValue}
             renderScript={renderScript}
           />
             {teamPopup &&
@@ -471,22 +495,21 @@ export const ScriptComponents = () => {
           <InviteUsers
             invitePopup={invitePopup}
             setInvitePopup={setInvitePopup}
+            inviteEmail={inviteEmail}
+            setRole={setRole}
+            handleInviteUsers={handleInviteUsers}
           />
         )}
-          {/* <BatchHeader widths={state ? "w-[1000px]" : "w-[1160px]"} />
-          <BatchLayouts widths={state ? "w-[1000px]" : "w-[1120px]"} /> */}
+        
         </div>
         {/* {invitePopup && 
               <InviteUsers
-
                invitePopup={invitePopup}
                setInvitePopup={setInvitePopup}
               /> 
           } */}
-      </div>
-      {/* {console.log(editorContent,"welcome")} */}
-      
-      {/* {console.log(particularTitle)} */}
+      </div>   
+
     </div>
   );
 };

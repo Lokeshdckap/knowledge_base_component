@@ -16,6 +16,7 @@ import { UrlPage } from "./common/commonLayouts/UrlPage";
 import { Team } from "./Team/container/Team.jsx";
 import { Invited } from "./Invited.jsx";
 import { Dashboards } from "./Dashboard/container/Dashboards.jsx";
+import { JoinTeam } from "./joinTeam/JoinTeam.jsx";
 
 
 const router = createBrowserRouter([
@@ -70,7 +71,7 @@ const router = createBrowserRouter([
         path: "/signin",
         element: <SigninContainer />,
 
-      },
+      },    
       {
         path: "/signup",
         element: <SignupContainer />,
@@ -94,14 +95,17 @@ const router = createBrowserRouter([
     ],
   },
 
-  // {
-  //   path: "*",
-  //   element: <Error />,
-  // },
+  {
+    path:"/join/:token",
+    element:<JoinTeam />
+  },
+  {
+    path: "/error",
+    element: <Error />,
+  },
   {
     path: "/:slug/*",
     element: <UrlPage />,
-
   }
 ]);
 

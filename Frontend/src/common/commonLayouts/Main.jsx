@@ -30,7 +30,7 @@ export default function Main(props) {
   
 
   return (
-    <div className="pt-16 h-[520px]  overflow-y-auto z-0">
+    <div className="pt-16 h-[520px] overflow-y-auto z-0">
       <div className="   ">
         <div className={`flex justify-between ${props.widths} m-auto  `}>
           <div className="flex space-x-3">

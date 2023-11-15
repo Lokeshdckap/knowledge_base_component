@@ -146,4 +146,14 @@ dashboardController.getScripts
 );
 
 
+router.post('/uploadImage',
+verifyAuthMiddleware.verifyToken,
+dashboardController.uploadImage
+);
+
+
+
+
+
+
 module.exports = router;

@@ -1,7 +1,7 @@
 const express = require("express");
 
 const app = express();
-
+const multer = require('multer');
 const cors = require("cors");
 
 const fs = require("fs");
@@ -50,6 +50,18 @@ app.set('views', path.join(__dirname, 'views'));
 
 //listening to server connection
 
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/');
+  },
+  filename: (req, file, cb) => {
+    const filename = `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`;
+    cb(null, filename);
+  },
+});
+
+
+const upload = multer({ storage });
 
 
 app.listen(PORT, () => console.log(`Serpassportver running server on port ${PORT}`));

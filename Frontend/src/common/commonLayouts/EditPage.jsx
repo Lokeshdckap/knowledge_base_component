@@ -9,7 +9,6 @@ import { PublishPopup } from "../commonComponents/PublishPopup";
 // import ImageTool from '@editorjs/image';
 
 export default function EditPage(props) {
-  
 
   const [newPagePopup, setNewPagePopup] = useState(false);
 
@@ -20,7 +19,8 @@ export default function EditPage(props) {
     // console.log(props.editorContent);
     props.setParticularTitle(props.particularTitle);
     props.setDescription(props.description);
-  }, [props.particularTitle, props.description]);
+    
+  }, [props.particularTitle, props.description,props.editorContent]);
 
   const handleMouseEnter = (e) => {
     let targetId = e.target.id;
@@ -123,8 +123,9 @@ export default function EditPage(props) {
             <EditorComponents
               handleSave={props.handleSave}
               editorState={props.setEditorContent}
+              editorValue={props.editorValue}
               editorContent={props.editorContent}
-            
+              particularTitle={props.particularTitle}
             />
           </div>
         </div>
@@ -137,6 +138,7 @@ export default function EditPage(props) {
           renderScript={props.renderScript}
         />
       )}
+
     </div>
   );
 }

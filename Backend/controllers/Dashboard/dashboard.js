@@ -653,7 +653,7 @@ const newDocuments = async (req, res) => {
       return res.status(200).json({ hierarchy, script });
     })
     .catch((error) => {
-      return res.status(500).json({ error: error.message });
+      return res.status(409).json({ error: error.message });
     });
 };
 
@@ -865,6 +865,19 @@ const getScripts = async (req,res) =>{
 
 }
 
+
+
+const uploadImage =  (req, res) => {
+  console.log(req);
+  // upload.single('image')
+  //   // If the file was uploaded successfully, `req.file` will contain file information
+  //   if (req.file) {
+  //     res.json({ success: true, message: 'File uploaded successfully!' });
+  //   } else {
+  //     res.status(400).json({ success: false, message: 'File upload failed.' });
+  //   }
+  }
+
 module.exports = {
   createTeams,
   getTeam,
@@ -890,6 +903,6 @@ module.exports = {
   inviteTeams,
   updateInvite,
   getScripts,
-
+  uploadImage,
 
 };

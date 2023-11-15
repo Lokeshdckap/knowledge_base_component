@@ -3,6 +3,9 @@ import EditorJS from "@editorjs/editorjs";
 import Header from "@editorjs/header";
 import List from "@editorjs/list";
 import ImageTool from "@editorjs/image";
+import Table from "@editorjs/table";
+import InlineCode from "@editorjs/inline-code";
+import Underline from "@editorjs/underline";
 import Paragraph from "@editorjs/paragraph";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import axiosClient from "../../axios-client";
@@ -20,17 +23,24 @@ export const UrlPage = () => {
   const [loadPage, setLoadPage] = useState({});
 
   useEffect(() => {
-    console.log(slug);
-    console.log(wildcardValue);
     if (wildcardValue) {
       axiosClient
         .get(`/pages/${slug}/${wildcardValue}`)
         .then((res) => {
-          setLoadPage(res.data.publicUrl);
-          setEditorValue(res.data.publicUrl.content);
+          if(res.status == 200){
+            setLoadPage(res.data.publicUrl);
+            setEditorValue(res.data.publicUrl.content);
+          }       
+          console.log(res.data);   
         })
         .catch((err) => {
-          console.log(err);
+          const response = err.response;
+          console.log(response);
+          if (response && response.status === 409) {
+              console.log("ghjhkjlk");
+          } else {
+            console.error("Error:", response.status);
+          }
         });
     }
 
@@ -76,8 +86,26 @@ export const UrlPage = () => {
 
       tools: {
         header: Header,
-        list: List,
-        paragraph: Paragraph,
+        list: {
+          class: List,
+          inlineToolbar: true,
+          config: {
+            defaultStyle: "unordered",
+          },
+        },
+        table: {
+          class: Table,
+          inlineToolbar: true,
+          config: {
+            rows: 2,
+            cols: 3,
+          },
+        },
+        inlineCode: {
+          class: InlineCode,
+          shortcut: "CMD+SHIFT+M",
+        },
+        underline: Underline,
       },
     });
   };

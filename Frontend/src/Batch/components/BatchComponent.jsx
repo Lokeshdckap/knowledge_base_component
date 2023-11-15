@@ -36,6 +36,8 @@ export const BatchComponent = () => {
   const [batchDescription, setbatchDescription] = useState("");
 
   const [invitePopup, setInvitePopup] = useState(false);
+  const [inviteEmail,setInviteEmail] = useState("");
+  const [role,setRole] = useState("null");
 
 
   useEffect(() => {
@@ -266,6 +268,24 @@ export const BatchComponent = () => {
     }
   };
 
+
+  const handleInviteUsers = () => {
+
+    axiosClient.post("/inviteUsers",{
+      "email" : inviteEmail,
+      "role":role,
+      "team_uuid" : params.uuid
+    })
+    .then((res) => {
+      console.log(res);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  }
+
+
+  
   return (
     <div className="relative">
       <div className="flex bg-[#ECEDEF] ">
@@ -323,6 +343,9 @@ export const BatchComponent = () => {
           <InviteUsers
             invitePopup={invitePopup}
             setInvitePopup={setInvitePopup}
+            inviteEmail={inviteEmail}
+            setRole={setRole}
+            handleInviteUsers={handleInviteUsers}
           />
         )}
       </div>

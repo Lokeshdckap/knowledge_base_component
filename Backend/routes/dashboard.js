@@ -8,6 +8,23 @@ const verifyAuthMiddleware = require("../middleware/authenticationToken");
 
 const dashboardController = require("../controllers/Dashboard/dashboard");
 
+const multer = require('multer');
+
+const path = require("path");
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/');
+  },
+  filename: (req, file, cb) => {
+    const filename = `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`;
+    cb(null, filename);
+  },
+});
+
+
+const upload = multer({storage});
+
 router.post(
   "/team",
   verifyAuthMiddleware.verifyToken,
@@ -145,15 +162,11 @@ verifyAuthMiddleware.verifyToken,
 dashboardController.getScripts
 );
 
-// router.post('/inviteChecking',
-// dashboardController.checkingInviteUser
-// );
-
-
 
 router.post('/uploadImage',
 verifyAuthMiddleware.verifyToken,
-dashboardController.uploadImage
+upload.single('image'),
+dashboardController.uploadImage,
 );
 
 router.get("/search/items",
@@ -161,9 +174,9 @@ verifyAuthMiddleware.verifyToken,
 dashboardController.globalSearch
 )
 
-
-
-
+router.get("/fetchImage",
+dashboardController.fetchImage
+)
 
 
 module.exports = router;

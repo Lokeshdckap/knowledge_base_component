@@ -9,7 +9,6 @@ import { PublishPopup } from "../commonComponents/PublishPopup";
 // import ImageTool from '@editorjs/image';
 
 export default function EditPage(props) {
-
   const [newPagePopup, setNewPagePopup] = useState(false);
 
   const [OverPage, setOverPage] = useState(null);
@@ -18,8 +17,7 @@ export default function EditPage(props) {
   useEffect(() => {
     props.setParticularTitle(props.particularTitle);
     props.setDescription(props.description);
-    
-  }, [props.particularTitle, props.description,props.editorContent]);
+  }, [props.particularTitle, props.description, props.editorContent]);
 
   const handleMouseEnter = (e) => {
     let targetId = e.target.id;
@@ -45,7 +43,6 @@ export default function EditPage(props) {
                   key={topLevelPage.page_id}
                   id={topLevelPage.page_id}
                   className=""
-                  
                 >
                   <PageTree
                     node={topLevelPage}
@@ -106,7 +103,6 @@ export default function EditPage(props) {
               value={props.particularTitle}
               onChange={(e) => props.setParticularTitle(e.target.value)}
               placeholder="Page Name"
-
             />
           </div>
           <div>
@@ -117,6 +113,9 @@ export default function EditPage(props) {
               placeholder="Page Description"
             />
           </div>
+          <img
+     src="/uploads/image-1700066218108.png"
+/>
           <div className={`pt-5 ${props.marginEditor}`}>
             <EditorComponents
               handleSave={props.handleSave}
@@ -125,6 +124,7 @@ export default function EditPage(props) {
               editorContent={props.editorContent}
               particularTitle={props.particularTitle}
             />
+          
           </div>
         </div>
       </div>
@@ -136,7 +136,6 @@ export default function EditPage(props) {
           renderScript={props.renderScript}
         />
       )}
-
     </div>
   );
 }

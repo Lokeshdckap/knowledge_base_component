@@ -23,7 +23,7 @@ export default function EditHeader(props) {
           >
             Save
           </button>
-            <Link to={`dashboard/${localStorage.getItem("ACCESS_TOKEN")}/*`} >
+            <Link to={`dashboard/*`} >
                 <button
                   type="button"
                   className="text-textPrimary border-[1px] border-gray-400 font-medium rounded-lg text-sm h-9 w-24 mr-2 mb-2 "

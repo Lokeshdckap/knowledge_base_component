@@ -9,11 +9,11 @@ const Page = db.pages;
 const Invite = db.invites;
 const Roles = db.roles_type;
 const UserTeams = db.user_team_members;
+const Image = db.images_path;
 const path = require("path");
 const fs = require("fs");
 const sendEmail = require("../../utils/sendEmails");
 const jwt = require("jsonwebtoken");
-
 
 const uuid = require("uuid");
 const {
@@ -35,7 +35,7 @@ const createTeams = async (req, res) => {
 
     const team_name = req.body.team_name;
     // console.log(team_name);
-    const user = req.user.id; 
+    const user = req.user.id;
 
     // const teamExists = await Team.findOne(
     //   {
@@ -45,22 +45,17 @@ const createTeams = async (req, res) => {
     //     }
     // );
 
-
     const teamExists = `select teams.name from user_team_members inner join teams on user_team_members.team_uuid = teams.uuid inner join users on user_team_members.user_uuid = users.uuid where users.uuid = :user and teams.name = :team_name `;
 
     const [results] = await sequelize.query(teamExists, {
-      replacements: { user,team_name},
+      replacements: { user, team_name },
     });
 
     if (results.length) {
       return res
         .status(400)
         .send({ team_name: `${results[0].name} Team Is Already Exists` });
-    } 
-
-
-    else {
-
+    } else {
       const newTeam = await Team.create({
         name: team_name,
         uuid: uuid.v4(),
@@ -73,21 +68,18 @@ const createTeams = async (req, res) => {
         role_id: "1",
       });
 
-
       if (newTeam && usersTeam) {
         return res.status(200).send({
           Success: "Your Team Created Sucessfully",
           newTeam,
         });
-      }
-       else {
+      } else {
         return res.status(500).send({
           Error: "Error Team Not Created ll",
         });
       }
     }
-  } 
-  catch (err) {
+  } catch (err) {
     return res.status(500).send({
       Error: err.message,
     });
@@ -244,7 +236,6 @@ const addNewScripts = async (req, res) => {
     });
   }
 };
-
 
 const getBatch = async (req, res) => {
   const team_uuid = req.params.uuid;
@@ -496,35 +487,31 @@ const addScriptTitle = async (req, res) => {
     }
   );
 
-
   const updatePath = await Page.findAll({
     where: { script_uuid: req.query.queryParameter },
   });
-  
 
   const updateAllPages = async () => {
     for (const scriptPaths of updatePath) {
       let oldPath = scriptPaths.path.split("/")[1];
       let replaceTheNew = oldPath.replace(oldPath, req.query.inputValue);
-  
+
       const pathArray = scriptPaths.path.split("/");
       pathArray.splice(1, 1, replaceTheNew);
       const updatedPath = pathArray.join("/");
-  
+
       console.log(updatedPath);
-  
+
       // Update the current row with its corresponding updatedPath
-      scriptPaths.path = updatedPath;
+      scriptPaths.path = updatedPath.toLowerCase();
       await scriptPaths.save();
     }
   };
-  
+
   updateAllPages();
 
   return res.status(200).json({ scriptTitleUpdate });
 };
-
-
 
 const updatePageData = async (req, res) => {
   let paths;
@@ -553,8 +540,7 @@ const updatePageData = async (req, res) => {
       parentPage.path +
       "/" +
       req.body.title.split(" ").filter(Boolean).join("").toLowerCase();
-  } 
-  else {
+  } else {
     paths =
       script.path +
       "/" +
@@ -580,26 +566,21 @@ const updatePageData = async (req, res) => {
       },
     });
 
-    // console.log(childpages);
-    
-
     for (let childpage of childpages) {
+      const newPath = parentPath + "/" + childpage.path.split("/").pop();
 
-      console.log(childpage.path.split("/"));
+      console.log(newPath);
 
-      let lo = childpage.path.replace(childpage.path, parentPath);
+      await Page.update(
+        {
+          path: newPath,
+        },
+        {
+          where: { uuid: childpage.uuid },
+        }
+      );
 
-      //  await Page.update(
-      //   {
-      //     path: lo,
-      //   },
-      //   {
-      //     where: { page_uuid: req.body.id },
-      //   }
-
-      // );
-
-      await updateChildPagePaths(parentPath, childpage.uuid);
+      await updateChildPagePaths(newPath, childpage.uuid);
     }
   }
 
@@ -611,17 +592,13 @@ const updatePageData = async (req, res) => {
 
   if (parentPage) {
     const parentPath = parentPage.path;
-
     await updateChildPagePaths(parentPath, parentPage.uuid);
   } else {
     console.log("Parent page not found");
   }
 
-  return res.status(200).json({  });
+  return res.status(200).json({ updateData });
 };
-
-
-
 
 const getPage = async (req, res) => {
   const pages = await Page.findAll({
@@ -631,9 +608,6 @@ const getPage = async (req, res) => {
   // let data = JSON.parse(pages.content)
   return res.status(200).json({ pages });
 };
-
-
-
 
 const addBatchTitleAndDescription = async (req, res) => {
   const param1 = req.query.param1 ? req.query.param1 : null;
@@ -788,9 +762,7 @@ const particularPageRender = async (req, res) => {
   return res.status(200).json({ publicUrl });
 };
 
-
 const inviteTeams = async (req, res) => {
-
   const email = req.body.email;
   const is_progress = 0;
   const team_uuid = req.body.team_uuid;
@@ -801,8 +773,7 @@ const inviteTeams = async (req, res) => {
   });
   if (exitsInviteUsers) {
     return res.status(400).json(`${email} this email already sended invite`);
-  } 
-  else {
+  } else {
     await Invite.create({
       email: email,
       is_progess: is_progress,
@@ -812,27 +783,25 @@ const inviteTeams = async (req, res) => {
 
     const exitsUsers = await User.findOne({
       where: { email: email },
-    });  
+    });
 
-    let userId = exitsUsers ? exitsUsers.uuid : null
+    let userId = exitsUsers ? exitsUsers.uuid : null;
 
-    let payload = {id:userId,
-                  team_uuid:team_uuid,
-                  role:role} 
+    let payload = { id: userId, team_uuid: team_uuid, role: role };
 
     let inviteToken = jwt.sign(payload, process.env.secretKey, {
       expiresIn: 1 * 24 * 60 * 60 * 1000,
     });
 
-     let  link = `http://localhost:3000/join/${inviteToken}`;
+    let link = `http://localhost:3000/join/${inviteToken}`;
 
-     console.log(link);
+    console.log(link);
 
     const emailTemplate = fs.readFileSync(
       path.join(__dirname, "../../", "public", "emailTemplates/invite.html"),
       "utf8"
     );
-    
+
     const emailink = emailTemplate.replace("{{link}}", link);
 
     await sendEmail(email, "Invite Notification", emailink);
@@ -840,7 +809,6 @@ const inviteTeams = async (req, res) => {
     return res.status(200).json(`Invite Sended Sucucessfully to this ${email}`);
   }
 };
-
 
 // Roles creation by bulk seeding
 const blukCreation = async () => {
@@ -861,6 +829,7 @@ const blukCreation = async () => {
     console.log("Roles already exist.");
   }
 };
+
 blukCreation();
 
 const updateInvite = async (req, res) => {
@@ -878,19 +847,15 @@ const updateInvite = async (req, res) => {
   return res.status(200).json({ invitedData });
 };
 
-
-
-
-
-
 const getScripts = async (req, res) => {
   const TeamId = req.params.uuid;
+
   const scriptId = req.params.slug;
 
   const script_batch = await Script.findOne({
     where: {
       [Op.and]: [{ team_uuid: TeamId }, { uuid: scriptId }],
-    }
+    },
   });
 
   let result = await Script.findAll({
@@ -915,17 +880,25 @@ const getScripts = async (req, res) => {
   return res.status(200).json({ script_batch, result });
 };
 
-const uploadImage =  (req, res) => {
-  console.log(req);
-  // upload.single('image')
-  //   // If the file was uploaded successfully, `req.file` will contain file information
-  //   if (req.file) {
-  //     res.json({ success: true, message: 'File uploaded successfully!' });
-  //   } else {
-  //     res.status(400).json({ success: false, message: 'File upload failed.' });
-  //   }
+const uploadImage = async (req, res) => {
+  const { filename } = req.file;
+  const path = `http://localhost:4000/uploads/${filename}`
+  const page_uuid = req.body.uuid;
+  try {
+    const image = await Image.create({
+      filename: path,
+      uuid: uuid.v4(),
+    });
+
+    return res
+      .status(200)
+      .json({ success: true, message: "File uploaded successfully!", image });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ success: false, message: "File upload failed." });
   }
-  
+};
 
   const globalSearch = async (req,res) =>{
     const { q } = req.query;
@@ -946,8 +919,21 @@ const uploadImage =  (req, res) => {
       console.error(error);
       return res.status(500).json({ error: 'Internal Server Error' });
     }
-  };
-     
+}
+const fetchImage = async (req, res) => {
+  try {
+    const image = await Image.findOne({
+      where: { uuid: "43943438-3b6c-4c26-820e-d0ca3810244a" },
+    });
+
+    return res
+      .status(200)
+      .json({ success: true, message: "File Founded!", image });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: "File Not Found." });
+  }
+};
+
 
   const updateRole = async (req,res) => {
     let team_uuid = req.body.team_uuid;
@@ -1000,4 +986,5 @@ module.exports = {
   uploadImage,
   globalSearch,
   updateRole,
+  fetchImage
 };

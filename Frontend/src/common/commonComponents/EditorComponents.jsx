@@ -7,7 +7,6 @@ import InlineCode from "@editorjs/inline-code";
 import Underline from "@editorjs/underline";
 import ImageTool from '@editorjs/image';
 import axiosClient from "../../axios-client";
-import SimpleImage from '@editorjs/simple-image';
 
 
 
@@ -16,52 +15,48 @@ export const EditorComponents = (props) => {
   const [imageUrl, setImageUrl] = useState('');
 
   const handleUpload = async (file) => {
-    console.log(file);
+
     const formData = new FormData()
 
     formData.append('image', file);
-    console.log(formData.getAll("image"));
 
     try {
-      const response = await axiosClient.post('/uploadImage', file,{
+     axiosClient.post('/uploadImage', formData,{
         headers:{
           "Content-Type":"multipart/form-data",
         },
-      });
-      // console.log(formData);
-      console.log(response);
-      setImageUrl(response.data.imageUrl);
-    } catch (error) {
-      console.error('Error uploading image:', error);
-    }
+      })
+      .then((res) =>{
+        setImageUrl(res.data.image.filename)
+      })
+      } catch (error) {
+        console.error('Error parsing JSON or response undefined:', error);
+      }
+    try {
+       axiosClient.get('/fetchImage')
+      .then((res) => {
+        setImageUrl(res.data.image.filename);
+        console.log(res);
+      })
+      } catch (error) {
+        console.error('Error parsing JSON or response undefined:', error);
+      }
+
+
   };
+
 
   useEffect(() => {
     let isMounted = true;
-    console.log(props.editorValue);
-
-
     const initEditor = async (datas) => {
       if (isMounted && !ejInstance.current) {
         const editor = new EditorJS({
           holder: "editorjs",
           onReady: async () => {
-          
             ejInstance.current = editor;
-            // let content = await editor.saver.save();
-              
-            // props.editorState(content);
-            // console.log(content);
-            // if (datas !== null) {
-            //   let content = await editor.saver.save();
-
-            //   props.editorState(content);
-            // }
           },
           onChange: async () => {
-
             if ( datas !== null) {
-              console.log(datas,"datas");
               try {
                 let content = await editor.saver.save();
                 props.editorState(content);
@@ -88,16 +83,16 @@ export const EditorComponents = (props) => {
                 defaultStyle: "unordered",
               },
             },
-            image: SimpleImage,
             image: {
               class: ImageTool,
               inlineToolbar: true,
               config: {
                 uploader: {
                   uploadByFile(file) {
-                    return handleUpload(file); // This function should be defined in your component
+                    return handleUpload(file);
                   },
                 },
+                byUrl: imageUrl, // Make sure imageUrl contains a valid URL
               },
             },
             table: {
@@ -128,9 +123,18 @@ export const EditorComponents = (props) => {
         ejInstance.current = null;
       }
     };
-  }, [props.editorValue, props.editorState]);
+  }, [props.editorValue, props.editorState,imageUrl]);
 
-  return <div id="editorjs"></div>;
+  return (
+  <>
+    <div id="editorjs"></div>
+    {imageUrl && <img src={imageUrl} alt="Fetched"/>}
+    {console.log(imageUrl)};
+  <div>
+  </div>
+  </>
+
+  );
 };
 
 

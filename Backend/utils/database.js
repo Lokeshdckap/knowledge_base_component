@@ -5,7 +5,7 @@ const { Sequelize, DataTypes } = require("sequelize");
 //Database connection with dialect of postgres specifying the database we are using
 
 const sequelize = new Sequelize(
-  `postgres://dckap:admin@localhost:5432/knowledge_base`,
+  `postgres://dckap:admin@localhost:5432/knowledge_base_app`,
   { dialect: "postgres" }
 );
 
@@ -53,6 +53,10 @@ db.user_team_members = require("../models/user_team_members")(
   sequelize,
   DataTypes
 );
+
+db.images_path = require("../models/images_path")(sequelize, DataTypes);
+
+
 
 db.users.hasMany(db.user_team_members, {
   foreignKey: "user_uuid",

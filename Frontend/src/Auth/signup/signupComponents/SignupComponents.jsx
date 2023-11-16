@@ -71,6 +71,7 @@ export default function SignupComponents() {
       setLoading(true);
 
       Cookies.set("userEmail", formValues.email, { expires: 7 });
+      console.log(formValues);
       axiosClient
         .post("http://localhost:4000/register", formValues)
         .then(({ data }) => {
@@ -107,6 +108,7 @@ export default function SignupComponents() {
         team_uuid: inviteDetail.team_uuid,
         role: inviteDetail.role,
       });
+
     } else {
       setFormValues({ ...formValues, [name]: value });
     }

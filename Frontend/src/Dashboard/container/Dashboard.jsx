@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Header from "../../common/commonLayouts/Header";
 import SideNav from "../../common/commonLayouts/SideNav";
 import SideNavLarge from "../../common/commonLayouts/SideNavLarge";
@@ -8,11 +8,12 @@ import { useNavigate, useParams } from "react-router-dom";
 import { ModelPopup } from "../../common/commonComponents/ModelPopup";
 import { PublishPopup } from "../../common/commonComponents/PublishPopup";
 import { InviteUsers } from "../../common/commonLayouts/InviteUsers";
+import { Search } from "../../common/commonLayouts/Search";
 
 export default function Dashboard() {
   const navigate = useNavigate();
   const params = useParams();
-
+  const searchInpRef= useRef();
   //hooks
 
   useEffect(() => {
@@ -36,9 +37,15 @@ export default function Dashboard() {
   const [errors, setError] = useState({});
 
   const [invitePopup, setInvitePopup] = useState(false);
-  const [inviteEmail,setInviteEmail] = useState("");
-  const [role,setRole] = useState("null");
+  const [inviteEmail, setInviteEmail] = useState("");
+  const [role, setRole] = useState("null");
 
+
+
+  //search states
+  const [searchPopup, setsearchPopup] = useState(false);
+  const [searchData,setSearchData] = useState(null);
+ 
   //
 
   //Event
@@ -85,7 +92,7 @@ export default function Dashboard() {
     await axiosClient
       .get(`/getBatch/${teamuuid}`)
       .then((res) => {
-        console.log(res,"kk");
+        console.log(res, "kk");
         setBatch(res.data.batchs);
         setScriptCount(res.data.results);
       })
@@ -212,21 +219,49 @@ export default function Dashboard() {
     }
   };
 
-
-
   const handleInviteUsers = () => {
+    axiosClient
+      .post("/inviteUsers", {
+        email: inviteEmail,
+        role: role,
+        team_uuid: params.uuid,
+      })
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
-    axiosClient.post("/inviteUsers",{
-      "email" : inviteEmail,
-      "role":role,
-      "team_uuid" : params.uuid
-    })
-    .then((res) => {
-      console.log(res);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+  // search
+
+  const HandleSearch =  () => {
+    setsearchPopup(true);
+    console.log("ehey");
+  };
+
+  const searchEvent = async (e) => {
+    let value = e.target.value;
+
+   await axiosClient.get(`/search/items?q=${value}`)
+   .then((res) => {
+   if(res.data.length > 0){
+    setSearchData(res.data);
+   }
+   else{
+    setSearchData(null);
+   }
+
+   })
+   .catch((err) => {
+    const response = err.response;
+    if (response && response.status === 404) {
+      setSearchData(null);
+    } else {
+      console.error("Error:", response.status);
+    }
+  });
   }
 
   return (
@@ -257,7 +292,12 @@ export default function Dashboard() {
         )}
 
         <div className="bg-[#F9FAFB] h-[80px] w-screen z-[10px] ">
-          <Header widths={state ? "w-[1000px]" : "w-[1160px]"} team={team} />
+          <Header
+            widths={state ? "w-[1000px]" : "w-[1160px]"}
+            team={team}
+            HandleSearch={HandleSearch}
+            searchInpRef={searchInpRef}
+          />
           <Main
             widths={state ? "w-[1010px]" : "w-[1120px]"}
             team={team}
@@ -277,6 +317,7 @@ export default function Dashboard() {
             error={errors}
           />
         )}
+        {console.log(searchPopup)}
         {invitePopup && (
           <InviteUsers
             invitePopup={invitePopup}
@@ -287,6 +328,14 @@ export default function Dashboard() {
             handleInviteUsers={handleInviteUsers}
           />
         )}
+        {searchPopup && <Search 
+        searchEvent={searchEvent}
+        searchData={searchData}
+        setsearchPopup={setsearchPopup}
+        searchInpRef={searchInpRef}
+        
+        
+        />}
       </div>
     </div>
   );

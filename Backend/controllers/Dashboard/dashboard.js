@@ -881,6 +881,8 @@ const updateInvite = async (req, res) => {
 
 
 
+
+
 const getScripts = async (req, res) => {
   const TeamId = req.params.uuid;
   const scriptId = req.params.slug;
@@ -927,7 +929,9 @@ const uploadImage =  (req, res) => {
 
   const globalSearch = async (req,res) =>{
     const { q } = req.query;
-
+    if(!q){
+      return res.status(404).json({ error: 'Datas Not Found' });
+    }
     const whereClause = {
       title: {
         [Op.iLike]: `%${q}%`,
@@ -944,6 +948,29 @@ const uploadImage =  (req, res) => {
     }
   };
      
+
+  const updateRole = async (req,res) => {
+    let team_uuid = req.body.team_uuid;
+    let role_type = req.body.role_type;
+    let updateData = {
+      role_id:role_type
+    }
+    try {
+    const updatedRole = await UserTeams.update(updateData, {
+      where: {
+        [Op.and]: [{ team_uuid: team_uuid }, { user_uuid: req.body.user_uuid }],
+      }
+    });
+    return res.status(200).json(updatedRole);
+
+  }
+  catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: 'Internal Server Error' });
+  }
+
+
+  }
 
 module.exports = {
   createTeams,
@@ -971,5 +998,6 @@ module.exports = {
   updateInvite,
   getScripts,
   uploadImage,
-  globalSearch
+  globalSearch,
+  updateRole,
 };

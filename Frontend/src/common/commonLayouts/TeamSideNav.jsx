@@ -10,13 +10,13 @@ export const TeamSideNav = (props) => {
   return (
     <div>
       <div className=" ">
-        <div className="bg-white h-screen w-56 shadow-md">
+        <div className="bg-white h-screen overflow-auto w-56 shadow-md">
           <div className="bg-slate-300 h-14 w-56 ` ">
             <p className="w-20 m-auto pt-4 truncate">
               {props.teamname && props.teamname}
             </p>
           </div>
-          <div className="w-48 m-auto h-[532px] ">
+          <div className="w-48 m-auto h-[500px] ">
             <p className="text-textPrimary font-bold text-lg mt-3 ">
               Team Setting
             </p>

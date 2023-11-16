@@ -20,7 +20,7 @@ export default function Header(props) {
         <div>
           <form>
             <div className="flex">
-              <button
+              {/* <button
                 id="dropdown-button"
                 data-dropdown-toggle="dropdown"
                 className="flex-shrink-0 z-10 inline-flex items-center p-2 px-4 text-sm font-medium text-center text-gray-900 bg-gray-100 border border-gray-300 rounded-l-lg hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700 dark:text-white dark:border-gray-600"
@@ -42,14 +42,17 @@ export default function Header(props) {
                     d="m1 1 4 4 4-4"
                   />
                 </svg>
-              </button>
+              </button> */}
               <div className="relative w-[380px]">
                 <input
                   type="search"
                   id="search-dropdown"
-                  className="block p-[10px] w-[380px] z-20 text-sm text-gray-900 bg-white rounded-r-lg focus:outline-primary  placeholder-gray-400 dark:text-white "
+                  className="block p-[10px] w-[380px] z-20 text-sm text-gray-900 bg-white rounded-lg focus:outline-primary  placeholder-gray-400 dark:text-white cursor-pointer "
                   placeholder="Search here"
+                  autoComplete="off"
                   required
+                  ref={props.searchInpRef}
+                  onClick={props.HandleSearch}
                 />
                 <button
                   type="submit"

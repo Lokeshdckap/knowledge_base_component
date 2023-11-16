@@ -3,6 +3,7 @@ import { InviteUsers } from "./InviteUsers";
 
 export const ActiveUsers = (props) => {
   let users = props.teamMember;
+  console.log(users);
   return (
     <div>
       <div className="bg-white w-[900px] h-[550px] shadow-md mt-5 overflow-auto">
@@ -52,7 +53,7 @@ export const ActiveUsers = (props) => {
                 </tr>
               </thead>
               <tbody>
-                {console.log(users)}
+                
                 {users &&
                   users.map((user) => (
                     <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
@@ -66,11 +67,50 @@ export const ActiveUsers = (props) => {
                       {user.user_team_members &&
                         user.user_team_members.map((member) => {
                           if (member.role_id == 1) {
-                            return <td className="px-6 py-4">admin</td>;
+                            return (
+                              <td className="px-6 py-4">
+                                <select
+                                  name=""
+                                  id={member.user_uuid}
+                                  className="focus:outline-none"
+                                  onChange={props.handleRole}
+                                >
+                                  <option value="1">admin</option>
+                                  <option value="2">viewer</option>
+                                  <option value="3">editor</option>
+                                </select>
+                              </td>
+                            );
                           } else if (member.role_id == 2) {
-                            return <td className="px-6 py-4">Viewer</td>;
-                          } else {
-                            return <td className="px-6 py-4">editor</td>;
+                            return (
+                              <td className="px-6 py-4">
+                                <select
+                                  name=""
+                                  id={member.user_uuid}
+                                  className="focus:outline-none"
+                                  onChange={props.handleRole}
+                                >
+                                  <option value="2">viewer</option>
+                                  <option value="3">editor</option>
+                                  <option value="1">admin</option>
+                                </select>
+                              </td>
+                            );
+                          } else if (member.role_id == 3) {
+                            return (
+                              <td className="px-6 py-4">
+                                <select
+                                  name=""
+                                  id={member.user_uuid}
+                                  className="focus:outline-none"
+                                  onChange={props.handleRole}
+                                >
+                                  <option value="3">editor</option>
+                                  <option value="1">admin</option>
+                                  <option value="2">viewer</option>
+                                </select>
+                              </td>
+                            );
                           }
                         })}
                       <td className="px-6 py-4">

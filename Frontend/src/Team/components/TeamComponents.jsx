@@ -8,7 +8,7 @@ export const TeamComponents = (props) => {
     const params = useParams();
     
   return (
-    <div className="flex bg-[#F4F4F4]">
+    <div className="flex bg-[#F4F4F4] h-screen overflow-auto">
       <TeamSideNav
         teamname={props.teamname}
         setTeamName={props.setTeamName}
@@ -34,6 +34,7 @@ export const TeamComponents = (props) => {
           handleInviteUsers={props.handleInviteUsers}
           setInviteEmail={props.setInviteEmail}
           setRole={props.setRole}
+          handleRole={props.handleRole}
           />
         )}
       </div>

@@ -161,6 +161,11 @@ verifyAuthMiddleware.verifyToken,
 dashboardController.globalSearch
 )
 
+router.post("/updateRole",
+verifyAuthMiddleware.verifyToken,
+dashboardController.updateRole
+)
+
 
 
 

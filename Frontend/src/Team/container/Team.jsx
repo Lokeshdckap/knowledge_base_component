@@ -89,6 +89,25 @@ export const Team = () => {
         });
       }
 
+
+      //role change
+
+      const handleRole = async (e) =>{
+          let payload = {
+            "team_uuid":params.uuid,
+            "role_type":e.target.value,
+            "user_uuid":e.target.id
+          }
+          console.log(payload);
+          await axiosClient.post("/updateRole",payload)
+          .then((res) => {
+            console.log(res.data);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+
   return (
     <div>
         <TeamComponents 
@@ -103,6 +122,7 @@ export const Team = () => {
             handleInviteUsers={handleInviteUsers}
             setInviteEmail={setInviteEmail}
             setRole={setRole}
+            handleRole={handleRole}
         />
 
     </div>  

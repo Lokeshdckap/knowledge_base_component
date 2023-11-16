@@ -40,7 +40,7 @@ const register = async (req, res) => {
       const UserTeam = await UserTeams.create({
         user_uuid : user.uuid,
         team_uuid : req.body.team_uuid,
-        role : req.body.role,
+        role_id : req.body.role,
         uuid: uuid.v4(),
       })
     }

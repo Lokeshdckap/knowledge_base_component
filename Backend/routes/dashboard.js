@@ -182,10 +182,14 @@ router.get("/fetchImage",
 dashboardController.fetchImage
 )
 
+
 router.get("/getOpenParent/:uuid",
 dashboardController.getParentPage
 )
 
+router.get("/pendingList/:uuid",
+dashboardController.pendingList
+)
 
 
 module.exports = router;

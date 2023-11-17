@@ -153,7 +153,7 @@ const addNewBatch = async (req, res) => {
   const script = await Script.create({
     uuid: uuid.v4(),
     team_uuid: team_uuid,
-    batch_uuid: batch.uuid
+    batch_uuid: batch.uuid,
   });
 
   const existingDocument = await Script.findAll({
@@ -221,7 +221,6 @@ const addNewBatch = async (req, res) => {
 };
 
 const addNewScripts = async (req, res) => {
-
   const title = "untitled";
 
   const originalSlug = slugify(title, { lower: true });
@@ -987,7 +986,7 @@ const uploadImage = async (req, res) => {
 
 const globalSearch = async (req, res) => {
   const { q } = req.query;
-  const team_uuid  = req.params.uuid
+  const team_uuid = req.params.uuid;
   if (!q) {
     return res.status(404).json({ error: "Datas Not Found" });
   }
@@ -1062,6 +1061,24 @@ const getParentPage = async (req,res) => {
 
 }
 
+const pendingList = async (req, res) => {
+  let teamuuid = req.params.uuid;
+
+  try {
+    const pendingData = await Invite.findAll({
+      where: {
+        team_uuid: teamuuid,
+      },
+    });
+    return res
+      .status(200)
+      .json({ pendingData, message: "PendingData Get Sucessfully" });
+  } catch (error) {
+    return res.status(500).json({ error: "Updated Failed" });
+  }
+};
+
+
 module.exports = {
   createTeams,
   getTeam,
@@ -1092,4 +1109,6 @@ module.exports = {
   updateRole,
   fetchImage,
   getParentPage,
+  pendingList,
+
 };

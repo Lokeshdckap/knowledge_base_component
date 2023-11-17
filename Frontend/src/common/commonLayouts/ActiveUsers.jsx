@@ -45,7 +45,7 @@ export const ActiveUsers = (props) => {
                     Email
                   </th>
                   <th scope="col" className="px-6 py-3">
-                    Category
+                    Role
                   </th>
                   <th scope="col" className="px-6 py-3">
                     Action
@@ -131,10 +131,12 @@ export const ActiveUsers = (props) => {
       {props.invitePopup && (
         <InviteUsers
           setInvitePopup={props.setInvitePopup}
-          teamname={props.teamname}
+          team={props.team}
           handleInviteUsers={props.handleInviteUsers}
           setInviteEmail={props.setInviteEmail}
           setRole={props.setRole}
+          inviteError={props.inviteError}
+          setInviteError={props.setInviteError}
         />
       )}
     </div>

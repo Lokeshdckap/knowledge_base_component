@@ -10,10 +10,13 @@ import { PublishPopup } from "../../common/commonComponents/PublishPopup";
 import { InviteUsers } from "../../common/commonLayouts/InviteUsers";
 import { Search } from "../../common/commonLayouts/Search";
 
+import { ToastContainer, toast } from "react-toastify";
+import HashLoader from "react-spinners/HashLoader";
+
 export default function Dashboard() {
   const navigate = useNavigate();
   const params = useParams();
-  const searchInpRef= useRef();
+  const searchInpRef = useRef();
   //hooks
 
   useEffect(() => {
@@ -31,6 +34,10 @@ export default function Dashboard() {
   const [data, setData] = useState(null);
   const [childScript, setChildScript] = useState([]);
 
+
+  const [loading, setLoading] = useState(false);
+
+  const [inviteError, setInviteError] = useState(null);
   //create Team state
   const [teamPopup, setTeamPopup] = useState(false);
   const [formValues, setFormValues] = useState({});
@@ -38,15 +45,22 @@ export default function Dashboard() {
 
   const [invitePopup, setInvitePopup] = useState(false);
   const [inviteEmail, setInviteEmail] = useState("");
-  const [role, setRole] = useState("null");
-
-
+  const [role, setRole] = useState("");
 
   //search states
   const [searchPopup, setsearchPopup] = useState(false);
-  const [searchData,setSearchData] = useState(null);
- 
-  //
+  const [searchData, setSearchData] = useState(null);
+
+  //toaster
+
+
+  const showToastMessage = (data) => {
+    toast.success(data, {
+      position: toast.POSITION.TOP_RIGHT,
+    });
+  };
+
+
 
   //Event
   const handleClick = () => {
@@ -219,24 +233,10 @@ export default function Dashboard() {
     }
   };
 
-  const handleInviteUsers = () => {
-    axiosClient
-      .post("/inviteUsers", {
-        email: inviteEmail,
-        role: role,
-        team_uuid: params.uuid,
-      })
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
 
   // search
 
-  const HandleSearch =  () => {
+  const HandleSearch = () => {
     setsearchPopup(true);
     console.log("ehey");
   };
@@ -244,25 +244,72 @@ export default function Dashboard() {
   const searchEvent = async (e) => {
     let value = e.target.value;
 
-   await axiosClient.get(`${params.uuid}/search/items?q=${value}`)
-   .then((res) => {
-   if(res.data.length > 0){
-    setSearchData(res.data);
-   }
-   else{
-    setSearchData(null);
-   }
+    await axiosClient
+      .get(`${params.uuid}/search/items?q=${value}`)
+      .then((res) => {
+        if (res.data.length > 0) {
+          setSearchData(res.data);
+        } else {
+          setSearchData(null);
+        }
+      })
+      .catch((err) => {
+        const response = err.response;
+        if (response && response.status === 404) {
+          setSearchData(null);
+        } else {
+          console.error("Error:", response.status);
+        }
+      });
+  };
 
-   })
-   .catch((err) => {
-    const response = err.response;
-    if (response && response.status === 404) {
-      setSearchData(null);
-    } else {
-      console.error("Error:", response.status);
+
+  //invite
+
+  const handleInvite = () => {
+    setInvitePopup(true);
+  };
+
+  const handleInviteUsers = () => {
+
+    setLoading(true);
+    console.log(inviteEmail);
+    console.log(role);
+    if(!inviteEmail.trim()) {
+    setLoading(false);
+      
+      setInviteError("Email is required");
     }
-  });
-  }
+    else if(!role.trim()) {
+      setLoading(false);
+        
+        setInviteError("Role is required");
+      }
+    else{
+    axiosClient
+      .post("/inviteUsers", {
+        email: inviteEmail,
+        role: role,
+        team_uuid: params.uuid,
+      })
+      .then((res) => {
+        showToastMessage(res.data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        const response = err.response;
+        if (response && response.status === 400) {
+          setInviteError(response.data);
+          setTimeout(() => {
+            setInviteError("");
+          }, 1500);
+          setLoading(false);
+        } else {
+          console.error("Error:", response.status);
+        }
+      });
+    }
+  };
 
   return (
     <div className="relative">
@@ -317,25 +364,34 @@ export default function Dashboard() {
             error={errors}
           />
         )}
-        {console.log(searchPopup)}
         {invitePopup && (
           <InviteUsers
+          team={team}
             invitePopup={invitePopup}
             setInvitePopup={setInvitePopup}
             setInviteEmail={setInviteEmail}
             inviteEmail={inviteEmail}
             setRole={setRole}
             handleInviteUsers={handleInviteUsers}
+            inviteError={inviteError}
           />
         )}
-        {searchPopup && <Search 
-        searchEvent={searchEvent}
-        searchData={searchData}
-        setsearchPopup={setsearchPopup}
-        searchInpRef={searchInpRef}
-        
-        
-        />}
+        {searchPopup && (
+          <Search
+            searchEvent={searchEvent}
+            searchData={searchData}
+            setsearchPopup={setsearchPopup}
+            searchInpRef={searchInpRef}
+          />
+        )}
+
+        <ToastContainer />
+
+        {loading && (
+          <p className="absolute top-72 left-[600px] z-40">
+            <HashLoader color="#3197e8" />
+          </p>
+        )}
       </div>
     </div>
   );

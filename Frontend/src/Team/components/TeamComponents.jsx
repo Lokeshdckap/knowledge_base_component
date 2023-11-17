@@ -6,11 +6,12 @@ import { ActiveUsers } from "../../common/commonLayouts/ActiveUsers";
 
 export const TeamComponents = (props) => {
     const params = useParams();
+
     
   return (
     <div className="flex bg-[#F4F4F4] h-screen overflow-auto">
       <TeamSideNav
-        teamname={props.teamname}
+        team={props.team}
         setTeamName={props.setTeamName}
         handleUpdate={props.handleUpdate}
         message={props.message}
@@ -19,14 +20,14 @@ export const TeamComponents = (props) => {
       <div className="m-auto">
         {params.slug == "teamsetting" ? (
           <TeamProfile
-            teamname={props.teamname}
+          team={props.team}
             setTeamName={props.setTeamName}
             message={props.message}
             handleUpdate={props.handleUpdate}
           />
         ) : (
           <ActiveUsers 
-          teamname={props.teamname}
+          team={props.team}
           handleInvite={props.handleInvite}
           invitePopup={props.invitePopup}
           setInvitePopup={props.setInvitePopup}
@@ -35,9 +36,14 @@ export const TeamComponents = (props) => {
           setInviteEmail={props.setInviteEmail}
           setRole={props.setRole}
           handleRole={props.handleRole}
+          inviteError={props.inviteError}
+          setInviteError={props.setInviteError}
           />
         )}
+
       </div>
+   
+      
     </div>
   );
 };

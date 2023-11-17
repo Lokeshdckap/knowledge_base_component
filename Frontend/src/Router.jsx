@@ -45,6 +45,10 @@ const router = createBrowserRouter([
         element: <Scripts />,
       },
       {
+        path: "/dashboard/:uuid/s/:slug/*",
+        element: <Scripts />,
+      },
+      {
         path: "/teampage",
         element: <TeamPage />,
       },

@@ -36,7 +36,7 @@ export const EditorComponents = (props) => {
        axiosClient.get('/fetchImage')
       .then((res) => {
         setImageUrl(res.data.image.filename);
-        console.log(res);
+
       })
       } catch (error) {
         console.error('Error parsing JSON or response undefined:', error);
@@ -67,7 +67,6 @@ export const EditorComponents = (props) => {
             else{
               if(editor){
                 let content = await editor.saver.save();
-                 console.log(content);
                 props.editorState(content);
               }
             }
@@ -129,7 +128,7 @@ export const EditorComponents = (props) => {
   <>
     <div id="editorjs"></div>
     {imageUrl && <img src={imageUrl} alt="Fetched"/>}
-    {console.log(imageUrl)};
+
   <div>
   </div>
   </>

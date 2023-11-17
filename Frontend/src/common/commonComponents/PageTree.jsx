@@ -73,8 +73,6 @@ export const PageTree = ({
                 contentPage={contentPage}
                 handleMore={handleMore}
               />
-          {/* <p>{index}</p>  */}
-
             </li>
    
 

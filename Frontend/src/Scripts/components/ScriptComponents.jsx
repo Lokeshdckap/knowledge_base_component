@@ -58,16 +58,20 @@ export const ScriptComponents = () => {
 
   const [inviteEmail, setInviteEmail] = useState("");
   
-  const [role, setRole] = useState("null");
+  const [role, setRole] = useState(null);
 
-  const [index, setIndex] = useState("null");
+  const [index, setIndex] = useState(null);
 
   useEffect(() => {
+    
     getTeam();
     getAllTeam();
     getParticularScript();
     getScripts();
-  }, [params.slug]);
+
+    console.log(params);
+
+  }, [params.slug,params]);
 
   //Event
 
@@ -79,6 +83,8 @@ export const ScriptComponents = () => {
 
   const getParticularScript = async () => {
     let script_uuid = params.slug;
+    console.log(params);
+
     await axiosClient
       .get(`/getScriptAndPage/${script_uuid}`)
       .then((res) => {
@@ -91,7 +97,6 @@ export const ScriptComponents = () => {
         setEditorContent(res.data.hierarchy[0].content);
         setEditorValue(res.data.hierarchy[0].content);
         setPublish(res.data.getScriptAndPages);
-        console.log(res.data);
       })
       .catch((err) => {
         console.log(err);
@@ -238,6 +243,7 @@ export const ScriptComponents = () => {
   };
 
   const addChildPage = (uuid) => {
+
     let page_uuid = uuid;
     axiosClient
 
@@ -274,7 +280,24 @@ export const ScriptComponents = () => {
   const contentPage = (e) => {
 
     setPageId(e.target.id);
+
     let pageId = e.target.id;
+    let pagePath = e.target.dataset.set;
+    // if(pagePath !== undefined){
+    //     let pagePathArray = pagePath.split("/");
+    //     let pageSplitPath = pagePathArray.slice(2).join("/");
+    //     navigate(`/dashboard/${params.uuid}/s/${params.slug}/${pageSplitPath}`)
+    //     console.log(pageSplitPath);
+
+    // }
+
+    // let pagePathArray = pagePath.split("/");
+    // console.log(pagePathArray.slice(2).join("/"));
+    // console.log(pagePath[2]);
+    // console.log(params.uuid);
+    // console.log(params.slug);
+
+    // navigate(`/dashboard/${params.uuid}/s/${params.slug}/${pagePath[2]}`)
     axiosClient
       .get(`/getPage/${pageId}`)
       .then((res) => {
@@ -481,7 +504,6 @@ export const ScriptComponents = () => {
                setInvitePopup={setInvitePopup}
               /> 
           } */}
-        {console.log(editorValue)}
       </div>
     </div>
   );

@@ -54,6 +54,7 @@ export default function EditPage(props) {
                     handleScriptMouseEnter={props.handleScriptMouseEnter}
                     hoverPageId={props.hoverPageId}
                     handleMore={props.handleMore}
+                    parentOpen={props.parentOpen}
                   />
                 </div>
               ))}
@@ -113,9 +114,6 @@ export default function EditPage(props) {
               placeholder="Page Description"
             />
           </div>
-          <img
-     src="/uploads/image-1700066218108.png"
-/>
           <div className={`pt-5 ${props.marginEditor}`}>
             <EditorComponents
               handleSave={props.handleSave}

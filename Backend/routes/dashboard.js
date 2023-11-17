@@ -182,5 +182,10 @@ router.get("/fetchImage",
 dashboardController.fetchImage
 )
 
+router.get("/getOpenParent/:uuid",
+dashboardController.getParentPage
+)
+
+
 
 module.exports = router;

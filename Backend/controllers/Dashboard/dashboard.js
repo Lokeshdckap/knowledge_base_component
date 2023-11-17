@@ -582,6 +582,8 @@ const addScriptTitle = async (req, res) => {
 };
 
 const updatePageData = async (req, res) => {
+
+
   let paths;
 
   console.log(req.body);
@@ -591,6 +593,8 @@ const updatePageData = async (req, res) => {
       uuid: req.body.id,
     },
   });
+
+
   const script = await Script.findOne({
     where: {
       uuid: page.script_uuid,
@@ -615,7 +619,12 @@ const updatePageData = async (req, res) => {
       req.body.title.split(" ").filter(Boolean).join("").toLowerCase();
   }
 
+
+
+
+  
   const updateData = await Page.update(
+    
     {
       title: req.body.title,
       description: req.body.description,
@@ -623,7 +632,9 @@ const updatePageData = async (req, res) => {
       path: paths,
     },
     {
-      where: { uuid: req.body.id },
+      where: {
+        uuid:req.body.id
+      },
     }
   );
 
@@ -669,11 +680,16 @@ const updatePageData = async (req, res) => {
 };
 
 const getPage = async (req, res) => {
-  const pages = await Page.findAll({
-    where: { uuid: req.params.uuid }, // Fetch root-level pages
+
+  const page_uuid = req.params.uuid;
+
+
+
+  const pages = await Page.findOne({
+    where: { uuid: page_uuid }, // Fetch root-level pages
   });
 
-  // let data = JSON.parse(pages.content)
+
   return res.status(200).json({ pages });
 };
 
@@ -916,6 +932,7 @@ const updateInvite = async (req, res) => {
 };
 
 const getScripts = async (req, res) => {
+
   const TeamId = req.params.uuid;
 
   const scriptId = req.params.slug;
@@ -1026,6 +1043,25 @@ const updateRole = async (req, res) => {
   }
 };
 
+
+
+const getParentPage = async (req,res) => {
+
+
+  const childData = await Page.findOne({
+    where:{uuid:req.params.uuid}
+  })
+
+  const parentData = await Page.findOne({
+    where:{uuid:childData.page_uuid}
+  })
+
+  return res
+  .status(200)
+  .json({ parentData, message: "Updated Sucessfully" });
+
+}
+
 module.exports = {
   createTeams,
   getTeam,
@@ -1055,4 +1091,5 @@ module.exports = {
   globalSearch,
   updateRole,
   fetchImage,
+  getParentPage,
 };

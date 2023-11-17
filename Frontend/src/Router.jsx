@@ -17,6 +17,7 @@ import { Team } from "./Team/container/Team.jsx";
 import { Invited } from "./Invited.jsx";
 import { Dashboards } from "./Dashboard/container/Dashboards.jsx";
 import { JoinTeam } from "./joinTeam/JoinTeam.jsx";
+import { Checking } from "./Scripts/components/Checking.jsx";
 
 
 const router = createBrowserRouter([
@@ -41,11 +42,11 @@ const router = createBrowserRouter([
         element: <Batch />,
       },
       {
-        path: "/dashboard/:uuid/s/:slug",
+        path: "/dashboard/:uuid/s/:slug/:pageId?",
         element: <Scripts />,
       },
       {
-        path: "/dashboard/:uuid/s/:slug/*",
+        path: "/dashboard/:uuid/s/:slug",
         element: <Scripts />,
       },
       {

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/solid";
 import { useParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 export const PageTree = ({
   node,
@@ -12,23 +13,28 @@ export const PageTree = ({
   handleMore,
   hasParent,
   index,
+  parentOpen,
 }) => {
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const pageIds = queryParams.get("pageId");
 
-
+  const params = useParams();
   const [isOpen, setIsOpen] = useState(false);
-
+  const [parentOpens,setParentOpen] = useState(parentOpen);
   const toggleOpen = () => {
     setIsOpen(!isOpen);
   };
-  const { slug, '*': wildcardValue } = useParams();
+  const { slug, "*": wildcardValue } = useParams();
 
-
-  
-  
   return (
     <div className="mb-1">
       <div
-        className={`flex items-center hover:bg-slate-300   ${"/"+slug+"/"+wildcardValue == node.path ? "bg-slate-300 " : "" }  rounded hover:rounded pl-2`}
+        className={`flex items-center hover:bg-slate-300 ${
+          pageIds == node.uuid ? "bg-slate-300 " : ""
+        }  ${
+          "/" + slug + "/" + wildcardValue == node.path ? "bg-slate-300 " : ""
+        }  rounded hover:rounded pl-2`}
         data-set={node.path}
       >
         <span
@@ -51,17 +57,23 @@ export const PageTree = ({
           )}
         </span>
         <button className="text-sm mr-2" onClick={toggleOpen}>
-          {isOpen ? (
+          {isOpen || node.uuid == parentOpens ? (
             <i className="fa-solid fa-angle-down cursor-pointer "></i>
           ) : (
             <i className="fa-solid fa-angle-up cursor-pointer rotate-90"></i>
           )}
         </button>
       </div>
-      {isOpen && node.ChildPages && node.ChildPages.length > 0 && (
+      {(node.uuid == parentOpens || isOpen)  && node.ChildPages && node.ChildPages.length > 0 && (
         <ul className="ml-3 mt-1 pl-1 border-l-[1px] border-gray-400">
           {node.ChildPages.map((child, index) => (
-            <li key={child.page_id} className="cursor-pointer" data-id={index}  id={child.uuid}>
+            <li
+              key={child.page_id}
+              className="cursor-pointer"
+              data-id={index}
+              id={child.uuid}
+            >
+              {console.log(node.path)}
               <PageTree
                 node={child}
                 index={index}
@@ -74,15 +86,10 @@ export const PageTree = ({
                 handleMore={handleMore}
               />
             </li>
-   
-
-
-
           ))}
         </ul>
       )}
     </div>
-
 
     // <div className="mb-1">
     //   <div className="flex items-center">

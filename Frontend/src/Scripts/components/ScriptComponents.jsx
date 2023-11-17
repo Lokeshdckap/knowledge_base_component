@@ -2,7 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 import SideNav from "../../common/commonLayouts/SideNav";
 import axiosClient from "../../axios-client";
 import SideNavLarge from "../../common/commonLayouts/SideNavLarge";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams} from "react-router-dom";
+import { useLocation } from 'react-router-dom';
 import EditHeader from "../../common/commonLayouts/EditHeader";
 import EditPage from "../../common/commonLayouts/EditPage";
 import { PageTree } from "../../common/commonComponents/PageTree";
@@ -62,16 +63,43 @@ export const ScriptComponents = () => {
 
   const [index, setIndex] = useState(null);
 
+  const [parentOpen,setParentOpen] = useState(null);
+
+
+      const location = useLocation();
+    const queryParams = new URLSearchParams(location.search);
+    const pageIds = queryParams.get('pageId');
+    console.log(pageIds);
+
   useEffect(() => {
-    
-    getTeam();
-    getAllTeam();
-    getParticularScript();
-    getScripts();
 
-    console.log(params);
 
-  }, [params.slug,params]);
+    // if(params["*"]){
+    //   getParticularPage();
+    //   getTeam();
+    //   getAllTeam();
+    //   getParticularScript();
+    //   getScripts();
+    // }
+
+
+     
+      if(pageIds){
+        getTeam();
+        getAllTeam();
+        getParticularScript();
+        getScripts();
+        getParticularPage();
+        getParentOpen();
+      }
+      else{
+        getTeam();
+        getAllTeam();
+        getParticularScript();
+        getScripts();
+      }
+      
+  }, [pageIds]);
 
   //Event
 
@@ -81,9 +109,44 @@ export const ScriptComponents = () => {
 
   //Api
 
+  const getParticularPage = async () => {
+      await axiosClient
+      .get(`/getPage/${pageIds}`)
+      .then((res) => {
+        setParticularTitle(res.data.pages.title);
+        setDescription(res.data.pages.description);
+        setEditorValue(res.data.pages.content);
+        setEditorContent(res.data.pages.content);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+
+  const getParentOpen = async () =>{
+
+    await axiosClient.get(`/getOpenParent/${pageIds}`)
+    .then((res) => {
+      setParentOpen(res.data.parentData.uuid);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  }
+
+
+
+
+
+
+
+
+
+
+
   const getParticularScript = async () => {
     let script_uuid = params.slug;
-    console.log(params);
 
     await axiosClient
       .get(`/getScriptAndPage/${script_uuid}`)
@@ -92,19 +155,23 @@ export const ScriptComponents = () => {
         setPageContent(res.data.hierarchy[0]);
         setTreeNode(res.data.hierarchy);
         setRenderScript(res.data.getScriptAndPages);
-        setParticularTitle(res.data.hierarchy[0].title);
-        setDescription(res.data.hierarchy[0].description);
-        setEditorContent(res.data.hierarchy[0].content);
-        setEditorValue(res.data.hierarchy[0].content);
         setPublish(res.data.getScriptAndPages);
+        // console.log(res.data.hierarchy[0].path);
+        // let pagePathArray = res.data.hierarchy[0].path.split("/");
+        // let pageSplitPath = pagePathArray.slice(2).join("/");
+        // navigate(`/dashboard/${params.uuid}/s/${params.slug}/${pageSplitPath}`)
+        // setParticularTitle(res.data.hierarchy[0].title);
+        // setDescription(res.data.hierarchy[0].description);
+        // setEditorContent(res.data.hierarchy[0].content);
+        // setEditorValue(res.data.hierarchy[0].content);
       })
       .catch((err) => {
         console.log(err);
       });
   };
 
-  const getScripts = () => {
-    axiosClient.get(`/getScripts/${params.uuid}/${params.slug}`).then((res) => {
+  const getScripts = async() => {
+   await axiosClient.get(`/getScripts/${params.uuid}/${params.slug}`).then((res) => {
       setOverStates(res.data.script_batch.batch_uuid);
       setChildScript(res.data.result);
     });
@@ -112,7 +179,6 @@ export const ScriptComponents = () => {
 
   const getTeam = async () => {
     let teamUUID = params.uuid;
-
     await axiosClient
       .get(`/getTeam/${teamUUID}`)
       .then((res) => {
@@ -213,8 +279,9 @@ export const ScriptComponents = () => {
   //Editor functionality
 
   const handleSave = () => {
+
     const postData = {
-      id: pageId,
+      id: pageIds,
       title: particularTitle ? particularTitle : "Page Name",
       description: description ? description : "Page Description",
       content: editorContent,
@@ -280,36 +347,26 @@ export const ScriptComponents = () => {
   const contentPage = (e) => {
 
     setPageId(e.target.id);
-
     let pageId = e.target.id;
     let pagePath = e.target.dataset.set;
+    navigate(`/dashboard/${params.uuid}/s/${params.slug}/?pageId=${pageId}`)
     // if(pagePath !== undefined){
     //     let pagePathArray = pagePath.split("/");
     //     let pageSplitPath = pagePathArray.slice(2).join("/");
     //     navigate(`/dashboard/${params.uuid}/s/${params.slug}/${pageSplitPath}`)
-    //     console.log(pageSplitPath);
-
     // }
-
-    // let pagePathArray = pagePath.split("/");
-    // console.log(pagePathArray.slice(2).join("/"));
-    // console.log(pagePath[2]);
-    // console.log(params.uuid);
-    // console.log(params.slug);
-
-    // navigate(`/dashboard/${params.uuid}/s/${params.slug}/${pagePath[2]}`)
-    axiosClient
-      .get(`/getPage/${pageId}`)
-      .then((res) => {
-        setPageContent(res.data.pages[0]);
-        setParticularTitle(res.data.pages[0].title);
-        setDescription(res.data.pages[0].description);
-        setEditorValue(res.data.pages[0].content);
-        setEditorContent(res.data.pages[0].content);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    // axiosClient
+    //   .get(`/getPage/${pageId}`)
+    //   .then((res) => {
+    //     setPageContent(res.data.pages[0]);
+    //     setParticularTitle(res.data.pages[0].title);
+    //     setDescription(res.data.pages[0].description);
+    //     setEditorValue(res.data.pages[0].content);
+    //     setEditorContent(res.data.pages[0].content);
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   });
   };
 
   const handleScriptMouseEnter = (e) => {
@@ -477,6 +534,7 @@ export const ScriptComponents = () => {
             publish={publish}
             editorValue={editorValue}
             renderScript={renderScript}
+            parentOpen={parentOpen}
           />
           {teamPopup && (
             <ModelPopup
@@ -503,7 +561,9 @@ export const ScriptComponents = () => {
                invitePopup={invitePopup}
                setInvitePopup={setInvitePopup}
               /> 
+
           } */}
+
       </div>
     </div>
   );

@@ -13,6 +13,8 @@ import { BatchHeader } from "../../common/commonLayouts/BatchHeader";
 import { BatchLayouts } from "../../common/commonLayouts/BatchLayouts";
 import { ModelPopup } from "../../common/commonComponents/ModelPopup";
 import { InviteUsers } from "../../common/commonLayouts/InviteUsers";
+import { ToastContainer, toast } from "react-toastify";
+import HashLoader from "react-spinners/HashLoader";
 
 export const BatchComponent = () => {
   const navigate = useNavigate();
@@ -36,15 +38,32 @@ export const BatchComponent = () => {
   const [batchDescription, setbatchDescription] = useState("");
 
   const [invitePopup, setInvitePopup] = useState(false);
-  const [inviteEmail,setInviteEmail] = useState("");
-  const [role,setRole] = useState("null");
+  const [inviteEmail, setInviteEmail] = useState("");
+  const [role, setRole] = useState("");
 
+  const [loading, setLoading] = useState(false);
+
+  const [inviteError, setInviteError] = useState(null);
 
   useEffect(() => {
     getTeam();
     getAllTeam();
     getScripts();
   }, [params.slug, batchTitle]);
+
+
+
+
+    //toaster
+
+
+    const showToastMessage = (data) => {
+      toast.success(data, {
+        position: toast.POSITION.TOP_RIGHT,
+      });
+    };
+
+
   //Event
   const handleClick = () => {
     // setState((prevState) => !prevState);
@@ -268,24 +287,47 @@ export const BatchComponent = () => {
     }
   };
 
-
   const handleInviteUsers = () => {
 
-    axiosClient.post("/inviteUsers",{
-      "email" : inviteEmail,
-      "role":role,
-      "team_uuid" : params.uuid
-    })
-    .then((res) => {
-      console.log(res);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-  }
+    setLoading(true);
+    console.log(inviteEmail);
+    if(!inviteEmail.trim()) {
+    setLoading(false);
+      
+      setInviteError("Email is required");
+    }
+    else if(!role.trim()) {
+      setLoading(false);
+        
+        setInviteError("Role is required");
+      }
+    else{
 
+    axiosClient
+      .post("/inviteUsers", {
+        email: inviteEmail,
+        role: role,
+        team_uuid: params.uuid,
+      })
+      .then((res) => {
+        showToastMessage(res.data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        const response = err.response;
+        if (response && response.status === 400) {
+          setInviteError(response.data);
+          setTimeout(() => {
+            setInviteError("");
+          }, 1500);
+          setLoading(false);
+        } else {
+          console.error("Error:", response.status);
+        }
+      });
+    }
+  };
 
-  
   return (
     <div className="relative">
       <div className="flex bg-[#ECEDEF] ">
@@ -339,14 +381,25 @@ export const BatchComponent = () => {
             error={errors}
           />
         )}
-                {invitePopup && (
+        {invitePopup && (
           <InviteUsers
+          team={team}
             invitePopup={invitePopup}
             setInvitePopup={setInvitePopup}
+            setInviteEmail={setInviteEmail}
             inviteEmail={inviteEmail}
             setRole={setRole}
             handleInviteUsers={handleInviteUsers}
+            inviteError={inviteError}
           />
+        )}
+
+        <ToastContainer />
+
+        {loading && (
+          <p className="absolute top-72 left-[600px] z-40">
+            <HashLoader color="#3197e8" />
+          </p>
         )}
       </div>
     </div>

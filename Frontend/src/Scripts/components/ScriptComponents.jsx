@@ -8,6 +8,8 @@ import EditPage from "../../common/commonLayouts/EditPage";
 import { PageTree } from "../../common/commonComponents/PageTree";
 import { InviteUsers } from "../../common/commonLayouts/InviteUsers";
 import { ModelPopup } from "../../common/commonComponents/ModelPopup";
+import { ToastContainer, toast } from "react-toastify";
+import HashLoader from "react-spinners/HashLoader";
 
 export const ScriptComponents = () => {
   const navigate = useNavigate();
@@ -57,21 +59,31 @@ export const ScriptComponents = () => {
   const [overStates, setOverStates] = useState(null);
 
   const [inviteEmail, setInviteEmail] = useState("");
-  
-  const [role, setRole] = useState(null);
+
+  const [role, setRole] = useState("");
 
   const [index, setIndex] = useState(null);
 
+  const [loading, setLoading] = useState(false);
+
+  const [inviteError, setInviteError] = useState(null);
+
   useEffect(() => {
-    
     getTeam();
     getAllTeam();
     getParticularScript();
     getScripts();
 
     console.log(params);
+  }, [params.slug, params]);
 
-  }, [params.slug,params]);
+  //toast
+
+  const showToastMessage = (data) => {
+    toast.success(data, {
+      position: toast.POSITION.TOP_RIGHT,
+    });
+  };
 
   //Event
 
@@ -243,7 +255,6 @@ export const ScriptComponents = () => {
   };
 
   const addChildPage = (uuid) => {
-
     let page_uuid = uuid;
     axiosClient
 
@@ -278,7 +289,6 @@ export const ScriptComponents = () => {
   };
 
   const contentPage = (e) => {
-
     setPageId(e.target.id);
 
     let pageId = e.target.id;
@@ -323,7 +333,6 @@ export const ScriptComponents = () => {
   const handleMore = (e) => {
     setParticularPageId(e.target.id);
     addChildPage(e.target.id);
-
   };
 
   const onDragEnd = (result) => {
@@ -399,6 +408,21 @@ export const ScriptComponents = () => {
   };
 
   const handleInviteUsers = () => {
+
+    setLoading(true);
+    console.log(inviteEmail);
+    if(!inviteEmail.trim()) {
+    setLoading(false);
+      
+      setInviteError("Email is required");
+    }
+    else if(!role.trim()) {
+      setLoading(false);
+        
+        setInviteError("Role is required");
+      }
+    else{
+
     axiosClient
       .post("/inviteUsers", {
         email: inviteEmail,
@@ -406,11 +430,22 @@ export const ScriptComponents = () => {
         team_uuid: params.uuid,
       })
       .then((res) => {
-        console.log(res);
+        showToastMessage(res.data);
+        setLoading(false);
       })
       .catch((err) => {
-        console.log(err);
+        const response = err.response;
+        if (response && response.status === 400) {
+          setInviteError(response.data);
+          setTimeout(() => {
+            setInviteError("");
+          }, 1500);
+          setLoading(false);
+        } else {
+          console.error("Error:", response.status);
+        }
       });
+    }
   };
 
   return (
@@ -489,12 +524,14 @@ export const ScriptComponents = () => {
           )}
           {invitePopup && (
             <InviteUsers
+            team={team}
               invitePopup={invitePopup}
               setInvitePopup={setInvitePopup}
-              inviteEmail={inviteEmail}
               setInviteEmail={setInviteEmail}
+              inviteEmail={inviteEmail}
               setRole={setRole}
               handleInviteUsers={handleInviteUsers}
+              inviteError={inviteError}
             />
           )}
         </div>
@@ -504,6 +541,13 @@ export const ScriptComponents = () => {
                setInvitePopup={setInvitePopup}
               /> 
           } */}
+        <ToastContainer />
+
+        {loading && (
+          <p className="absolute top-72 left-[600px] z-40">
+            <HashLoader color="#3197e8" />
+          </p>
+        )}
       </div>
     </div>
   );

@@ -182,5 +182,11 @@ router.get("/fetchImage",
 dashboardController.fetchImage
 )
 
+router.get("/pendingList/:uuid",
+dashboardController.pendingList
+)
+
+
+
 
 module.exports = router;

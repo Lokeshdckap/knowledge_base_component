@@ -1,9 +1,40 @@
+
+
 import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import axiosClient from "../../axios-client";
 
 export const InviteUsers = (props) => {
 
+  const params = useParams();
+
   const [changeState, setChangeState] = useState("invite");
 
+  const [pendingData,setPendingData] = useState(null);
+  useEffect(() => {
+    if(changeState == "pending")
+    {
+      axiosClient.get(`/pendingList/${params.uuid}`)
+      .then((res) => {
+        setPendingData(res.data.pendingData);
+      })
+      .catch((err) => {
+        const response = err.response;
+        if (response && response.status === 400) {
+          console.log(response);
+        } else {
+          console.error("Error:", response.status);
+        }
+      });
+    }
+  },[changeState])
+
+
+ const invite  = (e) => {
+  
+  props.setInviteEmail(e.target.value)
+
+  }
 
   return (
     <div>
@@ -19,7 +50,7 @@ export const InviteUsers = (props) => {
           <div className="w-[500px] m-auto">
             <div className="pt-24">
               <p className="text-textPrimary font-bold text-2xl">
-                Invite teammates to {props.teamname}
+                Invite teammates to {props.team.name}
               </p>
               <p className="text-sm pt-2 text-textPrimary">
                 Let's get the rest of your team using Knowledge Base.
@@ -42,19 +73,25 @@ export const InviteUsers = (props) => {
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg  focus:outline-primary block w-full p-4 pl-5 "
                     placeholder="invite teammates"
                     value={props.inviteEmail}
-                    onChange={((e) => props.setInviteEmail(e.target.value))}
+                    onChange={invite}
                   />
                   <select
                     id="countries"
                     className="bg-gray-50 border absolute right-2.5 bottom-2.5 border-gray-300 text-gray-900 text-sm rounded-lg block w-20 p-1.5  "
-                    onChange={((e) => props.setRole(e.target.value))}
+                    onChange={((e) => 
+                      props.setRole(e.target.value))}
+                      
                   >
-                    <option selected>select</option>
+                    <option selected disabled>select</option>
                     <option value="1">Admin</option>
                     <option value="2">Viewer</option>
                     <option value="3">Editor</option>
                   </select>
                 </div>
+                {props.inviteError && (
+                  <p className="text-red-500 text-sm pt-1">{props.inviteError}</p>
+                )
+                }
                 <button
                   type="button"
                   className="text-white bg-primary font-medium rounded-lg text-sm px-12 py-3 text-center mt-5 ml-[150px] mr-2 mb-2"
@@ -62,32 +99,39 @@ export const InviteUsers = (props) => {
                 >
                   Send Invite
                 </button>
+
               </div>
             ) : (
               <div>
-                <div className="bg-slate-300 w-full h-10 rounded mt-5 flex justify-between ">
+                <div className="bg-slate-300 w-full h-10 pl-1 pr-1 rounded mt-5 flex justify-between ">
                   <p className="pl-3 pt-1.5">email</p>
                   <p className="pr-3 pt-1.5">Action</p>
                 </div>
-                <div className="h-48 overflow-auto bg-secondary">
-                  <div className=" flex justify-between mt-3 ">
-                    <p className="pl-3">gokulakrishnanddckap@gmail.com</p>
-                    <p className="pr-8">X</p>
-                  </div>
-                  <div className=" flex justify-between mt-3">
-                    <p className="pl-3">gokulakrishnanddckap@gmail.com</p>
-                    <p className="pr-8">X</p>
-                  </div>
-                  <div className=" flex justify-between mt-3">
-                    <p className="pl-3">gokulakrishnanddckap@gmail.com</p>
-                    <p className="pr-8">X</p>
-                  </div>
+                <div className="h-48 overflow-auto  bg-secondary">
+
+                  {pendingData &&
+                  pendingData.length > 0 ? 
+                  (pendingData.map((data) => (
+
+                     <div className=" flex justify-between mt-3 cursor-pointer ml-1 mr-1 rounded-sm hover:bg-blue-100 p-2 ">
+                     <p className="pl-3">{data.email}</p>
+                     <p className="pr-8">X</p>
+                      </div>)
+                  )
+                  ):(
+                    <div className="  mt-16 text-center">
+                     <p className="text-lg">NO Records Found</p>
+
+                      </div>
+                  )
+                  }
                 </div>
               </div>
             )}
           </div>
         </div>
       </div>
+      
     </div>
   );
 };

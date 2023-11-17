@@ -13,12 +13,6 @@ export default function SigninComponents() {
   const params = useParams();
   // console.log(params);
 
-
-
-
-
-  console.log(params);
-
   const [errors, setError] = useState({});
 
   const [PasswordVisible, setPasswordVisible] = useState(false);

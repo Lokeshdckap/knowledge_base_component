@@ -66,13 +66,13 @@ export default function EditPage(props) {
             <div>
               <p
                 className="text-xl cursor-pointer text-[#90979D] pl-5 pt-3"
-                onClick={handlePopupPage}
+                onClick={props.addPage}
               >
-                <i className="fa-regular fa-file" onClick={handlePopupPage}></i>{" "}
+                <i className="fa-regular fa-file" onClick={props.addPage}></i>{" "}
                 New Page
               </p>
             </div>
-            <div>
+            {/* <div>
               {newPagePopup && (
                 <div className="box-border bg-white h-28 w-56 p-4 mt-1 border-[1px] m-auto rounded shadow-lg ">
                   <p
@@ -93,7 +93,7 @@ export default function EditPage(props) {
                   </p>
                 </div>
               )}
-            </div>
+            </div> */}
           </div>
         </div>
         <div className={`bg-white h-[510px] ${props.widths} overflow-auto`}>
@@ -113,9 +113,7 @@ export default function EditPage(props) {
               placeholder="Page Description"
             />
           </div>
-          <img
-     src="/uploads/image-1700066218108.png"
-/>
+
           <div className={`pt-5 ${props.marginEditor}`}>
             <EditorComponents
               handleSave={props.handleSave}

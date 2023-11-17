@@ -141,10 +141,74 @@ const getActiveUsersForTeam = async (req, res) => {
 
 const addNewBatch = async (req, res) => {
   const team_uuid = req.body.uuid;
+  const title = "untitled";
+  const originalSlug = slugify(title, { lower: true });
+  let slug = originalSlug;
+
   const batch = await Batch.create({
     uuid: uuid.v4(),
     team_uuid: team_uuid,
   });
+
+  const script = await Script.create({
+    uuid: uuid.v4(),
+    team_uuid: team_uuid,
+    batch_uuid: batch.uuid
+  });
+
+  const existingDocument = await Script.findAll({
+    where: {
+      [Op.and]: [{ team_uuid: team_uuid }, { batch_uuid: batch.uuid }],
+    },
+  });
+  if (existingDocument) {
+    slug = `/${originalSlug}-${existingDocument.length}`;
+  }
+
+  const pathUpdate = await Script.update(
+    { path: slug },
+    {
+      where: { uuid: script.uuid },
+    }
+  );
+
+  const findOne = await Script.findOne({
+    where: {
+      uuid: script.uuid,
+    },
+  });
+
+  if (script) {
+    const title = "page";
+    const originalSlug = slugify(title, { lower: true });
+    let slug = originalSlug;
+    let script_paths = findOne.path;
+
+    const Pages = await Page.create({
+      title: "Page Name",
+      description: "Page Description",
+      uuid: uuid.v4(),
+      script_uuid: script.uuid,
+      content: null,
+      page_uuid: null,
+    });
+
+    const existPage = await Page.findAll({
+      where: { script_uuid: script.uuid },
+    });
+
+    if (existPage) {
+      slug = `${script_paths}/${originalSlug}-${existPage.length}`;
+    }
+    const pathUpdate = await Page.update(
+      { path: slug },
+      {
+        where: {
+          [Op.and]: [{ uuid: Pages.uuid }, { script_uuid: script.uuid }],
+        },
+      }
+    );
+  }
   if (batch) {
     return res.status(200).send({
       Success: "Your Batch Created Sucessfully",
@@ -157,6 +221,7 @@ const addNewBatch = async (req, res) => {
 };
 
 const addNewScripts = async (req, res) => {
+
   const title = "untitled";
 
   const originalSlug = slugify(title, { lower: true });
@@ -171,6 +236,7 @@ const addNewScripts = async (req, res) => {
     team_uuid: team_uuid,
     batch_uuid: batch_uuid ? batch_uuid : null,
   });
+
   const existingDocument = await Script.findAll({
     where: {
       [Op.and]: [{ team_uuid: team_uuid }, { batch_uuid: batch_uuid }],
@@ -247,10 +313,12 @@ const getBatch = async (req, res) => {
   });
 
   const joinQuery = `
-  SELECT batches.title, COUNT(*) as script_count
-  FROM batches
-  INNER JOIN scripts ON scripts.batch_uuid = batches.uuid where batches.team_uuid = :team_uuid
-  GROUP BY batches.title`;
+SELECT scripts.batch_uuid, COUNT(*) as script_count
+FROM batches
+INNER JOIN scripts ON scripts.batch_uuid = batches.uuid
+WHERE batches.team_uuid = :team_uuid
+GROUP BY scripts.batch_uuid
+ORDER BY script_count DESC`;
 
   const [results] = await sequelize.query(joinQuery, {
     replacements: { team_uuid },
@@ -882,7 +950,7 @@ const getScripts = async (req, res) => {
 
 const uploadImage = async (req, res) => {
   const { filename } = req.file;
-  const path = `http://localhost:4000/uploads/${filename}`
+  const path = `http://localhost:4000/uploads/${filename}`;
   const page_uuid = req.body.uuid;
   try {
     const image = await Image.create({
@@ -900,26 +968,30 @@ const uploadImage = async (req, res) => {
   }
 };
 
-  const globalSearch = async (req,res) =>{
-    const { q } = req.query;
-    if(!q){
-      return res.status(404).json({ error: 'Datas Not Found' });
-    }
-    const whereClause = {
-      title: {
-        [Op.iLike]: `%${q}%`,
+const globalSearch = async (req, res) => {
+  const { q } = req.query;
+  const team_uuid  = req.params.uuid
+  if (!q) {
+    return res.status(404).json({ error: "Datas Not Found" });
+  }
+  const whereClause = {
+    title: {
+      [Op.iLike]: `%${q}%`,
+    },
+  };
+  try {
+    const scripts = await Script.findAll({
+      // where: whereClause,
+      where: {
+        [Op.and]: [whereClause, { team_uuid: team_uuid }],
       },
-    };
-    try {
-      const scripts = await Script.findAll({
-        where: whereClause,
-      });
-     return res.status(200).json(scripts);
-    } catch (error) {
-      console.error(error);
-      return res.status(500).json({ error: 'Internal Server Error' });
-    }
-}
+    });
+    return res.status(200).json(scripts);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+};
 const fetchImage = async (req, res) => {
   try {
     const image = await Image.findOne({
@@ -934,29 +1006,25 @@ const fetchImage = async (req, res) => {
   }
 };
 
-
-  const updateRole = async (req,res) => {
-    let team_uuid = req.body.team_uuid;
-    let role_type = req.body.role_type;
-    let updateData = {
-      role_id:role_type
-    }
-    try {
+const updateRole = async (req, res) => {
+  let team_uuid = req.body.team_uuid;
+  let role_type = req.body.role_type;
+  let updateData = {
+    role_id: role_type,
+  };
+  try {
     const updatedRole = await UserTeams.update(updateData, {
       where: {
         [Op.and]: [{ team_uuid: team_uuid }, { user_uuid: req.body.user_uuid }],
-      }
+      },
     });
-    return res.status(200).json(updatedRole);
-
+    return res
+      .status(200)
+      .json({ updatedRole, message: "Updated Sucessfully" });
+  } catch (error) {
+    return res.status(500).json({ error: "Updated Failed" });
   }
-  catch (error) {
-    console.error(error);
-    return res.status(500).json({ error: 'Internal Server Error' });
-  }
-
-
-  }
+};
 
 module.exports = {
   createTeams,
@@ -986,5 +1054,5 @@ module.exports = {
   uploadImage,
   globalSearch,
   updateRole,
-  fetchImage
+  fetchImage,
 };

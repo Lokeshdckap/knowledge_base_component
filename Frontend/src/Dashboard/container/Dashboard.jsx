@@ -244,7 +244,7 @@ export default function Dashboard() {
   const searchEvent = async (e) => {
     let value = e.target.value;
 
-   await axiosClient.get(`/search/items?q=${value}`)
+   await axiosClient.get(`${params.uuid}/search/items?q=${value}`)
    .then((res) => {
    if(res.data.length > 0){
     setSearchData(res.data);

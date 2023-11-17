@@ -10,8 +10,6 @@ export default function Main(props) {
   const addBatchEvent = props.addBatchEvent;
   const scriptCount = props.scriptCount;
 
-  console.log(scriptCount);
-
   const handleBatch = (e) => {
     let TargetScriptId = e.target.id;
     navigate(`/dashboard/${props.team.uuid}/b/${TargetScriptId}`);

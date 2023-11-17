@@ -169,7 +169,7 @@ upload.single('image'),
 dashboardController.uploadImage,
 );
 
-router.get("/search/items",
+router.get("/:uuid/search/items",
 verifyAuthMiddleware.verifyToken,
 dashboardController.globalSearch
 )

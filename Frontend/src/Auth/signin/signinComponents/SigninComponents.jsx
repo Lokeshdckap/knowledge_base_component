@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import logo from "../../../assets/images/onboard.png";
 import { Link, useParams } from "react-router-dom";
@@ -7,17 +6,9 @@ import { useStateContext } from "../../../context/ContextProvider";
 import axiosClient from "../../../axios-client";
 import HashLoader from "react-spinners/HashLoader";
 
-
 export default function SigninComponents() {
-
   const params = useParams();
-  // console.log(params);
 
-
-
-
-
-  console.log(params);
 
   const [errors, setError] = useState({});
 
@@ -29,7 +20,7 @@ export default function SigninComponents() {
 
   function togglePassword() {
     setPasswordVisible((prevState) => !prevState);
-  };
+  }
 
   const [formValues, setFormValues] = useState({
     email: "",
@@ -51,7 +42,7 @@ export default function SigninComponents() {
     if (!formValues.email.trim()) {
       validationErrors.email = "Email is required";
       isValid = false;
-    };
+    }
 
     if (!formValues.password.trim()) {
       validationErrors.password = "Password is required";
@@ -67,27 +58,34 @@ export default function SigninComponents() {
   };
 
   const handleSubmit = (event) => {
-
     event.preventDefault();
-    console.log("failed");
-
 
     if (validation()) {
       setLoading(true);
-      axiosClient.post("http://localhost:4000/login", formValues)
+      axiosClient
+        .post("http://localhost:4000/login", formValues)
         .then(({ data }) => {
-          setAuth({
-            token: data.token,
-            verify: data.verify,
-            state: true
-          });
-        setLoading(false);
+          if (data.verify) {
 
+            setAuth({
+              token: data.token,
+              verify: data.verify,
+              state: true,
+            });
+          }
+          else{{
+
+
+            setError({
+              "email":"Please verifiy your email"
+            })
+          }}
+
+          setLoading(false);
         })
         .catch((err) => {
           const response = err.response;
           if (response && response.status === 401) {
-
             let error = {};
             let keys = Object.keys(response.data);
             let value = Object.values(response.data);
@@ -96,8 +94,6 @@ export default function SigninComponents() {
             setLoading(false);
 
             setError(error);
-            
-
           } else {
             console.error("Error:", response.status);
           }
@@ -108,7 +104,11 @@ export default function SigninComponents() {
   return (
     <main className="flex">
       <div className="bg-primary w-1/2 h-[664px]">
-        <img src={logo} alt="" className="max-w-[390px]  m-auto mt-[130px] mb-[112px] " />
+        <img
+          src={logo}
+          alt=""
+          className="max-w-[390px]  m-auto mt-[130px] mb-[112px] "
+        />
       </div>
       <div className="bg-secondary  w-1/2 p-32">
         <div>
@@ -208,10 +208,10 @@ export default function SigninComponents() {
           </Link>
         </div>
         {loading && (
-        <p className="absolute top-72 left-[600px]">
-          <HashLoader color="#3197e8" />
-        </p>
-      )}
+          <p className="absolute top-72 left-[600px]">
+            <HashLoader color="#3197e8" />
+          </p>
+        )}
       </div>
     </main>
   );

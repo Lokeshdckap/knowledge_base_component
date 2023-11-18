@@ -55,7 +55,8 @@ const createTeams = async (req, res) => {
       return res
         .status(400)
         .send({ team_name: `${results[0].name} Team Is Already Exists` });
-    } else {
+    } 
+    else {
       const newTeam = await Team.create({
         name: team_name,
         uuid: uuid.v4(),
@@ -73,7 +74,8 @@ const createTeams = async (req, res) => {
           Success: "Your Team Created Sucessfully",
           newTeam,
         });
-      } else {
+      }
+       else {
         return res.status(500).send({
           Error: "Error Team Not Created ll",
         });
@@ -310,6 +312,7 @@ const getBatch = async (req, res) => {
     where: {
       team_uuid: req.params.uuid,
     },
+    order:[['createdAt','DESC']],
   });
 
   const joinQuery = `
@@ -359,6 +362,7 @@ const getScript = async (req, res) => {
     where: {
       [Op.and]: [{ team_uuid: req.params.uuid }, { batch_uuid: null }],
     },
+    order:[['createdAt','DESC']],
   });
   return res.status(200).send({
     script,
@@ -396,6 +400,7 @@ const getBatchAndScripts = async (req, res) => {
         ],
       },
     ],
+    order:[['createdAt','DESC']]
   });
   // console.log(result,"result");
   return res.status(200).json({ result });
@@ -694,25 +699,26 @@ const getPage = async (req, res) => {
 };
 
 const addBatchTitleAndDescription = async (req, res) => {
-  const param1 = req.query.param1 ? req.query.param1 : null;
 
-  const param2 = req.query.param2 ? req.query.param2 : null;
+  const title = req.body.title;
+  const description = req.body.description;
 
-  const queryParameter = req.query.queryParameter;
+      const updateData = {};
+    if(title){
 
-  const updateData = {};
+      {updateData.title = title}
 
-  if (param1) {
-    updateData.title = param1;
-  }
+    }
+    if(description){
+      {updateData.description = description}
 
-  if (param2) {
-    updateData.description = param2;
-  }
+    }
+
+
 
   try {
     const [numUpdated] = await Batch.update(updateData, {
-      where: { uuid: queryParameter },
+      where: { uuid: req.body.batch_uuid },
     });
 
     if (numUpdated > 0) {

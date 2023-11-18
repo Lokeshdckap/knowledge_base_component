@@ -69,21 +69,10 @@ export const ScriptComponents = () => {
       const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
     const pageIds = queryParams.get('pageId');
-    console.log(pageIds);
+
 
   useEffect(() => {
 
-
-    // if(params["*"]){
-    //   getParticularPage();
-    //   getTeam();
-    //   getAllTeam();
-    //   getParticularScript();
-    //   getScripts();
-    // }
-
-
-     
       if(pageIds){
         getTeam();
         getAllTeam();
@@ -97,9 +86,10 @@ export const ScriptComponents = () => {
         getAllTeam();
         getParticularScript();
         getScripts();
+        getParticularOpenScript();
       }
       
-  }, [pageIds]);
+  }, [pageIds,params.slug]);
 
   //Event
 
@@ -124,6 +114,19 @@ export const ScriptComponents = () => {
   }
 
 
+  const getParticularOpenScript = async () => {
+    let script_uuid = params.slug;
+
+    await axiosClient 
+      .get(`/getScriptAndPage/${script_uuid}`)
+      .then((res) => {
+        navigate(`/dashboard/${params.uuid}/s/${params.slug}/?pageId=${res.data.hierarchy[0].uuid}`)
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
   const getParentOpen = async () =>{
 
     await axiosClient.get(`/getOpenParent/${pageIds}`)
@@ -134,16 +137,6 @@ export const ScriptComponents = () => {
       console.log(err);
     });
   }
-
-
-
-
-
-
-
-
-
-
 
   const getParticularScript = async () => {
     let script_uuid = params.slug;
@@ -156,14 +149,6 @@ export const ScriptComponents = () => {
         setTreeNode(res.data.hierarchy);
         setRenderScript(res.data.getScriptAndPages);
         setPublish(res.data.getScriptAndPages);
-        // console.log(res.data.hierarchy[0].path);
-        // let pagePathArray = res.data.hierarchy[0].path.split("/");
-        // let pageSplitPath = pagePathArray.slice(2).join("/");
-        // navigate(`/dashboard/${params.uuid}/s/${params.slug}/${pageSplitPath}`)
-        // setParticularTitle(res.data.hierarchy[0].title);
-        // setDescription(res.data.hierarchy[0].description);
-        // setEditorContent(res.data.hierarchy[0].content);
-        // setEditorValue(res.data.hierarchy[0].content);
       })
       .catch((err) => {
         console.log(err);
@@ -290,12 +275,12 @@ export const ScriptComponents = () => {
     axiosClient
       .post("/updatePageData", postData)
       .then((res) => {
-        console.log(res.data);
+        getParticularScript();
       })
       .catch((err) => {
         console.log(err);
       });
-    // getParticularScript();
+
   };
 
   const addPage = () => {
@@ -313,10 +298,15 @@ export const ScriptComponents = () => {
 
     let page_uuid = uuid;
     axiosClient
-
       .post(`/addChildPage/${params.slug}/${page_uuid}`)
       .then((res) => {
         getParticularScript();
+        // console.log("gjhk");
+        // console.log(res);
+        console.log(res.data.Pages);
+        navigate(`/dashboard/${params.uuid}/s/${params.slug}/?pageId=${res.data.Pages.uuid}`)
+
+        
       })
       .catch((err) => {
         console.log(err);
@@ -337,7 +327,7 @@ export const ScriptComponents = () => {
         `/addScriptTitle?inputValue=${encodedInputValue}&queryParameter=${paraId}`
       )
       .then((res) => {
-        console.log(res);
+        getScripts()
       })
       .catch((err) => {
         console.log(err);

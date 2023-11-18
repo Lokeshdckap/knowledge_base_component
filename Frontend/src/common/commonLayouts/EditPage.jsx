@@ -37,6 +37,7 @@ export default function EditPage(props) {
       <div className="mt-14 flex">
         <div className="bg-[#E4E8EC] w-[278px] h-[490px] overflow-auto">
           <div className="space-y-2 ml-4 mt-4">
+
             <div className="p-4 rounded-lg shadow">
               {treeNode.map((topLevelPage, index) => (
                 <div

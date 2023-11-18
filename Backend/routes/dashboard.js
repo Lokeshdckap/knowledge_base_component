@@ -91,7 +91,7 @@ router.get(
   dashboardController.addScriptTitle
 );
 
-router.get(
+router.post(
   "/addBatchTitleAndDescription",
   verifyAuthMiddleware.verifyToken,
   dashboardController.addBatchTitleAndDescription

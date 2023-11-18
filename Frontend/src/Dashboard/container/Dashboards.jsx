@@ -17,10 +17,16 @@ export const Dashboards = () => {
   }, []);
 
   const getAllTeam = () => {
+    console.log("ghjhk");
     axiosClient
       .get(`/getAllTeam`)
       .then((res) => {
-        navigate(`/dashboard/${res.data.getAllTeam[0].team_uuid}`);
+        if(res.data.getAllTeam.length > 0){
+          navigate(`/dashboard/${res.data.getAllTeam[0].team_uuid}`);
+        }
+        else{
+         navigate("/teampage")
+        }
       })
       .catch((err) => {});
   };

@@ -19,7 +19,8 @@ module.exports = {
         defaultValue:"New Batch"
       },
       description: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        defaultValue: "Batch Description"
       },
       team_uuid: {
         type: Sequelize.UUID,

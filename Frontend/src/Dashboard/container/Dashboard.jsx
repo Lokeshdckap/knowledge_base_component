@@ -106,7 +106,6 @@ export default function Dashboard() {
     await axiosClient
       .get(`/getBatch/${teamuuid}`)
       .then((res) => {
-        console.log(res, "kk");
         setBatch(res.data.batchs);
         setScriptCount(res.data.results);
       })

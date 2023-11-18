@@ -73,7 +73,6 @@ export const PageTree = ({
               data-id={index}
               id={child.uuid}
             >
-              {console.log(node.path)}
               <PageTree
                 node={child}
                 index={index}
@@ -84,6 +83,7 @@ export const PageTree = ({
                 hoverPageId={hoverPageId}
                 contentPage={contentPage}
                 handleMore={handleMore}
+                parentOpen={parentOpens}
               />
             </li>
           ))}

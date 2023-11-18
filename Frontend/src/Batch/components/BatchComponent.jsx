@@ -49,20 +49,15 @@ export const BatchComponent = () => {
     getTeam();
     getAllTeam();
     getScripts();
-  }, [params.slug, batchTitle]);
 
 
+  }, [params.slug]);
 
-
-    //toaster
-
-
-    const showToastMessage = (data) => {
-      toast.success(data, {
-        position: toast.POSITION.TOP_RIGHT,
-      });
-    };
-
+  const showToastMessage = (data) => {
+    toast.success(data, {
+      position: toast.POSITION.TOP_RIGHT,
+    });
+  };
 
   //Event
   const handleClick = () => {
@@ -177,8 +172,6 @@ export const BatchComponent = () => {
     await axiosClient
       .get(`/getBatchAndScripts/${team_uuid}/${batch_uuid}`)
       .then((res) => {
-        // console.log(res.data.result[0].batch.title);
-        // console.log(res.data.result[0].batch.description);
         setBatchTitle(res.data.result[0].batch.title);
         setbatchDescription(res.data.result[0].batch.description);
         setScripts(res.data.result);
@@ -188,9 +181,6 @@ export const BatchComponent = () => {
         console.log(err);
       });
   };
-  // const handleSave = () => {
-  //   console.log(data);
-  // };
 
   const AddScript = () => {
     let team_uuid = params.uuid;
@@ -206,34 +196,80 @@ export const BatchComponent = () => {
       });
   };
 
-  const handleTitleAndDescription = async (event) => {
-    if (event.name == "title") {
-      const batchTitle = event.value;
-      setBatchTitle(batchTitle);
-      await axiosClient
-        .get(
-          `/addBatchTitleAndDescription?param1=${batchTitle}&param2=${batchDescription}&queryParameter=${params.slug}`
-        )
-        .then((res) => {
-          getScripts();
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    } else {
-      const batchDescription = event.value;
-      setbatchDescription(batchDescription);
-      await axiosClient
-        .get(
-          `/addBatchTitleAndDescription?param1=${batchTitle}&param2=${batchDescription}&queryParameter=${params.slug}`
-        )
-        .then((res) => {
-          console.log(res);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+
+  const handleBatchBlur = async() => {
+    console.log(batchTitle);
+    console.log(params.slug);
+
+    let payLoad = {
+      "batch_uuid" : params.slug,
+      "title":batchTitle
     }
+    await axiosClient.post(
+      "/addBatchTitleAndDescription",payLoad)
+    .then((res) => {
+      // getScripts();
+      console.log(res);
+      getBatch(params.uuid)
+
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  }
+
+  const handleDescriptionBlur = async () => {
+    let payLoad = {
+      "batch_uuid" : params.slug,
+      "description":batchDescription
+    }
+    await axiosClient.post(
+      "/addBatchTitleAndDescription",payLoad)
+    .then((res) => {
+      // getScripts();
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  }
+
+
+  const handleTitleAndDescription = async (e) => {
+    if (e.target.name == "title") {
+      setBatchTitle(e.target.value);
+    
+    }
+    else{
+      setbatchDescription(e.target.value);
+
+    }
+    //   const batchTitle = event.value;
+      // setBatchTitle(e.target.value);
+      // console.log(e.target.value);
+    //   await axiosClient
+    //     .get(
+    //       `/addBatchTitleAndDescription?param1=${batchTitle}&param2=${batchDescription}&queryParameter=${params.slug}`
+    //     )
+    //     .then((res) => {
+    //       getScripts();
+    //     })
+    //     .catch((err) => {
+    //       console.log(err);
+    //     });
+    // } else {
+    //   const batchDescription = event.value;
+    //   setbatchDescription(batchDescription);
+    //   await axiosClient
+    //     .get(
+    //       `/addBatchTitleAndDescription?param1=${batchTitle}&param2=${batchDescription}&queryParameter=${params.slug}`
+    //     )
+    //     .then((res) => {
+    //       console.log(res);
+    //     })
+    //     .catch((err) => {
+    //       console.log(err);
+    //     });
+    // }
   };
 
   const handleCancel = () => {
@@ -252,7 +288,6 @@ export const BatchComponent = () => {
   };
 
   const createTeam = () => {
-    // alert("je")
 
     const validationErrors = {};
 
@@ -271,7 +306,6 @@ export const BatchComponent = () => {
         .catch((err) => {
           const response = err.response;
           if (response && response.status === 400) {
-            // console.log(response);
             let error = {};
             let keys = Object.keys(response.data);
             let value = Object.values(response.data);
@@ -370,6 +404,8 @@ export const BatchComponent = () => {
             setbatchDescription={setbatchDescription}
             changeEvent={handleTitleAndDescription}
             batch={batch}
+            handleBlur={handleBatchBlur}
+            handleDescriptionBlur={handleDescriptionBlur}
           />
         </div>
         {teamPopup && (

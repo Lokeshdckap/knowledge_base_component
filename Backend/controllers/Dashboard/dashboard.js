@@ -754,7 +754,7 @@ const getPage = async (req, res) => {
 };
 
 const addBatchTitleAndDescription = async (req, res) => {
-
+  try {
   const title = req.body.title;
   const description = req.body.description;
 
@@ -769,14 +769,11 @@ const addBatchTitleAndDescription = async (req, res) => {
 
     }
 
-
-
-  try {
     const [numUpdated] = await Batch.update(updateData, {
       where: { uuid: req.body.batch_uuid },
     });
     const numUpdatedData = await Batch.findOne({
-      where: { uuid: queryParameter },
+      where: { uuid: req.body.batch_uuid },
     });
 
     if (numUpdated > 0) {
@@ -786,8 +783,9 @@ const addBatchTitleAndDescription = async (req, res) => {
     } else {
       return res.status(404).json({ error: "Record not found" });
     }
-  } catch (error) {
-    return res.status(500).json({ error: "Internal server error" });
+  }
+   catch (error) {
+    return res.status(404).json({ error: error });
   }
 };
 
@@ -998,32 +996,34 @@ const updateInvite = async (req, res) => {
 };
 
 const getScripts = async (req, res) => {
-  // const TeamId = req.params.uuid;
-  // const scriptId = req.params.slug;
-  // const script_batch = await Script.findOne({
-  //   where: {
-  //     [Op.and]: [{ team_uuid: TeamId }, { uuid: scriptId }],
-  //   },
-  // });
-  // let result = await Script.findAll({
-  //   include: [
-  //     {
-  //       model: Batch,
-  //       where: {
-  //         uuid: script_batch.batch_uuid, // WHERE condition for the Batch model
-  //       },
-  //       include: [
-  //         {
-  //           model: Team,
-  //           where: {
-  //             uuid: TeamId, // WHERE condition for the Team model
-  //           },
-  //         },
-  //       ],
-  //     },
-  //   ],
-  // });
-  // return res.status(200).json({ script_batch, result });
+        const TeamId = req.params.uuid;
+        const scriptId = req.params.slug;
+        if(TeamId && scriptId){
+        const script_batch = await Script.findOne({
+          where: {
+            [Op.and]: [{ team_uuid: TeamId }, { uuid: scriptId }],
+          },
+        });
+        let result = await Script.findAll({
+          include: [
+            {
+              model: Batch,
+              where: {
+                uuid: script_batch.batch_uuid, // WHERE condition for the Batch model
+              },
+              include: [
+                {
+                  model: Team,
+                  where: {
+                    uuid: TeamId, // WHERE condition for the Team model
+                  },
+                },
+              ],
+            },
+          ],
+        });
+        return res.status(200).json({ script_batch, result });
+      }
 };
 
 const uploadImage = async (req, res) => {
@@ -1070,6 +1070,43 @@ const globalSearch = async (req, res) => {
     return res.status(500).json({ error: "Internal Server Error" });
   }
 };
+
+
+const pageSearch = async (req, res) => {
+
+  const { q } = req.query;
+  const team_uuid = req.params.uuid;
+  const slug = req.params.slug;
+ 
+  const script = await Script.findOne({
+    where: {
+            [Op.and]: [{team_uuid:team_uuid}, { path: "/"+slug }],
+          },
+  })
+
+  if (!q) {
+    return res.status(404).json({ error: "Datas Not Found" });
+  }
+  const whereClause = {
+    title: {
+      [Op.iLike]: `%${q}%`,
+    },
+  };
+  try {
+    const pages = await Page.findAll({
+      // where: whereClause,
+      where: {
+        [Op.and]: [whereClause, { script_uuid: script.uuid }],
+      },
+    });
+    return res.status(200).json(pages);
+
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
 const fetchImage = async (req, res) => {
   try {
     const image = await Image.findOne({
@@ -1105,13 +1142,13 @@ const updateRole = async (req, res) => {
 };
 
 const getParentPage = async (req, res) => {
-  // const childData = await Page.findOne({
-  //   where: { uuid: req.params.uuid },
-  // });
-  // const parentData = await Page.findOne({
-  //   where: { uuid: childData.page_uuid },
-  // });
-  // return res.status(200).json({ parentData, message: "Updated Sucessfully" });
+  const childData = await Page.findOne({
+    where: { uuid: req.params.uuid },
+  });
+  const parentData = await Page.findOne({
+    where: { uuid: childData.page_uuid },
+  });
+  return res.status(200).json({ parentData, message: "Updated Sucessfully" });
 };
 
 const pendingList = async (req, res) => {
@@ -1162,4 +1199,5 @@ module.exports = {
   fetchImage,
   getParentPage,
   pendingList,
+  pageSearch,
 };

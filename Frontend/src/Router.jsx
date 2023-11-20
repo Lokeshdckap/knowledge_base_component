@@ -17,7 +17,7 @@ import { Team } from "./Team/container/Team.jsx";
 import { Invited } from "./Invited.jsx";
 import { Dashboards } from "./Dashboard/container/Dashboards.jsx";
 import { JoinTeam } from "./joinTeam/JoinTeam.jsx";
-import { Checking } from "./Scripts/components/Checking.jsx";
+
 
 
 const router = createBrowserRouter([
@@ -66,7 +66,6 @@ const router = createBrowserRouter([
         element: <Invited />,
       },
     ],
-
   },
   {
     path: "/",
@@ -109,7 +108,7 @@ const router = createBrowserRouter([
     element: <Error />,
   },
   {
-    path: "/:slug/*",
+    path: "/:uuid/:slug/*",
     element: <UrlPage />,
   }
 ]);

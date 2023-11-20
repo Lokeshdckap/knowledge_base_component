@@ -40,6 +40,9 @@ export const ScriptComponents = () => {
   const [treeNode, setTreeNode] = useState([]);
 
   const [renderScript, setRenderScript] = useState([]);
+  const [teamUuid, setTeamUuid] = useState([]);
+
+  
 
   const [pageContent, setPageContent] = useState(null);
 
@@ -54,7 +57,7 @@ export const ScriptComponents = () => {
   const [shareState, setShareState] = useState(false);
 
   const [publish, setPublish] = useState([]);
-
+  
   const [invitePopup, setInvitePopup] = useState(false);
 
   const [overStates, setOverStates] = useState(null);
@@ -82,6 +85,18 @@ export const ScriptComponents = () => {
     });
   };
 
+  const showToastSaveMessage = (data) => {
+    toast.success(data, {
+      position: toast.POSITION.TOP_CENTER,
+      autoClose: false,
+    });
+  };
+
+  const showToastErrorMessage = (data) => {
+    toast.error(data, {
+      position: toast.POSITION.TOP_RIGHT,
+    });
+  };
 
   useEffect(() => {
 
@@ -102,8 +117,6 @@ export const ScriptComponents = () => {
       getParticularOpenScript()
     }
 
-
-    console.log(params);
   }, [params.slug, params,pageIds]);
 
 
@@ -158,7 +171,6 @@ export const ScriptComponents = () => {
 
   const getParticularScript = async () => {
     let script_uuid = params.slug;
-
     await axiosClient
       .get(`/getScriptAndPage/${script_uuid}`)
       .then((res) => {
@@ -167,13 +179,11 @@ export const ScriptComponents = () => {
         setTreeNode(res.data.hierarchy);
         setRenderScript(res.data.getScriptAndPages);
         setPublish(res.data.getScriptAndPages);
-
       })
       .catch((err) => {
         console.log(err);
       });
   };
-
 
 
   
@@ -299,9 +309,9 @@ export const ScriptComponents = () => {
     axiosClient
       .post("/updatePageData", postData)
       .then((res) => {
-
         getParticularScript();
 
+        showToastSaveMessage("Content Saved Sucessfully");
       })
       .catch((err) => {
         console.log(err);
@@ -326,42 +336,13 @@ export const ScriptComponents = () => {
       .post(`/addChildPage/${params.slug}/${page_uuid}`)
       .then((res) => {
         getParticularScript();
-        // console.log("gjhk");
-        // console.log(res);
-        console.log(res.data.Pages);
         navigate(`/dashboard/${params.uuid}/s/${params.slug}/?pageId=${res.data.Pages.uuid}`)
-
-        
       })
       .catch((err) => {
         console.log(err);
       });
   };
 
-  // const handleTitleBlur = async() => {
-
-  //   let paraId = params.slug;
-  //   const encodedInputValue = encodeURIComponent(inputValue);
-  //   let payload = {
-  //     "inputValue":encodedInputValue,
-  //     "queryParameter":paraId,
-  //     "teamParameter":params.uuid
-  //   }
-  //   await axiosClient.post(
-  //     "/addScriptTitle",payload)
-  //   .then((res) => {
-  //     console.log(res);
-
-  //   })
-  //   .catch((err) => {
-  //     const response = err.response;
-  //     if (response && response.status === 403) {
-  //       setScriptError(response.data.errorMsg);
-  //     } else {
-  //       console.error("Error:", response.status);
-  //     }
-  //   });
-  // }
 
   const handleChange = async (event) => {
     const inputValue = event;
@@ -378,19 +359,17 @@ export const ScriptComponents = () => {
     await axiosClient.post(
       "/addScriptTitle",payload)
     .then((res) => {
-      console.log(res);
-
+        getScripts();
     })
     .catch((err) => {
       const response = err.response;
       if (response && response.status === 403) {
-        setScriptError(response.data.errorMsg);
+        showToastErrorMessage(response.data.errorMsg)
       } else {
         console.error("Error:", response.status);
       }
     });
 
- 
 
    await axiosClient
       .post(
@@ -478,7 +457,7 @@ export const ScriptComponents = () => {
       .get(`/scripts/${params.slug}/${checked}`)
       .then((res) => {
         setRenderScript(res.data.publicUrl);
-        console.log(res);
+        setTeamUuid(params.uuid);
       })
       .catch((err) => {
         console.log(err);
@@ -588,7 +567,6 @@ export const ScriptComponents = () => {
             setInputValue={setInputValue}
             renderScript={renderScript}
             HandleShare={HandleShare}
-            // handleTitleBlur={handleTitleBlur}
             scriptError={scriptError}
           />
           <EditPage
@@ -617,6 +595,8 @@ export const ScriptComponents = () => {
             editorValue={editorValue}
             renderScript={renderScript}
             parentOpen={parentOpen}
+            teamUuid={teamUuid}
+           
           />
           {teamPopup && (
             <ModelPopup
@@ -640,13 +620,6 @@ export const ScriptComponents = () => {
             />
           )}
         </div>
-        {/* {invitePopup && 
-              <InviteUsers
-               invitePopup={invitePopup}
-               setInvitePopup={setInvitePopup}
-              /> 
-
-          } */}
       </div>
     </div>
   );

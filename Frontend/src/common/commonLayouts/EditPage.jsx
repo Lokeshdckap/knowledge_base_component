@@ -133,6 +133,8 @@ export default function EditPage(props) {
           onChange={props.onChange}
           publish={props.publish}
           renderScript={props.renderScript}
+          teamUuid={props.teamUuid}
+
         />
       )}
     </div>

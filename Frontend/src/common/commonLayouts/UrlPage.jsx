@@ -1,65 +1,90 @@
 import React, { useEffect, useRef, useState } from "react";
 import EditorJS from "@editorjs/editorjs";
-import Header from "@editorjs/header";
 import List from "@editorjs/list";
-import ImageTool from "@editorjs/image";
 import Table from "@editorjs/table";
+import Header from "@editorjs/header";
 import InlineCode from "@editorjs/inline-code";
 import Underline from "@editorjs/underline";
-import Paragraph from "@editorjs/paragraph";
+import Marker from "@editorjs/marker";
+import Checklist from "@editorjs/checklist";
+import Quote from "@editorjs/quote";
+import Embed from "@editorjs/embed";
+import ImageTool from "@editorjs/image";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import axiosClient from "../../axios-client";
 import { PageTree } from "../commonComponents/PageTree";
+import { Search } from "./Search";
 
 export const UrlPage = () => {
+
+
   const location = useLocation();
   const navigate = useNavigate();
 
   const [script, setScript] = useState(null);
   const [page, setPages] = useState([]);
-  const { slug, "*": wildcardValue } = useParams();
+  const params = useParams();
+
+  const [serachPopup,setsearchPopup] = useState(false);
+  const [searchPageData, setSearchPageData] = useState(null);
+
 
   const [url, setUrl] = useState(null);
   const [loadPage, setLoadPage] = useState({});
 
+  const searchInpRef = useRef();
+
   useEffect(() => {
-    if (wildcardValue) {
+    if (params["*"]) {
       axiosClient
-        .get(`/pages/${slug}/${wildcardValue}`)
+        .get(`/pages/${params.slug}/${params["*"]}`)
         .then((res) => {
-          if(res.status == 200){
+          if (res.status == 200) {
             setLoadPage(res.data.publicUrl);
             setEditorValue(res.data.publicUrl.content);
-          }       
-          console.log(res.data);   
+          }
         })
         .catch((err) => {
           const response = err.response;
-          console.log(response);
+
           if (response && response.status === 409) {
-              console.log("ghjhkjlk");
+
           } else {
             console.error("Error:", response.status);
           }
         });
-    }
 
-       axiosClient
-      .get(`/documents/${slug}`)
+
+        axiosClient
+        .get(`/documents/${params.slug}`)
+        .then((res) => {
+          if (!res.data.script.is_published) {
+            navigate("/");
+          }
+          setPages(res.data.hierarchy);
+          setScript(res.data.script);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+    if(params.slug && params["*"] == ""){
+    axiosClient
+      .get(`/documents/${params.slug}`)
       .then((res) => {
         if (!res.data.script.is_published) {
           navigate("/");
         }
         setPages(res.data.hierarchy);
         setScript(res.data.script);
+        navigate(`/${params.uuid}${res.data.hierarchy[0].path}`);
       })
       .catch((err) => {
         console.log(err);
       });
-
-
-   
-  }, [wildcardValue]);
+    }
+    
+  }, [params.slug, params["*"]]);
 
   const ejInstance = useRef();
 
@@ -67,7 +92,8 @@ export const UrlPage = () => {
 
   const contentPage = (e) => {
     let path = e.target.dataset.set;
-    navigate(`${path}`);
+
+    navigate(`/${params.uuid}${path}`);
   };
 
   const initEditor = () => {
@@ -83,15 +109,22 @@ export const UrlPage = () => {
       onChange: async () => {
         let content = await editor.saver.save();
       },
-
       tools: {
-        header: Header,
         list: {
           class: List,
           inlineToolbar: true,
           config: {
             defaultStyle: "unordered",
           },
+        },
+        header: Header,
+        checklist: {
+          class: Checklist,
+          inlineToolbar: true,
+        },
+        Marker: {
+          class: Marker,
+          shortcut: "CMD+SHIFT+M",
         },
         table: {
           class: Table,
@@ -101,9 +134,18 @@ export const UrlPage = () => {
             cols: 3,
           },
         },
-        inlineCode: {
-          class: InlineCode,
-          shortcut: "CMD+SHIFT+M",
+        quote: {
+          class: Quote,
+          inlineToolbar: true,
+          shortcut: "CMD+SHIFT+O",
+          config: {
+            quotePlaceholder: "Enter a quote",
+            captionPlaceholder: "Quote's author",
+          },
+        },
+        embed: {
+          class: Embed,
+          inlineToolbar: true,
         },
         underline: Underline,
       },
@@ -116,14 +158,42 @@ export const UrlPage = () => {
 
     if (ejInstance.current === null && editorValue) {
       initEditor();
-      console.log("editor is ready");
     }
-
     return () => {
       ejInstance?.current?.destroy();
       ejInstance.current = null;
     };
   }, [page]);
+
+
+
+  //search
+
+  const searchEvent = async(e) => {
+    let value = e.target.value;
+    let path = params.slug+"/"+params["*"]
+
+    await axiosClient
+      .get(`${params.uuid}/${params.slug}/pageSearch/items?q=${value}`)
+      .then((res) => {
+        console.log(res.data);
+        if (res.data.length > 0) {
+
+
+          setSearchPageData(res.data);
+        } else {
+          setSearchPageData(null);
+        }
+      })
+      .catch((err) => {
+        const response = err.response;
+        if (response && response.status === 404) {
+          setSearchPageData(null);
+        } else {
+          console.error("Error:", response.status);
+        }
+      });
+  }
   return (
     <div className="">
       <div className="flex justify-between w-[1200px] m-auto  mt-6 mb-6 items-center">
@@ -131,22 +201,23 @@ export const UrlPage = () => {
         <input
           type="text"
           placeholder="Search"
-          className="bg-gray-200 rounded-md w-48 h-10 pl-2 focus:outline-primary"
+          onClick={()=>setsearchPopup((prevState) => !prevState)}
+          ref={searchInpRef}
+          value=""
+          className="bg-gray-200 rounded-md w-48 h-10 pl-2 focus:outline-primary cursor-pointer"
         />
       </div>
       <hr className="" />
       <div className="flex ">
-        <div className="w-[250px] m-auto h-[540px] pr-2 overflow-auto">
-          <h3 className="text-3xl mt-5 mb-5">DCKAP</h3>
-
+        <div className="w-[250px] m-auto mt-5 h-[540px] pr-2 overflow-auto">
+          {/* <h3 className="text-3xl mt-5 mb-5">DCKAP</h3> */}
           {page.map((topLevelPage, index) => (
             <div
               key={topLevelPage.page_id}
               id={topLevelPage.page_id}
               className=""
             >
-              <PageTree
-              
+              <PageTree 
                 node={topLevelPage}
                 hasSibling={index < page.length - 1}
                 hasParent={false}
@@ -167,6 +238,17 @@ export const UrlPage = () => {
           <div id="editorjs" className="mr-64"></div>
         </div>
       </div>
+      {serachPopup &&
+
+       <Search 
+          searchInpRef={searchInpRef}
+          setsearchPopup={setsearchPopup}
+          searchEvent={searchEvent}
+          searchPageData={searchPageData}
+          setSearchPageData={setSearchPageData}
+       /> 
+
+      }
     </div>
   );
 };

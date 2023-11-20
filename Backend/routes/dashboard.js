@@ -173,6 +173,9 @@ router.get("/:uuid/search/items",
 verifyAuthMiddleware.verifyToken,
 dashboardController.globalSearch
 )
+router.get("/:uuid/:slug/pageSearch/items",
+dashboardController.pageSearch
+)
 
 router.post("/updateRole",
 verifyAuthMiddleware.verifyToken,

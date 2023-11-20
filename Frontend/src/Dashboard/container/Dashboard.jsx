@@ -130,6 +130,7 @@ export default function Dashboard() {
       .post("/addNewBatch", { uuid: params.uuid })
       .then((res) => {
         getBatch(params.uuid);
+        showToastMessage("New Batch added successfully");
       })
       .catch((err) => {
         console.log(err);
@@ -143,6 +144,7 @@ export default function Dashboard() {
       .post("/addNewScript", { uuid: params.uuid, batch_uuid: batch_uuid })
       .then((res) => {
         getScript(params.uuid);
+        showToastMessage("New Script added successfully");
       })
       .catch((err) => {
         console.log(err);

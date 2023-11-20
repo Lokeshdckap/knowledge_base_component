@@ -135,6 +135,7 @@ export const BatchComponent = () => {
       .then((res) => {
         getScript(team_uuid);
         getScripts();
+        showToastMessage("New Script added successfully");
       })
       .catch((err) => {
         console.log(err);
@@ -188,6 +189,7 @@ export const BatchComponent = () => {
       .then((res) => {
         getScript(team_uuid);
         getScripts();
+        showToastMessage("New Script added successfully")
       })
       .catch((err) => {
         console.log(err);
@@ -195,8 +197,6 @@ export const BatchComponent = () => {
   };
 
   const handleBatchBlur = async () => {
-    console.log(batchTitle);
-    console.log(params.slug);
 
     let payLoad = {
       batch_uuid: params.slug,
@@ -205,7 +205,7 @@ export const BatchComponent = () => {
     await axiosClient
       .post("/addBatchTitleAndDescription", payLoad)
       .then((res) => {
-        // getScripts();
+        getScripts();
         console.log(res);
         getBatch(params.uuid);
       })

@@ -16,7 +16,7 @@ export const PublishPopup = (props) => {
   };
 
   useEffect(() => {
-    console.log(props.renderScript);
+   
 
     clipboard = new ClipboardJS(buttonRef.current, {
       text: () => textToCopyRef.current.innerText,
@@ -108,7 +108,7 @@ export const PublishPopup = (props) => {
                         <p ref={textToCopyRef}>
                           {!props.renderScript.is_published
                             ? ""
-                            : `http://localhost:3000${props.renderScript.path}`}
+                            : `http://localhost:3000/${props.teamUuid}${props.renderScript.path}`}
                         </p>
                         <div className="box-border border-[#c5ccd8] h-8 w-24 border-[1px] rounded bg-white flex space-x-2 mt-0.5 hover:bg-sky-200 cursor-pointer">
                           <p

@@ -5,11 +5,7 @@ import { ToastContainer,toast } from "react-toastify";
 // import { useParams } from "react-router-dom";
 
 export default function EditHeader(props) {
-  const showToastMessage = (data) => {
-    toast.error(data, {
-      position: toast.POSITION.TOP_RIGHT,
-    });
-  };
+
   return (
     <div className="">
       <div
@@ -21,9 +17,7 @@ export default function EditHeader(props) {
           onChange={(e) => props.changeEvent(e.target.value)}
           // onBlur={props.handleTitleBlur}
         />
-        {props.scriptError && (
-          showToastMessage(props.scriptError)
-        )}
+
         <div>
           <button
             type="button"

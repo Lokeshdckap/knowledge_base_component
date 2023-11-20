@@ -2,8 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 import SideNav from "../../common/commonLayouts/SideNav";
 import axiosClient from "../../axios-client";
 import SideNavLarge from "../../common/commonLayouts/SideNavLarge";
-import { useNavigate, useParams} from "react-router-dom";
-import { useLocation } from 'react-router-dom';
+import { useNavigate, useParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import EditHeader from "../../common/commonLayouts/EditHeader";
 import EditPage from "../../common/commonLayouts/EditPage";
 import { PageTree } from "../../common/commonComponents/PageTree";
@@ -63,30 +63,36 @@ export const ScriptComponents = () => {
 
   const [role, setRole] = useState("");
 
-  const [index, setIndex] = useState(null);
+  const [scriptError, setScriptError] = useState(null);
 
   const [loading, setLoading] = useState(false);
 
   const [inviteError, setInviteError] = useState(null);
 
-  const [parentOpen,setParentOpen] = useState(null);
+  const [parentOpen, setParentOpen] = useState(null);
 
-
-      const location = useLocation();
-    const queryParams = new URLSearchParams(location.search);
-    const pageIds = queryParams.get('pageId');
-    console.log(pageIds);
+  const showToastMessage = (data) => {
+    toast.success(data, {
+      position: toast.POSITION.TOP_CENTER,
+    });
+  };
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const pageIds = queryParams.get("pageId");
+  console.log(pageIds);
 
   useEffect(() => {
-    
     getTeam();
     getAllTeam();
     getParticularScript();
     getScripts();
+    if(pageIds){
+    getParentOpen()
+    getParticularPage()
+    }
 
     console.log(params);
-
-  }, [params.slug,params]);
+  }, [params.slug, params,pageIds]);
 
   //Event
 
@@ -95,42 +101,6 @@ export const ScriptComponents = () => {
   };
 
   //Api
-
-  const getParticularPage = async () => {
-      await axiosClient
-      .get(`/getPage/${pageIds}`)
-      .then((res) => {
-        setParticularTitle(res.data.pages.title);
-        setDescription(res.data.pages.description);
-        setEditorValue(res.data.pages.content);
-        setEditorContent(res.data.pages.content);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }
-
-
-  const getParentOpen = async () =>{
-
-    await axiosClient.get(`/getOpenParent/${pageIds}`)
-    .then((res) => {
-      setParentOpen(res.data.parentData.uuid);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-  }
-
-
-
-
-
-
-
-
-
-
 
   const getParticularScript = async () => {
     let script_uuid = params.slug;
@@ -143,25 +113,51 @@ export const ScriptComponents = () => {
         setTreeNode(res.data.hierarchy);
         setRenderScript(res.data.getScriptAndPages);
         setPublish(res.data.getScriptAndPages);
-        // console.log(res.data.hierarchy[0].path);
-        // let pagePathArray = res.data.hierarchy[0].path.split("/");
-        // let pageSplitPath = pagePathArray.slice(2).join("/");
-        // navigate(`/dashboard/${params.uuid}/s/${params.slug}/${pageSplitPath}`)
         // setParticularTitle(res.data.hierarchy[0].title);
         // setDescription(res.data.hierarchy[0].description);
-        // setEditorContent(res.data.hierarchy[0].content);
         // setEditorValue(res.data.hierarchy[0].content);
+        // setEditorContent(res.data.hierarchy[0].content);
       })
       .catch((err) => {
         console.log(err);
       });
   };
 
-  const getScripts = async() => {
-   await axiosClient.get(`/getScripts/${params.uuid}/${params.slug}`).then((res) => {
-      setOverStates(res.data.script_batch.batch_uuid);
-      setChildScript(res.data.result);
-    });
+  const getParticularPage = async () => {
+    await axiosClient
+      .get(`/getPage/${pageIds}`)
+      .then((res) => {
+        console.log(res);
+        setParticularTitle(res.data.pages.title);
+        setDescription(res.data.pages.description);
+        setEditorValue(res.data.pages.content);
+        setEditorContent(res.data.pages.content);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const getParentOpen = async () => {
+    await axiosClient
+      .get(`/getOpenParent/${pageIds}`)
+      .then((res) => {
+        setParentOpen(res.data.parentData.uuid);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  
+
+  const getScripts = async () => {
+    await axiosClient
+      .get(`/getScripts/${params.uuid}/${params.slug}`)
+      .then((res) => {
+        setOverStates(res.data.script_batch.batch_uuid);
+        setChildScript(res.data.result);
+      });
   };
 
   const getTeam = async () => {
@@ -266,7 +262,6 @@ export const ScriptComponents = () => {
   //Editor functionality
 
   const handleSave = () => {
-
     const postData = {
       id: pageIds,
       title: particularTitle ? particularTitle : "Page Name",
@@ -277,12 +272,13 @@ export const ScriptComponents = () => {
     axiosClient
       .post("/updatePageData", postData)
       .then((res) => {
+      //  getParticularScript();
+
         console.log(res.data);
       })
       .catch((err) => {
         console.log(err);
       });
-    // getParticularScript();
   };
 
   const addPage = () => {
@@ -309,18 +305,63 @@ export const ScriptComponents = () => {
       });
   };
 
+  // const handleTitleBlur = async() => {
+
+  //   let paraId = params.slug;
+  //   const encodedInputValue = encodeURIComponent(inputValue);
+  //   let payload = {
+  //     "inputValue":encodedInputValue,
+  //     "queryParameter":paraId,
+  //     "teamParameter":params.uuid
+  //   }
+  //   await axiosClient.post(
+  //     "/addScriptTitle",payload)
+  //   .then((res) => {
+  //     console.log(res);
+
+  //   })
+  //   .catch((err) => {
+  //     const response = err.response;
+  //     if (response && response.status === 403) {
+  //       setScriptError(response.data.errorMsg);
+  //     } else {
+  //       console.error("Error:", response.status);
+  //     }
+  //   });
+  // }
+
   const handleChange = async (event) => {
     const inputValue = event;
-
-    const encodedInputValue = encodeURIComponent(inputValue);
 
     setInputValue(inputValue); // Update the state with the current value
 
     let paraId = params.slug;
+    const encodedInputValue = encodeURIComponent(inputValue);
+    let payload = {
+      "inputValue":encodedInputValue,
+      "queryParameter":paraId,
+      "teamParameter":params.uuid
+    }
+    await axiosClient.post(
+      "/addScriptTitle",payload)
+    .then((res) => {
+      console.log(res);
 
-    axiosClient
-      .get(
-        `/addScriptTitle?inputValue=${encodedInputValue}&queryParameter=${paraId}`
+    })
+    .catch((err) => {
+      const response = err.response;
+      if (response && response.status === 403) {
+        setScriptError(response.data.errorMsg);
+      } else {
+        console.error("Error:", response.status);
+      }
+    });
+
+ 
+
+   await axiosClient
+      .post(
+        `/addScriptTitle`,payload
       )
       .then((res) => {
         console.log(res);
@@ -334,7 +375,7 @@ export const ScriptComponents = () => {
     setPageId(e.target.id);
     let pageId = e.target.id;
     let pagePath = e.target.dataset.set;
-    navigate(`/dashboard/${params.uuid}/s/${params.slug}/?pageId=${pageId}`)
+    navigate(`/dashboard/${params.uuid}/s/${params.slug}/?pageId=${pageId}`);
     // if(pagePath !== undefined){
     //     let pagePathArray = pagePath.split("/");
     //     let pageSplitPath = pagePathArray.slice(2).join("/");
@@ -440,43 +481,39 @@ export const ScriptComponents = () => {
   };
 
   const handleInviteUsers = () => {
-
     setLoading(true);
     console.log(inviteEmail);
-    if(!inviteEmail.trim()) {
-    setLoading(false);
-      
-      setInviteError("Email is required");
-    }
-    else if(!role.trim()) {
+    if (!inviteEmail.trim()) {
       setLoading(false);
-        
-        setInviteError("Role is required");
-      }
-    else{
 
-    axiosClient
-      .post("/inviteUsers", {
-        email: inviteEmail,
-        role: role,
-        team_uuid: params.uuid,
-      })
-      .then((res) => {
-        showToastMessage(res.data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        const response = err.response;
-        if (response && response.status === 400) {
-          setInviteError(response.data);
-          setTimeout(() => {
-            setInviteError("");
-          }, 1500);
+      setInviteError("Email is required");
+    } else if (!role.trim()) {
+      setLoading(false);
+
+      setInviteError("Role is required");
+    } else {
+      axiosClient
+        .post("/inviteUsers", {
+          email: inviteEmail,
+          role: role,
+          team_uuid: params.uuid,
+        })
+        .then((res) => {
+          showToastMessage(res.data);
           setLoading(false);
-        } else {
-          console.error("Error:", response.status);
-        }
-      });
+        })
+        .catch((err) => {
+          const response = err.response;
+          if (response && response.status === 400) {
+            setInviteError(response.data);
+            setTimeout(() => {
+              setInviteError("");
+            }, 1500);
+            setLoading(false);
+          } else {
+            console.error("Error:", response.status);
+          }
+        });
     }
   };
 
@@ -518,6 +555,8 @@ export const ScriptComponents = () => {
             setInputValue={setInputValue}
             renderScript={renderScript}
             HandleShare={HandleShare}
+            // handleTitleBlur={handleTitleBlur}
+            scriptError={scriptError}
           />
           <EditPage
             widths={state ? "w-[785px]" : "w-[933px]"}
@@ -557,7 +596,7 @@ export const ScriptComponents = () => {
           )}
           {invitePopup && (
             <InviteUsers
-            team={team}
+              team={team}
               invitePopup={invitePopup}
               setInvitePopup={setInvitePopup}
               setInviteEmail={setInviteEmail}

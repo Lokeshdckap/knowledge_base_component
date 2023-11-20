@@ -85,7 +85,7 @@ router.get(
   dashboardController.getScriptAndPage
 );
 
-router.get(
+router.post(
   "/addScriptTitle",
   verifyAuthMiddleware.verifyToken,
   dashboardController.addScriptTitle

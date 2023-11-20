@@ -177,10 +177,9 @@ export const BatchComponent = () => {
     await axiosClient
       .get(`/getBatchAndScripts/${team_uuid}/${batch_uuid}`)
       .then((res) => {
-        // console.log(res.data.result[0].batch.title);
-        // console.log(res.data.result[0].batch.description);
-        setBatchTitle(res.data.result[0].batch.title);
-        setbatchDescription(res.data.result[0].batch.description);
+        console.log(res);
+        setbatchDescription(res.data.batchData.description);
+        setBatchTitle(res.data.batchData.title);
         setScripts(res.data.result);
         setChildScript(res.data.result);
       })
@@ -188,9 +187,7 @@ export const BatchComponent = () => {
         console.log(err);
       });
   };
-  // const handleSave = () => {
-  //   console.log(data);
-  // };
+
 
   const AddScript = () => {
     let team_uuid = params.uuid;
@@ -215,7 +212,7 @@ export const BatchComponent = () => {
           `/addBatchTitleAndDescription?param1=${batchTitle}&param2=${batchDescription}&queryParameter=${params.slug}`
         )
         .then((res) => {
-          getScripts();
+          //  getScripts();
         })
         .catch((err) => {
           console.log(err);

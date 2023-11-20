@@ -93,9 +93,8 @@ export default function SideNavLarge(props) {
 
   return (
     <div className="bg-primary h-screen  overflow-auto w-[280px] z-10 ">
-
       <div>
-        <img src={mainLogo} alt="" className="max-w-md m-auto mt-4" />
+        <img src={mainLogo} alt="" className="max-w-md m-auto mt-4 h-10" />
       </div>
       <div className="bg-slate-300 h-6 w-6 rounded-full absolute mt-4 left-[219px]">
         <span

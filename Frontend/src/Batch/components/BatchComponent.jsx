@@ -49,8 +49,6 @@ export const BatchComponent = () => {
     getTeam();
     getAllTeam();
     getScripts();
-
-
   }, [params.slug]);
 
   const showToastMessage = (data) => {
@@ -196,56 +194,50 @@ export const BatchComponent = () => {
       });
   };
 
-
-  const handleBatchBlur = async() => {
+  const handleBatchBlur = async () => {
     console.log(batchTitle);
     console.log(params.slug);
 
     let payLoad = {
-      "batch_uuid" : params.slug,
-      "title":batchTitle
-    }
-    await axiosClient.post(
-      "/addBatchTitleAndDescription",payLoad)
-    .then((res) => {
-      // getScripts();
-      console.log(res);
-      getBatch(params.uuid)
-
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-  }
+      batch_uuid: params.slug,
+      title: batchTitle,
+    };
+    await axiosClient
+      .post("/addBatchTitleAndDescription", payLoad)
+      .then((res) => {
+        // getScripts();
+        console.log(res);
+        getBatch(params.uuid);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   const handleDescriptionBlur = async () => {
     let payLoad = {
-      "batch_uuid" : params.slug,
-      "description":batchDescription
-    }
-    await axiosClient.post(
-      "/addBatchTitleAndDescription",payLoad)
-    .then((res) => {
-      // getScripts();
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-  }
-
+      batch_uuid: params.slug,
+      description: batchDescription,
+    };
+    await axiosClient
+      .post("/addBatchTitleAndDescription", payLoad)
+      .then((res) => {
+        // getScripts();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   const handleTitleAndDescription = async (e) => {
     if (e.target.name == "title") {
       setBatchTitle(e.target.value);
-    
-    }
-    else{
+    } else {
       setbatchDescription(e.target.value);
-
     }
     //   const batchTitle = event.value;
-      // setBatchTitle(e.target.value);
-      // console.log(e.target.value);
+    // setBatchTitle(e.target.value);
+    // console.log(e.target.value);
     //   await axiosClient
     //     .get(
     //       `/addBatchTitleAndDescription?param1=${batchTitle}&param2=${batchDescription}&queryParameter=${params.slug}`
@@ -288,7 +280,6 @@ export const BatchComponent = () => {
   };
 
   const createTeam = () => {
-
     const validationErrors = {};
 
     if (!formValues.team_name) {
@@ -322,43 +313,39 @@ export const BatchComponent = () => {
   };
 
   const handleInviteUsers = () => {
-
     setLoading(true);
     console.log(inviteEmail);
-    if(!inviteEmail.trim()) {
-    setLoading(false);
-      
-      setInviteError("Email is required");
-    }
-    else if(!role.trim()) {
+    if (!inviteEmail.trim()) {
       setLoading(false);
-        
-        setInviteError("Role is required");
-      }
-    else{
 
-    axiosClient
-      .post("/inviteUsers", {
-        email: inviteEmail,
-        role: role,
-        team_uuid: params.uuid,
-      })
-      .then((res) => {
-        showToastMessage(res.data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        const response = err.response;
-        if (response && response.status === 400) {
-          setInviteError(response.data);
-          setTimeout(() => {
-            setInviteError("");
-          }, 1500);
+      setInviteError("Email is required");
+    } else if (!role.trim()) {
+      setLoading(false);
+
+      setInviteError("Role is required");
+    } else {
+      axiosClient
+        .post("/inviteUsers", {
+          email: inviteEmail,
+          role: role,
+          team_uuid: params.uuid,
+        })
+        .then((res) => {
+          showToastMessage(res.data);
           setLoading(false);
-        } else {
-          console.error("Error:", response.status);
-        }
-      });
+        })
+        .catch((err) => {
+          const response = err.response;
+          if (response && response.status === 400) {
+            setInviteError(response.data);
+            setTimeout(() => {
+              setInviteError("");
+            }, 1500);
+            setLoading(false);
+          } else {
+            console.error("Error:", response.status);
+          }
+        });
     }
   };
 
@@ -419,7 +406,7 @@ export const BatchComponent = () => {
         )}
         {invitePopup && (
           <InviteUsers
-          team={team}
+            team={team}
             invitePopup={invitePopup}
             setInvitePopup={setInvitePopup}
             setInviteEmail={setInviteEmail}

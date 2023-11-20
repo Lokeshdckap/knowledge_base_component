@@ -1,6 +1,6 @@
 const db = require("../../utils/database");
-const { Op } = require("sequelize");
-const { sequelize } = require("../../utils/database");
+const { Op, where } = require("sequelize");
+const { sequelize, col } = require("../../utils/database");
 const User = db.users;
 const Team = db.teams;
 const Batch = db.batch;
@@ -401,8 +401,11 @@ const getBatchAndScripts = async (req, res) => {
     ],
     order:[['createdAt','DESC']]
   });
+  const batchData = await Batch.findOne({
+    where: { uuid: req.params.batch_uuid },
+  });
   // console.log(result,"result");
-  return res.status(200).json({ result });
+  return res.status(200).json({ batchData, result });
 };
 
 const addPageData = async (req, res) => {
@@ -548,62 +551,126 @@ const getScriptAndPage = async (req, res) => {
 // });
 
 const addScriptTitle = async (req, res) => {
-  const paths =
-    "/" +
-    req.query.inputValue.split(" ").filter(Boolean).join("").toLowerCase();
+  try {
+    const checkTitles = await Script.findOne({
+      where: {
+        [Op.and]: [
+          { team_uuid: req.body.teamParameter },
+          sequelize.where(
+            sequelize.fn("lower", sequelize.col("title")),
+            sequelize.fn("lower", req.body.inputValue)
+          ),
+        ],
+      },
+    });
+    if (!checkTitles) {
+      const paths =
+        "/" +
+        req.body.inputValue.split(" ").filter(Boolean).join("").toLowerCase();
 
-  const scriptTitleUpdate = await Script.update(
-    { title: req.query.inputValue, path: paths },
-    {
-      where: { uuid: req.query.queryParameter },
+      const scriptTitleUpdate = await Script.update(
+        { title: req.body.inputValue, path: paths },
+        {
+          where: { uuid: req.body.queryParameter },
+        }
+      );
+
+      const updatePath = await Page.findAll({
+        where: { script_uuid: req.body.queryParameter },
+      });
+
+      const updateAllPages = async () => {
+        for (const scriptPaths of updatePath) {
+          let oldPath = scriptPaths.path.split("/")[1];
+          let replaceTheNew = oldPath.replace(oldPath, req.body.inputValue);
+
+          const pathArray = scriptPaths.path.split("/");
+          pathArray.splice(1, 1, replaceTheNew);
+          const updatedPath = pathArray.join("/");
+
+          // Update the current row with its corresponding updatedPath
+          scriptPaths.path = updatedPath.toLowerCase();
+          await scriptPaths.save();
+        }
+      };
+
+      updateAllPages();
+
+      return res.status(200).json({ scriptTitleUpdate });
+    } else {
+      return res
+        .status(403)
+        .json({ errorMsg: "Please Choose a Different Script Name" });
     }
-  );
-
-  const updatePath = await Page.findAll({
-    where: { script_uuid: req.query.queryParameter },
-  });
-
-  const updateAllPages = async () => {
-    for (const scriptPaths of updatePath) {
-      let oldPath = scriptPaths.path.split("/")[1];
-      let replaceTheNew = oldPath.replace(oldPath, req.query.inputValue);
-
-      const pathArray = scriptPaths.path.split("/");
-      pathArray.splice(1, 1, replaceTheNew);
-      const updatedPath = pathArray.join("/");
-
-      console.log(updatedPath);
-
-      // Update the current row with its corresponding updatedPath
-      scriptPaths.path = updatedPath.toLowerCase();
-      await scriptPaths.save();
-    }
-  };
-
-  updateAllPages();
-
-  return res.status(200).json({ scriptTitleUpdate });
+  } catch (err) {
+    return res
+      .status(403)
+      .json({ errorMsg: "Please Choose a Different Script Name" });
+  }
 };
 
 const updatePageData = async (req, res) => {
-
-
   let paths;
-
-  console.log(req.body);
-
   const page = await Page.findOne({
     where: {
       uuid: req.body.id,
     },
   });
 
-
   const script = await Script.findOne({
     where: {
       uuid: page.script_uuid,
     },
   });
+
+  // check title
+  const checkTitle = await Page.findAll({
+    where: {
+      script_uuid: script.uuid,
+    },
+  });
+
+  let pathArray = [];
+  for (let checkTitles of checkTitle) {
+    if (
+      checkTitles.title
+        .split(" ")
+        .filter(Boolean)
+        .join("")
+        .toLowerCase()
+        .replace(/-\d/g, "") ===
+      req.body.title.split(" ").filter(Boolean).join("").toLowerCase()
+    ) {
+      pathArray.push(checkTitles.title);
+    }
+  }
+
+  let modifiedStrings = pathArray.map((str) => str.replace(/-\d/g, ""));
+  console.log(modifiedStrings);
+
+  let titles;
+  const checkTitles = await Page.findOne({
+    where: {
+      [Op.and]: [
+        { script_uuid: script.uuid },
+        sequelize.where(
+          sequelize.fn("lower", sequelize.col("title")),
+          sequelize.fn("lower", req.body.title)
+        ),
+      ],
+    },
+  });
+  let existTitle = checkTitles ? checkTitles.title : null;
+  if (existTitle) {
+    if (
+      existTitle.split(" ").filter(Boolean).join("").toLowerCase() ===
+      req.body.title.split(" ").filter(Boolean).join("").toLowerCase()
+    ) {
+      titles = `${req.body.title}-${modifiedStrings.length}`;
+    }
+  } else {
+    titles = `${req.body.title}`;
+  }
 
   if (page.page_uuid) {
     const parentPage = await Page.findOne({
@@ -615,29 +682,23 @@ const updatePageData = async (req, res) => {
     paths =
       parentPage.path +
       "/" +
-      req.body.title.split(" ").filter(Boolean).join("").toLowerCase();
+      titles.split(" ").filter(Boolean).join("").toLowerCase();
   } else {
     paths =
       script.path +
       "/" +
-      req.body.title.split(" ").filter(Boolean).join("").toLowerCase();
+      titles.split(" ").filter(Boolean).join("").toLowerCase();
   }
-
-
-
-
-  
   const updateData = await Page.update(
-    
     {
-      title: req.body.title,
+      title: titles,
       description: req.body.description,
       content: JSON.stringify(req.body.content),
       path: paths,
     },
     {
       where: {
-        uuid:req.body.id
+        uuid: req.body.id,
       },
     }
   );
@@ -649,10 +710,9 @@ const updatePageData = async (req, res) => {
       },
     });
 
+    console.log(parentPath);
     for (let childpage of childpages) {
       const newPath = parentPath + "/" + childpage.path.split("/").pop();
-
-      console.log(newPath);
 
       await Page.update(
         {
@@ -684,15 +744,11 @@ const updatePageData = async (req, res) => {
 };
 
 const getPage = async (req, res) => {
-
   const page_uuid = req.params.uuid;
-
-
 
   const pages = await Page.findOne({
     where: { uuid: page_uuid }, // Fetch root-level pages
   });
-
 
   return res.status(200).json({ pages });
 };
@@ -719,9 +775,14 @@ const addBatchTitleAndDescription = async (req, res) => {
     const [numUpdated] = await Batch.update(updateData, {
       where: { uuid: req.body.batch_uuid },
     });
+    const numUpdatedData = await Batch.findOne({
+      where: { uuid: queryParameter },
+    });
 
     if (numUpdated > 0) {
-      return res.status(200).json({ message: "Update successful" });
+      return res
+        .status(200)
+        .json({ numUpdatedData, message: "Update successful" });
     } else {
       return res.status(404).json({ error: "Record not found" });
     }
@@ -937,37 +998,32 @@ const updateInvite = async (req, res) => {
 };
 
 const getScripts = async (req, res) => {
-
-  const TeamId = req.params.uuid;
-
-  const scriptId = req.params.slug;
-
-  const script_batch = await Script.findOne({
-    where: {
-      [Op.and]: [{ team_uuid: TeamId }, { uuid: scriptId }],
-    },
-  });
-
-  let result = await Script.findAll({
-    include: [
-      {
-        model: Batch,
-        where: {
-          uuid: script_batch.batch_uuid, // WHERE condition for the Batch model
-        },
-
-        include: [
-          {
-            model: Team,
-            where: {
-              uuid: TeamId, // WHERE condition for the Team model
-            },
-          },
-        ],
-      },
-    ],
-  });
-  return res.status(200).json({ script_batch, result });
+  // const TeamId = req.params.uuid;
+  // const scriptId = req.params.slug;
+  // const script_batch = await Script.findOne({
+  //   where: {
+  //     [Op.and]: [{ team_uuid: TeamId }, { uuid: scriptId }],
+  //   },
+  // });
+  // let result = await Script.findAll({
+  //   include: [
+  //     {
+  //       model: Batch,
+  //       where: {
+  //         uuid: script_batch.batch_uuid, // WHERE condition for the Batch model
+  //       },
+  //       include: [
+  //         {
+  //           model: Team,
+  //           where: {
+  //             uuid: TeamId, // WHERE condition for the Team model
+  //           },
+  //         },
+  //       ],
+  //     },
+  //   ],
+  // });
+  // return res.status(200).json({ script_batch, result });
 };
 
 const uploadImage = async (req, res) => {
@@ -1048,24 +1104,15 @@ const updateRole = async (req, res) => {
   }
 };
 
-
-
-const getParentPage = async (req,res) => {
-
-
-  const childData = await Page.findOne({
-    where:{uuid:req.params.uuid}
-  })
-
-  const parentData = await Page.findOne({
-    where:{uuid:childData.page_uuid}
-  })
-
-  return res
-  .status(200)
-  .json({ parentData, message: "Updated Sucessfully" });
-
-}
+const getParentPage = async (req, res) => {
+  // const childData = await Page.findOne({
+  //   where: { uuid: req.params.uuid },
+  // });
+  // const parentData = await Page.findOne({
+  //   where: { uuid: childData.page_uuid },
+  // });
+  // return res.status(200).json({ parentData, message: "Updated Sucessfully" });
+};
 
 const pendingList = async (req, res) => {
   let teamuuid = req.params.uuid;
@@ -1083,7 +1130,6 @@ const pendingList = async (req, res) => {
     return res.status(500).json({ error: "Updated Failed" });
   }
 };
-
 
 module.exports = {
   createTeams,
@@ -1116,5 +1162,4 @@ module.exports = {
   fetchImage,
   getParentPage,
   pendingList,
-
 };

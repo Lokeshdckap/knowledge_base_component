@@ -2,8 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 import SideNav from "../../common/commonLayouts/SideNav";
 import axiosClient from "../../axios-client";
 import SideNavLarge from "../../common/commonLayouts/SideNavLarge";
-import { useNavigate, useParams} from "react-router-dom";
-import { useLocation } from 'react-router-dom';
+import { useNavigate, useParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import EditHeader from "../../common/commonLayouts/EditHeader";
 import EditPage from "../../common/commonLayouts/EditPage";
 import { PageTree } from "../../common/commonComponents/PageTree";
@@ -63,29 +63,49 @@ export const ScriptComponents = () => {
 
   const [role, setRole] = useState("");
 
-  const [index, setIndex] = useState(null);
+  const [scriptError, setScriptError] = useState(null);
 
   const [loading, setLoading] = useState(false);
 
   const [inviteError, setInviteError] = useState(null);
 
-  const [parentOpen,setParentOpen] = useState(null);
+  const [parentOpen, setParentOpen] = useState(null);
 
 
       const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
     const pageIds = queryParams.get('pageId');
 
+  const showToastMessage = (data) => {
+    toast.success(data, {
+      position: toast.POSITION.TOP_CENTER,
+    });
+  };
+
 
   useEffect(() => {
-    
-    getTeam();
-    getAllTeam();
-    getParticularScript();
-    getScripts();
-    console.log(params);
 
-  }, [params.slug,params]);
+
+    if(pageIds){
+      getTeam();
+      getAllTeam();
+      getParentOpen()
+      getParticularPage();
+      getParticularScript();
+      getScripts();
+    }
+    else
+    {
+      getTeam();
+      getAllTeam();
+      getParticularScript();
+      getScripts();
+      getParticularOpenScript()
+    }
+
+
+    console.log(params);
+  }, [params.slug, params,pageIds]);
 
 
   //Event
@@ -95,6 +115,7 @@ export const ScriptComponents = () => {
   };
 
   //Api
+
 
   const getParticularPage = async () => {
       await axiosClient
@@ -146,17 +167,24 @@ export const ScriptComponents = () => {
         setTreeNode(res.data.hierarchy);
         setRenderScript(res.data.getScriptAndPages);
         setPublish(res.data.getScriptAndPages);
+
       })
       .catch((err) => {
         console.log(err);
       });
   };
 
-  const getScripts = async() => {
-   await axiosClient.get(`/getScripts/${params.uuid}/${params.slug}`).then((res) => {
-      setOverStates(res.data.script_batch.batch_uuid);
-      setChildScript(res.data.result);
-    });
+
+
+  
+
+  const getScripts = async () => {
+    await axiosClient
+      .get(`/getScripts/${params.uuid}/${params.slug}`)
+      .then((res) => {
+        setOverStates(res.data.script_batch.batch_uuid);
+        setChildScript(res.data.result);
+      });
   };
 
   const getTeam = async () => {
@@ -261,7 +289,6 @@ export const ScriptComponents = () => {
   //Editor functionality
 
   const handleSave = () => {
-
     const postData = {
       id: pageIds,
       title: particularTitle ? particularTitle : "Page Name",
@@ -272,7 +299,9 @@ export const ScriptComponents = () => {
     axiosClient
       .post("/updatePageData", postData)
       .then((res) => {
+
         getParticularScript();
+
       })
       .catch((err) => {
         console.log(err);
@@ -309,18 +338,63 @@ export const ScriptComponents = () => {
       });
   };
 
+  // const handleTitleBlur = async() => {
+
+  //   let paraId = params.slug;
+  //   const encodedInputValue = encodeURIComponent(inputValue);
+  //   let payload = {
+  //     "inputValue":encodedInputValue,
+  //     "queryParameter":paraId,
+  //     "teamParameter":params.uuid
+  //   }
+  //   await axiosClient.post(
+  //     "/addScriptTitle",payload)
+  //   .then((res) => {
+  //     console.log(res);
+
+  //   })
+  //   .catch((err) => {
+  //     const response = err.response;
+  //     if (response && response.status === 403) {
+  //       setScriptError(response.data.errorMsg);
+  //     } else {
+  //       console.error("Error:", response.status);
+  //     }
+  //   });
+  // }
+
   const handleChange = async (event) => {
     const inputValue = event;
-
-    const encodedInputValue = encodeURIComponent(inputValue);
 
     setInputValue(inputValue); // Update the state with the current value
 
     let paraId = params.slug;
+    const encodedInputValue = encodeURIComponent(inputValue);
+    let payload = {
+      "inputValue":encodedInputValue,
+      "queryParameter":paraId,
+      "teamParameter":params.uuid
+    }
+    await axiosClient.post(
+      "/addScriptTitle",payload)
+    .then((res) => {
+      console.log(res);
 
-    axiosClient
-      .get(
-        `/addScriptTitle?inputValue=${encodedInputValue}&queryParameter=${paraId}`
+    })
+    .catch((err) => {
+      const response = err.response;
+      if (response && response.status === 403) {
+        setScriptError(response.data.errorMsg);
+      } else {
+        console.error("Error:", response.status);
+      }
+    });
+
+ 
+
+   await axiosClient
+      .post(
+        `/addScriptTitle`,payload
       )
       .then((res) => {
         getScripts()
@@ -334,7 +408,7 @@ export const ScriptComponents = () => {
     setPageId(e.target.id);
     let pageId = e.target.id;
     let pagePath = e.target.dataset.set;
-    navigate(`/dashboard/${params.uuid}/s/${params.slug}/?pageId=${pageId}`)
+    navigate(`/dashboard/${params.uuid}/s/${params.slug}/?pageId=${pageId}`);
     // if(pagePath !== undefined){
     //     let pagePathArray = pagePath.split("/");
     //     let pageSplitPath = pagePathArray.slice(2).join("/");
@@ -440,43 +514,39 @@ export const ScriptComponents = () => {
   };
 
   const handleInviteUsers = () => {
-
     setLoading(true);
     console.log(inviteEmail);
-    if(!inviteEmail.trim()) {
-    setLoading(false);
-      
-      setInviteError("Email is required");
-    }
-    else if(!role.trim()) {
+    if (!inviteEmail.trim()) {
       setLoading(false);
-        
-        setInviteError("Role is required");
-      }
-    else{
 
-    axiosClient
-      .post("/inviteUsers", {
-        email: inviteEmail,
-        role: role,
-        team_uuid: params.uuid,
-      })
-      .then((res) => {
-        showToastMessage(res.data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        const response = err.response;
-        if (response && response.status === 400) {
-          setInviteError(response.data);
-          setTimeout(() => {
-            setInviteError("");
-          }, 1500);
+      setInviteError("Email is required");
+    } else if (!role.trim()) {
+      setLoading(false);
+
+      setInviteError("Role is required");
+    } else {
+      axiosClient
+        .post("/inviteUsers", {
+          email: inviteEmail,
+          role: role,
+          team_uuid: params.uuid,
+        })
+        .then((res) => {
+          showToastMessage(res.data);
           setLoading(false);
-        } else {
-          console.error("Error:", response.status);
-        }
-      });
+        })
+        .catch((err) => {
+          const response = err.response;
+          if (response && response.status === 400) {
+            setInviteError(response.data);
+            setTimeout(() => {
+              setInviteError("");
+            }, 1500);
+            setLoading(false);
+          } else {
+            console.error("Error:", response.status);
+          }
+        });
     }
   };
 
@@ -518,6 +588,8 @@ export const ScriptComponents = () => {
             setInputValue={setInputValue}
             renderScript={renderScript}
             HandleShare={HandleShare}
+            // handleTitleBlur={handleTitleBlur}
+            scriptError={scriptError}
           />
           <EditPage
             widths={state ? "w-[785px]" : "w-[933px]"}
@@ -557,7 +629,7 @@ export const ScriptComponents = () => {
           )}
           {invitePopup && (
             <InviteUsers
-            team={team}
+              team={team}
               invitePopup={invitePopup}
               setInvitePopup={setInvitePopup}
               setInviteEmail={setInviteEmail}

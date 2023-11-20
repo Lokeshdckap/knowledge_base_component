@@ -112,7 +112,7 @@ const login = async (req, res) => {
       return res.status(401).send({ email: "Invaild Crendtials" });
     }
   } catch (error) {
-    console.log("error", error);
+    return res.status(400).send({ email: "Email Not Verified" });
   }
 };
 

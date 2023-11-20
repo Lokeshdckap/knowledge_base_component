@@ -83,30 +83,10 @@ export const ScriptComponents = () => {
     getAllTeam();
     getParticularScript();
     getScripts();
-
-<<<<<<< HEAD
     console.log(params);
 
   }, [params.slug,params]);
-=======
-      if(pageIds){
-        getTeam();
-        getAllTeam();
-        getParticularScript();
-        getScripts();
-        getParticularPage();
-        getParentOpen();
-      }
-      else{
-        getTeam();
-        getAllTeam();
-        getParticularScript();
-        getScripts();
-        getParticularOpenScript();
-      }
-      
-  }, [pageIds,params.slug]);
->>>>>>> feature/bug
+
 
   //Event
 

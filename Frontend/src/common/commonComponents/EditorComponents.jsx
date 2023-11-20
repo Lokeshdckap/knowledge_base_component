@@ -5,6 +5,7 @@ import Table from "@editorjs/table";
 import Header from "@editorjs/header";
 import InlineCode from "@editorjs/inline-code";
 import Underline from "@editorjs/underline";
+import Quote from '@editorjs/quote';
 import ImageTool from "@editorjs/image";
 import axiosClient from "../../axios-client";
 

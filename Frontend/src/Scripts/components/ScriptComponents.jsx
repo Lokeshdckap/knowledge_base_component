@@ -79,16 +79,7 @@ export const ScriptComponents = () => {
 
   useEffect(() => {
     
-    getTeam();
-    getAllTeam();
-    getParticularScript();
-    getScripts();
 
-<<<<<<< HEAD
-    console.log(params);
-
-  }, [params.slug,params]);
-=======
       if(pageIds){
         getTeam();
         getAllTeam();
@@ -106,7 +97,7 @@ export const ScriptComponents = () => {
       }
       
   }, [pageIds,params.slug]);
->>>>>>> feature/bug
+
 
   //Event
 

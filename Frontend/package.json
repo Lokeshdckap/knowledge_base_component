@@ -6,6 +6,7 @@
     "@editorjs/editorjs": "^2.28.2",
     "@editorjs/header": "^2.8.1",
     "@editorjs/list": "^1.9.0",
+    "@editorjs/quote": "^2.6.0",
     "@editorjs/table": "^2.3.0",
     "@editorjs/underline": "^1.1.0",
     "@heroicons/react": "^1.0.6",

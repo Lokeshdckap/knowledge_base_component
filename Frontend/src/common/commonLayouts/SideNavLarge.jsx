@@ -132,7 +132,7 @@ export default function SideNavLarge(props) {
             <div>
               <p>Change Team</p>
               {AllTeams && (
-                <ul className="space-y-2 pt-1 h-[200px] overflow-auto">
+                <ul className={`space-y-2 pt-1 h-[200px] overflow-auto`}>
                   {AllTeams.map((team) => (
                     <li
                       key={team.uuid}

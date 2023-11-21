@@ -17,12 +17,17 @@ export default function Dashboard() {
   const navigate = useNavigate();
   const params = useParams();
   const searchInpRef = useRef();
+
+
+
   //hooks
 
   useEffect(() => {
     getTeam();
     getAllTeam();
   }, [params.uuid]);
+
+
 
   //state
   const [state, setState] = useState(true);
@@ -34,10 +39,11 @@ export default function Dashboard() {
   const [data, setData] = useState(null);
   const [childScript, setChildScript] = useState([]);
 
-
   const [loading, setLoading] = useState(false);
 
   const [inviteError, setInviteError] = useState(null);
+
+
   //create Team state
   const [teamPopup, setTeamPopup] = useState(false);
   const [formValues, setFormValues] = useState({});
@@ -47,9 +53,14 @@ export default function Dashboard() {
   const [inviteEmail, setInviteEmail] = useState("");
   const [role, setRole] = useState("");
 
+
   //search states
   const [searchPopup, setsearchPopup] = useState(false);
   const [searchData, setSearchData] = useState(null);
+
+
+  //state for overflow 
+  const [overflowState,setOverflowState] = useState("overflow-auto");
 
   //toaster
 
@@ -329,6 +340,7 @@ export default function Dashboard() {
             childScript={childScript}
             handleCreate={handleCreate}
             setInvitePopup={setInvitePopup}
+            overflowState={overflowState}
           />
         ) : (
           <SideNav

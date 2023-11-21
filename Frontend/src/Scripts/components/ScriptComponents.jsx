@@ -74,6 +74,7 @@ export const ScriptComponents = () => {
 
   const [parentOpen, setParentOpen] = useState(null);
 
+  const duration = 2000;
 
       const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
@@ -88,7 +89,10 @@ export const ScriptComponents = () => {
   const showToastSaveMessage = (data) => {
     toast.success(data, {
       position: toast.POSITION.TOP_CENTER,
-      autoClose: false,
+      autoClose: duration,
+      hideProgressBar: true,
+      draggable: true,
+      closeOnClick: true,
     });
   };
 

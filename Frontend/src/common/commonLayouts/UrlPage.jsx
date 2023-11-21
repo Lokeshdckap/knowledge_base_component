@@ -56,7 +56,7 @@ export const UrlPage = () => {
 
 
         axiosClient
-        .get(`/documents/${params.slug}`)
+         .get(`/documents/${params.uuid}/${params.slug}`)
         .then((res) => {
           if (!res.data.script.is_published) {
             navigate("/");
@@ -70,7 +70,7 @@ export const UrlPage = () => {
     }
     if(params.slug && params["*"] == ""){
     axiosClient
-      .get(`/documents/${params.slug}`)
+      .get(`/documents/${params.uuid}/${params.slug}`)
       .then((res) => {
         if (!res.data.script.is_published) {
           navigate("/");
@@ -82,8 +82,8 @@ export const UrlPage = () => {
       .catch((err) => {
         console.log(err);
       });
-    }
     
+    }
   }, [params.slug, params["*"]]);
 
   const ejInstance = useRef();

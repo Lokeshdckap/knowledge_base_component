@@ -623,8 +623,7 @@ const updatePageData = async (req, res) => {
     });
 
     let titles;
-
-    async function generateUniqueRandomNumber() {
+    async function generateUniqueRandomNumber(existingTitles, exitsNumber) {
       let uniqueNumber;
       const digits = 4;
       const min = 10 ** (digits - 1);
@@ -632,69 +631,36 @@ const updatePageData = async (req, res) => {
 
       do {
         uniqueNumber = Math.floor(Math.random() * (max - min + 1) + min);
-      } while (await checkIfNumberExists(uniqueNumber));
+      } while (existingTitles.includes(exitsNumber));
 
-      return uniqueNumber;
+      return uniqueNumber.toString().padStart(digits, "0");
     }
-    async function checkIfNumberExists(number) {
-      const checkTitles = await Page.findOne({
-        where: {
-          [Op.and]: [
-            { script_uuid: script.uuid },
-            sequelize.where(
-              sequelize.fn(
-                "lower",
-                sequelize.fn(
-                  "substring",
-                  sequelize.col("title"),
-                  1,
-                  sequelize.literal("length(title)-5")
-                )
-              ),
-              sequelize.fn("lower", `${req.body.title}-${number}`)
-            ),
-          ],
-        },
-      });
-
-      return !!checkTitles;
-    }
-
-    const checkTitles = await Page.findOne({
+    const existingTitles = [];
+    const pages = await Page.findAll({
       where: {
-        [Op.and]: [
-          { script_uuid: script.uuid },
-          sequelize.where(
-            sequelize.fn(
-              "lower",
-              sequelize.fn(
-                "substring",
-                sequelize.col("title"),
-                1,
-                sequelize.literal("length(title) -5")
-              )
-            ),
-            sequelize.fn("lower", req.body.title)
-          ),
-        ],
+        script_uuid: page.script_uuid,
       },
     });
-    
-    if (checkTitles) {
-      const randomNumber = await generateUniqueRandomNumber();
-      titles = `${req.body.title}-${randomNumber}`;
-    } 
-    else {
-      titles = `${req.body.title}-${0}${0}${0}${0}`;
+    for (let allPage of pages) {
+      existingTitles.push(allPage.title.slice(-4));
     }
-
+    const numbers = existingTitles.map((str) => parseInt(str, 10));
+    const validNumbers = numbers.filter((num) => !isNaN(num));
+    let newTitle;
+    const randomNumber = await generateUniqueRandomNumber(
+      existingTitles,
+      validNumbers
+    );
+    if (req.body.title != page.title) {
+      newTitle = `${req.body.title}-${randomNumber}`;
+    }
+    titles = newTitle ? newTitle : req.body.title;
     if (page.page_uuid) {
       const parentPage = await Page.findOne({
         where: {
           uuid: page.page_uuid,
         },
       });
-
       paths =
         parentPage.path +
         "/" +
@@ -705,7 +671,6 @@ const updatePageData = async (req, res) => {
         "/" +
         titles.split(" ").filter(Boolean).join("").toLowerCase();
     }
-
     const updateData = await Page.update(
       {
         title: titles,
@@ -726,8 +691,6 @@ const updatePageData = async (req, res) => {
           page_uuid: parentId,
         },
       });
-
-      console.log(parentPath);
       for (let childpage of childpages) {
         const newPath = parentPath + "/" + childpage.path.split("/").pop();
 
@@ -775,47 +738,46 @@ const getPage = async (req, res) => {
 };
 
 const addBatchTitleAndDescription = async (req, res) => {
-
   try {
+    const title = req.body.title;
+    const description = req.body.description;
 
-  const title = req.body.title;
-  const description = req.body.description;
+    const updateData = {};
 
-  const updateData = {};
-
-  if (title) {
-    {
-      updateData.title = title;
+    if (title) {
+      {
+        updateData.title = title;
+      }
     }
-  }
-  if (description) {
-    {
-      updateData.description = description;
+    if (description) {
+      {
+        updateData.description = description;
+      }
     }
-  }
 
-  try {
-    const [numUpdated] = await Batch.update(updateData, {
-      where: { uuid: req.body.batch_uuid },
-    });
+    try {
+      const [numUpdated] = await Batch.update(updateData, {
+        where: { uuid: req.body.batch_uuid },
+      });
 
-    const numUpdatedData = await Batch.findOne({
-      where: { uuid: req.body.batch_uuid },
-    });
+      const numUpdatedData = await Batch.findOne({
+        where: { uuid: req.body.batch_uuid },
+      });
 
-    if (numUpdated > 0) {
-      return res
-        .status(200)
-        .json({ numUpdatedData, message: "Update successful" });
-    } else {
-      return res.status(404).json({ error: "Record not found" });
+      if (numUpdated > 0) {
+        return res
+          .status(200)
+          .json({ numUpdatedData, message: "Update successful" });
+      } else {
+        return res.status(404).json({ error: "Record not found" });
+      }
+    } catch (error) {
+      return res.status(404).json({ error: error });
     }
-  }
-  catch (error) {
+  } catch (error) {
     return res.status(404).json({ error: error });
   }
-}
-}
+};
 
 const newDocuments = async (req, res) => {
   const script_uuid = "/" + req.params.slug;
@@ -826,7 +788,6 @@ const newDocuments = async (req, res) => {
 
   async function fetchPagesWithDynamicChildInclude() {
     const rootPages = await Page.findAll({
-      // where: { page_uuid: null }, // Fetch root-level pages
       where: {
         [Op.and]: [{ page_uuid: null }, { script_uuid: script.uuid }],
       },
@@ -854,6 +815,36 @@ const newDocuments = async (req, res) => {
 
     return hierarchy;
   }
+
+  async function traverseUpHierarchy(uuid, parents = []) {
+    const pageData = await Page.findOne({
+      where: { uuid },
+    });
+  
+    if (pageData && pageData.page_uuid) {
+      parents.push(pageData.uuid);
+      return traverseUpHierarchy(pageData.page_uuid, parents);
+    } else {
+      return parents;
+    }
+  }
+  const parentPages = await traverseUpHierarchy(req.params.uuid);
+  
+  async function traverseUpHierarchys(uuid) {
+    const pageData = await Page.findOne({
+      where: { uuid },
+    });
+    if (pageData && pageData.page_uuid) {
+      return traverseUpHierarchys(pageData.page_uuid);
+    } else {
+      return pageData;
+    }
+  }
+  const childDatas = await traverseUpHierarchys(req.params.uuid);
+  parentPages.push(childDatas.uuid);
+
+
+
   fetchPagesWithDynamicChildInclude()
     .then((hierarchy) => {
       return res.status(200).json({ hierarchy, script });
@@ -1024,36 +1015,34 @@ const updateInvite = async (req, res) => {
 };
 
 const getScripts = async (req, res) => {
-
-        const TeamId = req.params.uuid;
-        const scriptId = req.params.slug;
-        if(TeamId && scriptId){
-        const script_batch = await Script.findOne({
+  const TeamId = req.params.uuid;
+  const scriptId = req.params.slug;
+  if (TeamId && scriptId) {
+    const script_batch = await Script.findOne({
+      where: {
+        [Op.and]: [{ team_uuid: TeamId }, { uuid: scriptId }],
+      },
+    });
+    let result = await Script.findAll({
+      include: [
+        {
+          model: Batch,
           where: {
-            [Op.and]: [{ team_uuid: TeamId }, { uuid: scriptId }],
+            uuid: script_batch.batch_uuid, // WHERE condition for the Batch model
           },
-        });
-        let result = await Script.findAll({
           include: [
             {
-              model: Batch,
+              model: Team,
               where: {
-                uuid: script_batch.batch_uuid, // WHERE condition for the Batch model
+                uuid: TeamId, // WHERE condition for the Team model
               },
-              include: [
-                {
-                  model: Team,
-                  where: {
-                    uuid: TeamId, // WHERE condition for the Team model
-                  },
-                },
-              ],
             },
           ],
-        });
-        return res.status(200).json({ script_batch, result });
-      }
-
+        },
+      ],
+    });
+    return res.status(200).json({ script_batch, result });
+  }
 };
 
 const uploadImage = async (req, res) => {
@@ -1101,18 +1090,16 @@ const globalSearch = async (req, res) => {
   }
 };
 
-
 const pageSearch = async (req, res) => {
-
   const { q } = req.query;
   const team_uuid = req.params.uuid;
   const slug = req.params.slug;
- 
+
   const script = await Script.findOne({
     where: {
-            [Op.and]: [{team_uuid:team_uuid}, { path: "/"+slug }],
-          },
-  })
+      [Op.and]: [{ team_uuid: team_uuid }, { path: "/" + slug }],
+    },
+  });
 
   if (!q) {
     return res.status(404).json({ error: "Datas Not Found" });
@@ -1130,7 +1117,6 @@ const pageSearch = async (req, res) => {
       },
     });
     return res.status(200).json(pages);
-
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: "Internal Server Error" });
@@ -1172,23 +1158,38 @@ const updateRole = async (req, res) => {
 };
 
 const getParentPage = async (req, res) => {
-  
-  async function traverseUpHierarchy(uuid) {
-    const pageData = await Page.findOne({
-      where: { uuid },
-    });
-    if (pageData && pageData.page_uuid) {
-      // Recursively call the function for the parent
-      return traverseUpHierarchy(pageData.page_uuid);
-    } else {
-      // Return the current page data or handle the case where the page has no parent
-      return pageData;
+
+async function traverseUpHierarchy(uuid, parents = []) {
+  const pageData = await Page.findOne({
+    where: { uuid },
+  });
+
+  if (pageData && pageData.page_uuid) {
+    if(pageData.uuid != req.params.uuid){
+    parents.push(pageData.uuid);
     }
+    return traverseUpHierarchy(pageData.page_uuid, parents);
+  } else {
+    return parents;
   }
-  // Usage
-  const childDatas = await traverseUpHierarchy(req.params.uuid);
-  console.log(childDatas); // This will contain the top-level parent page data or null if not found
-  return res.status(200).json({ childDatas, message: "Updated Sucessfully" });
+}
+const parentPages = await traverseUpHierarchy(req.params.uuid);
+let pageData;
+async function traverseUpHierarchys(uuid) {
+  pageData = await Page.findOne({
+    where: { uuid },
+  });
+  if (pageData && pageData.page_uuid) {
+    return traverseUpHierarchys(pageData.page_uuid);
+  } else {
+    return pageData;
+  }
+}
+const childDatas = await traverseUpHierarchys(req.params.uuid);
+if(pageData.uuid != req.params.uuid){
+parentPages.push(childDatas.uuid);
+}
+return res.status(200).json({ parentPages, message: "Updated Successfully" });
 };
 
 const pendingList = async (req, res) => {
@@ -1206,7 +1207,7 @@ const pendingList = async (req, res) => {
   } catch (error) {
     return res.status(500).json({ error: "Updated Failed" });
   }
-}
+};
 
 module.exports = {
   createTeams,

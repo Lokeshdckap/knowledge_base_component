@@ -8,8 +8,9 @@ export const PublishPopup = (props) => {
   const buttonRef = useRef(null);
   let clipboard = null;
   const params = useParams();
-
+  
   const [check, setCheck] = useState(props.renderScript);
+
 
   const showToastMessage = (data) => {
     toast.success(data, {

@@ -12,7 +12,6 @@ export const PageTree = ({
   hoverPageId,
   handleMore,
   parentOpen,
-
 }) => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
@@ -22,30 +21,24 @@ export const PageTree = ({
 
   const [isOpen, setIsOpen] = useState(false);
 
-  const [parentOpens, setParentOpen] = useState(parentOpen);
-
   const toggleOpen = () => {
     setIsOpen(!isOpen);
   };
-
   useEffect(() => {
-
     setIsOpen(parentOpen.includes(node.uuid));
-    
   }, [parentOpen, node.uuid]);
 
   const { slug, "*": wildcardValue } = useParams();
 
-
   return (
     <div className="mb-1">
-    {console.log(parentOpen)}
-
       <div
         className={`flex items-center hover:bg-slate-300 ${
           pageIds == node.uuid ? "bg-slate-300 " : ""
         }  ${
-          "/" + slug + "/" + wildcardValue == node.path ? "bg-slate-300 " : ""
+          "/" + slug + "/" + wildcardValue == node.path
+            ? "bg-slate-300 "
+            : ""
         }  rounded hover:rounded pl-2`}
         data-set={node.path}
       >
@@ -98,8 +91,7 @@ export const PageTree = ({
                   hoverPageId={hoverPageId}
                   contentPage={contentPage}
                   handleMore={handleMore}
-                  parentOpen={parentOpens}
-
+                  parentOpen={parentOpen}
                 />
               </li>
             ))}

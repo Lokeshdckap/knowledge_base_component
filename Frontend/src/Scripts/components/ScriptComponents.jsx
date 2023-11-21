@@ -138,7 +138,8 @@ export const ScriptComponents = () => {
       await axiosClient
       .get(`/getPage/${pageIds}`)
       .then((res) => {
-        setParticularTitle(res.data.pages.title);
+        
+        setParticularTitle(res.data.pages.title.slice(0,-5));
         setDescription(res.data.pages.description);
         setEditorValue(res.data.pages.content);
         setEditorContent(res.data.pages.content);
@@ -166,7 +167,8 @@ export const ScriptComponents = () => {
 
     await axiosClient.get(`/getOpenParent/${pageIds}`)
     .then((res) => {
-      setParentOpen(res.data.childDatas.uuid);
+
+      setParentOpen(res.data.parentPages);
     })
     .catch((err) => {
       console.log(err);
@@ -625,6 +627,7 @@ export const ScriptComponents = () => {
             />
           )}
         </div>
+
       </div>
     </div>
   );

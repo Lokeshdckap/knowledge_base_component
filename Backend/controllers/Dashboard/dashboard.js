@@ -55,8 +55,7 @@ const createTeams = async (req, res) => {
       return res
         .status(400)
         .send({ team_name: `${results[0].name} Team Is Already Exists` });
-    } 
-    else {
+    } else {
       const newTeam = await Team.create({
         name: team_name,
         uuid: uuid.v4(),
@@ -74,8 +73,7 @@ const createTeams = async (req, res) => {
           Success: "Your Team Created Sucessfully",
           newTeam,
         });
-      }
-       else {
+      } else {
         return res.status(500).send({
           Error: "Error Team Not Created ll",
         });
@@ -311,7 +309,7 @@ const getBatch = async (req, res) => {
     where: {
       team_uuid: req.params.uuid,
     },
-    order:[['createdAt','DESC']],
+    order: [["createdAt", "DESC"]],
   });
 
   const joinQuery = `
@@ -361,7 +359,7 @@ const getScript = async (req, res) => {
     where: {
       [Op.and]: [{ team_uuid: req.params.uuid }, { batch_uuid: null }],
     },
-    order:[['createdAt','DESC']],
+    order: [["createdAt", "DESC"]],
   });
   return res.status(200).send({
     script,
@@ -399,7 +397,7 @@ const getBatchAndScripts = async (req, res) => {
         ],
       },
     ],
-    order:[['createdAt','DESC']]
+    order: [["createdAt", "DESC"]],
   });
   const batchData = await Batch.findOne({
     where: { uuid: req.params.batch_uuid },
@@ -610,137 +608,160 @@ const addScriptTitle = async (req, res) => {
 };
 
 const updatePageData = async (req, res) => {
-  let paths;
-  const page = await Page.findOne({
-    where: {
-      uuid: req.body.id,
-    },
-  });
-
-  const script = await Script.findOne({
-    where: {
-      uuid: page.script_uuid,
-    },
-  });
-
-  // check title
-  const checkTitle = await Page.findAll({
-    where: {
-      script_uuid: script.uuid,
-    },
-  });
-
-  let pathArray = [];
-  for (let checkTitles of checkTitle) {
-    if (
-      checkTitles.title
-        .split(" ")
-        .filter(Boolean)
-        .join("")
-        .toLowerCase()
-        .replace(/-\d/g, "") ===
-      req.body.title.split(" ").filter(Boolean).join("").toLowerCase()
-    ) {
-      pathArray.push(checkTitles.title);
-    }
-  }
-
-  let modifiedStrings = pathArray.map((str) => str.replace(/-\d/g, ""));
-  console.log(modifiedStrings);
-
-  let titles;
-  const checkTitles = await Page.findOne({
-    where: {
-      [Op.and]: [
-        { script_uuid: script.uuid },
-        sequelize.where(
-          sequelize.fn("lower", sequelize.col("title")),
-          sequelize.fn("lower", req.body.title)
-        ),
-      ],
-    },
-  });
-  let existTitle = checkTitles ? checkTitles.title : null;
-  if (existTitle) {
-    if (
-      existTitle.split(" ").filter(Boolean).join("").toLowerCase() ===
-      req.body.title.split(" ").filter(Boolean).join("").toLowerCase()
-    ) {
-      titles = `${req.body.title}-${modifiedStrings.length}`;
-    }
-  } else {
-    titles = `${req.body.title}`;
-  }
-
-  if (page.page_uuid) {
-    const parentPage = await Page.findOne({
-      where: {
-        uuid: page.page_uuid,
-      },
-    });
-
-    paths =
-      parentPage.path +
-      "/" +
-      titles.split(" ").filter(Boolean).join("").toLowerCase();
-  } else {
-    paths =
-      script.path +
-      "/" +
-      titles.split(" ").filter(Boolean).join("").toLowerCase();
-  }
-  const updateData = await Page.update(
-    {
-      title: titles,
-      description: req.body.description,
-      content: JSON.stringify(req.body.content),
-      path: paths,
-    },
-    {
+  try {
+    let paths;
+    const page = await Page.findOne({
       where: {
         uuid: req.body.id,
       },
-    }
-  );
+    });
 
-  async function updateChildPagePaths(parentPath, parentId) {
-    const childpages = await Page.findAll({
+    const script = await Script.findOne({
       where: {
-        page_uuid: parentId,
+        uuid: page.script_uuid,
       },
     });
 
-    console.log(parentPath);
-    for (let childpage of childpages) {
-      const newPath = parentPath + "/" + childpage.path.split("/").pop();
+    let titles;
 
-      await Page.update(
-        {
-          path: newPath,
-        },
-        {
-          where: { uuid: childpage.uuid },
-        }
-      );
+    async function generateUniqueRandomNumber() {
+      let uniqueNumber;
+      const digits = 4;
+      const min = 10 ** (digits - 1);
+      const max = 10 ** digits - 1;
 
-      await updateChildPagePaths(newPath, childpage.uuid);
+      do {
+        uniqueNumber = Math.floor(Math.random() * (max - min + 1) + min);
+      } while (await checkIfNumberExists(uniqueNumber));
+
+      return uniqueNumber;
     }
+    async function checkIfNumberExists(number) {
+      const checkTitles = await Page.findOne({
+        where: {
+          [Op.and]: [
+            { script_uuid: script.uuid },
+            sequelize.where(
+              sequelize.fn(
+                "lower",
+                sequelize.fn(
+                  "substring",
+                  sequelize.col("title"),
+                  1,
+                  sequelize.literal("length(title)-5")
+                )
+              ),
+              sequelize.fn("lower", `${req.body.title}-${number}`)
+            ),
+          ],
+        },
+      });
+
+      return !!checkTitles;
+    }
+
+    const checkTitles = await Page.findOne({
+      where: {
+        [Op.and]: [
+          { script_uuid: script.uuid },
+          sequelize.where(
+            sequelize.fn(
+              "lower",
+              sequelize.fn(
+                "substring",
+                sequelize.col("title"),
+                1,
+                sequelize.literal("length(title) -5")
+              )
+            ),
+            sequelize.fn("lower", req.body.title)
+          ),
+        ],
+      },
+    });
+    
+    if (checkTitles) {
+      const randomNumber = await generateUniqueRandomNumber();
+      titles = `${req.body.title}-${randomNumber}`;
+    } 
+    else {
+      titles = `${req.body.title}-${0}${0}${0}${0}`;
+    }
+
+    if (page.page_uuid) {
+      const parentPage = await Page.findOne({
+        where: {
+          uuid: page.page_uuid,
+        },
+      });
+
+      paths =
+        parentPage.path +
+        "/" +
+        titles.split(" ").filter(Boolean).join("").toLowerCase();
+    } else {
+      paths =
+        script.path +
+        "/" +
+        titles.split(" ").filter(Boolean).join("").toLowerCase();
+    }
+
+    const updateData = await Page.update(
+      {
+        title: titles,
+        description: req.body.description,
+        content: JSON.stringify(req.body.content),
+        path: paths,
+      },
+      {
+        where: {
+          uuid: req.body.id,
+        },
+      }
+    );
+
+    async function updateChildPagePaths(parentPath, parentId) {
+      const childpages = await Page.findAll({
+        where: {
+          page_uuid: parentId,
+        },
+      });
+
+      console.log(parentPath);
+      for (let childpage of childpages) {
+        const newPath = parentPath + "/" + childpage.path.split("/").pop();
+
+        await Page.update(
+          {
+            path: newPath,
+          },
+          {
+            where: { uuid: childpage.uuid },
+          }
+        );
+
+        await updateChildPagePaths(newPath, childpage.uuid);
+      }
+    }
+
+    const parentPage = await Page.findOne({
+      where: {
+        uuid: req.body.id,
+      },
+    });
+
+    if (parentPage) {
+      const parentPath = parentPage.path;
+      await updateChildPagePaths(parentPath, parentPage.uuid);
+    } else {
+      console.log("Parent page not found");
+    }
+
+    return res.status(200).json({ updateData });
+  } catch (err) {
+    console.log("err", err);
+    return res.status(500).json({ error: err });
   }
-
-  const parentPage = await Page.findOne({
-    where: {
-      uuid: req.body.id,
-    },
-  });
-
-  if (parentPage) {
-    const parentPath = parentPage.path;
-    await updateChildPagePaths(parentPath, parentPage.uuid);
-  } else {
-    console.log("Parent page not found");
-  }
-
-  return res.status(200).json({ updateData });
 };
 
 const getPage = async (req, res) => {
@@ -754,24 +775,30 @@ const getPage = async (req, res) => {
 };
 
 const addBatchTitleAndDescription = async (req, res) => {
+
   try {
+
   const title = req.body.title;
   const description = req.body.description;
 
-      const updateData = {};
-    if(title){
+  const updateData = {};
 
-      {updateData.title = title}
-
+  if (title) {
+    {
+      updateData.title = title;
     }
-    if(description){
-      {updateData.description = description}
-
+  }
+  if (description) {
+    {
+      updateData.description = description;
     }
+  }
 
+  try {
     const [numUpdated] = await Batch.update(updateData, {
       where: { uuid: req.body.batch_uuid },
     });
+
     const numUpdatedData = await Batch.findOne({
       where: { uuid: req.body.batch_uuid },
     });
@@ -784,10 +811,11 @@ const addBatchTitleAndDescription = async (req, res) => {
       return res.status(404).json({ error: "Record not found" });
     }
   }
-   catch (error) {
+  catch (error) {
     return res.status(404).json({ error: error });
   }
-};
+}
+}
 
 const newDocuments = async (req, res) => {
   const script_uuid = "/" + req.params.slug;
@@ -996,6 +1024,7 @@ const updateInvite = async (req, res) => {
 };
 
 const getScripts = async (req, res) => {
+
         const TeamId = req.params.uuid;
         const scriptId = req.params.slug;
         if(TeamId && scriptId){
@@ -1024,6 +1053,7 @@ const getScripts = async (req, res) => {
         });
         return res.status(200).json({ script_batch, result });
       }
+
 };
 
 const uploadImage = async (req, res) => {
@@ -1142,13 +1172,23 @@ const updateRole = async (req, res) => {
 };
 
 const getParentPage = async (req, res) => {
-  const childData = await Page.findOne({
-    where: { uuid: req.params.uuid },
-  });
-  const parentData = await Page.findOne({
-    where: { uuid: childData.page_uuid },
-  });
-  return res.status(200).json({ parentData, message: "Updated Sucessfully" });
+  
+  async function traverseUpHierarchy(uuid) {
+    const pageData = await Page.findOne({
+      where: { uuid },
+    });
+    if (pageData && pageData.page_uuid) {
+      // Recursively call the function for the parent
+      return traverseUpHierarchy(pageData.page_uuid);
+    } else {
+      // Return the current page data or handle the case where the page has no parent
+      return pageData;
+    }
+  }
+  // Usage
+  const childDatas = await traverseUpHierarchy(req.params.uuid);
+  console.log(childDatas); // This will contain the top-level parent page data or null if not found
+  return res.status(200).json({ childDatas, message: "Updated Sucessfully" });
 };
 
 const pendingList = async (req, res) => {
@@ -1166,7 +1206,7 @@ const pendingList = async (req, res) => {
   } catch (error) {
     return res.status(500).json({ error: "Updated Failed" });
   }
-};
+}
 
 module.exports = {
   createTeams,

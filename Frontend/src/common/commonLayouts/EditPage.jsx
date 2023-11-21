@@ -19,6 +19,7 @@ export default function EditPage(props) {
     props.setDescription(props.description);
   }, [props.particularTitle, props.description, props.editorContent]);
 
+  const title = props.particularTitle;
   const handleMouseEnter = (e) => {
     let targetId = e.target.id;
     setOverPage(targetId);
@@ -37,7 +38,6 @@ export default function EditPage(props) {
       <div className="mt-14 flex">
         <div className="bg-[#E4E8EC] w-[278px] h-[490px] overflow-auto">
           <div className="space-y-2 ml-4 mt-4">
-
             <div className="p-4 rounded-lg shadow">
               {treeNode.map((topLevelPage, index) => (
                 <div
@@ -100,9 +100,9 @@ export default function EditPage(props) {
         </div>
         <div className={`bg-white h-[510px] ${props.widths} overflow-auto`}>
           <div>
-            <input
+            <input type="text"
               className="text-2xl ml-[80px] mt-8 focus:outline-none text-textPrimary font-bold"
-              value={props.particularTitle}
+              value={title}
               onChange={(e) => props.setParticularTitle(e.target.value)}
               placeholder="Page Name"
             />
@@ -123,7 +123,6 @@ export default function EditPage(props) {
               editorContent={props.editorContent}
               particularTitle={props.particularTitle}
             />
-          
           </div>
         </div>
       </div>

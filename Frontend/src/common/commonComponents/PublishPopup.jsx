@@ -2,10 +2,13 @@ import React, { useEffect, useRef, useState } from "react";
 import { Switch } from "antd";
 import ClipboardJS from "clipboard";
 import { ToastContainer, toast } from "react-toastify";
+import { useParams } from "react-router-dom";
 export const PublishPopup = (props) => {
   const textToCopyRef = useRef(null);
   const buttonRef = useRef(null);
   let clipboard = null;
+
+  const params = useParams()
 
   // const [publishUrl, setPublishUrl] = useState(null);
 
@@ -108,7 +111,7 @@ export const PublishPopup = (props) => {
                         <p ref={textToCopyRef}>
                           {!props.renderScript.is_published
                             ? ""
-                            : `http://localhost:3000/${props.teamUuid}${props.renderScript.path}`}
+                            : `http://localhost:3000/${params.uuid}${props.renderScript.path}`}
                         </p>
                         <div className="box-border border-[#c5ccd8] h-8 w-24 border-[1px] rounded bg-white flex space-x-2 mt-0.5 hover:bg-sky-200 cursor-pointer">
                           <p

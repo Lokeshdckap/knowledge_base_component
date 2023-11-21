@@ -781,9 +781,14 @@ const addBatchTitleAndDescription = async (req, res) => {
 
 const newDocuments = async (req, res) => {
   const script_uuid = "/" + req.params.slug;
+  const team_uuid = req.params.uuid;
+  const wildcardValue = req.params[0];
+  const path = `/${script_uuid}/${wildcardValue}`;
 
   const script = await Script.findOne({
-    where: { path: script_uuid },
+    where: {
+      [Op.and]: [{ team_uuid: team_uuid }, { path: script_uuid }],
+    },
   });
 
   async function fetchPagesWithDynamicChildInclude() {
@@ -816,38 +821,29 @@ const newDocuments = async (req, res) => {
     return hierarchy;
   }
 
-  async function traverseUpHierarchy(uuid, parents = []) {
+  async function traverseUpHierarchy(path, parents = []) {
     const pageData = await Page.findOne({
-      where: { uuid },
+      where: { path:path },
     });
-  
-    if (pageData && pageData.page_uuid) {
+
+    if (pageData) {
       parents.push(pageData.uuid);
-      return traverseUpHierarchy(pageData.page_uuid, parents);
+
+      if (pageData.page_uuid) {
+        return traverseUpHierarchy(pageData.page_uuid, parents);
+      } else {
+        return parents.reverse(); // Reverse the array to have the main parent first
+      }
     } else {
       return parents;
     }
   }
-  const parentPages = await traverseUpHierarchy(req.params.uuid);
-  
-  async function traverseUpHierarchys(uuid) {
-    const pageData = await Page.findOne({
-      where: { uuid },
-    });
-    if (pageData && pageData.page_uuid) {
-      return traverseUpHierarchys(pageData.page_uuid);
-    } else {
-      return pageData;
-    }
-  }
-  const childDatas = await traverseUpHierarchys(req.params.uuid);
-  parentPages.push(childDatas.uuid);
-
-
+  // Usage
+  const parentPages = await traverseUpHierarchy(path);
 
   fetchPagesWithDynamicChildInclude()
     .then((hierarchy) => {
-      return res.status(200).json({ hierarchy, script });
+      return res.status(200).json({ parentPages,hierarchy,script });
     })
     .catch((error) => {
       return res.status(409).json({ error: error.message });
@@ -928,6 +924,8 @@ const particularPageRender = async (req, res) => {
   });
   return res.status(200).json({ publicUrl });
 };
+
+
 
 const inviteTeams = async (req, res) => {
   const email = req.body.email;
@@ -1158,38 +1156,28 @@ const updateRole = async (req, res) => {
 };
 
 const getParentPage = async (req, res) => {
+  async function traverseUpHierarchy(uuid, parents = []) {
+    const pageData = await Page.findOne({
+      where: { uuid },
+    });
 
-async function traverseUpHierarchy(uuid, parents = []) {
-  const pageData = await Page.findOne({
-    where: { uuid },
-  });
+    if (pageData) {
+      parents.push(pageData.uuid);
 
-  if (pageData && pageData.page_uuid) {
-    if(pageData.uuid != req.params.uuid){
-    parents.push(pageData.uuid);
+      if (pageData.page_uuid) {
+        return traverseUpHierarchy(pageData.page_uuid, parents);
+      } else {
+        return parents.reverse(); // Reverse the array to have the main parent first
+      }
+    } else {
+      return parents;
     }
-    return traverseUpHierarchy(pageData.page_uuid, parents);
-  } else {
-    return parents;
   }
-}
-const parentPages = await traverseUpHierarchy(req.params.uuid);
-let pageData;
-async function traverseUpHierarchys(uuid) {
-  pageData = await Page.findOne({
-    where: { uuid },
-  });
-  if (pageData && pageData.page_uuid) {
-    return traverseUpHierarchys(pageData.page_uuid);
-  } else {
-    return pageData;
-  }
-}
-const childDatas = await traverseUpHierarchys(req.params.uuid);
-if(pageData.uuid != req.params.uuid){
-parentPages.push(childDatas.uuid);
-}
-return res.status(200).json({ parentPages, message: "Updated Successfully" });
+  // Usage
+  const parentPages = await traverseUpHierarchy(req.params.uuid);
+  // console.log(parentPages); // This will contain an array of parent page uuids, including the main parent
+
+  return res.status(200).json({ parentPages, message: "Updated Successfully" });
 };
 
 const pendingList = async (req, res) => {

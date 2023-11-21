@@ -2,12 +2,14 @@ import React, { useEffect, useRef, useState } from "react";
 import { Switch } from "antd";
 import ClipboardJS from "clipboard";
 import { ToastContainer, toast } from "react-toastify";
+import { useParams } from "react-router-dom";
 export const PublishPopup = (props) => {
   const textToCopyRef = useRef(null);
   const buttonRef = useRef(null);
   let clipboard = null;
+  const params = useParams();
 
-  // const [publishUrl, setPublishUrl] = useState(null);
+  const [check, setCheck] = useState(props.renderScript);
 
   const showToastMessage = (data) => {
     toast.success(data, {
@@ -16,8 +18,6 @@ export const PublishPopup = (props) => {
   };
 
   useEffect(() => {
-   
-
     clipboard = new ClipboardJS(buttonRef.current, {
       text: () => textToCopyRef.current.innerText,
     });
@@ -32,7 +32,7 @@ export const PublishPopup = (props) => {
       }
     };
   }, [props.renderScript]);
-
+  console.log(props.renderScript.is_published);
   return (
     <div>
       <div className="bg-primary opacity-[0.5] w-[1289px] h-[664px] absolute top-0 left-0  z-10"></div>
@@ -92,32 +92,56 @@ export const PublishPopup = (props) => {
                     </div>
                   </div>
                 </div>
+                {console.log(check.is_published == 1, "true")}
+                {console.log(props.renderScript.is_published == 1, "true")}
+
+                {check.is_published == 0 ? "" : <div>No content</div>}
                 <div className="box-border border-[#c5ccd8] h-32 w-full border-[1px] rounded bg-white">
                   <div className="w-[500px] m-auto">
                     <div className="flex justify-between mt-4 items-center">
                       <p className="text-xl">Script Title</p>
                       <div className="box-border border-[#c5ccd8] h-10 w-28 border-[1px] rounded-lg bg-primary flex space-x-2">
-                        <p>
-                          <i className="fa-solid fa-up-right-from-square pl-2 pt-2.5 text-white "></i>
-                        </p>
-                        <p className="pt-1.5  text-white ">Visit Site</p>
+                        <a
+                          href={
+                            !props.renderScript.is_published
+                              ? ""
+                              : `http://localhost:3000/${params.uuid}${props.renderScript.path}`
+                          }
+                          target="blank"
+                        >
+                          {" "}
+                          <p>
+                            <i className="fa-solid fa-up-right-from-square pl-2 pt-2.5 text-white "></i>
+                          </p>
+                        </a>
+                        <a
+                          href={
+                            !props.renderScript.is_published
+                              ? ""
+                              : `http://localhost:3000/${params.uuid}${props.renderScript.path}`
+                          }
+                          target="blank"
+                        >
+                          <p className="pt-1.5  text-white ">Visit Site</p>
+                        </a>
                       </div>
                     </div>
-                    <div className="box-border border-[#c5ccd8] h-10 w-full border-[1px] rounded bg-sky-100 mt-4 ">
+                    <div className="box-border border-[#c5ccd8] w-full border-[1px] rounded bg-sky-100 mt-4 ">
                       <div className="flex justify-between w-[450px] items-center m-auto">
-                        <p ref={textToCopyRef}>
+                        <p ref={textToCopyRef}
+                          className="text-sm text-textPrimary"
+                        >
                           {!props.renderScript.is_published
                             ? ""
-                            : `http://localhost:3000/${props.teamUuid}${props.renderScript.path}`}
+                            : `http://localhost:3000/${params.uuid}${props.renderScript.path}`}
                         </p>
-                        <div className="box-border border-[#c5ccd8] h-8 w-24 border-[1px] rounded bg-white flex space-x-2 mt-0.5 hover:bg-sky-200 cursor-pointer">
+                        <div className="bg-white p-1 mt-1 mb-1 cursor-pointer">
                           <p
                             className="text-lg text-gray-400"
                             ref={buttonRef}
                             data-clipboard-text="Copy Text"
                           >
-                            <i className="fa-regular fa-copy pl-5 text-sm pr-2 text-gray-400"></i>
-                            copy
+                            <i className="fa-regular fa-copy text-lg  text-gray-400"></i>
                           </p>
                         </div>
                       </div>

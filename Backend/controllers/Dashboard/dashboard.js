@@ -815,13 +815,19 @@ const addBatchTitleAndDescription = async (req, res) => {
     return res.status(404).json({ error: error });
   }
 }
+catch (error) {
+  return res.status(404).json({ error: error });
+}
 }
 
 const newDocuments = async (req, res) => {
   const script_uuid = "/" + req.params.slug;
+  const team_uuid = req.params.uuid;
 
   const script = await Script.findOne({
-    where: { path: script_uuid },
+    where: {
+      [Op.and]: [{ team_uuid: team_uuid }, { path: script_uuid }],
+    },
   });
 
   async function fetchPagesWithDynamicChildInclude() {

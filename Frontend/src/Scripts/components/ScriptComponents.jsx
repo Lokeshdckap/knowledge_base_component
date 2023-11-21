@@ -149,7 +149,7 @@ export const ScriptComponents = () => {
 
     await axiosClient.get(`/getOpenParent/${pageIds}`)
     .then((res) => {
-      setParentOpen(res.data.parentData.uuid);
+      setParentOpen(res.data.childDatas.uuid);
     })
     .catch((err) => {
       console.log(err);
@@ -291,6 +291,7 @@ export const ScriptComponents = () => {
   const handleSave = () => {
     const postData = {
       id: pageIds,
+      script_uuid:params.slug,
       title: particularTitle ? particularTitle : "Page Name",
       description: description ? description : "Page Description",
       content: editorContent,

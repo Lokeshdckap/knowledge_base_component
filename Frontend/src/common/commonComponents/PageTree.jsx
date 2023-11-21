@@ -27,6 +27,8 @@ export const PageTree = ({
   };
   const { slug, "*": wildcardValue } = useParams();
 
+  
+
   return (
     <div className="mb-1">
       <div
@@ -47,7 +49,7 @@ export const PageTree = ({
           index={node.id}
           key={node.id}
         >
-          {node.title}
+          {node.title.slice(0,-5)}
           {hoverPageId == node.uuid && (
             <i
               className="fa-solid fa-plus text-[#57595c] pl-6"

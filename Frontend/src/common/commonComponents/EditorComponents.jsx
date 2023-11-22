@@ -46,6 +46,7 @@ export const EditorComponents = (props) => {
 
   useEffect(() => {
     
+    console.log(props.editorValue);
     if (props.editorValue) {
       if (props.editorValue.length == 0) {
       } else {

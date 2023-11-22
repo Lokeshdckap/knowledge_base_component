@@ -30,7 +30,9 @@ export const PageTree = ({
 
   useEffect(() => {
 
-    setIsOpen(parentOpen.includes(node.uuid));
+      if(parentOpen){
+        setIsOpen(parentOpen.includes(node.uuid));
+      }
     
   }, [parentOpen, node.uuid]);
 

@@ -2,11 +2,6 @@ import React, { useEffect, useRef, useState } from "react";
 import { EditorComponents } from "../commonComponents/EditorComponents";
 import { PageTree } from "../commonComponents/PageTree";
 import { PublishPopup } from "../commonComponents/PublishPopup";
-// import EditorJS from "@editorjs/editorjs";
-// import Header from '@editorjs/header';
-// import List from '@editorjs/list';
-// import SimpleImage from '@editorjs/simple-image';
-// import ImageTool from '@editorjs/image';
 
 export default function EditPage(props) {
   const [newPagePopup, setNewPagePopup] = useState(false);

@@ -25,7 +25,9 @@ export const PageTree = ({
     setIsOpen(!isOpen);
   };
   useEffect(() => {
+    if(parentOpen){
     setIsOpen(parentOpen.includes(node.uuid));
+    }
   }, [parentOpen, node.uuid]);
 
   const { slug, "*": wildcardValue } = useParams();

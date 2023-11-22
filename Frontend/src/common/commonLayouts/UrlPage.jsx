@@ -16,8 +16,6 @@ import { PageTree } from "../commonComponents/PageTree";
 import { Search } from "./Search";
 
 export const UrlPage = () => {
-
-
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -25,10 +23,10 @@ export const UrlPage = () => {
   const [page, setPages] = useState([]);
   const params = useParams();
 
-  const [serachPopup,setsearchPopup] = useState(false);
+  const [serachPopup, setsearchPopup] = useState(false);
   const [searchPageData, setSearchPageData] = useState(null);
 
-
+  const [parentOpen, setParentOpen] = useState(null);
   const [url, setUrl] = useState(null);
   const [loadPage, setLoadPage] = useState({});
 
@@ -48,19 +46,18 @@ export const UrlPage = () => {
           const response = err.response;
 
           if (response && response.status === 409) {
-
           } else {
             console.error("Error:", response.status);
           }
         });
 
-
-        axiosClient
-         .get(`/documents/${params.uuid}/${params.slug}`)
+      axiosClient
+        .get(`/documents/${params.uuid}/${params.slug}/${params["*"]}`)
         .then((res) => {
           if (!res.data.script.is_published) {
             navigate("/");
           }
+          setParentOpen(res.data.parentPages);
           setPages(res.data.hierarchy);
           setScript(res.data.script);
         })
@@ -68,21 +65,21 @@ export const UrlPage = () => {
           console.log(err);
         });
     }
-    if(params.slug && params["*"] == ""){
-    axiosClient
-      .get(`/documents/${params.uuid}/${params.slug}`)
-      .then((res) => {
-        if (!res.data.script.is_published) {
-          navigate("/");
-        }
-        setPages(res.data.hierarchy);
-        setScript(res.data.script);
-        navigate(`/${params.uuid}${res.data.hierarchy[0].path}`);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-    
+    if (params.slug && params["*"] == "") {
+      axiosClient
+        .get(`/documents/${params.uuid}/${params.slug}/${params["*"]}`)
+        .then((res) => {
+          if (!res.data.script.is_published) {
+            navigate("/");
+          }
+          setPages(res.data.hierarchy);
+          setScript(res.data.script);
+          setParentOpen(res.data.parentPages);
+          navigate(`/${params.uuid}${res.data.hierarchy[0].path}`);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
   }, [params.slug, params["*"]]);
 
@@ -165,21 +162,14 @@ export const UrlPage = () => {
     };
   }, [page]);
 
-
-
-  //search
-
-  const searchEvent = async(e) => {
+  const searchEvent = async (e) => {
     let value = e.target.value;
-    let path = params.slug+"/"+params["*"]
+    let path = params.slug + "/" + params["*"];
 
     await axiosClient
       .get(`${params.uuid}/${params.slug}/pageSearch/items?q=${value}`)
       .then((res) => {
-        console.log(res.data);
         if (res.data.length > 0) {
-
-
           setSearchPageData(res.data);
         } else {
           setSearchPageData(null);
@@ -193,7 +183,7 @@ export const UrlPage = () => {
           console.error("Error:", response.status);
         }
       });
-  }
+  };
   return (
     <div className="">
       <div className="flex justify-between w-[1200px] m-auto  mt-6 mb-6 items-center">
@@ -201,7 +191,7 @@ export const UrlPage = () => {
         <input
           type="text"
           placeholder="Search"
-          onClick={()=>setsearchPopup((prevState) => !prevState)}
+          onClick={() => setsearchPopup((prevState) => !prevState)}
           ref={searchInpRef}
           value=""
           className="bg-gray-200 rounded-md w-48 h-10 pl-2 focus:outline-primary cursor-pointer"
@@ -217,11 +207,12 @@ export const UrlPage = () => {
               id={topLevelPage.page_id}
               className=""
             >
-              <PageTree 
+              <PageTree
                 node={topLevelPage}
                 hasSibling={index < page.length - 1}
                 hasParent={false}
                 contentPage={contentPage}
+                parentOpen={parentOpen}
               />
             </div>
           ))}
@@ -238,17 +229,15 @@ export const UrlPage = () => {
           <div id="editorjs" className="mr-64"></div>
         </div>
       </div>
-      {serachPopup &&
-
-       <Search 
+      {serachPopup && (
+        <Search
           searchInpRef={searchInpRef}
           setsearchPopup={setsearchPopup}
           searchEvent={searchEvent}
           searchPageData={searchPageData}
           setSearchPageData={setSearchPageData}
-       /> 
-
-      }
+        />
+      )}
     </div>
   );
 };

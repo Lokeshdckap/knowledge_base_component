@@ -782,10 +782,11 @@ const addBatchTitleAndDescription = async (req, res) => {
 
 
 const newDocuments = async (req, res) => {
+
   const script_uuid = "/" + req.params.slug;
   const team_uuid = req.params.uuid;
   const wildcardValue = req.params[0];
-  const path = `/${script_uuid}/${wildcardValue}`;
+  const path = `${script_uuid}/${wildcardValue}`;
 
 
   const script = await Script.findOne({
@@ -823,16 +824,22 @@ const newDocuments = async (req, res) => {
 
     return hierarchy;
   }
-
-  async function traverseUpHierarchy(path, parents = []) {
+  const pageId = await Page.findOne({
+    where: { path : path },
+  });
+  let parentPages;
+ if(pageId){
+  async function traverseUpHierarchy(uuid, parents = []) {
     const pageData = await Page.findOne({
-      where: { path:path },
+      where: { uuid },
     });
 
+  
     if (pageData) {
       parents.push(pageData.uuid);
-
+  
       if (pageData.page_uuid) {
+        // Recursively call traverseUpHierarchy and accumulate results
         return traverseUpHierarchy(pageData.page_uuid, parents);
       } else {
         return parents.reverse(); // Reverse the array to have the main parent first
@@ -841,9 +848,10 @@ const newDocuments = async (req, res) => {
       return parents;
     }
   }
+  parentPages = await traverseUpHierarchy(pageId.uuid);
+  
+}
   // Usage
-  const parentPages = await traverseUpHierarchy(path);
-
   fetchPagesWithDynamicChildInclude()
     .then((hierarchy) => {
       return res.status(200).json({ parentPages,hierarchy,script });

@@ -122,7 +122,7 @@ router.get(
   dashboardController.getPage
 );
 
-router.get('/documents/:uuid/:slug',
+router.get('/documents/:uuid/:slug/*',
 dashboardController.newDocuments
 );
 

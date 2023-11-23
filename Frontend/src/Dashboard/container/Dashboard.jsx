@@ -12,12 +12,14 @@ import { Search } from "../../common/commonLayouts/Search";
 
 import { ToastContainer, toast } from "react-toastify";
 import HashLoader from "react-spinners/HashLoader";
+import { TrashComponent } from "../../Trash/component/TrashComponent";
+import { Trash } from "../../Trash/container/Trash";
 
 export default function Dashboard() {
   const navigate = useNavigate();
   const params = useParams();
   const searchInpRef = useRef();
-
+ 
 
 
   //hooks
@@ -70,23 +72,9 @@ export default function Dashboard() {
       position: toast.POSITION.TOP_RIGHT,
     });
   };
-
-
-
   //Event
   const handleClick = () => {
     setState((prevState) => !prevState);
-    // if(state)
-    // {
-    //   setState(localStorage.setItem("sidePopUp",true))
-    // }
-    // else{
-
-    //   // localStorage.setItem("sidePopUp",true);
-    //   setState(localStorage.setItem("sidePopUp",false))
-    // }
-    // // console.log(localStorage.setItem("sidePopUp",true));
-    // console.log(state);
   };
 
   //Api
@@ -229,7 +217,6 @@ export default function Dashboard() {
         .catch((err) => {
           const response = err.response;
           if (response && response.status === 400) {
-            // console.log(response);
             let error = {};
             let keys = Object.keys(response.data);
             let value = Object.values(response.data);
@@ -323,6 +310,25 @@ export default function Dashboard() {
     }
   };
 
+  //Trash
+
+  const handleTrash = (e) => {
+    let targetId = e.target.id;
+    axiosClient.put(`/trash/${targetId}/${params.uuid}`)
+    .then((res) => {
+      console.log(res);
+    })
+    .catch((err) => {
+      const response = err.response;
+      console.log(response);
+      if (response && response.status === 400) {
+      
+      } else {
+        console.error("Error:", response.status);
+      }
+    });
+  }
+
   return (
     <div className="relative">
       <div className="flex bg-[#ECEDEF]">
@@ -341,6 +347,7 @@ export default function Dashboard() {
             handleCreate={handleCreate}
             setInvitePopup={setInvitePopup}
             overflowState={overflowState}
+            handleTrash={handleTrash}
           />
         ) : (
           <SideNav
@@ -350,8 +357,13 @@ export default function Dashboard() {
             scriptEvent={addNewScript}
           />
         )}
-
         <div className="bg-[#F9FAFB] h-[80px] w-screen z-[10px] ">
+          {params.slug == "trash" ? (<div>
+            <Trash 
+              widths={state ? "w-[1000px]" : "w-[1160px]"}
+            />
+            </div>) : 
+          (<>
           <Header
             widths={state ? "w-[1000px]" : "w-[1160px]"}
             team={team}
@@ -367,6 +379,8 @@ export default function Dashboard() {
             addBatchEvent={addNewBatch}
             scriptEvent={addNewScript}
           />
+          </>)}
+          
         </div>
         {teamPopup && (
           <ModelPopup

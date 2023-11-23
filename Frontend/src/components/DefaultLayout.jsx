@@ -1,6 +1,7 @@
 import { Link, Navigate, Outlet } from "react-router-dom";
 import { useStateContext } from "../context/ContextProvider.jsx";
 import { useEffect } from "react";
+import SideNavLarge from "../common/commonLayouts/SideNavLarge.jsx";
 
 
 export default function DefaultLayout()
@@ -14,7 +15,14 @@ export default function DefaultLayout()
     else{
         return (
             <>
-                <Outlet />
+            <div>
+                <div>
+                {/* <SideNavLarge /> */}
+                    <Outlet />
+
+                </div>
+            </div>
+                
             </>
         )
 

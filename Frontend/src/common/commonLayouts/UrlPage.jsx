@@ -200,7 +200,6 @@ export const UrlPage = () => {
       <hr className="" />
       <div className="flex ">
         <div className="w-[250px] m-auto mt-5 h-[540px] pr-2 overflow-auto">
-          {/* <h3 className="text-3xl mt-5 mb-5">DCKAP</h3> */}
           {page.map((topLevelPage, index) => (
             <div
               key={topLevelPage.page_id}

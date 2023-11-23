@@ -46,13 +46,12 @@ export default function SideNavLarge(props) {
       ) {
         setAddNewMenu(false);
       }
-      
     };
     window.addEventListener("click", closeOnOutsideClick);
     return () => {
       window.removeEventListener("click", closeOnOutsideClick);
     };
-  }, [teamDropDown,AddNewMenu,props.overStates]);
+  }, [teamDropDown, AddNewMenu, props.overStates]);
 
   const handleMouseEnter = (e) => {
     let targetId = e.target.id;
@@ -236,7 +235,9 @@ export default function SideNavLarge(props) {
                       <li
                         key={child.id}
                         id={child.uuid}
-                        className={`text-[#BCD1FF] pl-12 cursor-pointer hover:bg-cyan-950 ${params.slug == child.uuid && "bg-cyan-950"} pt-1 pb-1 truncate  `}
+                        className={`text-[#BCD1FF] pl-12 cursor-pointer hover:bg-cyan-950 ${
+                          params.slug == child.uuid && "bg-cyan-950"
+                        } pt-1 pb-1 truncate  `}
                         onMouseEnter={handleScriptMouseEnter}
                         onMouseLeave={handleScriptMouseLeave}
                         onClick={renderPage}
@@ -274,6 +275,8 @@ export default function SideNavLarge(props) {
                     <p
                       className="text-lg cursor-pointer text-textPrimary hover:bg-primary  hover:text-white hover:rounded"
                       id="script"
+                      
+                      onClick={props.handleTrash}
                     >
                       <i className="fa-solid fa-trash pr-[5px]"></i>Trash
                     </p>
@@ -305,9 +308,11 @@ export default function SideNavLarge(props) {
       />
       <div className=" flex items-center  justify-around w-[200px] m-auto  mt-10">
         <div className="bg-white h-8 w-8 rounded-full cursor-pointer  ">
-          <p className=" text-primary pl-[8px] pt-[3px]  ">
-            <i className="fa-solid fa-trash pr-[5px]"></i>
-          </p>
+          <Link to={`/dashboard/${params.uuid}/t/trash`}>
+            <p className=" text-primary pl-[8px] pt-[3px]  ">
+              <i className="fa-solid fa-trash pr-[5px]"></i>
+            </p>
+          </Link>
         </div>
         <div className="bg-white h-8 w-8 rounded-full cursor-pointer">
           {AddNewMenu ? (
@@ -315,9 +320,7 @@ export default function SideNavLarge(props) {
               className=" text-primary pl-[9px] pt-[2px]"
               onClick={() => setAddNewMenu(false)}
             >
-              <i className="fa-solid fa-x text-lg" 
-              ref={AddIconRef}
-              ></i>
+              <i className="fa-solid fa-x text-lg" ref={AddIconRef}></i>
             </p>
           ) : (
             <p

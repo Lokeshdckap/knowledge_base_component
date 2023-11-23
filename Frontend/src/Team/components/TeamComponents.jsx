@@ -3,6 +3,7 @@ import { TeamSideNav } from "../../common/commonLayouts/TeamSideNav";
 import { TeamProfile } from "../../common/commonLayouts/TeamProfile";
 import { useParams } from "react-router-dom";
 import { ActiveUsers } from "../../common/commonLayouts/ActiveUsers";
+import Error from "../../Error/Error";
 
 export const TeamComponents = (props) => {
     const params = useParams();
@@ -18,28 +19,32 @@ export const TeamComponents = (props) => {
       />
 
       <div className="m-auto">
-        {params.slug == "teamsetting" ? (
+
+      {params.slug === "teamsetting" ? (
           <TeamProfile
-          team={props.team}
+            team={props.team}
             setTeamName={props.setTeamName}
             message={props.message}
             handleUpdate={props.handleUpdate}
           />
-        ) : (
-          <ActiveUsers 
-          team={props.team}
-          handleInvite={props.handleInvite}
-          invitePopup={props.invitePopup}
-          setInvitePopup={props.setInvitePopup}
-          teamMember={props.teamMember}
-          handleInviteUsers={props.handleInviteUsers}
-          setInviteEmail={props.setInviteEmail}
-          setRole={props.setRole}
-          handleRole={props.handleRole}
-          inviteError={props.inviteError}
-          setInviteError={props.setInviteError}
+        ) : params.slug === "activeusers" ? (
+          <ActiveUsers
+            team={props.team}
+            handleInvite={props.handleInvite}
+            invitePopup={props.invitePopup}
+            setInvitePopup={props.setInvitePopup}
+            teamMember={props.teamMember}
+            handleInviteUsers={props.handleInviteUsers}
+            setInviteEmail={props.setInviteEmail}
+            setRole={props.setRole}
+            handleRole={props.handleRole}
+            inviteError={props.inviteError}
+            setInviteError={props.setInviteError}
           />
+        ) : (
+            <Error />
         )}
+
 
       </div>
    

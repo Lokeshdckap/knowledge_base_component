@@ -17,6 +17,7 @@ import { Team } from "./Team/container/Team.jsx";
 import { Invited } from "./Invited.jsx";
 import { Dashboards } from "./Dashboard/container/Dashboards.jsx";
 import { JoinTeam } from "./joinTeam/JoinTeam.jsx";
+import { Trash } from "./Trash/container/Trash.jsx";
 
 
 
@@ -64,6 +65,10 @@ const router = createBrowserRouter([
       {
         path: "/signin/:uuid/:id",
         element: <Invited />,
+      },
+      {
+        path: "/dashboard/:uuid/t/:slug",
+        element: <Dashboard />,
       },
     ],
   },

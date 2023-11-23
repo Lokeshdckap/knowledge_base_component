@@ -5,10 +5,10 @@ import Table from "@editorjs/table";
 import Header from "@editorjs/header";
 import InlineCode from "@editorjs/inline-code";
 import Underline from "@editorjs/underline";
-import Marker from '@editorjs/marker';
-import Checklist from '@editorjs/checklist'
-import Quote from '@editorjs/quote';
-import Embed from '@editorjs/embed';
+import Marker from "@editorjs/marker";
+import Checklist from "@editorjs/checklist";
+import Quote from "@editorjs/quote";
+import Embed from "@editorjs/embed";
 import ImageTool from "@editorjs/image";
 import axiosClient from "../../axios-client";
 
@@ -43,10 +43,7 @@ export const EditorComponents = (props) => {
     }
   };
 
-
   useEffect(() => {
-    
-    console.log(props.editorValue);
     if (props.editorValue) {
       if (props.editorValue.length == 0) {
       } else {
@@ -87,7 +84,7 @@ export const EditorComponents = (props) => {
                 },
                 Marker: {
                   class: Marker,
-                  shortcut: 'CMD+SHIFT+M',
+                  shortcut: "CMD+SHIFT+M",
                 },
                 image: {
                   class: ImageTool,
@@ -112,15 +109,15 @@ export const EditorComponents = (props) => {
                 quote: {
                   class: Quote,
                   inlineToolbar: true,
-                  shortcut: 'CMD+SHIFT+O',
+                  shortcut: "CMD+SHIFT+O",
                   config: {
-                    quotePlaceholder: 'Enter a quote',
-                    captionPlaceholder: 'Quote\'s author',
+                    quotePlaceholder: "Enter a quote",
+                    captionPlaceholder: "Quote's author",
                   },
                 },
                 embed: {
-                    class: Embed,
-                    inlineToolbar: true
+                  class: Embed,
+                  inlineToolbar: true,
                 },
                 underline: Underline,
               },
@@ -148,10 +145,9 @@ export const EditorComponents = (props) => {
           }
         };
       }
-    } 
-    else {
-    let isMounted = true;
-    console.log(props.editorValue);
+    } else {
+      let isMounted = true;
+      console.log(props.editorValue);
 
       const initEditor = async (datas) => {
         if (isMounted && ejInstance.current == null) {
@@ -189,7 +185,7 @@ export const EditorComponents = (props) => {
               },
               Marker: {
                 class: Marker,
-                shortcut: 'CMD+SHIFT+M',
+                shortcut: "CMD+SHIFT+M",
               },
               image: {
                 class: ImageTool,
@@ -214,15 +210,15 @@ export const EditorComponents = (props) => {
               quote: {
                 class: Quote,
                 inlineToolbar: true,
-                shortcut: 'CMD+SHIFT+O',
+                shortcut: "CMD+SHIFT+O",
                 config: {
-                  quotePlaceholder: 'Enter a quote',
-                  captionPlaceholder: 'Quote\'s author',
+                  quotePlaceholder: "Enter a quote",
+                  captionPlaceholder: "Quote's author",
                 },
               },
               embed: {
-                  class: Embed,
-                  inlineToolbar: true
+                class: Embed,
+                inlineToolbar: true,
               },
               underline: Underline,
             },
@@ -230,7 +226,10 @@ export const EditorComponents = (props) => {
           });
           editor.isReady
             .then(() => {
+
               if (isMounted) {
+                console.log(props.editorValue,"chec");
+
                 ejInstance.current = editor;
               }
             })
@@ -248,9 +247,8 @@ export const EditorComponents = (props) => {
           ejInstance.current = null;
         }
       };
-  }
-
-}, [props.editorValue]);
+    }
+  }, [props.editorValue]);
 
   return (
     <>
@@ -261,9 +259,3 @@ export const EditorComponents = (props) => {
     </>
   );
 };
-
-
-
-
-
-

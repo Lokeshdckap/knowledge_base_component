@@ -2,8 +2,9 @@ import React from 'react'
 
 export const BatchHeader = (props) => {
   return (
-    <div className={`flex justify-between items-center ${props.widths} m-auto mt-[18px]`}>
-        <div>
+    <div className="h-[75px] bg-white">
+    <div className={`flex justify-between items-center ${props.widths} m-auto pt-[20px]`}>
+        <div className='text-xl'>
            {props.batchTitle}
 
         </div>
@@ -15,6 +16,7 @@ export const BatchHeader = (props) => {
           </button> */}
 
 
+    </div>
     </div>
   )
 }

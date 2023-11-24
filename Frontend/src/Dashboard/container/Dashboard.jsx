@@ -22,13 +22,13 @@ export default function Dashboard() {
 
   //hooks
 
+ 
+
+
   useEffect(() => {
     getTeam();
     getAllTeam();
   }, [params.uuid]);
-
-
-
   //state
   const [state, setState] = useState(true);
   const [team, setTeam] = useState([]);
@@ -95,7 +95,9 @@ export default function Dashboard() {
     await axiosClient
       .get(`/getTeam/${params.uuid}`)
       .then((res) => {
-        setTeam(res.data[0]);
+        console.log(res.data.Teams[0]);
+        setTeam(res.data.Teams[0]);
+        document.title = res.data.Teams[0].name
         getBatch(params.uuid);
         getScript(params.uuid);
       })
@@ -349,9 +351,8 @@ export default function Dashboard() {
             addBatchEvent={addNewBatch}
             scriptEvent={addNewScript}
           />
-        )}
-
-        <div className="bg-[#F9FAFB] h-[80px] w-screen z-[10px] ">
+        )}      
+        <div className=" h-screen overflow-auto w-screen z-[10px] ">
           <Header
             widths={state ? "w-[1000px]" : "w-[1160px]"}
             team={team}

@@ -82,7 +82,7 @@ export const InviteUsers = (props) => {
                       props.setRole(e.target.value))}
                       
                   >
-                    <option selected disabled>select</option>
+                    <option disabled>select</option>
                     <option value="1">Admin</option>
                     <option value="2">Viewer</option>
                     <option value="3">Editor</option>

@@ -34,7 +34,8 @@ export const Team = () => {
     axiosClient
       .get(`/getTeam/${params.uuid}`)
       .then((res) => {
-        setTeamName(res.data[0]);
+        setTeamName(res.data.Teams[0]);
+
       })
       .catch((err) => {
         console.log(err);
@@ -42,7 +43,6 @@ export const Team = () => {
   };
 
   const allUsers = () => {
-    // console.log(params.uuid);
     axiosClient
       .get(`/getAciveUsers/${params.uuid}`)
       .then((res) => {

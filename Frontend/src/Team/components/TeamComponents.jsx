@@ -8,8 +8,8 @@ export const TeamComponents = (props) => {
     const params = useParams();
 
     
-  return (
-    <div className="flex bg-[#F4F4F4] h-screen overflow-auto">
+  return (    
+    <div className="flex bg-[#F4F4F4]">
       <TeamSideNav
         team={props.team}
         setTeamName={props.setTeamName}
@@ -17,7 +17,7 @@ export const TeamComponents = (props) => {
         message={props.message}
       />
 
-      <div className="m-auto">
+      <div className="h-screen overflow-auto w-screen" >
         {params.slug == "teamsetting" ? (
           <TeamProfile
           team={props.team}
@@ -42,8 +42,6 @@ export const TeamComponents = (props) => {
         )}
 
       </div>
-   
-      
-    </div>
+      </div>
   );
 };

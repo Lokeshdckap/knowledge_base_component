@@ -135,7 +135,7 @@ export default function SideNavLarge(props) {
                 <ul className={`space-y-2 pt-1 h-[200px] overflow-auto`}>
                   {AllTeams.map((team) => (
                     <li
-                      key={team.uuid}
+                      key={team.team_uuid}
                       id={team.team_uuid}
                       onClick={props.clickSwitch}
                       className="text-base cursor-pointer hover:text-purple-400 "
@@ -187,7 +187,7 @@ export default function SideNavLarge(props) {
       {
         <ul className="mt-5 space-y-1 h-[360px] overflow-auto ">
           {batchList.map((batch) => (
-            <div className="">
+            <div className="" key={batch.id}>
               <li
                 key={batch.id}
                 id={batch.uuid}

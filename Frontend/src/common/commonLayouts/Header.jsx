@@ -12,9 +12,9 @@ export default function Header(props) {
     window.location.href = "/signin";
   };
   return (
-    <div className="h-[65px] ">
+    <div className="h-[75px] bg-[#F9FAFB]">
       <div
-        className={`flex items-center justify-between m-auto ${props.widths}  mt-4`}
+        className={`flex items-center justify-between m-auto ${props.widths}  pt-4`}
       >
         <h2> {teamName}'s Team</h2>
         <div>
@@ -47,17 +47,19 @@ export default function Header(props) {
                 <input
                   type="search"
                   id="search-dropdown"
-                  className="block p-[10px] w-[380px] z-20 text-sm text-gray-900 bg-white rounded-lg focus:outline-primary  placeholder-gray-400 dark:text-white cursor-pointer "
+                  className="block p-[10px] w-[380px] z-20 text-sm text-gray-900 bg-white rounded-lg focus:outline-primary  placeholder-gray-400 dark:text-white cursor-pointer outline outline-1 "
                   placeholder="Search here"
                   autoComplete="off"
                   required
                   ref={props.searchInpRef}
                   onClick={props.HandleSearch}
+                  readOnly
                 />
                 <button
                   type="submit"
                   className="absolute top-0 right-0 p-2 text-sm font-medium h-full text-white bg-primary rounded-r-lg border border-primary hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                 >
+                  <i class="fa-solid fa-magnifying-glass"></i>
                   <svg
                     className="w-4 h-4"
                     aria-hidden="true"
@@ -65,13 +67,6 @@ export default function Header(props) {
                     fill="none"
                     viewBox="0 0 20 20"
                   >
-                    <path
-                      stroke="currentColor"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
-                    />
                   </svg>
                   <span className="sr-only">Search</span>
                 </button>
@@ -80,7 +75,7 @@ export default function Header(props) {
           </form>
         </div>
 
-        <button onClick={onLogout}>Logout</button>
+        <button className="h-[35px] w-[120px] text-white rounded  bg-primary" onClick={onLogout}>Logout <i class="fa-solid fa-arrow-right-from-bracket mx-2"></i></button>
       </div>
     </div>
   );

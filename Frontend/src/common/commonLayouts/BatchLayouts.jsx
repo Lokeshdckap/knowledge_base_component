@@ -32,7 +32,7 @@ export const BatchLayouts = (props) => {
                 className="text-[40px] ml-5  mt-8 font-bold focus:outline-none bg-[#ECEDEF] focus:bg-slate-100 h-14"
                 placeholder="Batch Name"
                 name="title"
-                value={props.batchTitle}
+                value={props.batchTitle || ''}
                 onChange={props.changeEvent}
                 onBlur={props.handleBlur}
               />
@@ -43,19 +43,13 @@ export const BatchLayouts = (props) => {
                 placeholder="Batch Description"
                 name="descritpion"
                 value={
-                  props.batchDescription
-                }
+                  props.batchDescription || ''}
                 onChange={props.changeEvent}
                 onBlur={props.handleDescriptionBlur}
               />
             </div>
           </div>
-          <div></div>
-
           <div className="flex items-center space-x-5">
-            {/* <button className="h-[40px] w-[121px] text-[#A8B0B7] rounded border-[#A8B0B7]  border-[1px] " >
-              New Batch
-            </button> */}
             <button
               className="h-[45px] w-[160px] text-white rounded  bg-primary"
               onClick={props.AddScript}

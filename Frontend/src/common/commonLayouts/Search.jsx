@@ -10,7 +10,7 @@ export const Search = (props) => {
   const handleScriptGo = (e) => {
     navigate(e.target.id);
     props.setsearchPopup(false);
-    props.setSearchPageData(null);
+    // props.setSearchPageData(null);
     
   };
 

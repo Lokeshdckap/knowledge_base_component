@@ -4,11 +4,25 @@ const generateAuthToken = (user) => {
 
   const payload = { id: user.uuid};
 
-  let token = jwt.sign(payload, process.env.secretKey, {
-    expiresIn: 1 * 24 * 60 * 60 * 1000,
+  const access_token = jwt.sign(payload, process.env.secretKey, {
+    expiresIn: '30s',
   });
 
-  return token;
+  return access_token;
 };
 
-module.exports = generateAuthToken;
+const generateAuthRefreshToken = (user) => {
+
+  const payload = { id: user.uuid};
+
+  const refresh_token = jwt.sign(payload, process.env.secretKey, {
+    expiresIn: '24h',
+  });
+
+  return refresh_token;
+};
+
+module.exports = {
+  generateAuthToken,
+  generateAuthRefreshToken
+}

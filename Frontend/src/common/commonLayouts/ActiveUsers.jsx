@@ -3,9 +3,9 @@ import { InviteUsers } from "./InviteUsers";
 
 export const ActiveUsers = (props) => {
   let users = props.teamMember;
-  console.log(users);
+
   return (
-    <div>
+    <div className='w-[890px] m-auto'>
       <div className="bg-white w-[900px] h-[550px] shadow-md mt-5 overflow-auto">
         <div className="w-[850px] m-auto">
           <p className="text-textPrimary text-2xl pt-5 font-semibold">
@@ -33,7 +33,6 @@ export const ActiveUsers = (props) => {
               required
             />
           </div>
-
           <div className="relative overflow-x-auto shadow-md sm:rounded-lg mt-5">
             <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
               <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -56,7 +55,7 @@ export const ActiveUsers = (props) => {
                 
                 {users &&
                   users.map((user) => (
-                    <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                    <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700" key={user.uuid}>
                       <th
                         scope="row"
                         className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
@@ -68,12 +67,16 @@ export const ActiveUsers = (props) => {
                         user.user_team_members.map((member) => {
                           if (member.role_id == 1) {
                             return (
-                              <td className="px-6 py-4">
+                              <td className="px-6 py-4"
+                              key={member.user_uuid}
+                              >
+
                                 <select
                                   name=""
                                   id={member.user_uuid}
                                   className="focus:outline-none"
                                   onChange={props.handleRole}
+                                  key={member.user_uuid}
                                 >
                                   <option value="1">admin</option>
                                   <option value="2">viewer</option>
@@ -83,12 +86,17 @@ export const ActiveUsers = (props) => {
                             );
                           } else if (member.role_id == 2) {
                             return (
-                              <td className="px-6 py-4">
+                              <td className="px-6 py-4"
+                              key={member.user_uuid}
+                              >
+
                                 <select
                                   name=""
                                   id={member.user_uuid}
                                   className="focus:outline-none"
                                   onChange={props.handleRole}
+                                  key={member.user_uuid}
+
                                 >
                                   <option value="2">viewer</option>
                                   <option value="3">editor</option>
@@ -98,12 +106,16 @@ export const ActiveUsers = (props) => {
                             );
                           } else if (member.role_id == 3) {
                             return (
-                              <td className="px-6 py-4">
+                              <td className="px-6 py-4"
+                              key={member.user_uuid}
+                              >
                                 <select
                                   name=""
                                   id={member.user_uuid}
                                   className="focus:outline-none"
                                   onChange={props.handleRole}
+                                  key={member.user_uuid}
+
                                 >
                                   <option value="3">editor</option>
                                   <option value="1">admin</option>

@@ -152,16 +152,18 @@ export default function SignupComponents() {
   return (
     <div className="">
       <div className="flex ">
-        <div className="bg-primary w-1/2 h-[664px]">
+        <div className="bg-primary w-1/2 h-screen">
+        <img src={"https://i.postimg.cc/FRL3nwV1/mainlogo.png"} className="mx-8 mt-5"/>
+        <p className="mx-11 text-white text-sm font-medium">Rhino Tome</p>
           <img
             src={logo}
-            className="max-w-[390px]  m-auto mt-[130px] mb-[112px] "
+            className="max-w-[390px]  m-auto mt-[70px] mb-[112px] "
           />
         </div>
-        <div className="bg-secondary h-[664px] w-1/2">
+        <div className="bg-secondary h-screen w-1/2">
           <div className=" ml-[140px]  mt-[34px] space-y-1">
             <h2 className="text-textPrimary font-bold text-2xl">
-              Welcome to Knowledge Base! 👋
+              Welcome to DCKAP Rhino Tome! 👋
             </h2>
             <h3 className="text-textPrimary">Please sign into your account</h3>
             <form className="space-y-1" onSubmit={handleSumbit}>
@@ -215,6 +217,13 @@ export default function SignupComponents() {
                     className="w-96 h-10 p-2 rounded-lg focus:outline-gray-400"
                     placeholder="Password"
                     name="password"
+                    onPaste={(e)=>{
+                      e.preventDefault()
+                      return false;
+                    }} onCopy={(e)=>{
+                      e.preventDefault()
+                      return false;
+                    }}
                   />
                   {PasswordVisible ? (
                     <span
@@ -258,6 +267,13 @@ export default function SignupComponents() {
                     className="w-96 h-10 p-2 rounded-lg focus:outline-gray-400"
                     name="confirmPassword"
                     placeholder="Password"
+                    onPaste={(e)=>{
+                      e.preventDefault()
+                      return false;
+                    }} onCopy={(e)=>{
+                      e.preventDefault()
+                      return false;
+                    }}
                   />
                   {ConfirmPasswordVisible ? (
                     <span

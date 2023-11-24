@@ -208,7 +208,7 @@ export const ScriptComponents = () => {
     await axiosClient
       .get(`/getTeam/${teamUUID}`)
       .then((res) => {
-        setTeam(res.data[0]);
+        setTeam(res.data.Teams[0]);
         getBatch(teamUUID);
         getScript(teamUUID);
       })
@@ -538,7 +538,7 @@ export const ScriptComponents = () => {
 
   return (
     <div className="relative">
-      <div className="flex bg-[#ECEDEF] h-screen overflow-auto ">
+      <div className="flex bg-[#ECEDEF] ">
         {state ? (
           <SideNavLarge
             buttonClicked={handleClick}
@@ -565,7 +565,7 @@ export const ScriptComponents = () => {
           />
         )}
 
-        <div className="bg-[#F9FAFB] h-[80px] w-screen z-[10px] ">
+        <div className="bg-[#F9FAFB] h-screen overflow-auto w-screen z-[10px] ">
           <EditHeader
             widths={state ? "w-[1040px]" : "w-[1200px]"}
             clickPublish={handleSave}

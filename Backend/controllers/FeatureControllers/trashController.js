@@ -93,7 +93,120 @@ const moveToTrash = async (req, res) => {
     return res.status(500).json({ error: "Deleted Failed" });
   }
 };
+
+const restoreParticular = async (req, res) => {
+  try {
+    const team_uuid = req.params.uuid;
+
+    const batchOrScriptUuid = req.params.batchOrScriptuuid;
+
+    const checkForScript = await Script.findOne({
+      where: {
+        team_uuid: team_uuid,
+        uuid: batchOrScriptUuid,
+      },
+    });
+    if (checkForScript) {
+      let updateData = {
+        deleted_at: null,
+      };
+      const restoreScript = await Script.update(updateData, {
+        where: {
+          [Op.and]: [{ team_uuid: team_uuid }, { uuid: checkForScript.uuid }],
+        },
+      });
+      if (restoreScript > 0) {
+        return res
+          .status(200)
+          .json({ restoreScript, message: "Script Restore Sucessfully" });
+      } else {
+        return res.status(500).json({ error: "Restore Failed" });
+      }
+    } else {
+      return res.status(500).json({ error: "Restore Failed or Can't Find" });
+    }
+  } catch (err) {
+    return res.status(404).json({ error: "Restore Failed" });
+  }
+};
+
+const permanentDeleteParticular = async (req, res) => {
+  try {
+    const team_uuid = req.params.uuid;
+    const script_uuid = req.params.batchOrScriptuuid;
+    await Script.destroy({
+      where: {
+        [Op.and]: [{ team_uuid: team_uuid }, { uuid: script_uuid }],
+      },
+    });
+    return res
+      .status(200)
+      .json({ message: "Script & Pages  Deleted Sucessfully" });
+  } catch (err) {
+    return res.status(404).json({ error: "Delete Failed or Can't Find" });
+  }
+};
+
+const permanentDeleteAll = async (req, res) => {
+  try {
+    const team_uuid = req.params.uuid;
+    await Script.destroy({
+      where: {
+        [Op.and]: [
+          { team_uuid: team_uuid },
+          {
+            deleted_at: {
+              [Op.not]: null,
+            },
+          },
+        ],
+      },
+    });
+    return res
+      .status(200)
+      .json({ Sucess: "All Script and Pages Permanent Deleted" });
+  } catch (err) {
+    return res
+      .status(404)
+      .json({ error: "All Script and Pages Permanent Delete Failed" });
+  }
+};
+
+const selectedTrash = async (req, res) => {
+  const team_uuid = req.params.uuid;
+  const selectedUuids = req.body.data;
+
+  try {
+    const deleteResult = await Script.destroy({
+      where: {
+        [Op.and]: [
+          { team_uuid: team_uuid },
+          { uuid: selectedUuids },
+          { deleted_at: { [Op.not]: null } },
+        ],
+      },
+    });
+
+    if (deleteResult > 0) {
+      return res
+        .status(200)
+        .json({ message: "Selected Scripts Deleted Successfully" });
+    } 
+    else {
+      return res
+        .status(404)
+        .json({ error: "No matching records found for deletion" });
+    }
+  } catch (err) {
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
 module.exports = {
   getAllTrash,
   moveToTrash,
+  restoreParticular,
+  permanentDeleteParticular,
+  permanentDeleteAll,
+  selectedTrash,
 };

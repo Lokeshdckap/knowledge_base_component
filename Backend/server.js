@@ -59,6 +59,8 @@ const pageRoute = require("./routes/pages")
 
 const publicRoute = require("./routes/publicUrl")
 
+const userRoute = require("./routes/userInfo")
+
 app.use("/",authRoute);
 
 app.use("/",dashboardRoute);
@@ -76,6 +78,8 @@ app.use("/",inviteRoute);
 app.use("/",pageRoute);
 
 app.use("/",publicRoute);
+
+app.use("/",userRoute);
 
 
 

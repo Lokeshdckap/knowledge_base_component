@@ -90,9 +90,9 @@ db.batch.hasMany(db.script, { foreignKey: "batch_uuid", targetKey: "uuid" });
 
 db.script.belongsTo(db.batch, { foreignKey: "batch_uuid", targetKey: "uuid" });
 
-db.script.hasMany(db.pages, { foreignKey: "script_uuid", targetKey: "uuid" });
+db.script.hasMany(db.pages, { foreignKey: "script_uuid", targetKey: "uuid" },{ onDelete: 'CASCADE' });
 
-db.pages.belongsTo(db.script, { foreignKey: "script_uuid", targetKey: "uuid" });
+db.pages.belongsTo(db.script, { foreignKey: "script_uuid", targetKey: "uuid" },{ onDelete: 'CASCADE' });
 
 db.pages.belongsTo(db.pages, {
   as: "ParentPage",

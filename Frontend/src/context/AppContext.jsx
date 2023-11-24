@@ -201,8 +201,8 @@ const MyContextProvider = ({ children }) => {
         teamName, 
         setTeam,
         allTeam,
-         setAllTeam,
-         handleAfterAddedChildrenScripts
+        setAllTeam,
+        handleAfterAddedChildrenScripts
       }}
     >
       {children}

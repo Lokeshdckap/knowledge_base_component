@@ -31,6 +31,7 @@ module.exports = {
           model: "scripts", // This references the 'script' table
           key: "uuid", // This references the 'uuid' column in the 'script' table
         },
+        onDelete: 'CASCADE', // This enables cascading delete
       },
       page_uuid: {
         type: Sequelize.UUID,

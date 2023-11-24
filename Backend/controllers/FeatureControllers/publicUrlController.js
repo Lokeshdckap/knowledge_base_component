@@ -111,11 +111,11 @@ const publicUrls = async (req, res) => {
         where: { uuid: script_uuid },
       });
       if(publicUrl.is_published){
-        return res.status(200).json({ publicUrl, msg: "Sucessfully Published" });
-        }
-        else{
-        return res.status(200).json({ publicUrl, msg: "UnPublished" });
-        }
+      return res.status(200).json({ publicUrl, msg: "Published Sucessfully" });
+      }
+      else{
+      return res.status(200).json({ publicUrl, msg: "UnPublished Content" });
+      }
     } catch (error) {
       return res
         .status(500)

@@ -87,9 +87,8 @@ const addNewBatch = async (req, res) => {
         Error: "Error Batch Not Created",
       });
     }
-  } 
-  catch (err) {
-    console.log("err",err);
+  } catch (err) {
+    console.log("err", err);
     return res.status(500).send({
       Error: "Error Batch Not Created",
     });
@@ -145,20 +144,24 @@ const addBatchTitleAndDescription = async (req, res) => {
     }
 
     try {
-      const [numUpdated] = await Batch.update(updateData, {
-        where: { uuid: req.body.batch_uuid },
-      });
+      if (title || description) {
+        const [numUpdated] = await Batch.update(updateData, {
+          where: { uuid: req.body.batch_uuid },
+        });
 
-      const numUpdatedData = await Batch.findOne({
-        where: { uuid: req.body.batch_uuid },
-      });
+        const numUpdatedData = await Batch.findOne({
+          where: { uuid: req.body.batch_uuid },
+        });
 
-      if (numUpdated > 0) {
-        return res
-          .status(200)
-          .json({ numUpdatedData, message: "Update successful" });
+        if (numUpdated > 0) {
+          return res
+            .status(200)
+            .json({ numUpdatedData, message: "Update successful" });
+        } else {
+          return res.status(404).json({ error: "Record not found" });
+        }
       } else {
-        return res.status(404).json({ error: "Record not found" });
+        return res.status(404).json({ error: "Please Enter Your Batch Name" });
       }
     } catch (error) {
       return res.status(404).json({ error: error });

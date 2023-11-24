@@ -110,7 +110,12 @@ const publicUrls = async (req, res) => {
       const publicUrl = await Script.findOne({
         where: { uuid: script_uuid },
       });
-      return res.status(200).json({ publicUrl, msg: "Sucessfully Published" });
+      if(publicUrl.is_published){
+      return res.status(200).json({ publicUrl, msg: "Published Sucessfully" });
+      }
+      else{
+      return res.status(200).json({ publicUrl, msg: "UnPublished Content" });
+      }
     } catch (error) {
       return res
         .status(500)

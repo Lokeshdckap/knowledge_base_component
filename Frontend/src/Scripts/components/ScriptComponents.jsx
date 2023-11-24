@@ -225,7 +225,7 @@ export const ScriptComponents = () => {
     setInputValue(inputValue); // Update the state with the current value
 
     let paraId = params.slug;
-    const encodedInputValue = encodeURIComponent(inputValue);
+    const encodedInputValue = (inputValue);
     let payload = {
       inputValue: encodedInputValue,
       queryParameter: paraId,

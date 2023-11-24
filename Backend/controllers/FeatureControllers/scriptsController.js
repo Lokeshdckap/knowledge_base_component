@@ -114,60 +114,72 @@ const getScript = async (req, res) => {
 
 const addScriptTitle = async (req, res) => {
   try {
-    const checkTitles = await Script.findOne({
-      where: {
-        [Op.and]: [
-          { team_uuid: req.body.teamParameter },
-          sequelize.where(
-            sequelize.fn("lower", sequelize.col("title")),
-            sequelize.fn("lower", req.body.inputValue)
-          ),
-        ],
-      },
-    });
-    if (!checkTitles) {
-      const paths =
-        "/" +
-        req.body.inputValue.split(" ").filter(Boolean).join("").toLowerCase();
+    if (req.body.inputValue) {
+      const checkTitles = await Script.findOne({
+        where: {
+          [Op.and]: [
+            { team_uuid: req.body.teamParameter },
+            sequelize.where(
+              sequelize.fn("lower", sequelize.col("title")),
+              sequelize.fn("lower", req.body.inputValue)
+            ),
+          ],
+        },
+      });
+      if (!checkTitles) {
+        const paths =
+          "/" +
+          req.body.inputValue.split(" ").filter(Boolean).join("").toLowerCase();
 
+        const scriptTitleUpdate = await Script.update(
+          { title: req.body.inputValue, path: paths },
+          {
+            where: { uuid: req.body.queryParameter },
+          }
+        );
+
+        const updatePath = await Page.findAll({
+          where: { script_uuid: req.body.queryParameter },
+        });
+
+        const updateAllPages = async () => {
+          for (const scriptPaths of updatePath) {
+            let oldPath = scriptPaths.path.split("/")[1];
+            let replaceTheNew = oldPath.replace(oldPath, req.body.inputValue);
+
+            const pathArray = scriptPaths.path.split("/");
+            pathArray.splice(1, 1, replaceTheNew);
+            const updatedPath = pathArray.join("/");
+
+            // Update the current row with its corresponding updatedPath
+            scriptPaths.path = updatedPath.toLowerCase();
+            await scriptPaths.save();
+          }
+        };
+
+        updateAllPages();
+
+        return res.status(200).json({ scriptTitleUpdate });
+      } else {
+        return res
+          .status(403)
+          .json({ errorMsg: "Please Choose A Different Script Name" });
+      }
+    } else {
       const scriptTitleUpdate = await Script.update(
-        { title: req.body.inputValue, path: paths },
+        { title: "Untitled Content" },
         {
           where: { uuid: req.body.queryParameter },
         }
       );
-
-      const updatePath = await Page.findAll({
-        where: { script_uuid: req.body.queryParameter },
-      });
-
-      const updateAllPages = async () => {
-        for (const scriptPaths of updatePath) {
-          let oldPath = scriptPaths.path.split("/")[1];
-          let replaceTheNew = oldPath.replace(oldPath, req.body.inputValue);
-
-          const pathArray = scriptPaths.path.split("/");
-          pathArray.splice(1, 1, replaceTheNew);
-          const updatedPath = pathArray.join("/");
-
-          // Update the current row with its corresponding updatedPath
-          scriptPaths.path = updatedPath.toLowerCase();
-          await scriptPaths.save();
-        }
-      };
-
-      updateAllPages();
-
-      return res.status(200).json({ scriptTitleUpdate });
-    } else {
       return res
         .status(403)
-        .json({ errorMsg: "Please Choose a Different Script Name" });
+        .json({ errorMsg: "Please Enter Script Name", scriptTitleUpdate });
     }
   } catch (err) {
     return res
       .status(403)
-      .json({ errorMsg: "Please Choose a Different Script Name" });
+      .json({ errorMsg: "Please Choose A Different Script Name" });
   }
 };
 

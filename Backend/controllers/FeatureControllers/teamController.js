@@ -39,7 +39,6 @@ const createTeams = async (req, res) => {
         team_uuid: newTeam.uuid,
         role_id: "1",
       });
-
       if (newTeam && usersTeam) {
         return res.status(200).send({
           Success: "Your Team Created Sucessfully",

@@ -466,7 +466,7 @@ export default function SideNavLarge(props) {
           ))}
         </ul>
         <hr
-          className={`h-px  bg-textPrimary border-0 dark:bg-gray-900 m-auto mt-2`}
+          className={`h-px bg-[#477094] border-0 dark:bg-gray-300 m-auto mt-2`}
         />
         <div className=" flex items-center  justify-around w-[200px] m-auto  mt-10">
           <div className="bg-white h-8 w-8 rounded-full cursor-pointer  ">

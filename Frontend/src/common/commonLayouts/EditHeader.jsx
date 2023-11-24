@@ -9,7 +9,7 @@ export default function EditHeader(props) {
   return (
     <div className="">
       <div
-        className={`flex items-center justify-between m-auto ${props.widths} mt-3 space-y-2`}
+        className={`flex items-center justify-between m-auto ${props.widths} pt-3 space-y-2`}
       >
         <input
           className="text-primary font-bold text-2xl bg-[#EEEEEE] focus:outline-gray-300 w-80 h-11 pl-2 rounded"

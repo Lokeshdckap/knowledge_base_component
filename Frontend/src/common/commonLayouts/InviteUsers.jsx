@@ -50,7 +50,7 @@ export const InviteUsers = (props) => {
           <div className="w-[500px] m-auto">
             <div className="pt-24">
               <p className="text-textPrimary font-bold text-2xl">
-                Invite teammates to {props.team.name}
+                Invite teammates to {props.team}
               </p>
               <p className="text-sm pt-2 text-textPrimary">
                 Let's get the rest of your team using Knowledge Base.

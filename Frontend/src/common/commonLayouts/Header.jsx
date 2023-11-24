@@ -4,9 +4,7 @@ import { Navigate, useNavigate } from "react-router-dom";
 
 export default function Header(props) {
 
-  const teamName =props.team.name;
 
-  const navigate = useNavigate();
   const onLogout = () => {
     localStorage.removeItem("ACCESS_TOKEN");
     window.location.href = "/signin";
@@ -16,33 +14,10 @@ export default function Header(props) {
       <div
         className={`flex items-center justify-between m-auto ${props.widths}  mt-4`}
       >
-        <h2> {teamName}'s Team</h2>
+        <h2> {props.team}'s Team</h2>
         <div>
           <form>
             <div className="flex">
-              {/* <button
-                id="dropdown-button"
-                data-dropdown-toggle="dropdown"
-                className="flex-shrink-0 z-10 inline-flex items-center p-2 px-4 text-sm font-medium text-center text-gray-900 bg-gray-100 border border-gray-300 rounded-l-lg hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700 dark:text-white dark:border-gray-600"
-                type="button"
-              >
-                All
-                <svg
-                  className="w-2.5 h-2.5 ml-2.5"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 10 6"
-                >
-                  <path
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="m1 1 4 4 4-4"
-                  />
-                </svg>
-              </button> */}
               <div className="relative w-[380px]">
                 <input
                   type="search"

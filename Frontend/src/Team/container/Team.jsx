@@ -6,6 +6,7 @@ import { ToastContainer, toast } from "react-toastify";
 import HashLoader from "react-spinners/HashLoader";
 
 export const Team = () => {
+
   const [teamName, setTeamName] = useState("");
   const [message, setMessage] = useState("");
   const [teamMembers, setTeamMembers] = useState([]);
@@ -31,10 +32,12 @@ export const Team = () => {
   };
 
   const team = () => {
+    
     axiosClient
       .get(`/getTeam/${params.uuid}`)
       .then((res) => {
-        setTeamName(res.data[0]);
+
+        setTeamName(res.data.name);
       })
       .catch((err) => {
         console.log(err);

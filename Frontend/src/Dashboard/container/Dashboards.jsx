@@ -17,7 +17,6 @@ export const Dashboards = () => {
   }, []);
 
   const getAllTeam = () => {
-    console.log("ghjhk");
     axiosClient
       .get(`/getAllTeam`)
       .then((res) => {
@@ -32,6 +31,6 @@ export const Dashboards = () => {
   };
 
   return (
-    <div>Dashboardss</div>
+    <div>Loadingg...</div>
   )
 }

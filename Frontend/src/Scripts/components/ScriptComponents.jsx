@@ -1,20 +1,16 @@
 import React, { useEffect, useRef, useState } from "react";
-import SideNav from "../../common/commonLayouts/SideNav";
 import axiosClient from "../../axios-client";
-import SideNavLarge from "../../common/commonLayouts/SideNavLarge";
 import { useNavigate, useParams } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import EditHeader from "../../common/commonLayouts/EditHeader";
 import EditPage from "../../common/commonLayouts/EditPage";
-import { PageTree } from "../../common/commonComponents/PageTree";
-import { InviteUsers } from "../../common/commonLayouts/InviteUsers";
-import { ModelPopup } from "../../common/commonComponents/ModelPopup";
 import { ToastContainer, toast } from "react-toastify";
-import HashLoader from "react-spinners/HashLoader";
+import { useMyContext } from "../../context/AppContext";
 
 export const ScriptComponents = () => {
   const navigate = useNavigate();
   const params = useParams();
+  const {getScript,script ,getScripts} = useMyContext();
 
   //hooks
 
@@ -26,7 +22,7 @@ export const ScriptComponents = () => {
   const [team, setTeam] = useState([]);
   const [allTeam, setAllTeam] = useState([]);
   const [batch, setBatch] = useState([]);
-  const [script, setScript] = useState([]);
+  // const [script, setScript] = useState([]);
   const [teamPopup, setTeamPopup] = useState(false);
 
   const [childScript, setChildScript] = useState([]);
@@ -42,8 +38,6 @@ export const ScriptComponents = () => {
   const [renderScript, setRenderScript] = useState([]);
   const [teamUuid, setTeamUuid] = useState([]);
 
-  
-
   const [pageContent, setPageContent] = useState(null);
 
   const [particularTitle, setParticularTitle] = useState("");
@@ -57,7 +51,7 @@ export const ScriptComponents = () => {
   const [shareState, setShareState] = useState(false);
 
   const [publish, setPublish] = useState([]);
-  
+
   const [invitePopup, setInvitePopup] = useState(false);
 
   const [overStates, setOverStates] = useState(null);
@@ -76,9 +70,9 @@ export const ScriptComponents = () => {
 
   const duration = 2000;
 
-      const location = useLocation();
-    const queryParams = new URLSearchParams(location.search);
-    const pageIds = queryParams.get('pageId');
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const pageIds = queryParams.get("pageId");
 
   const showToastMessage = (data) => {
     toast.success(data, {
@@ -103,43 +97,26 @@ export const ScriptComponents = () => {
   };
 
   useEffect(() => {
-
-    if(pageIds){
-      getTeam();
-      getAllTeam();
-      getParentOpen()
+    if (pageIds) {
+      getParentOpen();
       getParticularPage();
       getParticularScript();
       getScripts();
-    }
-    else
-    {
-      getTeam();
-      getAllTeam();
+    } else {
       getParticularScript();
       getScripts();
-      getParticularOpenScript()
+      getParticularOpenScript();
     }
+  }, [params.slug, params, pageIds]);
 
-  }, [params.slug, params,pageIds]);
-
-
-
-  //Event
-
-  const handleClick = () => {
-    setState((prevState) => !prevState);
-  };
 
   //Api
 
-
   const getParticularPage = async () => {
-      await axiosClient
+    await axiosClient
       .get(`/getPage/${pageIds}`)
       .then((res) => {
-        
-        setParticularTitle(res.data.pages.title.slice(0,-5));
+        setParticularTitle(res.data.pages.title.slice(0, -5));
         setDescription(res.data.pages.description);
         setEditorValue(res.data.pages.content);
         setEditorContent(res.data.pages.content);
@@ -147,33 +124,33 @@ export const ScriptComponents = () => {
       .catch((err) => {
         console.log(err);
       });
-  }
-
+  };
 
   const getParticularOpenScript = async () => {
     let script_uuid = params.slug;
 
-    await axiosClient 
+    await axiosClient
       .get(`/getScriptAndPage/${script_uuid}`)
       .then((res) => {
-        navigate(`/dashboard/${params.uuid}/s/${params.slug}/?pageId=${res.data.hierarchy[0].uuid}`)
+        navigate(
+          `/dashboard/${params.uuid}/s/${params.slug}/?pageId=${res.data.hierarchy[0].uuid}`
+        );
       })
       .catch((err) => {
         console.log(err);
       });
-  }
+  };
 
-  const getParentOpen = async () =>{
-
-    await axiosClient.get(`/getOpenParent/${pageIds}`)
-    .then((res) => {
-
-      setParentOpen(res.data.parentPages);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-  }
+  const getParentOpen = async () => {
+    await axiosClient
+      .get(`/getOpenParent/${pageIds}`)
+      .then((res) => {
+        setParentOpen(res.data.parentPages);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   const getParticularScript = async () => {
     let script_uuid = params.slug;
@@ -192,122 +169,12 @@ export const ScriptComponents = () => {
   };
 
 
-  
-
-  const getScripts = async () => {
-    await axiosClient
-      .get(`/getScripts/${params.uuid}/${params.slug}`)
-      .then((res) => {
-        setOverStates(res.data.script_batch.batch_uuid);
-        setChildScript(res.data.result);
-      });
-  };
-
-  const getTeam = async () => {
-    let teamUUID = params.uuid;
-    await axiosClient
-      .get(`/getTeam/${teamUUID}`)
-      .then((res) => {
-        setTeam(res.data[0]);
-        getBatch(teamUUID);
-        getScript(teamUUID);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
-  const getAllTeam = () => {
-    axiosClient
-      .get(`/getAllTeam`)
-      .then((res) => {
-        setAllTeam(res.data.getAllTeam);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
-  const getBatch = async (teamuuid) => {
-    await axiosClient
-      .get(`/getBatch/${teamuuid}`)
-      .then((res) => {
-        setBatch(res.data.batchs);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
-  const getScript = async (teamuuid) => {
-    await axiosClient
-      .get(`/getScript/${teamuuid}`)
-      .then((res) => {
-        setScript(res.data.script);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
-  const addNewBatch = (e) => {
-    let team_uuid = params.uuid;
-
-    axiosClient
-      .post("/addNewBatch", { uuid: team_uuid })
-      .then((res) => {
-        getBatch(team_uuid);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
-  const addNewScript = (e) => {
-    let team_uuid = params.uuid;
-    let batch_uuid = e.target.id;
-
-    axiosClient
-      .post("/addNewScript", { uuid: team_uuid, batch_uuid: batch_uuid })
-      .then((res) => {
-        getScript(team_uuid);
-        setPageContent(res.data.pages);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
-  const switchTeamEvent = (e) => {
-    const TeamId = e.target.id;
-    getTeam();
-    getAllTeam();
-    setTeamPopup(false);
-    navigate(`/dashboard/${TeamId}`);
-  };
-
-  let batch_uuid;
-
-  const handleChildrenScripts = async (e) => {
-    let team_uuid = params.uuid;
-    batch_uuid = e.target.id;
-
-    await axiosClient
-      .get(`/getBatchAndScripts/${team_uuid}/${batch_uuid}`)
-      .then((res) => {
-        setChildScript(res.data.result);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
-  //Editor functionality
+   //Editor functionality
 
   const handleSave = () => {
     const postData = {
       id: pageIds,
-      script_uuid:params.slug,
+      script_uuid: params.slug,
       title: particularTitle ? particularTitle : "Page Name",
       description: description ? description : "Page Description",
       content: editorContent,
@@ -323,7 +190,6 @@ export const ScriptComponents = () => {
       .catch((err) => {
         console.log(err);
       });
-
   };
 
   const addPage = () => {
@@ -343,15 +209,17 @@ export const ScriptComponents = () => {
       .post(`/addChildPage/${params.slug}/${page_uuid}`)
       .then((res) => {
         getParticularScript();
-        navigate(`/dashboard/${params.uuid}/s/${params.slug}/?pageId=${res.data.Pages.uuid}`)
+        navigate(
+          `/dashboard/${params.uuid}/s/${params.slug}/?pageId=${res.data.Pages.uuid}`
+        );
       })
       .catch((err) => {
         console.log(err);
       });
   };
 
-
   const handleChange = async (event) => {
+    console.log("checing");
     const inputValue = event;
 
     setInputValue(inputValue); // Update the state with the current value
@@ -359,59 +227,32 @@ export const ScriptComponents = () => {
     let paraId = params.slug;
     const encodedInputValue = encodeURIComponent(inputValue);
     let payload = {
-      "inputValue":encodedInputValue,
-      "queryParameter":paraId,
-      "teamParameter":params.uuid
-    }
-    await axiosClient.post(
-      "/addScriptTitle",payload)
-    .then((res) => {
-        getScripts();
-    })
-    .catch((err) => {
-      const response = err.response;
-      if (response && response.status === 403) {
-        showToastErrorMessage(response.data.errorMsg)
-      } else {
-        console.error("Error:", response.status);
-      }
-    });
-
-
-   await axiosClient
-      .post(
-        `/addScriptTitle`,payload
-      )
+      inputValue: encodedInputValue,
+      queryParameter: paraId,
+      teamParameter: params.uuid,
+    };
+    console.log(payload);
+    await axiosClient
+      .post("/addScriptTitle", payload)
       .then((res) => {
-        getScripts()
+        getScripts();
+        getScript();
       })
       .catch((err) => {
-        console.log(err);
+        const response = err.response;
+        if (response && response.status === 403) {
+          showToastErrorMessage(response.data.errorMsg);
+        } else {
+          console.error("Error:", response.status);
+        }
       });
+
   };
 
   const contentPage = (e) => {
     setPageId(e.target.id);
     let pageId = e.target.id;
-    let pagePath = e.target.dataset.set;
     navigate(`/dashboard/${params.uuid}/s/${params.slug}/?pageId=${pageId}`);
-    // if(pagePath !== undefined){
-    //     let pagePathArray = pagePath.split("/");
-    //     let pageSplitPath = pagePathArray.slice(2).join("/");
-    //     navigate(`/dashboard/${params.uuid}/s/${params.slug}/${pageSplitPath}`)
-    // }
-    // axiosClient
-    //   .get(`/getPage/${pageId}`)
-    //   .then((res) => {
-    //     setPageContent(res.data.pages[0]);
-    //     setParticularTitle(res.data.pages[0].title);
-    //     setDescription(res.data.pages[0].description);
-    //     setEditorValue(res.data.pages[0].content);
-    //     setEditorContent(res.data.pages[0].content);
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
   };
 
   const handleScriptMouseEnter = (e) => {
@@ -445,14 +286,6 @@ export const ScriptComponents = () => {
     setShareState(true);
   };
 
-  const handleCreate = () => {
-    setTeamPopup(true);
-  };
-
-  const handleCancel = () => {
-    setTeamPopup(false);
-  };
-
   const HandleChange = (e) => {
     const { name, value } = e.target;
     console.log(e.target.value);
@@ -471,33 +304,6 @@ export const ScriptComponents = () => {
       });
   };
 
-  const createTeam = () => {
-    const validationErrors = {};
-    if (!formValues.team_name) {
-      validationErrors.team_name = "Team is required";
-    }
-    setError(validationErrors);
-    if (Object.keys(validationErrors).length === 0) {
-      axiosClient
-        .post("/team", formValues)
-        .then((res) => {
-          setTeamPopup(false);
-          getAllTeam();
-        })
-        .catch((err) => {
-          const response = err.response;
-          if (response && response.status === 400) {
-            let error = {};
-            let keys = Object.keys(response.data);
-            let value = Object.values(response.data);
-            error[keys] = value;
-            setError(error);
-          } else {
-            console.error("Error:", response.status);
-          }
-        });
-    }
-  };
 
   const handleInviteUsers = () => {
     setLoading(true);
@@ -537,98 +343,45 @@ export const ScriptComponents = () => {
   };
 
   return (
-    <div className="relative">
-      <div className="flex bg-[#ECEDEF] h-screen overflow-auto ">
-        {state ? (
-          <SideNavLarge
-            buttonClicked={handleClick}
-            team={team}
-            allTeams={allTeam}
-            clickSwitch={switchTeamEvent}
-            addBaltchEvent={addNewBatch}
-            scriptEvent={addNewScript}
-            batches={batch}
-            scripts={script}
-            handleChildrenScripts={handleChildrenScripts}
-            childScript={childScript}
-            getParticularScript={getParticularScript}
-            handleCreate={handleCreate}
-            setInvitePopup={setInvitePopup}
-            overStates={overStates}
-          />
-        ) : (
-          <SideNav
-            buttonClicked={handleClick}
-            team={team}
-            addBatchEvent={addNewBatch}
-            scriptEvent={addNewScript}
-          />
-        )}
-
-        <div className="bg-[#F9FAFB] h-[80px] w-screen z-[10px] ">
-          <EditHeader
-            widths={state ? "w-[1040px]" : "w-[1200px]"}
-            clickPublish={handleSave}
-            changeEvent={handleChange}
-            inputValue={inputValue}
-            setInputValue={setInputValue}
-            renderScript={renderScript}
-            HandleShare={HandleShare}
-            scriptError={scriptError}
-          />
-          <EditPage
-            widths={state ? "w-[785px]" : "w-[933px]"}
-            marginEditor={state ? "ml-[10px]" : "mr-[115px]"}
-            setEditorContent={setEditorContent}
-            treeNode={treeNode}
-            addPage={addPage}
-            contentPage={contentPage}
-            pageContent={pageContent}
-            particularTitle={particularTitle}
-            setParticularTitle={setParticularTitle}
-            description={description}
-            setDescription={setDescription}
-            handleScriptMouseEnter={handleScriptMouseEnter}
-            handleScriptMouseLeave={handleScriptMouseLeave}
-            hoverPageId={hoverPageId}
-            handleMore={handleMore}
-            handleSave={handleSave}
-            editorContent={editorContent}
-            onDragEnd={onDragEnd}
-            shareState={shareState}
-            setShareState={setShareState}
-            onChange={onChange}
-            publish={publish}
-            editorValue={editorValue}
-            renderScript={renderScript}
-            parentOpen={parentOpen}
-            teamUuid={teamUuid}
-           
-          />
-          {teamPopup && (
-            <ModelPopup
-              click={handleCancel}
-              HandleChange={HandleChange}
-              createTeam={createTeam}
-              columnName={"team_name"}
-              error={errors}
-            />
-          )}
-          {invitePopup && (
-            <InviteUsers
-              team={team}
-              invitePopup={invitePopup}
-              setInvitePopup={setInvitePopup}
-              setInviteEmail={setInviteEmail}
-              inviteEmail={inviteEmail}
-              setRole={setRole}
-              handleInviteUsers={handleInviteUsers}
-              inviteError={inviteError}
-            />
-          )}
-        </div>
-
-      </div>
+    <div className="bg-white h-[85px]">
+      <EditHeader
+        widths={state ? "w-[1040px]" : "w-[1200px]"}
+        clickPublish={handleSave}
+        changeEvent={handleChange}
+        inputValue={inputValue}
+        setInputValue={setInputValue}
+        renderScript={renderScript}
+        HandleShare={HandleShare}
+        scriptError={scriptError}
+      />
+      <EditPage
+        widths={state ? "w-[785px]" : "w-[933px]"}
+        marginEditor={state ? "ml-[10px]" : "mr-[115px]"}
+        setEditorContent={setEditorContent}
+        treeNode={treeNode}
+        addPage={addPage}
+        contentPage={contentPage}
+        pageContent={pageContent}
+        particularTitle={particularTitle}
+        setParticularTitle={setParticularTitle}
+        description={description}
+        setDescription={setDescription}
+        handleScriptMouseEnter={handleScriptMouseEnter}
+        handleScriptMouseLeave={handleScriptMouseLeave}
+        hoverPageId={hoverPageId}
+        handleMore={handleMore}
+        handleSave={handleSave}
+        editorContent={editorContent}
+        onDragEnd={onDragEnd}
+        shareState={shareState}
+        setShareState={setShareState}
+        onChange={onChange}
+        publish={publish}
+        editorValue={editorValue}
+        renderScript={renderScript}
+        parentOpen={parentOpen}
+        teamUuid={teamUuid}
+      />
     </div>
   );
 };

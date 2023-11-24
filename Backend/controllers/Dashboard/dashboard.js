@@ -88,7 +88,7 @@ const createTeams = async (req, res) => {
 
 const getTeam = async (req, res) => {
   try {
-    const Teams = await Team.findAll({
+    const Teams = await Team.findOne({
       where: { uuid: req.params.uuid },
     });
 
@@ -595,7 +595,8 @@ const addScriptTitle = async (req, res) => {
       updateAllPages();
 
       return res.status(200).json({ scriptTitleUpdate });
-    } else {
+    }
+     else {
       return res
         .status(403)
         .json({ errorMsg: "Please Choose a Different Script Name" });
@@ -603,7 +604,7 @@ const addScriptTitle = async (req, res) => {
   } catch (err) {
     return res
       .status(403)
-      .json({ errorMsg: "Please Choose a Different Script Name" });
+      .json({ errorMsg: err });
   }
 };
 

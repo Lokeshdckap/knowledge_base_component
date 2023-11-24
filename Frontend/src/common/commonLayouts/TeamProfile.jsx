@@ -13,7 +13,7 @@ export const TeamProfile = (props) => {
                 <div>
                   <input
                     type="text"
-                    value={props.team && props.team.name}
+                    value={props.team && props.team}
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded  block w-[500px] pl-2 p-2.5 focus:outline-primary mt-2"
                     placeholder="Team Name"
                     onChange={(e)=> props.setTeamName(e.target.value)}

@@ -1,20 +1,13 @@
-import React from 'react'
+import React from "react";
 
 export const BatchHeader = (props) => {
   return (
-    <div className={`flex justify-between items-center ${props.widths} m-auto mt-[18px]`}>
-        <div>
-           {props.batchTitle}
-
+    <div className={`h-[75px] bg-[#F9FAFB] `}>
+      <div className={`flex justify-between items-center bg-white  h-[75px]  `}>
+        <div className={`${props.widths} m-auto `}>
+          <div>{props.batchTitle}</div>
         </div>
-         {/* <button
-            type="button"
-            className="text-textPrimary border-[1px] border-gray-400 font-medium rounded-lg text-sm h-9 w-24 mr-2 mb-2 "
-          >
-            Share
-          </button> */}
-
-
+      </div>
     </div>
-  )
-}
+  );
+};

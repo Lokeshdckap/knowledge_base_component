@@ -30,5 +30,6 @@ import { createContext, useState } from "react";
     )
 }
 
-export const useStateContext = () => useContext(StateContext)
+export const useStateContext = () => useContext(StateContext);
+
 // export const useStateContext

@@ -13,7 +13,7 @@ export const TeamSideNav = (props) => {
         <div className="bg-white h-screen overflow-auto w-56 shadow-md">
           <div className="bg-slate-300 h-14 w-56 ` ">
             <p className="w-20 m-auto pt-4 truncate">
-              {props.team && props.team.name}
+              {props.team && props.team}
             </p>
           </div>
           <div className="w-48 m-auto h-[500px] ">

@@ -18,6 +18,7 @@ import { Invited } from "./Invited.jsx";
 import { Dashboards } from "./Dashboard/container/Dashboards.jsx";
 import { JoinTeam } from "./joinTeam/JoinTeam.jsx";
 import { Trash } from "./Trash/container/Trash.jsx";
+import TeamLayout from "./components/TeamLayout.jsx";
 
 
 
@@ -72,6 +73,29 @@ const router = createBrowserRouter([
       },
     ],
   },
+
+  {
+    path: "/dashboard/:uuid/:slug",
+    element: <TeamLayout />,
+    children: [
+      {
+        path: `/dashboard/:uuid/:slug`,
+        element: <Team />
+      },
+
+    ],
+  },
+
+
+
+
+
+
+
+
+
+
+
   {
     path: "/",
     element: <GuestLayout />,

@@ -1,9 +1,9 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 export default function Main(props) {
+  const params = useParams() 
   const navigate = useNavigate();
-  const teamName = props.team.name;
   const batchList = props.batches;
   const scriptList = props.scripts;
   const scriptEvent = props.scriptEvent;
@@ -12,11 +12,12 @@ export default function Main(props) {
 
   const handleBatch = (e) => {
     let TargetScriptId = e.target.id;
-    navigate(`/dashboard/${props.team.uuid}/b/${TargetScriptId}`);
+    navigate(`/dashboard/${params.uuid}/b/${TargetScriptId}`);
   };
   const handleScripts = (e) => {
+    console.log(e.target);
     let TargetScriptId = e.target.id;
-    navigate(`/dashboard/${props.team.uuid}/s/${TargetScriptId}`);
+    navigate(`/dashboard/${params.uuid}/s/${TargetScriptId}`);
   };
 
   return (
@@ -29,7 +30,7 @@ export default function Main(props) {
             </div>
             <div>
               <h1 className="text-xl font-bold">Team Documents</h1>
-              <h3 className="text-sm">{teamName} 's Teams</h3>
+              <h3 className="text-sm">{props.team} 's Teams</h3>
             </div>
           </div>
           <div className="flex items-center space-x-5">

@@ -6,7 +6,9 @@ const User = db.users;
 const emailVerificationToken = db.email_verification_token; // Email Verification Token
 const Joi = require("joi");
 const crypto = require("crypto");
-const generateAuthToken = require("../../utils/generateAuthToken");
+const tokens = require("../../utils/generateAuthToken");
+const generateAuthToken = tokens.generateAuthToken;
+const generateAuthRefreshToken = tokens.generateAuthRefreshToken;
 const sendEmail = require("../../utils/sendEmails");
 const uuid = require("uuid");
 const UserTeams = db.user_team_members;
@@ -28,7 +30,6 @@ const register = async (req, res) => {
     if (userExists) {
       return res.status(400).send("Email is already exists");
     }
-
     const user = await User.create({
       username,
       email,
@@ -36,15 +37,14 @@ const register = async (req, res) => {
       uuid: uuid.v4(),
     });
 
-    if(req.body.team_uuid){
+    if (req.body.team_uuid) {
       const UserTeam = await UserTeams.create({
-        user_uuid : user.uuid,
-        team_uuid : req.body.team_uuid,
-        role_id : req.body.role,
+        user_uuid: user.uuid,
+        team_uuid: req.body.team_uuid,
+        role_id: req.body.role,
         uuid: uuid.v4(),
-      })
+      });
     }
-
 
     if (user) {
       const expiresAt = new Date(Date.now() + 3600000);
@@ -97,14 +97,17 @@ const login = async (req, res) => {
     //if user email is found, compare password with bcrypt
     if (user) {
       const isSame = await bcrypt.compare(password, user.password);
-
       //if password is the same
       //generate token with the user's id and the secretKey in the env file
 
       if (isSame) {
         let token = generateAuthToken(user);
 
-        return res.status(200).send({ token, verify: user.isVerified });
+        let refresh_token = generateAuthRefreshToken(user);
+
+        return res
+          .status(200)
+          .send({ token, refresh_token, verify: user.isVerified });
       } else {
         return res.status(401).send({ password: "Invaild Crendtials" });
       }
@@ -112,6 +115,7 @@ const login = async (req, res) => {
       return res.status(401).send({ email: "Invaild Crendtials" });
     }
   } catch (error) {
+    console.log("eee", error);
     return res.status(400).send({ email: "Email Not Verified" });
   }
 };
@@ -123,72 +127,75 @@ const verifyEmail = async (req, res) => {
     console.log(req.params.uuid);
 
     //find user by token using the where clause
-    const usertoken = await emailVerificationToken.findOne({
-      token,
-      where: {
-        user_uuid: req.params.uuid,
-      },
-    });
-
-    const userTeamAvailable = await UserTeams.findOne({
-      where: {
-        user_uuid: req.params.uuid,
-      },
-    });
-
-
-    //if token doesnt exist, send status of 400
-    if (usertoken.expires_at < new Date()) {
-      return res
-        .status(400)
-        .json({ message: "Token has expired or Invaild Token" });
-    }
-    if (!usertoken) {
-      return res.status(400).send({
-        msg: "Your verification link may have expired. Please click on resend for verify your Email.",
+    if (req.params.uuid) {
+      const usertoken = await emailVerificationToken.findOne({
+        token,
+        where: {
+          user_uuid: req.params.uuid,
+        },
       });
 
-      //if token exist, find the user with that token
-    } else {
-      const user = await User.findOne({ where: { uuid: req.params.uuid } });
-      if (!user) {
-        return res.status(401).send({
-          msg: "We were unable to find a user for this verification. Please SignUp!",
+      const userTeamAvailable = await UserTeams.findOne({
+        where: {
+          user_uuid: req.params.uuid,
+        },
+      });
+
+      //if token doesnt exist, send status of 400
+      if (usertoken.expires_at < new Date()) {
+        return res
+          .status(400)
+          .json({ message: "Token has expired or Invaild Token" });
+      }
+      if (!usertoken) {
+        return res.status(400).send({
+          msg: "Your verification link may have expired. Please click on resend for verify your Email.",
         });
 
-        //if user is already verified, tell the user to login
-      } else if (user.isVerified) {
-        let jwttoken = generateAuthToken(user);
-        // JWT TokeN
-        return res.status(200).send({ verify: user.isVerified, jwttoken,userTeamAvailable });
-
-        //if user is not verified, change the verified to true by updating the field
+        //if token exist, find the user with that token
       } else {
-        const updated = await User.update(
-          { isVerified: true },
-          {
+        const user = await User.findOne({ where: { uuid: req.params.uuid } });
+        if (!user) {
+          return res.status(401).send({
+            msg: "We were unable to find a user for this verification. Please SignUp!",
+          });
+
+          //if user is already verified, tell the user to login
+        } else if (user.isVerified) {
+          let jwttoken = generateAuthToken(user);
+          // JWT TokeN
+          return res
+            .status(200)
+            .send({ verify: user.isVerified, jwttoken, userTeamAvailable });
+
+          //if user is not verified, change the verified to true by updating the field
+        } else {
+          const updated = await User.update(
+            { isVerified: true },
+            {
+              where: {
+                uuid: usertoken.user_uuid,
+              },
+            }
+          );
+
+          const user = await User.findOne({
             where: {
               uuid: usertoken.user_uuid,
             },
-          }
-        );
-
-        const user = await User.findOne({
-          where: {
-            uuid: usertoken.user_uuid,
-          },
-        });
-
-        //if not updated sencsrfd error message
-        if (!updated) {
-          return res.status(500).send({ msg: err.message });
-          //else send status of 200
-        } else {
-          return res.status(200).send({
-            Success: "Your account has been successfully verified",
-            verify: user.isVerified,
-            token,
           });
+
+          //if not updated sencsrfd error message
+          if (!updated) {
+            return res.status(500).send({ msg: err.message });
+            //else send status of 200
+          } else {
+            return res.status(200).send({
+              Success: "Your account has been successfully verified",
+              verify: user.isVerified,
+              token,
+            });
+          }
         }
       }
     }

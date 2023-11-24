@@ -7,7 +7,7 @@ import { ToastContainer,toast } from "react-toastify";
 export default function EditHeader(props) {
 
   return (
-    <div className="">
+    <div className="h-[75px] bg-white">
       <div
         className={`flex items-center justify-between m-auto ${props.widths} pt-3 space-y-2`}
       >

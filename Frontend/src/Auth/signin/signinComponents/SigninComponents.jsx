@@ -64,6 +64,7 @@ export default function SigninComponents() {
       axiosClient
         .post("http://localhost:4000/login", formValues)
         .then(({ data }) => {
+          console.log(data);
           if (data.verify) {
 
             setAuth({
@@ -102,16 +103,18 @@ export default function SigninComponents() {
 
   return (
     <main className="flex">
-      <div className="bg-primary w-1/2 h-[664px]">
+      <div className="bg-primary w-1/2 h-screen">
+        <img src={"https://i.postimg.cc/FRL3nwV1/mainlogo.png"} className="mx-8 mt-5"/>
+        <p className="mx-11 text-white text-sm font-medium">Rhino Tome</p>
         <img
           src={logo}
           alt=""
-          className="max-w-[390px]  m-auto mt-[130px] mb-[112px] "
+          className="max-w-[390px]  m-auto mt-[70px] mb-[112px] "
         />
       </div>
       <div className="bg-secondary  w-1/2 p-32">
         <div>
-          <h2 className="text-2xl text-textPrimary">Happy to see you back</h2>
+          <h2 className="text-xl text-textPrimary">Happy To See You Back ! Our Rhino Tome </h2>
           <h3 className="pt-2 text-base text-textPrimary">
             Log in and unlock your world!
           </h3>
@@ -150,7 +153,8 @@ export default function SigninComponents() {
                 type={PasswordVisible ? "text" : "password"}
                 event={HandleChange}
                 value={formValues.password}
-                placeholder="password"
+                placeholder="Password"
+             
               />
               <div className="">
                 {PasswordVisible ? (

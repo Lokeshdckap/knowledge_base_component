@@ -21,7 +21,7 @@ export default function Main(props) {
   };
 
   return (
-    <div className="pt-16 h-[520px] overflow-y-auto z-0">
+    <div className="pt-16 h-[520px]  overflow-y-auto z-0">
       <div className="   ">
         <div className={`flex justify-between ${props.widths} m-auto  `}>
           <div className="flex space-x-3">
@@ -35,7 +35,7 @@ export default function Main(props) {
           </div>
           <div className="flex items-center space-x-5">
             <button
-              className="h-[40px] w-[121px] text-[#A8B0B7] rounded border-[#A8B0B7]  border-[1px] "
+              className="h-[40px] w-[121px] text-primary rounded border-primary  border-[1px] "
               onClick={addBatchEvent}
             >
               New Batch

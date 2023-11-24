@@ -6,11 +6,9 @@ import { ToastContainer, toast } from "react-toastify";
 import HashLoader from "react-spinners/HashLoader";
 
 export const Team = () => {
-
   const [teamName, setTeamName] = useState("");
   const [message, setMessage] = useState("");
   const [teamMembers, setTeamMembers] = useState([]);
-
 
   const [invitePopup, setInvitePopup] = useState(false);
   const [inviteEmail, setInviteEmail] = useState("");
@@ -32,11 +30,9 @@ export const Team = () => {
   };
 
   const team = () => {
-    
     axiosClient
       .get(`/getTeam/${params.uuid}`)
       .then((res) => {
-
         setTeamName(res.data.name);
       })
       .catch((err) => {
@@ -45,7 +41,6 @@ export const Team = () => {
   };
 
   const allUsers = () => {
-    // console.log(params.uuid);
     axiosClient
       .get(`/getAciveUsers/${params.uuid}`)
       .then((res) => {
@@ -80,42 +75,38 @@ export const Team = () => {
   };
 
   const handleInviteUsers = () => {
-
     setLoading(true);
-    if(!inviteEmail.trim()) {
-    setLoading(false);
-      
-      setInviteError("Email is required");
-    }
-    else if(!role.trim()) {
+    if (!inviteEmail.trim()) {
       setLoading(false);
-        
-        setInviteError("Role is required");
-      }
-    else{
 
-    axiosClient
-      .post("/inviteUsers", {
-        email: inviteEmail,
-        role: role,
-        team_uuid: params.uuid,
-      })
-      .then((res) => {
-        showToastMessage(res.data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        const response = err.response;
-        if (response && response.status === 400) {
-          setInviteError(response.data);
-          setTimeout(() => {
-            setInviteError("");
-          }, 1500);
+      setInviteError("Email is required");
+    } else if (!role.trim()) {
+      setLoading(false);
+
+      setInviteError("Role is required");
+    } else {
+      axiosClient
+        .post("/inviteUsers", {
+          email: inviteEmail,
+          role: role,
+          team_uuid: params.uuid,
+        })
+        .then((res) => {
+          showToastMessage(res.data);
           setLoading(false);
-        } else {
-          console.error("Error:", response.status);
-        }
-      });
+        })
+        .catch((err) => {
+          const response = err.response;
+          if (response && response.status === 400) {
+            setInviteError(response.data);
+            setTimeout(() => {
+              setInviteError("");
+            }, 1500);
+            setLoading(false);
+          } else {
+            console.error("Error:", response.status);
+          }
+        });
     }
   };
 

@@ -34,15 +34,79 @@ app.use(passport.session());
 
 // Middlewares
 const path = require("path");
+
 app.use(express.json());
 
 app.use(express.urlencoded({ extended: true }));
 
 // Routes for user API
 
-app.use("/", require("./routes/authentication"));
+const authRoute =  require("./routes/authentication")
 
-app.use("/", require("./routes/dashboard"));
+const dashboardRoute = require("./routes/dashboard");
+
+const teamRoute = require("./routes/teams");
+
+const trashRoute = require("./routes/trash")
+
+const batchRoute = require("./routes/batch")
+
+const scriptRoute = require("./routes/scripts")
+
+const inviteRoute = require("./routes/invites")
+
+const pageRoute = require("./routes/pages")
+
+const publicRoute = require("./routes/publicUrl")
+
+app.use("/",authRoute);
+
+app.use("/",dashboardRoute);
+
+app.use("/",teamRoute);
+
+app.use("/",trashRoute);
+
+app.use("/",batchRoute);
+
+app.use("/",scriptRoute);
+
+app.use("/",inviteRoute);
+
+app.use("/",pageRoute);
+
+app.use("/",publicRoute);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 app.set('view engine', 'pug');
 

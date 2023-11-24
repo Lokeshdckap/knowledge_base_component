@@ -20,16 +20,14 @@ import { JoinTeam } from "./joinTeam/JoinTeam.jsx";
 import { Trash } from "./Trash/container/Trash.jsx";
 import TeamLayout from "./components/TeamLayout.jsx";
 
-
-
 const router = createBrowserRouter([
   {
     path: "/",
     element: <DefaultLayout />,
     children: [
       {
-        path: '/',
-        element: <Navigate to={`/dashboard`} />
+        path: "/",
+        element: <Navigate to={`/dashboard`} />,
       },
       {
         path: "/dashboard",
@@ -61,7 +59,7 @@ const router = createBrowserRouter([
       },
       {
         path: `/dashboard/:uuid/:slug`,
-        element: <Team />
+        element: <Team />,
       },
       {
         path: "/signin/:uuid/:id",
@@ -103,8 +101,7 @@ const router = createBrowserRouter([
       {
         path: "/signin",
         element: <SigninContainer />,
-
-      },    
+      },
       {
         path: "/signup",
         element: <SignupContainer />,
@@ -124,13 +121,13 @@ const router = createBrowserRouter([
       {
         path: "/email-verify/:uuid/:token",
         element: <SignupContainer />,
-      }
+      },
     ],
   },
 
   {
-    path:"/join/:token",
-    element:<JoinTeam />
+    path: "/join/:token",
+    element: <JoinTeam />,
   },
   {
     path: "/error",
@@ -139,7 +136,7 @@ const router = createBrowserRouter([
   {
     path: "/:uuid/:slug/*",
     element: <UrlPage />,
-  }
+  },
 ]);
 
 export default router;

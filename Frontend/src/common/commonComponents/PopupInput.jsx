@@ -5,7 +5,7 @@ export const PopupInput = (props) => {
     <div className="mb-2 mt-5">
       {/* <input type="text" className="border h-[33px] dark:placeholder-gray-400 bg-gray-50 rounded-sm " placeholder="Create team"/> */}
       <label
-        for="default-input"
+        htmlFor="default-input"
         className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
       >
         {props.lableName}

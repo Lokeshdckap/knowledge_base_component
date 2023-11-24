@@ -6,11 +6,10 @@ import { ActiveUsers } from "../../common/commonLayouts/ActiveUsers";
 import Error from "../../Error/Error";
 
 export const TeamComponents = (props) => {
-    const params = useParams();
+  const params = useParams();
 
-    
   return (
-    <div className="flex bg-[#F4F4F4] h-screen overflow-auto">
+    <div className="flex bg-[#F4F4F4]">
       <TeamSideNav
         team={props.team}
         setTeamName={props.setTeamName}
@@ -18,9 +17,8 @@ export const TeamComponents = (props) => {
         message={props.message}
       />
 
-      <div className="m-auto">
-
-      {params.slug === "teamsetting" ? (
+      <div className="h-screen overflow-auto w-screen">
+        {params.slug == "teamsetting" ? (
           <TeamProfile
             team={props.team}
             setTeamName={props.setTeamName}
@@ -42,13 +40,9 @@ export const TeamComponents = (props) => {
             setInviteError={props.setInviteError}
           />
         ) : (
-            <Error />
+          <Error />
         )}
-
-
       </div>
-   
-      
     </div>
   );
 };

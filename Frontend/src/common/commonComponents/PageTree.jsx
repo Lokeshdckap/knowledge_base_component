@@ -35,8 +35,9 @@ export const PageTree = ({
   const { slug, "*": wildcardValue } = useParams();
 
   return (
-    <div className="mb-1">
-      <div
+    <div className="mb-1" id={node.uuid}  key={node.uuid} >
+      <div 
+      key={node.uuid}
         className={`flex items-center hover:bg-slate-300 ${
           pageIds == node.uuid ? "bg-slate-300 " : ""
         }  ${
@@ -54,7 +55,7 @@ export const PageTree = ({
           id={node.uuid}
           data-set={node.path}
           index={node.id}
-          key={node.id}
+          key={node.uuid}
         >
           {node.title.slice(0, -5)}
           {hoverPageId == node.uuid && (
@@ -80,7 +81,7 @@ export const PageTree = ({
           <ul className="ml-3 mt-1 pl-1 border-l-[1px] border-gray-400">
             {node.ChildPages.map((child, index) => (
               <li
-                key={child.page_id}
+                key={child.uuid}
                 className="cursor-pointer"
                 data-id={index}
                 id={child.uuid}

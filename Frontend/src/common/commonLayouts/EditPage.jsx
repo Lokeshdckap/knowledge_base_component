@@ -36,9 +36,8 @@ export default function EditPage(props) {
             <div className="p-4 rounded-lg shadow">
               {treeNode.map((topLevelPage, index) => (
                 <div
-                  key={topLevelPage.page_id}
-                  id={topLevelPage.page_id}
-                  className=""
+                  key={topLevelPage.uuid}
+                  id={topLevelPage.uuid}
                 >
                   <PageTree
                     node={topLevelPage}

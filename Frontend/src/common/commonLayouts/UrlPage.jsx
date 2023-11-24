@@ -193,7 +193,7 @@ export const UrlPage = () => {
           placeholder="Search"
           onClick={() => setsearchPopup((prevState) => !prevState)}
           ref={searchInpRef}
-          value=""
+          readOnly
           className="bg-gray-200 rounded-md w-48 h-10 pl-2 focus:outline-primary cursor-pointer"
         />
       </div>
@@ -202,7 +202,7 @@ export const UrlPage = () => {
         <div className="w-[250px] m-auto mt-5 h-[540px] pr-2 overflow-auto">
           {page.map((topLevelPage, index) => (
             <div
-              key={topLevelPage.page_id}
+              key={topLevelPage.uuid}
               id={topLevelPage.page_id}
               className=""
             >

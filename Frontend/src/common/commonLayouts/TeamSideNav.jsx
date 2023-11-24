@@ -11,12 +11,12 @@ export const TeamSideNav = (props) => {
     <div>
       <div className=" ">
         <div className="bg-white h-screen overflow-auto w-56 shadow-md">
-          <div className="bg-slate-300 h-14 w-56 ` ">
+          <div className="bg-slate-300 h-14">
             <p className="w-20 m-auto pt-4 truncate">
               {props.team && props.team}
             </p>
           </div>
-          <div className="w-48 m-auto h-[500px] ">
+          <div className="w-48 m-auto h-[532px] ">
             <p className="text-textPrimary font-bold text-lg mt-3 ">
               Team Setting
             </p>
@@ -45,7 +45,7 @@ export const TeamSideNav = (props) => {
               </div>
             </Link>
           </div>
-          <div className="bg-primary h-16 p-5 flex items-center space-x-2">
+          <div className="bg-primary h-16 p-5  flex items-center space-x-2">
             <i className="fa-solid fa-arrow-left text-white"></i>
             <Link to={`/dashboard/${params.uuid}`}> <p className="text-white">Back to dashboard</p></Link>
           </div>

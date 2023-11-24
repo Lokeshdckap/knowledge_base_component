@@ -11,14 +11,15 @@ const uuid = require("uuid");
 
 const getBatchAndScripts = async (req, res) => {
   try {
-    let result = await Script.findAll({
+    let result = await Script.findAll({where:{deleted_at:{
+      [Op.is]: null,
+    }},
       include: [
         {
           model: Batch,
           where: {
             uuid: req.params.batch_uuid, // WHERE condition for the Batch model
           },
-
           include: [
             {
               model: Team,
@@ -28,7 +29,9 @@ const getBatchAndScripts = async (req, res) => {
             },
           ],
         },
+        
       ],
+
       order: [["createdAt", "DESC"]],
     });
     const batchData = await Batch.findOne({
@@ -137,7 +140,9 @@ const getScripts = async (req, res) => {
           [Op.and]: [{ team_uuid: TeamId }, { uuid: scriptId }],
         },
       });
-      let result = await Script.findAll({
+      let result = await Script.findAll({where:{deleted_at:{
+        [Op.is]: null,
+      }},
         include: [
           {
             model: Batch,

@@ -4,13 +4,11 @@ import { TrashMain } from '../../common/commonLayouts/TrashMain'
 
 export const TrashComponent = (props) => {
   return (
-    <div>
+    <div className="bg-[#F9FAFB] h-screen w-screen overflow-auto z-[10px]">
         <TrashHeader 
-        widths={props.widths}
-
         />
         <TrashMain 
-        
+          trashData={props.trashData}
         />
     </div>
   )

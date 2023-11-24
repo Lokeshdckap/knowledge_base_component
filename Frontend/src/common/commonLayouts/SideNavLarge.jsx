@@ -12,7 +12,11 @@ import { useMyContext } from "../../context/AppContext";
 export default function SideNavLarge(props) {
   //navigate
   const navigate = useNavigate();
-
+  const showToastErrorMessage = (data) => {
+    toast.error(data, {
+      position: toast.POSITION.TOP_RIGHT,
+    });
+  };
   const {
     moveState,
     handleMove,
@@ -40,6 +44,8 @@ export default function SideNavLarge(props) {
     showToastMessage,
     addNewScript,
     getLoadScript,
+    getScripts,
+    handleAfterAddedChildrenScripts
   } = useMyContext();
 
   //param
@@ -95,7 +101,7 @@ export default function SideNavLarge(props) {
             navigate(`/dashboard/${res.data.selectedTeam.uuid}`);
             setLoading(false);
             setteamDropDown(false);
-            showToastMessage("Team Switched");
+            showToastMessage(res.data.msg);
           }
         })
         .catch((err) => {
@@ -140,6 +146,7 @@ export default function SideNavLarge(props) {
   const handleScriptMouseLeave = () => {
     setOverScriptState(null);
   };
+
   //Redirect to Script
   const redirectToScript = (e) => {
     let TargetScriptId = e.target.id;
@@ -255,6 +262,41 @@ export default function SideNavLarge(props) {
     let batch_uuid = e.target.id;
 
     getLoadScript(params.uuid, batch_uuid);
+  };
+
+  //Trash
+
+  const handleTrash = (e) => {
+    let targetId = e.target.id;
+
+    let batchId = e.target.dataset.set;
+    if (targetId) {
+      setLoading(true);
+
+      axiosClient
+        .put(`/moveToTrash/${params.uuid}/${targetId}`)
+        .then((res) => {
+          if (res.status == 200) {
+            setLoading(false);
+            showToastErrorMessage(res.data.message);
+            getBatch();
+            getScript();
+            if(batchId){
+              handleAfterAddedChildrenScripts(batchId);
+            }
+          }
+        })
+        .catch((err) => {
+          const response = err.response;
+          console.log(response);
+          if (response && response.status === 400) {
+          } else {
+            console.error("Error:", response.status);
+          }
+        });
+    } else {
+      showToastErrorMessage("no Id");
+    }
   };
 
   return (
@@ -397,23 +439,64 @@ export default function SideNavLarge(props) {
                 childScript.map(
                   (child) =>
                     child.batch_uuid == batch.uuid && (
-                      <li
-                        key={child.id}
-                        id={child.uuid}
-                        className={`text-[#BCD1FF] pl-12 cursor-pointer hover:bg-cyan-950 ${
-                          params.slug == child.uuid && "bg-cyan-950"
-                        } pt-1 pb-1 truncate  `}
-                        onMouseEnter={handleScriptMouseEnter}
-                        onMouseLeave={handleScriptMouseLeave}
-                        onClick={redirectToScript}
-                      >
-                        <i
-                          className="fa-solid fa-file pr-3"
-                          onClick={redirectToScript}
+                      <div className="">
+                        <li
+                          key={child.id}
                           id={child.uuid}
-                        ></i>
-                        {child.title}
-                      </li>
+                          data-set={child.batch_uuid}
+                          className={`text-[#BCD1FF] pl-11 cursor-pointer hover:bg-cyan-950 pt-1 pb-1 truncate ${
+                            params.slug == child.uuid && "bg-cyan-950"
+                          } `}
+                          onMouseEnter={handleScriptMouseEnter}
+                          onMouseLeave={handleScriptMouseLeave}
+                        >
+                          <i
+                            className="fa-solid fa-file pr-3"
+                            onClick={redirectToScript}
+                          ></i>
+                          <span
+                            onClick={redirectToScript}
+                            id={child.uuid}
+                            className="truncate max-w-[20px]"
+                          >
+                            {child.title.slice(0, 7) +
+                              (child.title.length > 6 ? ".." : "")}
+                          </span>
+                          {overScriptState == child.uuid && (
+                            <i
+                              className="fa-solid fa-ellipsis-vertical text-[#BCD1FF]  pl-14"
+                              id={child.uuid}
+                              onClick={addPopUp}
+                            ></i>
+                          )}
+                        </li>
+                        {popUp == child.uuid && (
+                          <div className="box-border bg-white  w-44 p-4 border-[1px] border-slate-300 rounded-xl shadow-lg absolute left-52 z-50">
+                            <div className="w-[130px] m-auto space-y-3">
+                              <p
+                                className="text-lg cursor-pointer text-textPrimary hover:bg-primary  hover:text-white hover:rounded"
+                                id={child.uuid}
+                              >
+                                <i className="fa-regular fa-file pr-[7px]"></i>
+                                Share
+                              </p>
+                              <p
+                                className={`text-lg cursor-pointer text-textPrimary hover:bg-primary  hover:text-white hover:rounded`}
+                                id={child.uuid}
+                                onClick={handleTrash}
+                                data-set={child.batch_uuid}
+                              >
+                                <i className="fa-solid fa-trash pr-[5px]"
+                                  id={child.uuid}
+                                  onClick={handleTrash}
+                                  data-set={child.batch_uuid}
+                                ></i>
+                                Trash
+                              </p>
+                            </div>
+                          </div>
+                        )}
+                      </div>
                     )
                 )}
               {popUp == batch.uuid && (
@@ -439,8 +522,8 @@ export default function SideNavLarge(props) {
                     </p>
                     <p
                       className="text-lg cursor-pointer text-textPrimary hover:bg-primary  hover:text-white hover:rounded"
-                      id="script"
-                      onClick={props.handleTrash}
+                      id={batch.uuid}
+                      onClick={handleTrash}
                     >
                       <i className="fa-solid fa-trash pr-[5px]"></i>Trash
                     </p>
@@ -450,29 +533,75 @@ export default function SideNavLarge(props) {
             </div>
           ))}
           {script.map((script) => (
-            <li
-              key={script.id}
-              id={script.uuid}
-              className={`text-[#BCD1FF] pl-8 cursor-pointer hover:bg-cyan-950 pt-1 pb-1 truncate ${
-                params.slug == script.uuid && "bg-cyan-950"
-              } `}
-              onMouseEnter={handleScriptMouseEnter}
-              onMouseLeave={handleScriptMouseLeave}
-              onClick={redirectToScript}
-            >
-              <i className="fa-solid fa-file pr-3"></i>
-              {script.title}
-            </li>
+            <div>
+              <li
+                key={script.id}
+                id={script.uuid}
+                className={`text-[#BCD1FF] pl-8 cursor-pointer hover:bg-cyan-950 pt-1 pb-1 truncate ${
+                  params.slug == script.uuid && "bg-cyan-950"
+                } `}
+                onMouseEnter={handleScriptMouseEnter}
+                onMouseLeave={handleScriptMouseLeave}
+              >
+                <i
+                  className="fa-solid fa-file pr-3"
+                  onClick={redirectToScript}
+                ></i>
+                <span
+                  onClick={redirectToScript}
+                  id={script.uuid}
+                  className="truncate max-w-[20px]"
+                >
+                  {script.title.slice(0, 7) +
+                    (script.title.length > 6 ? ".." : "")}
+                </span>
+                {overScriptState == script.uuid && (
+                  <i
+                    className="fa-solid fa-ellipsis-vertical text-[#BCD1FF]  pl-14"
+                    id={script.uuid}
+                    onClick={addPopUp}
+                  ></i>
+                )}
+              </li>
+              {popUp == script.uuid && (
+                <div className="box-border bg-white  w-44 p-4 border-[1px] border-slate-300 rounded-xl shadow-lg absolute left-52 z-50">
+                  <div className="w-[130px] m-auto space-y-3">
+                    <p
+                      className="text-lg cursor-pointer text-textPrimary hover:bg-primary  hover:text-white hover:rounded"
+                      id={script.uuid}
+                    >
+                      <i className="fa-regular fa-file pr-[7px]"></i>Share
+                    </p>
+                    <p
+                      className={`text-lg cursor-pointer text-textPrimary hover:bg-primary  hover:text-white hover:rounded`}
+                      id={script.uuid}
+                      onClick={handleTrash}
+                    >
+                      <i className="fa-solid fa-trash pr-[5px]"></i>Trash
+                    </p>
+                  </div>
+                </div>
+              )}
+            </div>
           ))}
         </ul>
+
         <hr
           className={`h-px  bg-textPrimary border-0 dark:bg-gray-900 m-auto mt-2`}
         />
         <div className=" flex items-center  justify-around w-[200px] m-auto  mt-10">
-          <div className="bg-white h-8 w-8 rounded-full cursor-pointer  ">
+          <div
+            className={` ${
+              params.slug == "trash" ? "bg-textPrimary" : "bg-white"
+            } h-8 w-8    rounded-full cursor-pointer `}
+          >
             <Link to={`/dashboard/${params.uuid}/t/trash`}>
-              <p className=" text-primary pl-[8px] pt-[3px]  ">
-                <i className="fa-solid fa-trash pr-[5px]"></i>
+              <p className={` text-primary pl-[8px] pt-[3px]  `}>
+                <i
+                  className={`fa-solid fa-trash pr-[5px] ${
+                    params.slug == "trash" && "text-white"
+                  }`}
+                ></i>
               </p>
             </Link>
           </div>

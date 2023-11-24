@@ -64,6 +64,7 @@ export const BatchComponent = () => {
       .then((res) => {
         getScripts();
         getBatch();
+        showToastMessage(res.data.message);
       })
       .catch((err) => {
         console.log(err);
@@ -80,6 +81,7 @@ export const BatchComponent = () => {
       .then((res) => {
         getScripts();
         getBatch();
+        showToastMessage(res.data.message);
       })
       .catch((err) => {
         console.log(err);

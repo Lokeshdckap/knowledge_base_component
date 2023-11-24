@@ -33,7 +33,7 @@ export const Team = () => {
     axiosClient
       .get(`/getTeam/${params.uuid}`)
       .then((res) => {
-        setTeamName(res.data.name);
+        setTeamName(res.data.Teams[0].name);
       })
       .catch((err) => {
         console.log(err);

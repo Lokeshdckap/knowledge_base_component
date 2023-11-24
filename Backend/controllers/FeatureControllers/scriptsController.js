@@ -98,6 +98,9 @@ const getScript = async (req, res) => {
     const script = await Script.findAll({
       where: {
         [Op.and]: [{ team_uuid: req.params.uuid }, { batch_uuid: null }],
+        deleted_at:{
+          [Op.is]: null,
+        }
       },
       order: [["createdAt", "DESC"]],
     });

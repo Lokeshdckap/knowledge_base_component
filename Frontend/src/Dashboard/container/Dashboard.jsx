@@ -125,24 +125,7 @@ export default function Dashboard() {
     }
   };
 
-  //Trash
 
-  const handleTrash = (e) => {
-    let targetId = e.target.id;
-    axiosClient
-      .put(`/trash/${targetId}/${params.uuid}`)
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => {
-        const response = err.response;
-        console.log(response);
-        if (response && response.status === 400) {
-        } else {
-          console.error("Error:", response.status);
-        }
-      });
-  };
 
   return (
     <>

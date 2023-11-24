@@ -47,7 +47,7 @@ const MyContextProvider = ({ children }) => {
     await axiosClient
       .get(`/getTeam/${params.uuid}`)
       .then((res) => {
-        setTeam(res.data.name);
+        setTeam(res.data.Teams[0].name);
         getBatch();
         getScript();
       })
@@ -107,7 +107,7 @@ const MyContextProvider = ({ children }) => {
           setLoading(false);
           setAddNewMenu(false);
           setPopup(null);
-          showToastMessage("New Batch added successfully");
+          showToastMessage(res.data.Success);
         }
       })
       .catch((err) => {
@@ -129,7 +129,7 @@ const MyContextProvider = ({ children }) => {
         }
         setAddNewMenu(false);
         setPopup(null);
-        showToastMessage("New Script added successfully");
+        showToastMessage(res.data.Success);
       })
       .catch((err) => {
         console.log(err);
@@ -201,7 +201,8 @@ const MyContextProvider = ({ children }) => {
         teamName, 
         setTeam,
         allTeam,
-         setAllTeam
+         setAllTeam,
+         handleAfterAddedChildrenScripts
       }}
     >
       {children}

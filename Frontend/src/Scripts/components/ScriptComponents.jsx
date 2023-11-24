@@ -22,7 +22,6 @@ export const ScriptComponents = () => {
   const [team, setTeam] = useState([]);
   const [allTeam, setAllTeam] = useState([]);
   const [batch, setBatch] = useState([]);
-  // const [script, setScript] = useState([]);
   const [teamPopup, setTeamPopup] = useState(false);
 
   const [childScript, setChildScript] = useState([]);
@@ -76,7 +75,7 @@ export const ScriptComponents = () => {
 
   const showToastMessage = (data) => {
     toast.success(data, {
-      position: toast.POSITION.TOP_CENTER,
+      position: toast.POSITION.TOP_RIGHT,
     });
   };
 
@@ -185,7 +184,8 @@ export const ScriptComponents = () => {
       .then((res) => {
         getParticularScript();
 
-        showToastSaveMessage("Content Saved Sucessfully");
+        showToastMessage(res.data.msg);
+
       })
       .catch((err) => {
         console.log(err);
@@ -231,7 +231,7 @@ export const ScriptComponents = () => {
       queryParameter: paraId,
       teamParameter: params.uuid,
     };
-    console.log(payload);
+
     await axiosClient
       .post("/addScriptTitle", payload)
       .then((res) => {
@@ -292,12 +292,15 @@ export const ScriptComponents = () => {
     setFormValues({ ...formValues, [name]: value });
     delete errors[name];
   };
+
   const onChange = (checked) => {
     axiosClient
       .get(`/scripts/${params.slug}/${checked}`)
       .then((res) => {
         setRenderScript(res.data.publicUrl);
         setTeamUuid(params.uuid);
+        {res.data.publicUrl.is_published ? showToastMessage(res.data.msg) :showToastErrorMessage(res.data.msg)}
+
       })
       .catch((err) => {
         console.log(err);

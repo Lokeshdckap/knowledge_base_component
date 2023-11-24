@@ -5,7 +5,7 @@ const generateAuthToken = (user) => {
   const payload = { id: user.uuid};
 
   const access_token = jwt.sign(payload, process.env.secretKey, {
-    expiresIn: '30s',
+    expiresIn: '1h',
   });
 
   return access_token;

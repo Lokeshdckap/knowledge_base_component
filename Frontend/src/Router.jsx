@@ -30,6 +30,10 @@ const router = createBrowserRouter([
         element: <Navigate to={`/dashboard`} />,
       },
       {
+        path: "/teampage",
+        element: <TeamPage />,
+      },
+      {
         path: "/dashboard",
         element: <Dashboards />,
       },
@@ -49,10 +53,7 @@ const router = createBrowserRouter([
         path: "/dashboard/:uuid/s/:slug",
         element: <Scripts />,
       },
-      {
-        path: "/teampage",
-        element: <TeamPage />,
-      },
+
       {
         path: "/share",
         element: <TeamPage />,
@@ -67,7 +68,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/dashboard/:uuid/t/:slug",
-        element: <Dashboard />,
+        element: <Trash />,
       },
     ],
   },
@@ -83,17 +84,6 @@ const router = createBrowserRouter([
 
     ],
   },
-
-
-
-
-
-
-
-
-
-
-
   {
     path: "/",
     element: <GuestLayout />,

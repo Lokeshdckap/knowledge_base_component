@@ -103,6 +103,9 @@ const getBatch = async (req, res) => {
     const batchs = await Batch.findAll({
       where: {
         team_uuid: req.params.uuid,
+        deleted_at:{
+          [Op.is]: null,
+        }
       },
       order: [["createdAt", "DESC"]],
     });

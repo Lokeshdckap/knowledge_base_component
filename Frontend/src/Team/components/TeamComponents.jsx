@@ -17,7 +17,7 @@ export const TeamComponents = (props) => {
         message={props.message}
       />
 
-      <div className="h-screen overflow-auto w-screen">
+      <div className=" ">
         {params.slug == "teamsetting" ? (
           <TeamProfile
             team={props.team}

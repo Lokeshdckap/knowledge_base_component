@@ -4,12 +4,13 @@ import { TeamProfile } from "../../common/commonLayouts/TeamProfile";
 import { useParams } from "react-router-dom";
 import { ActiveUsers } from "../../common/commonLayouts/ActiveUsers";
 import Error from "../../Error/Error";
+import { Profile } from "./Profile";
 
 export const TeamComponents = (props) => {
   const params = useParams();
 
   return (
-    <div className="flex bg-[#F4F4F4]">
+    <div className="flex ">
       <TeamSideNav
         team={props.team}
         setTeamName={props.setTeamName}
@@ -17,7 +18,7 @@ export const TeamComponents = (props) => {
         message={props.message}
       />
 
-      <div className=" ">
+      <div className="">
         {params.slug == "teamsetting" ? (
           <TeamProfile
             team={props.team}
@@ -39,6 +40,10 @@ export const TeamComponents = (props) => {
             inviteError={props.inviteError}
             setInviteError={props.setInviteError}
           />
+        ) : params.slug === "profile" ? (
+          <Profile 
+          userInfos={props.userInfos}
+           />
         ) : (
           <Error />
         )}

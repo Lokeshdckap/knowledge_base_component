@@ -70,7 +70,7 @@ export const BatchLayouts = (props) => {
           {scripts &&
             scripts.map((script) => (
               <div
-                className="bg-white w-[230px] h-[120px] rounded-[10px]"
+                className="bg-white w-[230px] h-[120px] rounded-[10px] shadow-lg hover:scale-105"
                 key={script.id}
               >
                 <div className="bg-gradient-to-r from-primary to-[#226576] w-[230px] h-[36px] rounded-t-lg text-end pt-px">

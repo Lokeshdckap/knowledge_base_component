@@ -1,7 +1,7 @@
 import { Link, Navigate, Outlet } from "react-router-dom";
 import { useStateContext } from "../context/ContextProvider.jsx";
 import { useEffect } from "react";
-import SideNavLarge from "../common/commonLayouts/SideNavLarge.jsx";
+
 
 export default function TeamLayout() {
   const { auth, setAuth } = useStateContext();
@@ -11,18 +11,13 @@ export default function TeamLayout() {
   } else {
     return (
       <>
-      <div>
-        <div className="relative">
+        <div>
           <div className="flex bg-[#ECEDEF]">
-            {/* <SideNavLarge /> */}
+            {/* <TeamSideNav /> */}
             <Outlet />
           </div>
-        </div>
         </div>
       </>
     );
   }
 }
-
-
-

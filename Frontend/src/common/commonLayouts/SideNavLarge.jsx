@@ -237,12 +237,15 @@ export default function SideNavLarge(props) {
   useEffect(() => {
     setOverState(props.overStates);
     const closeOnOutsideClick = (e) => {
+
+
       if (
         teamDropDown &&
         !teamRef.current.contains(e.target) &&
         e.target !== iconRef.current
       ) {
         setteamDropDown(false);
+        console.log("j");
       }
       if (
         AddNewMenu &&
@@ -319,7 +322,6 @@ export default function SideNavLarge(props) {
           <p className="text-xl font-bold w-[100%] text-white  truncate ">
             <Link to={`/dashboard/${params.uuid}`}>{teamName}'s Team</Link>
           </p>
-
           {teamDropDown ? (
             <i
               className="fa-solid fa-angle-up text-white cursor-pointer"

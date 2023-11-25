@@ -148,6 +148,8 @@ const permanentDeleteParticular = async (req, res) => {
 };
 
 const permanentDeleteAll = async (req, res) => {
+  const team_uuid = req.params.uuid;
+
   try {
     const team_uuid = req.params.uuid;
     await Script.destroy({
@@ -166,6 +168,7 @@ const permanentDeleteAll = async (req, res) => {
       .status(200)
       .json({ Sucess: "All Script and Pages Permanent Deleted" });
   } catch (err) {
+    console.log(err);
     return res
       .status(404)
       .json({ error: "All Script and Pages Permanent Delete Failed" });
@@ -174,7 +177,8 @@ const permanentDeleteAll = async (req, res) => {
 
 const selectedTrash = async (req, res) => {
   const team_uuid = req.params.uuid;
-  const selectedUuids = req.body.data;
+  const selectedUuids = req.body;
+  console.log(req.body,"biy");
 
   try {
     const deleteResult = await Script.destroy({

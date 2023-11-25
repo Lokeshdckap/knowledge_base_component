@@ -1,9 +1,9 @@
 import React from "react";
 
 export const TeamProfile = (props) => {
-  console.log(props.team);
+
   return (
-    <div className="w-[890px] m-auto">
+    <div className="ml-24 mt-10">
       <div className="bg-white w-[900px] h-[550px]  shadow-md mt-5">
         <div className="w-[800px] m-auto">
           <p className="text-2xl font-bold text-textPrimary pt-10">

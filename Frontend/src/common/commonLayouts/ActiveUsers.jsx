@@ -5,7 +5,7 @@ export const ActiveUsers = (props) => {
   let users = props.teamMember;
 
   return (
-    <div className='w-[890px] m-auto'>
+    <div className='ml-24 mt-10'>
       <div className="bg-white w-[900px] h-[550px] shadow-md mt-5 overflow-auto">
         <div className="w-[850px] m-auto">
           <p className="text-textPrimary text-2xl pt-5 font-semibold">

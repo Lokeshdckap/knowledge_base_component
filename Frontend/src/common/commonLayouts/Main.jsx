@@ -59,7 +59,7 @@ export default function Main(props) {
           {batchList.map((batch, index) => (
             <div
               key={batch.uuid}
-              className="bg-white w-[230px] h-[120px] rounded-[10px]"
+              className="bg-white w-[230px] h-[120px] rounded-[10px] shadow-lg hover:scale-105"
             >
               <div className="bg-gradient-to-r from-primary to-[#226576] w-[230px] h-[36px] rounded-t-lg text-end pt-px">
                 <span className="material-symbols-outlined text-white cursor-pointer text-2xl pr-1">
@@ -98,7 +98,7 @@ export default function Main(props) {
           className={`${props.widths} m-auto flex flex-wrap gap-[30px] mt-10`}
         >
           {scriptList.map((script) => (
-            <div className="bg-white w-[230px] h-[120px] rounded-[10px]">
+            <div className="bg-white w-[230px] h-[120px] rounded-[10px] shadow-lg hover:scale-105">
               <div className="bg-gradient-to-r from-primary to-[#226576] w-[230px] h-[36px] rounded-t-lg text-end pt-px ">
                 <span className="material-symbols-outlined text-white cursor-pointer text-2xl pr-1">
                   more_vert

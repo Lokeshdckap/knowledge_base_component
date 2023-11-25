@@ -1,18 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
 import Main from "./Main";
 import { Navigate, useNavigate } from "react-router-dom";
 
 export default function Header(props) {
-
-
+  const [profileState, setProfileState] = useState(false);
   const onLogout = () => {
     localStorage.removeItem("ACCESS_TOKEN");
     window.location.href = "/signin";
   };
+
+  const handleProfile = () => {
+    setProfileState((prevState) => !prevState);
+  };
   return (
-    <div className="h-[75px] bg-[#F9FAFB]">
+    <div className="h-[75px] bg-white shadow-sm">
       <div
-        className={`flex items-center justify-between m-auto ${props.widths}  pt-4`}
+        className={`flex items-center justify-between m-auto relative ${props.widths}  pt-4`}
       >
         <h2> {props.team}'s Team</h2>
         <div>
@@ -41,16 +44,34 @@ export default function Header(props) {
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
                     viewBox="0 0 20 20"
-                  >
-                  </svg>
+                  ></svg>
                   <span className="sr-only">Search</span>
                 </button>
               </div>
             </div>
           </form>
         </div>
+        <div className=" cursor-pointer p-1" onClick={handleProfile}>
+          <i class="fa-regular text-slate-600 fa-circle-user text-2xl cursor-pointer pr-3"></i>
+        </div>
+        {profileState && (
+          <div className="bg-white h-[81px] w-28 absolute top-14 border-[1px] right-[-20px] shadow-md rounded-lg">
+            <p className="text-lg pl-3 pt-2 text-textPrimary cursor-pointer ">
+              <i class="fa-regular text-slate-600 fa-circle-user text-lg cursor-pointer pr-2 pb-0.5"></i>
+              Profile
+            </p>
+            <hr />
+            <p
+              className="text-lg pl-3 pt-1 text-textPrimary cursor-pointer"
+              onClick={onLogout}
+            >
+              <i class="fa-solid fa-arrow-right-from-bracket text-slate-600 text-lg cursor-pointer pr-2"></i>
+              Logout
+            </p>
+          </div>
+        )}
 
-        <button className="h-[35px] w-[120px] text-white rounded  bg-primary" onClick={onLogout}>Logout <i class="fa-solid fa-arrow-right-from-bracket mx-2"></i></button>
+        {/* <button className="h-[35px] w-[120px] text-white rounded  bg-primary" onClick={onLogout}>Logout <i class="fa-solid fa-arrow-right-from-bracket mx-2"></i></button> */}
       </div>
     </div>
   );

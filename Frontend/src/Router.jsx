@@ -19,6 +19,9 @@ import { Dashboards } from "./Dashboard/container/Dashboards.jsx";
 import { JoinTeam } from "./joinTeam/JoinTeam.jsx";
 import { Trash } from "./Trash/container/Trash.jsx";
 import TeamLayout from "./components/TeamLayout.jsx";
+import { TeamProfile } from "./Team/components/TeamProfile.jsx";
+import { TeamSetting } from "./Team/components/TeamSetting.jsx";
+import { Profile } from "./Team/components/Profile.jsx";
 
 const router = createBrowserRouter([
   {
@@ -78,9 +81,17 @@ const router = createBrowserRouter([
     element: <TeamLayout />,
     children: [
       {
-        path: `/dashboard/:uuid/:slug`,
+        path: "/dashboard/:uuid/:slug",
         element: <Team />
       },
+      // {
+      //   path: "/dashboard/:uuid/:slug",
+      //   element: <TeamSetting />
+      // },
+      // {
+      //   path: "/dashboard/:uuid/:slug",
+      //   element: <Profile />
+      // },
 
     ],
   },

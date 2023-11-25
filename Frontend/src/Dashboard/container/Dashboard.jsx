@@ -129,7 +129,7 @@ export default function Dashboard() {
 
   return (
     <>
-      <div className="bg-[#F9FAFB] h-[80px] w-screen z-[10px] ">
+      <div className=" h-[80px] w-screen z-[10px] ">
         <>
           <Header
             widths={state ? "w-[1000px]" : "w-[1160px]"}

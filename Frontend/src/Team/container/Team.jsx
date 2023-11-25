@@ -14,6 +14,8 @@ export const Team = () => {
   const [inviteEmail, setInviteEmail] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const [userInfos,setUserInfo] = useState([]);
+
   const [inviteError, setInviteError] = useState(null);
   const [role, setRole] = useState("");
   const params = useParams();
@@ -21,7 +23,10 @@ export const Team = () => {
   useEffect(() => {
     team();
     allUsers();
-  }, [params]);
+    if(params.slug == "profile"){
+      userInfo()
+    }
+  }, [params,params.slug]);
 
   const showToastMessage = (data) => {
     toast.success(data, {
@@ -129,6 +134,19 @@ export const Team = () => {
       });
   };
 
+  const userInfo = async() => {
+    await axiosClient.get("/getUserInfo")
+    .then((res) => {
+      setUserInfo(res.data.userInfo);
+    })
+    .catch((err) => {
+      const response = err.response;
+      console.log(response);
+    });
+
+
+  }
+
   return (
     <div>
       <TeamComponents
@@ -146,6 +164,7 @@ export const Team = () => {
         handleRole={handleRole}
         inviteError={inviteError}
         setInviteError={setInviteError}
+        userInfos={userInfos}
       />
 
       <ToastContainer />

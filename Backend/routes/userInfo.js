@@ -16,4 +16,9 @@ router.get(
     userController.getUserInfo
 );
 
+router.put(
+    "/userUpdateProfile",
+    verifyAuthMiddleware.verifyToken,
+    userController.userUpdateProfile
+);
 module.exports = router;

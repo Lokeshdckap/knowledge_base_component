@@ -58,7 +58,7 @@ export const Trash = () => {
     axiosClient
       .get(`/getAllTrash/${params.uuid}`)
       .then((res) => {
-        setTrashData(res.data.allTrashScript);
+        setTrashData(res.data.itemsWithDaysLeft);
       })
       .catch((err) => {
         console.log(err);

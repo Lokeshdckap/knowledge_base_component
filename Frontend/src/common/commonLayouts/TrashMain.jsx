@@ -23,6 +23,7 @@ export const TrashMain = (props) => {
         {props.trashData ? (
           props.trashData.length > 0 ? (
             props.trashData.map((trashScript) => (
+            
               <div
                 key={trashScript.uuid}
                 className="bg-white w-[230px] h-[120px] rounded-[10px]"
@@ -34,7 +35,7 @@ export const TrashMain = (props) => {
                 </div>
                 <div className="pl-5 pt-5 cursor-pointer">
                   <p>{trashScript.title}</p>
-                  <p className="text-gray-500">0 page</p>
+                  <p className="text-gray-500 text-sm pt-2">{trashScript.deleted_at}</p>
                 </div>
               </div>
             ))

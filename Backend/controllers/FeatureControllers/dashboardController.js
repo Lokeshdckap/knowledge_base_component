@@ -124,7 +124,7 @@ const blukCreation = async () => {
       console.log("Roles already exist.");
     }
   } catch (error) {
-    return res.status(500).json({ error: error });
+    console.error(error);
   }
 };
 

@@ -6,7 +6,7 @@ import axiosClient from "../../axios-client";
 export const Trash = () => {
   const params = useParams();
 
-  const [trashData,setTrashData] = useState([]);
+  const [trashData, setTrashData] = useState([]);
   useEffect(() => {
     getAllDeletedData();
   }, [params.slug]);
@@ -15,7 +15,9 @@ export const Trash = () => {
     axiosClient
       .get(`/getAllTrash/${params.uuid}`)
       .then((res) => {
-          setTrashData(res.data.allTrashScript);
+        console.log(res);
+        setTrashData(res.data.itemsWithDaysLeft);
+
       })
       .catch((err) => {
         console.log(err);
@@ -23,9 +25,7 @@ export const Trash = () => {
   };
   return (
     <>
-      <TrashComponent
-      trashData={trashData}
-      />
+      <TrashComponent trashData={trashData} />
     </>
   );
 };

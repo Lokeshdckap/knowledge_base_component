@@ -57,7 +57,7 @@ export const PageTree = ({
           index={node.id}
           key={node.uuid}
         >
-          {node.title.slice(0, -5)}
+          {node.title.split("-")[0]}
           {hoverPageId == node.uuid && (
             <i
               className="fa-solid fa-plus text-[#57595c] pl-6"

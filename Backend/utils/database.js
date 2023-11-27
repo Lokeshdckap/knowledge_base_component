@@ -90,7 +90,7 @@ db.batch.hasMany(db.script, { foreignKey: "batch_uuid", targetKey: "uuid" });
 
 db.script.belongsTo(db.batch, { foreignKey: "batch_uuid", targetKey: "uuid" });
 
-db.script.hasMany(db.pages, { foreignKey: "script_uuid", targetKey: "uuid" },{ onDelete: 'CASCADE' });
+db.script.hasMany(db.pages, { foreignKey: "script_uuid", s: "uuid" },{ onDelete: 'CASCADE' });
 
 db.pages.belongsTo(db.script, { foreignKey: "script_uuid", targetKey: "uuid" },{ onDelete: 'CASCADE' });
 
@@ -105,6 +105,13 @@ db.pages.hasMany(db.pages, {
   foreignKey: "page_uuid", // Define the join condition
   sourceKey: "uuid",
 });
+
+// db.users.hasMany(db.user_team_members, { foreignKey: "user_uuid", targetKey: "uuid" });
+
+// db.user_team_members.belongsTo(db.users, { foreignKey: "user_uuid", targetKey: "uuid" });
+
+
+
 
 //exporting the module
 

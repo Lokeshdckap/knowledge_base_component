@@ -304,8 +304,9 @@ export default function SideNavLarge(props) {
 
   return (
     <div className="bg-primary h-screen  overflow-auto w-[280px] z-10 ">
-      <div>
-        <img src={mainLogo} alt="" className="max-w-md m-auto mt-4 h-10" />
+      <div className="flex items-center space-x-3">
+        <img src={"https://i.postimg.cc/ydTtqjsF/book-2.png"} alt="" className="max-w-md ml-8 mt-6 h-6" />
+        <p className="mt-6 text-lg text-white font-medium">Rhino Tome</p>
       </div>
       <div
         className="bg-slate-300 h-6 w-6 rounded-full absolute mt-4 left-[219px] cursor-pointer"
@@ -437,6 +438,37 @@ export default function SideNavLarge(props) {
                   ></i>
                 )}
               </li>
+              {popUp == batch.uuid && (
+                <div className="box-border bg-white  w-44 p-4 border-[1px] border-slate-300 rounded-xl shadow-lg absolute left-48 z-50">
+                  <div className="w-[130px] m-auto space-y-3">
+                    <p
+                      className="text-lg cursor-pointer text-textPrimary hover:bg-primary  hover:text-white hover:rounded
+                      "
+                      id={batch.uuid}
+                      onClick={addNewScript}
+                    >
+                      <i
+                        className="fa-regular fa-file pr-[7px]"
+                        id={batch.uuid}
+                      ></i>
+                      New Script
+                    </p>
+                    <p
+                      className="text-lg cursor-pointer text-textPrimary hover:bg-primary  hover:text-white hover:rounded"
+                      id="script"
+                    >
+                      <i className="fa-regular fa-file pr-[7px]"></i>Share
+                    </p>
+                    <p
+                      className="text-lg cursor-pointer text-textPrimary hover:bg-primary  hover:text-white hover:rounded"
+                      id={batch.uuid}
+                      onClick={handleTrash}
+                    >
+                      <i className="fa-solid fa-trash pr-[5px]"></i>Trash
+                    </p>
+                  </div>
+                </div>
+              )}
               {childScript &&
                 childScript.map(
                   (child) =>
@@ -501,37 +533,6 @@ export default function SideNavLarge(props) {
                       </div>
                     )
                 )}
-              {popUp == batch.uuid && (
-                <div className="box-border bg-white  w-44 p-4 border-[1px] border-slate-300 rounded-xl shadow-lg absolute left-52 z-50">
-                  <div className="w-[130px] m-auto space-y-3">
-                    <p
-                      className="text-lg cursor-pointer text-textPrimary hover:bg-primary  hover:text-white hover:rounded
-                      "
-                      id={batch.uuid}
-                      onClick={addNewScript}
-                    >
-                      <i
-                        className="fa-regular fa-file pr-[7px]"
-                        id={batch.uuid}
-                      ></i>
-                      New Script
-                    </p>
-                    <p
-                      className="text-lg cursor-pointer text-textPrimary hover:bg-primary  hover:text-white hover:rounded"
-                      id="script"
-                    >
-                      <i className="fa-regular fa-file pr-[7px]"></i>Share
-                    </p>
-                    <p
-                      className="text-lg cursor-pointer text-textPrimary hover:bg-primary  hover:text-white hover:rounded"
-                      id={batch.uuid}
-                      onClick={handleTrash}
-                    >
-                      <i className="fa-solid fa-trash pr-[5px]"></i>Trash
-                    </p>
-                  </div>
-                </div>
-              )}
             </div>
           ))}
           {script.map((script) => (

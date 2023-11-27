@@ -131,37 +131,60 @@ const updatePageData = async (req, res) => {
     });
 
     let titles;
-    async function generateUniqueRandomNumber(existingTitles, exitsNumber) {
-      let uniqueNumber;
-      const digits = 4;
-      const min = 10 ** (digits - 1);
-      const max = 10 ** digits - 1;
 
+    // async function generateUniqueRandomNumber(existingTitles, exitsNumber) {
+    //   let uniqueNumber;
+    //   const digits = 4;
+    //   const min = 10 ** (digits - 1);
+    //   const max = 10 ** digits - 1;
+
+    //   do {
+    //     uniqueNumber = Math.floor(Math.random() * (max - min + 1) + min);
+    //   } while (existingTitles.includes(exitsNumber));
+
+    //   return uniqueNumber.toString().padStart(digits, "0");
+    // }
+
+    async function generateUniqueRandomAlphanumeric(existingValues,length,exitsNumber) {
+      const characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+      let uniqueValue;
+    
       do {
-        uniqueNumber = Math.floor(Math.random() * (max - min + 1) + min);
-      } while (existingTitles.includes(exitsNumber));
-
-      return uniqueNumber.toString().padStart(digits, "0");
+        uniqueValue = Array.from({ length }, () => characters[Math.floor(Math.random() * characters.length)]).join('');
+      } while (existingValues.includes(exitsNumber));
+    
+      return uniqueValue;
     }
+    
+    const length = 6;
+
     const existingTitles = [];
+
     const pages = await Page.findAll({
       where: {
         script_uuid: page.script_uuid,
       },
     });
     for (let allPage of pages) {
-      existingTitles.push(allPage.title.slice(-4));
+      if(allPage.title != "Page Name"){
+      existingTitles.push(allPage.title);
+      }
     }
+
     const numbers = existingTitles.map((str) => parseInt(str, 10));
     const validNumbers = numbers.filter((num) => !isNaN(num));
+
     let newTitle;
-    const randomNumber = await generateUniqueRandomNumber(
+
+    const randomNumber = await generateUniqueRandomAlphanumeric(
       existingTitles,
+      length,
       validNumbers
     );
-    if (req.body.title != page.title) {
+    if (req.body.title != page.title.slice(0,-7) &&  page.page_uuid == null) {
       newTitle = `${req.body.title}-${randomNumber}`;
     }
+
     titles = newTitle ? newTitle : req.body.title;
     if (page.page_uuid) {
       const parentPage = await Page.findOne({

@@ -84,7 +84,7 @@ export const TrashMain = (props) => {
                     {trashScript.title}
                   </p>
                   <p className="text-gray-500" id={trashScript.uuid}>
-                    0 page
+                    {trashScript.deleted_at}
                   </p>
                 </div>
                 {deleteState == trashScript.uuid && (

@@ -11,9 +11,12 @@ const uuid = require("uuid");
 
 const getBatchAndScripts = async (req, res) => {
   try {
-    let result = await Script.findAll({where:{deleted_at:{
-      [Op.is]: null,
-    }},
+    let result = await Script.findAll({
+      where: {
+        deleted_at: {
+          [Op.is]: null,
+        },
+      },
       include: [
         {
           model: Batch,
@@ -29,7 +32,6 @@ const getBatchAndScripts = async (req, res) => {
             },
           ],
         },
-        
       ],
 
       order: [["createdAt", "DESC"]],
@@ -140,9 +142,12 @@ const getScripts = async (req, res) => {
           [Op.and]: [{ team_uuid: TeamId }, { uuid: scriptId }],
         },
       });
-      let result = await Script.findAll({where:{deleted_at:{
-        [Op.is]: null,
-      }},
+      let result = await Script.findAll({
+        where: {
+          deleted_at: {
+            [Op.is]: null,
+          },
+        },
         include: [
           {
             model: Batch,
@@ -212,10 +217,26 @@ const globalSearch = async (req, res) => {
           [Op.and]: [whereClause, { team_uuid: team_uuid }],
         },
       });
+
+    //   let array = []
+
+    //   for(let script of scripts){
+    //      array.push(script.uuid)
+    //   }
+    //   const pages = await Page.findAll({
+    //     // where: whereClause,
+    //     where: {
+    //       script_uuid:array
+    //     },
+        
+    //   });
+    //   for(let page of pages){
+    //     scripts.push(page)
+    //  }
       return res.status(200).json(scripts);
     } catch (error) {
       console.error(error);
-      return res.status(500).json({ error: "Internal Server Error" });
+      return res.status(500).json({ error: error });
     }
   } catch (error) {
     return res.status(500).json({ error: error });
@@ -242,6 +263,7 @@ const pageSearch = async (req, res) => {
         [Op.iLike]: `%${q}%`,
       },
     };
+
     try {
       const pages = await Page.findAll({
         // where: whereClause,

@@ -3,12 +3,11 @@ import { TeamSideNav } from "../../common/commonLayouts/TeamSideNav";
 import { ChangePassword } from "../../common/commonComponents/ChangePassword";
 
 export const Profile = (props) => {
+  const [changePasswordPopup, setChangePasswordPopup] = useState(false);
 
-    const [changePasswordPopup,setChangePasswordPopup] = useState(false);
-
-    const handlePopup = () =>{
-        setChangePasswordPopup((prevState) => !prevState)
-    }
+  const handlePopup = () => {
+    setChangePasswordPopup((prevState) => !prevState);
+  };
   return (
     <div className="ml-24 mt-10">
       <div className="bg-white w-[900px] h-[550px]  shadow-md mt-5">
@@ -21,10 +20,11 @@ export const Profile = (props) => {
             <div className="mt-3">
               <label className="">UserName</label>
               <div>
+
                 <input
                   type="text"
-                  value={(props.userInfos && props.userInfos.username) || ""}
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded  block w-[500px] pl-2 p-2.5 focus:outline-primary mt-2"
+                  value={props.userInfos.username || ""}
+                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded block w-[500px] pl-2 p-2.5 focus:outline-primary mt-2"
                   placeholder="UserName"
                 />
               </div>
@@ -52,7 +52,8 @@ export const Profile = (props) => {
                   placeholder="Password"
                 />
               </div>
-              <button className="bg-primary mt-8 p-2.5 w-28 text-white border-0 rounded text-center"
+              <button
+                className="bg-primary mt-8 p-2.5 w-28 text-white border-0 rounded text-center"
                 onClick={handlePopup}
               >
                 Change
@@ -62,9 +63,7 @@ export const Profile = (props) => {
               update
             </button>
           </div>
-          {changePasswordPopup && <ChangePassword 
-            handlePopup={handlePopup}
-          />}
+          {changePasswordPopup && <ChangePassword handlePopup={handlePopup} />}
         </div>
       </div>
     </div>

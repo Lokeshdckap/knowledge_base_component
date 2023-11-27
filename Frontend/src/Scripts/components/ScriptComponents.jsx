@@ -115,7 +115,7 @@ export const ScriptComponents = () => {
     await axiosClient
       .get(`/getPage/${pageIds}`)
       .then((res) => {
-        setParticularTitle(res.data.pages.title.slice(0, -5));
+        setParticularTitle(res.data.pages.title.split("-")[0]);
         setDescription(res.data.pages.description);
         setEditorValue(res.data.pages.content);
         setEditorContent(res.data.pages.content);

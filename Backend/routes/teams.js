@@ -43,4 +43,10 @@ router.get(
   verifyAuthMiddleware.verifyToken,
   teamController.getAllTeam
 );
+
+router.get("/:uuid/search/users",
+verifyAuthMiddleware.verifyToken,
+teamController.searchActiveUsers
+)
+
 module.exports = router;

@@ -66,6 +66,7 @@ export default function Dashboard() {
       .get(`${params.uuid}/search/items?q=${value}`)
       .then((res) => {
         if (res.data.length > 0) {
+          console.log(res);
           setSearchData(res.data);
         } else {
           setSearchData(null);

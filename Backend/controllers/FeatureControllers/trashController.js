@@ -82,6 +82,7 @@ const moveToTrash = async (req, res) => {
     if (checkForBatch) {
       let updateData = {
         deleted_at: sequelize.literal("NOW()"),
+        batch_uuid : null
       };
       const deletedBatch = await Batch.update(updateData, {
         where: {

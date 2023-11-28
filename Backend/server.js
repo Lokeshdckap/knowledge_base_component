@@ -41,84 +41,58 @@ app.use(express.urlencoded({ extended: true }));
 
 // Routes for user API
 
-const authRoute =  require("./routes/authentication")
+const authRoute = require("./routes/authentication");
 
 const dashboardRoute = require("./routes/dashboard");
 
 const teamRoute = require("./routes/teams");
 
-const trashRoute = require("./routes/trash")
+const trashRoute = require("./routes/trash");
 
-const batchRoute = require("./routes/batch")
+const batchRoute = require("./routes/batch");
 
-const scriptRoute = require("./routes/scripts")
+const scriptRoute = require("./routes/scripts");
 
-const inviteRoute = require("./routes/invites")
+const inviteRoute = require("./routes/invites");
 
-const pageRoute = require("./routes/pages")
+const pageRoute = require("./routes/pages");
 
-const publicRoute = require("./routes/publicUrl")
+const publicRoute = require("./routes/publicUrl");
 
-const userRoute = require("./routes/userInfo")
+const userRoute = require("./routes/userInfo");
 
-app.use("/",authRoute);
+const tagRoute = require("./routes/tags");
 
-app.use("/",dashboardRoute);
+app.use("/", authRoute);
 
-app.use("/",teamRoute);
+app.use("/", dashboardRoute);
 
-app.use("/",trashRoute);
+app.use("/", teamRoute);
 
-app.use("/",batchRoute);
+app.use("/", trashRoute);
 
-app.use("/",scriptRoute);
+app.use("/", batchRoute);
 
-app.use("/",inviteRoute);
+app.use("/", scriptRoute);
 
-app.use("/",pageRoute);
+app.use("/", inviteRoute);
 
-app.use("/",publicRoute);
+app.use("/", pageRoute);
 
-app.use("/",userRoute);
+app.use("/", publicRoute);
 
+app.use("/", userRoute);
 
+app.use("/", tagRoute);
 
+app.set("view engine", "pug");
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-app.set('view engine', 'pug');
-
-app.set('views', path.join(__dirname, 'views'));
+app.set("views", path.join(__dirname, "views"));
 
 //listening to server connection
 
-app.use('/uploads', express.static('uploads'));
+app.use("/uploads", express.static("uploads"));
 
-app.listen(PORT, () => console.log(`Serpassportver running server on port ${PORT}`));
-
+app.listen(PORT, () =>
+  console.log(`Serpassportver running server on port ${PORT}`)
+);

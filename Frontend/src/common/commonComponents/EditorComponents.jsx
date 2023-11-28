@@ -2,20 +2,21 @@ import React, { useEffect, useRef, useState } from "react";
 import EditorJS from "@editorjs/editorjs";
 import List from "@editorjs/list";
 import Table from "@editorjs/table";
-import Header from "@editorjs/header";
-import InlineCode from "@editorjs/inline-code";
+import Header from '@editorjs/header';
+// import InlineCode from "@editorjs/inline-code";
 import Underline from "@editorjs/underline";
 import Marker from "@editorjs/marker";
-import Checklist from "@editorjs/checklist";
 import Quote from "@editorjs/quote";
 import Embed from "@editorjs/embed";
 import ImageTool from "@editorjs/image";
 import axiosClient from "../../axios-client";
 
 export const EditorComponents = (props) => {
-  const ejInstance = useRef();
   const [imageUrl, setImageUrl] = useState("");
-
+  // editorContent={props.editorContent}
+  // setEditorContent={props.setEditorContent}
+  // editorValue={props.editorValue}
+  // setEditorValue={props.setEditorValue}
   const handleUpload = async (file) => {
     const formData = new FormData();
 
@@ -43,214 +44,98 @@ export const EditorComponents = (props) => {
     }
   };
 
+  const ejInstance = useRef();
+
+  const initEditor = () => {
+    const editor = new EditorJS({
+      holder: "editorjs",
+      onReady: () => {
+        ejInstance.current = editor;
+      },
+      autofocus: false,
+      readOnly:true,
+
+      data: props.editorValue,
+      onChange: async () => {
+        try {
+          // Check if editor is defined before calling save method
+          if (editor) {
+            const content = await editor.saver.save();
+            props.setEditorContent(content);
+          }
+        } catch (error) {
+          console.error("Error saving content:", error);
+        }
+      },
+      tools: {
+        header: {
+          class: Header,
+          inlineToolbar: true,
+        },
+        list: {
+          class: List,
+          inlineToolbar: true,
+          config: {
+            defaultStyle: "unordered",
+          },
+        },
+        Marker: {
+          class: Marker,
+          shortcut: "CMD+SHIFT+M",
+        },
+        image: {
+          class: ImageTool,
+          inlineToolbar: true,
+          config: {
+            uploader: {
+              uploadByFile(file) {
+                return handleUpload(file);
+              },
+            },
+            byUrl: imageUrl, // Make sure imageUrl contains a valid URL
+          },
+        },
+        table: {
+          class: Table,
+          inlineToolbar: true,
+          config: {
+            rows: 2,
+            cols: 3,
+          },
+        },
+        quote: {
+          class: Quote,
+          inlineToolbar: true,
+          shortcut: "CMD+SHIFT+O",
+          config: {
+            quotePlaceholder: "Enter a quote",
+            captionPlaceholder: "Quote's author",
+          },
+        },
+        embed: {
+          class: Embed,
+          inlineToolbar: true,
+        },
+        underline: Underline,
+      },
+      placeholder: "Type here",
+    });
+  };
+  // This will run only once
   useEffect(() => {
-    if (props.editorValue) {
-      if (props.editorValue.length == 0) {
-      } else {
-        let isMounted = true;
-        const initEditor = async (datas) => {
-          if (isMounted && ejInstance.current == null) {
-            const editor = new EditorJS({
-              holder: "editorjs",
-              onChange: async () => {
-                if (datas !== null) {
-                  try {
-                    let content = await editor.saver.save();
-                    props.editorState(content);
-                  } catch (error) {
-                    console.error("Error saving content:", error);
-                  }
-                } else {
-                  if (editor) {
-                    let content = await editor.saver.save();
-                    props.editorState(content);
-                  }
-                }
-              },
-              autofocus: props.publish && props.publish.is_published ? true : false,
-              readOnly:props.publish && props.publish.is_published ? true : false,
-              data: datas,
-              tools: {
-                list: {
-                  class: List,
-                  inlineToolbar: true,
-                  config: {
-                    defaultStyle: "unordered",
-                  },
-                },
-                header: Header,
-                checklist: {
-                  class: Checklist,
-                  inlineToolbar: true,
-                },
-                Marker: {
-                  class: Marker,
-                  shortcut: "CMD+SHIFT+M",
-                },
-                image: {
-                  class: ImageTool,
-                  inlineToolbar: true,
-                  config: {
-                    uploader: {
-                      uploadByFile(file) {
-                        return handleUpload(file);
-                      },
-                    },
-                    byUrl: imageUrl, // Make sure imageUrl contains a valid URL
-                  },
-                },
-                table: {
-                  class: Table,
-                  inlineToolbar: true,
-                  config: {
-                    rows: 2,
-                    cols: 3,
-                  },
-                },
-                quote: {
-                  class: Quote,
-                  inlineToolbar: true,
-                  shortcut: "CMD+SHIFT+O",
-                  config: {
-                    quotePlaceholder: "Enter a quote",
-                    captionPlaceholder: "Quote's author",
-                  },
-                },
-                embed: {
-                  class: Embed,
-                  inlineToolbar: true,
-                },
-                underline: Underline,
-              },
-              placeholder: "Type here",
-            });
-            editor.isReady
-              .then(() => {
-                if (isMounted) {
-                  ejInstance.current = editor;
-                }
-              })
-              .catch((error) => {
-                console.error("Error initializing editor:", error);
-              });
-          }
-        };
-        initEditor(props.editorValue);
-        return () => {
-          isMounted = false;
-          if (ejInstance.current) {
-            ejInstance.current.destroy();
-            ejInstance.current = null;
-          }
-        };
-      }
-    } else {
-      let isMounted = true;
-      const initEditor = async (datas) => {
-        if (isMounted && ejInstance.current == null) {
-          const editor = new EditorJS({
-            holder: "editorjs",
-            onChange: async () => {
-              if (datas !== null) {
-                try {
-                  let content = await editor.saver.save();
-                  props.editorState(content);
-                } catch (error) {
-                  console.error("Error saving content:", error);
-                }
-              } else {
-                if (editor) {
-                  let content = await editor.saver.save();
-                  props.editorState(content);
-                }
-              }
-            },
-            autofocus: props.publish && props.publish.is_published ? true : false,
-            readOnly:props.publish && props.publish.is_published ? true : false,
-            data: datas,
-            tools: {
-              list: {
-                class: List,
-                inlineToolbar: true,
-                config: {
-                  defaultStyle: "unordered",
-                },
-              },
-              header: Header,
-              checklist: {
-                class: Checklist,
-                inlineToolbar: true,
-              },
-              Marker: {
-                class: Marker,
-                shortcut: "CMD+SHIFT+M",
-              },
-              image: {
-                class: ImageTool,
-                inlineToolbar: true,
-                config: {
-                  uploader: {
-                    uploadByFile(file) {
-                      return handleUpload(file);
-                    },
-                  },
-                  byUrl: imageUrl, // Make sure imageUrl contains a valid URL
-                },
-              },
-              table: {
-                class: Table,
-                inlineToolbar: true,
-                config: {
-                  rows: 2,
-                  cols: 3,
-                },
-              },
-              quote: {
-                class: Quote,
-                inlineToolbar: true,
-                shortcut: "CMD+SHIFT+O",
-                config: {
-                  quotePlaceholder: "Enter a quote",
-                  captionPlaceholder: "Quote's author",
-                },
-              },
-              embed: {
-                class: Embed,
-                inlineToolbar: true,
-              },
-              underline: Underline,
-            },
-            placeholder: "Type here",
-          });
-          editor.isReady
-            .then(() => {
-              if (isMounted) {
-                ejInstance.current = editor;
-              }
-            })
-            .catch((error) => {
-              console.error("Error initializing editor:", error);
-            });
-        }
-      };
-      initEditor(props.editorValue);
-
-      return () => {
-        isMounted = false;
-        if (ejInstance.current) {
-          ejInstance.current.destroy();
-          ejInstance.current = null;
-        }
-      };
+    if (ejInstance.current === null) {
+      initEditor();
     }
-  }, [props.editorValue]);
 
+    return () => {
+      ejInstance?.current?.destroy();
+      ejInstance.current = null;
+    };
+  }, [props.editorValue]);
   return (
     <>
       <div id="editorjs"></div>
-      {/* {imageUrl && <img src={imageUrl} alt="Fetched"/>} */}
-
-      <div></div>
     </>
   );
 };
+

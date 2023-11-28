@@ -389,9 +389,12 @@ export default function SideNavLarge(props) {
         )}
         <ul className="mt-5 space-y-1 h-[430px] overflow-auto ">
           {batch.map((batch) => (
-            <div className="">
+            <div className=""
+            key={batch.uuid}
+            
+            >
               <li
-                key={batch.id}
+                key={batch.uuid}
                 id={batch.uuid}
                 className={`text-[#BCD1FF] pl-8 cursor-pointer hover:bg-cyan-950 pt-1 pb-1  ${
                   params.slug == batch.uuid ? "bg-cyan-950" : ""
@@ -467,7 +470,9 @@ export default function SideNavLarge(props) {
                 childScript.map(
                   (child) =>
                     child.batch_uuid == batch.uuid && (
-                      <div className="">
+                      <div className=""
+                      key={child.id}
+                      >
                         <li
                           key={child.id}
                           id={child.uuid}
@@ -531,7 +536,9 @@ export default function SideNavLarge(props) {
             </div>
           ))}
           {script.map((script) => (
-            <div className="">
+            <div
+            key={script.id}
+            >
               <li
                 key={script.id}
                 id={script.uuid}

@@ -4,10 +4,10 @@ import { PageTree } from "../commonComponents/PageTree";
 import { PublishPopup } from "../commonComponents/PublishPopup";
 
 export default function EditPage(props) {
+  const {renderScript} = props;
+
   const [newPagePopup, setNewPagePopup] = useState(false);
-
   const [OverPage, setOverPage] = useState(null);
-
   const treeNode = props.treeNode;
   useEffect(() => {
     props.setParticularTitle(props.particularTitle);
@@ -35,10 +35,7 @@ export default function EditPage(props) {
           <div className="space-y-2 ml-4 mt-4">
             <div className="p-4 rounded-lg shadow">
               {treeNode.map((topLevelPage, index) => (
-                <div
-                  key={topLevelPage.uuid}
-                  id={topLevelPage.uuid}
-                >
+                <div key={topLevelPage.uuid} id={topLevelPage.uuid}>
                   <PageTree
                     node={topLevelPage}
                     index={index}
@@ -55,6 +52,7 @@ export default function EditPage(props) {
               ))}
             </div>
           </div>
+   
           <hr
             className={`h-px w-[250px] bg-[#D5D7DA] border-0 m-auto dark:bg-gray-900 mt-4`}
           />
@@ -94,7 +92,8 @@ export default function EditPage(props) {
         </div>
         <div className={`bg-white h-[560px] ${props.widths} overflow-auto`}>
           <div>
-            <input type="text"
+            <input
+              type="text"
               className="text-2xl ml-[80px] mt-8 focus:outline-none text-textPrimary font-bold"
               value={title}
               onChange={(e) => props.setParticularTitle(e.target.value)}
@@ -115,15 +114,20 @@ export default function EditPage(props) {
                   props.publish.is_published ? (true) : (false)}
             />
           </div>
+
           <div className={`pt-5 ${props.marginEditor}`}>
-            <EditorComponents
-              handleSave={props.handleSave}
-              editorState={props.setEditorContent}
-              editorValue={props.editorValue}
-              editorContent={props.editorContent}
-              particularTitle={props.particularTitle}
-              publish={props.publish}
-            />
+            {renderScript &&
+              <EditorComponents
+                handleSave={props.handleSave}
+                editorContent={props.editorContent}
+                setEditorContent={props.setEditorContent}
+                editorValue={props.editorValue}
+                setEditorValue={props.setEditorValue}
+                particularTitle={props.particularTitle}
+                publish={props.publish}
+                renderScript={renderScript}
+              />
+            }
           </div>
         </div>
       </div>
@@ -134,7 +138,6 @@ export default function EditPage(props) {
           publish={props.publish}
           renderScript={props.renderScript}
           teamUuid={props.teamUuid}
-
         />
       )}
     </div>

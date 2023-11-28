@@ -10,11 +10,12 @@ import { useMyContext } from "../../context/AppContext";
 export const ScriptComponents = () => {
   const navigate = useNavigate();
   const params = useParams();
-  const { getScript, getScripts } = useMyContext();
+  const {getScript,script ,getScripts} = useMyContext();
 
   //hooks
 
   const [inputValue, setInputValue] = useState("");
+
   const [editorContent, setEditorContent] = useState([]);
 
   const [description, setDescription] = useState("");
@@ -23,7 +24,7 @@ export const ScriptComponents = () => {
 
   const [treeNode, setTreeNode] = useState([]);
 
-  const [renderScript, setRenderScript] = useState([]);
+  const [renderScript, setRenderScript] = useState({});
   const [teamUuid, setTeamUuid] = useState([]);
 
   const [pageContent, setPageContent] = useState(null);
@@ -53,6 +54,8 @@ export const ScriptComponents = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const pageIds = queryParams.get("pageId");
+
+
 
   const showToastSaveMessage = (data) => {
     toast.success(data, {
@@ -96,7 +99,6 @@ export const ScriptComponents = () => {
         setParticularTitle(res.data.pages.title.split("-")[0]);
         setDescription(res.data.pages.description);
         setEditorValue(res.data.pages.content);
-        setEditorContent(res.data.pages.content);
       })
       .catch((err) => {
         console.log(err);
@@ -134,11 +136,14 @@ export const ScriptComponents = () => {
     await axiosClient
       .get(`/getScriptAndPage/${script_uuid}`)
       .then((res) => {
-        setInputValue(res.data.getScriptAndPages.title);
-        setPageContent(res.data.hierarchy[0]);
-        setTreeNode(res.data.hierarchy);
-        setRenderScript(res.data.getScriptAndPages);
-        setPublish(res.data.getScriptAndPages);
+        if(res.status == 200){
+          setInputValue(res.data.getScriptAndPages.title);
+          setPageContent(res.data.hierarchy[0]);
+          setTreeNode(res.data.hierarchy);
+          setRenderScript(res.data.getScriptAndPages);
+          setPublish(res.data.getScriptAndPages);
+        }
+
       })
       .catch((err) => {
         console.log(err);
@@ -147,7 +152,7 @@ export const ScriptComponents = () => {
 
   //Editor functionality
 
-  const handleSave = async () => {
+  const handleSave = () => {
     const postData = {
       id: pageIds,
       script_uuid: params.slug,
@@ -156,12 +161,13 @@ export const ScriptComponents = () => {
       content: editorContent,
     };
 
-    await axiosClient
+    axiosClient
       .post("/updatePageData", postData)
       .then((res) => {
         getParticularScript();
-        console.log("ejej");
+
         showToastSaveMessage(res.data.msg);
+
       })
       .catch((err) => {
         console.log(err);
@@ -179,9 +185,9 @@ export const ScriptComponents = () => {
       });
   };
 
-  const addChildPage = async (uuid) => {
+  const addChildPage = (uuid) => {
     let page_uuid = uuid;
-    await axiosClient
+    axiosClient
       .post(`/addChildPage/${params.slug}/${page_uuid}`)
       .then((res) => {
         getParticularScript();
@@ -224,9 +230,10 @@ export const ScriptComponents = () => {
       });
   };
 
-  const contentPage = (e) => {
+  const contentPage = async (e) => {
     setPageId(e.target.id);
     let pageId = e.target.id;
+ 
     navigate(`/dashboard/${params.uuid}/s/${params.slug}/?pageId=${pageId}`);
   };
 
@@ -253,16 +260,15 @@ export const ScriptComponents = () => {
       .then((res) => {
         setRenderScript(res.data.publicUrl);
         setTeamUuid(params.uuid);
-        {
-          res.data.publicUrl.is_published
-            ? showToastSaveMessage(res.data.msg)
-            : showToastErrorMessage(res.data.msg);
-        }
+        {res.data.publicUrl.is_published ? showToastSaveMessage(res.data.msg) :showToastErrorMessage(res.data.msg)}
+
       })
       .catch((err) => {
         console.log(err);
       });
   };
+
+
 
   return (
     <div className="bg-white h-[85px]">
@@ -280,7 +286,6 @@ export const ScriptComponents = () => {
       <EditPage
         widths={state ? "w-[785px]" : "w-[933px]"}
         marginEditor={state ? "ml-[10px]" : "mr-[115px]"}
-        setEditorContent={setEditorContent}
         treeNode={treeNode}
         addPage={addPage}
         contentPage={contentPage}
@@ -294,12 +299,15 @@ export const ScriptComponents = () => {
         hoverPageId={hoverPageId}
         handleMore={handleMore}
         handleSave={handleSave}
-        editorContent={editorContent}
+        onDragEnd={onDragEnd}
         shareState={shareState}
         setShareState={setShareState}
         onChange={onChange}
         publish={publish}
         editorValue={editorValue}
+        setEditorValue={setEditorValue}
+        editorContent={editorContent}
+        setEditorContent={setEditorContent}
         renderScript={renderScript}
         parentOpen={parentOpen}
         teamUuid={teamUuid}

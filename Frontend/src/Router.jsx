@@ -148,6 +148,10 @@ const router = createBrowserRouter([
     path: "/:uuid/:slug/*",
     element: <UrlPage />,
   },
+  {
+    path: "/teampage",
+    element: <TeamPage />,
+  },
 ]);
 
 export default router;

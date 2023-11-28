@@ -32,10 +32,7 @@ const router = createBrowserRouter([
         path: "/",
         element: <Navigate to={`/dashboard`} />,
       },
-      {
-        path: "/teampage",
-        element: <TeamPage />,
-      },
+
       {
         path: "/dashboard",
         element: <Dashboards />,
@@ -137,6 +134,10 @@ const router = createBrowserRouter([
   {
     path: "/:uuid/:slug/*",
     element: <UrlPage />,
+  },
+  {
+    path: "/teampage",
+    element: <TeamPage />,
   },
 ]);
 

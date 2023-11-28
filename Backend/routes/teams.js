@@ -22,14 +22,16 @@ router.get(
   teamController.getTeam
 );
 
-router.post('/updateTeamName',
-verifyAuthMiddleware.verifyToken,
-teamController.teamNameUpdate
+router.post(
+  "/updateTeamName",
+  verifyAuthMiddleware.verifyToken,
+  teamController.teamNameUpdate
 );
 
-router.get('/getAciveUsers/:uuid',
-verifyAuthMiddleware.verifyToken,
-teamController.getActiveUsersForTeam
+router.get(
+  "/getAciveUsers/:uuid",
+  verifyAuthMiddleware.verifyToken,
+  teamController.getActiveUsersForTeam
 );
 
 router.get(
@@ -44,9 +46,10 @@ router.get(
   teamController.getAllTeam
 );
 
-router.get("/:uuid/search/users",
-verifyAuthMiddleware.verifyToken,
-teamController.searchActiveUsers
-)
+router.get(
+  "/:uuid/search/users",
+  verifyAuthMiddleware.verifyToken,
+  teamController.searchActiveUsers
+);
 
 module.exports = router;

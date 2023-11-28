@@ -56,8 +56,6 @@ db.user_team_members = require("../models/user_team_members")(
 
 db.images_path = require("../models/images_path")(sequelize, DataTypes);
 
-
-
 db.users.hasMany(db.user_team_members, {
   foreignKey: "user_uuid",
   sourceKey: "uuid",
@@ -90,9 +88,17 @@ db.batch.hasMany(db.script, { foreignKey: "batch_uuid", targetKey: "uuid" });
 
 db.script.belongsTo(db.batch, { foreignKey: "batch_uuid", targetKey: "uuid" });
 
-db.script.hasMany(db.pages, { foreignKey: "script_uuid", s: "uuid" },{ onDelete: 'CASCADE' });
+db.script.hasMany(
+  db.pages,
+  { foreignKey: "script_uuid", s: "uuid" },
+  { onDelete: "CASCADE" }
+);
 
-db.pages.belongsTo(db.script, { foreignKey: "script_uuid", targetKey: "uuid" },{ onDelete: 'CASCADE' });
+db.pages.belongsTo(
+  db.script,
+  { foreignKey: "script_uuid", targetKey: "uuid" },
+  { onDelete: "CASCADE" }
+);
 
 db.pages.belongsTo(db.pages, {
   as: "ParentPage",
@@ -109,9 +115,6 @@ db.pages.hasMany(db.pages, {
 // db.users.hasMany(db.user_team_members, { foreignKey: "user_uuid", targetKey: "uuid" });
 
 // db.user_team_members.belongsTo(db.users, { foreignKey: "user_uuid", targetKey: "uuid" });
-
-
-
 
 //exporting the module
 

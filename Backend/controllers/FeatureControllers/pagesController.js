@@ -155,7 +155,6 @@ const updatePageData = async (req, res) => {
     
       return uniqueValue;
     }
-    
     const length = 6;
 
     const existingTitles = [];
@@ -165,6 +164,7 @@ const updatePageData = async (req, res) => {
         script_uuid: page.script_uuid,
       },
     });
+    
     for (let allPage of pages) {
       if(allPage.title != "Page Name"){
       existingTitles.push(allPage.title);

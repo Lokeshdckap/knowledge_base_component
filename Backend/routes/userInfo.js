@@ -11,14 +11,14 @@ const verifyAuthMiddleware = require("../middleware/authenticationToken");
 const userController = require("../controllers/FeatureControllers/userInfoController");
 
 router.get(
-    "/getUserInfo",
-    verifyAuthMiddleware.verifyToken,
-    userController.getUserInfo
+  "/getUserInfo",
+  verifyAuthMiddleware.verifyToken,
+  userController.getUserInfo
 );
 
 router.put(
-    "/userUpdateProfile",
-    verifyAuthMiddleware.verifyToken,
-    userController.userUpdateProfile
+  "/userUpdateProfile",
+  verifyAuthMiddleware.verifyToken,
+  userController.userUpdateProfile
 );
 module.exports = router;

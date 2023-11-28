@@ -71,7 +71,6 @@ export default function SignupComponents() {
       setLoading(true);
 
       Cookies.set("userEmail", formValues.email, { expires: 7 });
-      console.log(formValues);
       axiosClient
         .post("http://localhost:4000/register", formValues)
         .then(({ data }) => {
@@ -108,7 +107,6 @@ export default function SignupComponents() {
         team_uuid: inviteDetail.team_uuid,
         role: inviteDetail.role,
       });
-
     } else {
       setFormValues({ ...formValues, [name]: value });
     }
@@ -133,7 +131,7 @@ export default function SignupComponents() {
           setAuth({
             token: data.jwttoken,
             verify: data.verify,
-            state: true
+            state: true,
           });
         } else {
           setAuth({
@@ -142,7 +140,6 @@ export default function SignupComponents() {
           });
         }
         setLoading(false);
-
       })
       .catch((err) => {
         // debugger;
@@ -153,8 +150,13 @@ export default function SignupComponents() {
     <div className="">
       <div className="flex ">
         <div className="bg-primary w-1/2 h-screen">
-        <img src={"https://i.postimg.cc/FRL3nwV1/mainlogo.png"} className="mx-8 mt-5"/>
-        <p className="mx-11 text-white text-sm font-medium">Rhino Tome</p>
+          <img
+            src={"https://i.postimg.cc/ydTtqjsF/book-2.png"}
+            alt=""
+            className="max-w-md ml-11 mt-6 h-6"
+          />
+
+          <p className="mx-6 text-white text-sm font-medium pt-2">Rhino Tome</p>
           <img
             src={logo}
             className="max-w-[390px]  m-auto mt-[70px] mb-[112px] "
@@ -217,11 +219,12 @@ export default function SignupComponents() {
                     className="w-96 h-10 p-2 rounded-lg focus:outline-gray-400"
                     placeholder="Password"
                     name="password"
-                    onPaste={(e)=>{
-                      e.preventDefault()
+                    onPaste={(e) => {
+                      e.preventDefault();
                       return false;
-                    }} onCopy={(e)=>{
-                      e.preventDefault()
+                    }}
+                    onCopy={(e) => {
+                      e.preventDefault();
                       return false;
                     }}
                   />
@@ -267,11 +270,12 @@ export default function SignupComponents() {
                     className="w-96 h-10 p-2 rounded-lg focus:outline-gray-400"
                     name="confirmPassword"
                     placeholder="Password"
-                    onPaste={(e)=>{
-                      e.preventDefault()
+                    onPaste={(e) => {
+                      e.preventDefault();
                       return false;
-                    }} onCopy={(e)=>{
-                      e.preventDefault()
+                    }}
+                    onCopy={(e) => {
+                      e.preventDefault();
                       return false;
                     }}
                   />

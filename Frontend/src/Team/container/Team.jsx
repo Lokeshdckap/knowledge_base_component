@@ -14,23 +14,41 @@ export const Team = () => {
   const [inviteEmail, setInviteEmail] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const [userInfos,setUserInfo] = useState([]);
+  const [userInfos, setUserInfo] = useState([]);
+  const [userName, setUserName] = useState("");
 
   const [inviteError, setInviteError] = useState(null);
   const [role, setRole] = useState("");
+
   const params = useParams();
 
   useEffect(() => {
     team();
     allUsers();
-    if(params.slug == "profile"){
-      userInfo()
+    if (params.slug == "profile") {
+      userInfo();
     }
-  }, [params,params.slug]);
+  }, [params, params.slug]);
 
+
+  let duration = 2000
   const showToastMessage = (data) => {
     toast.success(data, {
       position: toast.POSITION.TOP_RIGHT,
+      autoClose: duration,
+      hideProgressBar: true,
+      draggable: true,
+      closeOnClick: true,
+    });
+  };
+
+  const showToastErrorMessage = (data) => {
+    toast.warning(data, {
+      position: toast.POSITION.TOP_RIGHT,
+      autoClose: duration,
+      hideProgressBar: true,
+      draggable: true,
+      closeOnClick: true,
     });
   };
 
@@ -57,22 +75,26 @@ export const Team = () => {
   };
 
   const handleUpdate = () => {
-    axiosClient
-      .post("/updateTeamName", {
-        uuid: params.uuid,
-        name: teamName,
-      })
-      .then((res) => {
-        setMessage(res.data.Success);
+    if (teamName) {
+      axiosClient
+        .post("/updateTeamName", {
+          uuid: params.uuid,
+          name: teamName,
+        })
+        .then((res) => {
+          setMessage(res.data.Success);
 
-        team();
-        setTimeout(() => {
-          setMessage("");
-        }, 1500);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+          team();
+          setTimeout(() => {
+            setMessage("");
+          }, 1500);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      showToastErrorMessage("please fill the input field");
+    }
   };
 
   const handleInvite = () => {
@@ -123,7 +145,6 @@ export const Team = () => {
       role_type: e.target.value,
       user_uuid: e.target.id,
     };
-    console.log(payload);
     await axiosClient
       .post("/updateRole", payload)
       .then((res) => {
@@ -134,18 +155,34 @@ export const Team = () => {
       });
   };
 
-  const userInfo = async() => {
-    await axiosClient.get("/getUserInfo")
-    .then((res) => {
-      setUserInfo(res.data.userInfo);
-    })
-    .catch((err) => {
-      const response = err.response;
-      console.log(response);
-    });
+  const userInfo = async () => {
+    await axiosClient
+      .get("/getUserInfo")
+      .then((res) => {
+        setUserInfo(res.data.userInfo);
+        setUserName(res.data.userInfo.username);
+      })
+      .catch((err) => {
+        const response = err.response;
+      });
+  };
 
-
-  }
+  const handleUserDetail = () => {
+    let username = userName;
+    if (username) {
+      axiosClient
+        .put(`http://localhost:4000/userUpdateProfile`, { username: username })
+        .then(({ data }) => {
+          showToastMessage(data.message);
+        })
+        .catch((err) => {
+          const response = err.response;
+          console.error("Error:", response.status);
+        });
+    } else {
+      showToastErrorMessage("please fill the input field");
+    }
+  };
 
   return (
     <div>
@@ -164,15 +201,22 @@ export const Team = () => {
         handleRole={handleRole}
         inviteError={inviteError}
         setInviteError={setInviteError}
+        handleUserDetail={handleUserDetail}
         userInfos={userInfos}
+        setUserInfo={setUserInfo}
+        userName={userName}
+        setUserName={setUserName}
       />
 
       <ToastContainer />
 
       {loading && (
-        <p className="absolute top-72 left-[600px] z-40">
-          <HashLoader color="#3197e8" />
-        </p>
+        <>
+          <div className="bg-primary opacity-[0.5] w-[1289px] h-[664px] absolute top-0 left-0  z-10"></div>
+          <p className="absolute top-72 left-[600px] z-40">
+            <HashLoader color="#3197e8" />
+          </p>
+        </>
       )}
     </div>
   );

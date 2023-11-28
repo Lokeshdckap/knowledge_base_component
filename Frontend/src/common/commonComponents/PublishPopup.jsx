@@ -11,10 +11,14 @@ export const PublishPopup = (props) => {
   
   const [check, setCheck] = useState(props.renderScript);
 
-
+  let duration = 2000
   const showToastMessage = (data) => {
     toast.success(data, {
       position: toast.POSITION.TOP_RIGHT,
+      autoClose: duration,
+      hideProgressBar: true,
+      draggable: true,
+      closeOnClick: true,
     });
   };
 
@@ -33,7 +37,8 @@ export const PublishPopup = (props) => {
       }
     };
   }, [props.renderScript]);
-  console.log(props.renderScript.is_published);
+
+
   return (
     <div>
       <div className="bg-primary opacity-[0.5] w-[1289px] h-[664px] absolute top-0 left-0  z-10"></div>
@@ -44,9 +49,6 @@ export const PublishPopup = (props) => {
               <div className="w-[200px] m-auto space-y-1">
                 <div className="hover:bg-[#e5e8f1] p-2 cursor-pointer rounded bg-[#e5e8f1]">
                   <p>Publish to the web</p>
-                </div>
-                <div className="hover:bg-[#e5e8f1] p-2 cursor-pointer rounded">
-                  <p>Invite members</p>
                 </div>
               </div>
             </div>
@@ -93,9 +95,6 @@ export const PublishPopup = (props) => {
                     </div>
                   </div>
                 </div>
-                {console.log(check.is_published == 1, "true")}
-                {console.log(props.renderScript.is_published == 1, "true")}
-
                 {check.is_published == 0 ? "" : <div>No content</div>}
                 <div className="box-border border-[#c5ccd8] h-32 w-full border-[1px] rounded bg-white">
                   <div className="w-[500px] m-auto">

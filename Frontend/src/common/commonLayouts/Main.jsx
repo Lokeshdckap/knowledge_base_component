@@ -2,7 +2,7 @@ import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 export default function Main(props) {
-  const params = useParams() 
+  const params = useParams();
   const navigate = useNavigate();
   const batchList = props.batches;
   const scriptList = props.scripts;
@@ -21,7 +21,7 @@ export default function Main(props) {
   };
 
   return (
-    <div className="pt-16 h-[520px]  overflow-y-auto z-0">
+    <div className="pt-10 h-[584px] overflow-y-auto z-0 bg-white">
       <div className="   ">
         <div className={`flex justify-between ${props.widths} m-auto  `}>
           <div className="flex space-x-3">
@@ -48,80 +48,101 @@ export default function Main(props) {
             </button>
           </div>
         </div>
-        <div className="mt-14">
+        <div className="mt-10">
           <hr
             className={`h-px my-8 bg-[#D5D7DA] border-0 dark:bg-gray-900 ${props.widths} m-auto`}
           />
         </div>
+        <p className="font-semibold text-textPrimary text-xl pl-6">BATCHS</p>
         <div
-          className={`${props.widths} m-auto flex flex-wrap gap-[30px] mt-10`}
+          className={`${props.widths} m-auto flex flex-wrap gap-[30px] mt-2`}
         >
-          {batchList.map((batch, index) => (
-            <div
-              key={batch.uuid}
-              className="bg-white w-[230px] h-[120px] rounded-[10px] shadow-lg hover:scale-105"
-            >
-              <div className="bg-gradient-to-r from-primary to-[#226576] w-[230px] h-[36px] rounded-t-lg text-end pt-px">
-                <span className="material-symbols-outlined text-white cursor-pointer text-2xl pr-1">
-                  more_vert
-                </span>
-              </div>
+          {batchList && batchList.length > 0 ? (
+            batchList.map((batch, index) => (
               <div
-                className="pl-5 pt-5 cursor-pointer"
-                id={batch.uuid}
-                onClick={handleBatch}
+                key={batch.uuid}
+                className="bg-white w-[230px] h-[120px] rounded-[10px] shadow-lg hover:scale-105"
               >
-                <p id={batch.uuid} onClick={handleBatch}>
-                  {batch.title}
-                </p>
-                {scriptCount[index] ? (
-                  <p
-                    id={batch.uuid}
-                    onClick={handleBatch}
-                    className="text-gray-500"
-                  >
-                    {scriptCount[index].script_count} Scripts
-                  </p>
-                ):( <p
+                <div className="bg-gradient-to-r from-primary to-[#226576] w-[230px] h-[36px] rounded-t-lg text-end pt-px">
+                  <span className="material-symbols-outlined text-white cursor-pointer text-2xl pr-1">
+                    more_vert
+                  </span>
+                </div>
+                <div
+                  className="pl-5 pt-5 cursor-pointer"
                   id={batch.uuid}
                   onClick={handleBatch}
-                  className="text-gray-500"
                 >
-                  0 Scripts
-                </p>)
-                }
+                  <p id={batch.uuid} onClick={handleBatch}>
+                    {batch.title}
+                  </p>
+                  {scriptCount[index] ? (
+                    <p
+                      id={batch.uuid}
+                      onClick={handleBatch}
+                      className="text-gray-500"
+                    >
+                      {scriptCount[index].script_count} Scripts
+                    </p>
+                  ) : (
+                    <p
+                      id={batch.uuid}
+                      onClick={handleBatch}
+                      className="text-gray-500"
+                    >
+                      0 Scripts
+                    </p>
+                  )}
+                </div>
               </div>
+            ))
+          ) : (
+            <div className="text-xl text-textPrimary ">
+              No records of Batchs
             </div>
-          ))}
+          )}
         </div>
+        <p className="font-semibold text-textPrimary text-xl pt-5 pl-6">
+          SCRIPTS
+        </p>
+
         <div
-          className={`${props.widths} m-auto flex flex-wrap gap-[30px] mt-10`}
+          className={`${props.widths} m-auto flex flex-wrap gap-[30px] mt-3`}
         >
-          {scriptList.map((script) => (
-            <div className="bg-white w-[230px] h-[120px] rounded-[10px] shadow-lg hover:scale-105">
-              <div className="bg-gradient-to-r from-primary to-[#226576] w-[230px] h-[36px] rounded-t-lg text-end pt-px ">
-                <span className="material-symbols-outlined text-white cursor-pointer text-2xl pr-1">
-                  more_vert
-                </span>
-              </div>
+          {scriptList && scriptList.length > 0 ? (
+            scriptList.map((script) => (
               <div
-                className="pl-5 pt-5 cursor-pointer"
-                id={script.uuid}
-                onClick={handleScripts}
+                className="bg-white w-[230px] h-[120px] rounded-[10px] shadow-lg hover:scale-105"
+                key={script.uuid}
               >
-                <p id={script.uuid} onClick={handleScripts}>
-                  {script.title}
-                </p>
-                <p
+                <div className="bg-gradient-to-r from-primary to-[#226576] w-[230px] h-[36px] rounded-t-lg text-end pt-px ">
+                  <span className="material-symbols-outlined text-white cursor-pointer text-2xl pr-1">
+                    more_vert
+                  </span>
+                </div>
+                <div
+                  className="pl-5 pt-5 cursor-pointer"
                   id={script.uuid}
                   onClick={handleScripts}
-                  className="text-gray-500"
                 >
-                  0 page
-                </p>
+                  <p id={script.uuid} onClick={handleScripts}>
+                    {script.title}
+                  </p>
+                  <p
+                    id={script.uuid}
+                    onClick={handleScripts}
+                    className="text-gray-500"
+                  >
+                    0 page
+                  </p>
+                </div>
               </div>
+            ))
+          ) : (
+            <div className="text-xl text-textPrimary ">
+              No records of Scripts
             </div>
-          ))}
+          )}
         </div>
       </div>
     </div>

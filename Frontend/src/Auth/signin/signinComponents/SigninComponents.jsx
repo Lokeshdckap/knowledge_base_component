@@ -66,20 +66,18 @@ export default function SigninComponents() {
         .then(({ data }) => {
           console.log(data);
           if (data.verify) {
-
             setAuth({
               token: data.token,
               verify: data.verify,
               state: true,
             });
+          } else {
+            {
+              setError({
+                email: "Please verifiy your email",
+              });
+            }
           }
-          else{{
-
-
-            setError({
-              "email":"Please verifiy your email"
-            })
-          }}
 
           setLoading(false);
         })
@@ -104,8 +102,13 @@ export default function SigninComponents() {
   return (
     <main className="flex">
       <div className="bg-primary w-1/2 h-screen">
-        <img src={"https://i.postimg.cc/FRL3nwV1/mainlogo.png"} className="mx-8 mt-5"/>
-        <p className="mx-11 text-white text-sm font-medium">Rhino Tome</p>
+        <img
+          src={"https://i.postimg.cc/ydTtqjsF/book-2.png"}
+          alt=""
+          className="max-w-md ml-11 mt-6 h-6"
+        />
+
+        <p className="mx-6 text-white text-sm font-medium pt-2">Rhino Tome</p>
         <img
           src={logo}
           alt=""
@@ -114,7 +117,9 @@ export default function SigninComponents() {
       </div>
       <div className="bg-secondary  w-1/2 p-32">
         <div>
-          <h2 className="text-xl text-textPrimary">Happy To See You Back ! Our Rhino Tome </h2>
+          <h2 className="text-xl text-textPrimary">
+            Happy To See You Back ! Our Rhino Tome{" "}
+          </h2>
           <h3 className="pt-2 text-base text-textPrimary">
             Log in and unlock your world!
           </h3>
@@ -154,7 +159,6 @@ export default function SigninComponents() {
                 event={HandleChange}
                 value={formValues.password}
                 placeholder="Password"
-             
               />
               <div className="">
                 {PasswordVisible ? (
@@ -211,9 +215,12 @@ export default function SigninComponents() {
           </Link>
         </div>
         {loading && (
-          <p className="absolute top-72 left-[600px]">
-            <HashLoader color="#3197e8" />
-          </p>
+          <>
+            <div className="bg-primary opacity-[0.5] w-[1289px] h-[664px] absolute top-0 left-0  z-10"></div>
+            <p className="absolute top-72 left-[600px] z-40">
+              <HashLoader color="#3197e8" />
+            </p>
+          </>
         )}
       </div>
     </main>

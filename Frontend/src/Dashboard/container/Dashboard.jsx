@@ -29,29 +29,13 @@ export default function Dashboard() {
 
   //state
   const [state, setState] = useState(true);
-  const [data, setData] = useState(null);
-  const [childScript, setChildScript] = useState([]);
-
   const [loading, setLoading] = useState(false);
 
-  const [inviteError, setInviteError] = useState(null);
 
-  //create Team state
-  const [teamPopup, setTeamPopup] = useState(false);
-
-  const [formValues, setFormValues] = useState({});
-  const [errors, setError] = useState({});
-
-  const [invitePopup, setInvitePopup] = useState(false);
-  const [inviteEmail, setInviteEmail] = useState("");
-  const [role, setRole] = useState("");
 
   //search states
   const [searchPopup, setsearchPopup] = useState(false);
   const [searchData, setSearchData] = useState(null);
-
-  //state for overflow
-  const [overflowState, setOverflowState] = useState("overflow-auto");
 
   // search
 
@@ -81,51 +65,6 @@ export default function Dashboard() {
         }
       });
   };
-
-  //invite
-
-  const handleInvite = () => {
-    setInvitePopup(true);
-  };
-
-  const handleInviteUsers = () => {
-    setLoading(true);
-    console.log(inviteEmail);
-    console.log(role);
-    if (!inviteEmail.trim()) {
-      setLoading(false);
-
-      setInviteError("Email is required");
-    } else if (!role.trim()) {
-      setLoading(false);
-
-      setInviteError("Role is required");
-    } else {
-      axiosClient
-        .post("/inviteUsers", {
-          email: inviteEmail,
-          role: role,
-          team_uuid: params.uuid,
-        })
-        .then((res) => {
-          showToastMessage(res.data);
-          setLoading(false);
-        })
-        .catch((err) => {
-          const response = err.response;
-          if (response && response.status === 400) {
-            setInviteError(response.data);
-            setTimeout(() => {
-              setInviteError("");
-            }, 1500);
-            setLoading(false);
-          } else {
-            console.error("Error:", response.status);
-          }
-        });
-    }
-  };
-
 
 
   return (
@@ -159,12 +98,13 @@ export default function Dashboard() {
         />
       )}
 
-      <ToastContainer />
-
       {loading && (
-        <p className="absolute top-72 left-[600px] z-40">
-          <HashLoader color="#3197e8" />
-        </p>
+        <>
+          <div className="bg-primary opacity-[0.5] w-[1289px] h-[664px] absolute top-0 left-0  z-10"></div>
+          <p className="absolute top-72 left-[600px] z-40">
+            <HashLoader color="#3197e8" />
+          </p>
+        </>
       )}
     </>
   );

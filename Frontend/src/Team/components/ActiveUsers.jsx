@@ -1,8 +1,128 @@
-import React from "react";
-import { InviteUsers } from "./InviteUsers";
+import React, { useEffect, useState } from "react";
+import { InviteUsers } from "../../common/commonLayouts/InviteUsers";
+import { useParams } from "react-router-dom";
+import axiosClient from "../../axios-client";
+import { ToastContainer, toast } from "react-toastify";
+import HashLoader from "react-spinners/HashLoader";
 
 export const ActiveUsers = (props) => {
-  let users = props.teamMember;
+  
+  // let users = props.teamMember;
+  const params = useParams();
+
+  const [invitePopup, setInvitePopup] = useState(false);
+  const [teamMembers, setTeamMembers] = useState([]);
+  const [teamName, setTeamName] = useState("");
+  const [inviteEmail, setInviteEmail] = useState("");  
+  const [role, setRole] = useState("");
+  const [inviteError, setInviteError] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    allUsers();
+    team();
+  }, [params]);
+
+  let duration = 2000;
+
+  const showToastMessage = (data) => {
+    toast.success(data, {
+      position: toast.POSITION.TOP_RIGHT,
+      autoClose: duration,
+      hideProgressBar: true,
+      draggable: true,
+      closeOnClick: true,
+    });
+  };
+
+  
+  const allUsers = () => {
+    axiosClient
+      .get(`/getAciveUsers/${params.uuid}`)
+      .then((res) => {
+        setTeamMembers(res.data.userDetail);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+
+  const team = () => {
+    axiosClient
+      .get(`/getTeam/${params.uuid}`)
+      .then((res) => {
+        setTeamName(res.data.Teams[0].name);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const handleInvite = () => {
+    setInvitePopup(true);
+  };
+
+
+
+    //role change
+
+    const handleRole = async (e) => {
+      let payload = {
+        team_uuid: params.uuid,
+        role_type: e.target.value,
+        user_uuid: e.target.id,
+      };
+      await axiosClient
+        .post("/updateRole", payload)
+        .then((res) => {
+          console.log(res.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    };
+
+
+
+
+
+    const handleInviteUsers = () => {
+      setLoading(true);
+      if (!inviteEmail.trim()) {
+        setLoading(false);
+  
+        setInviteError("Email is required");
+      } else if (!role.trim()) {
+        setLoading(false);
+  
+        setInviteError("Role is required");
+      } else {
+        axiosClient
+          .post("/inviteUsers", {
+            email: inviteEmail,
+            role: role,
+            team_uuid: params.uuid,
+          })
+          .then((res) => {
+            showToastMessage(res.data);
+            setLoading(false);
+          })
+          .catch((err) => {
+            const response = err.response;
+            if (response && response.status === 400) {
+              setInviteError(response.data);
+              setTimeout(() => {
+                setInviteError("");
+              }, 1500);
+              setLoading(false);
+            } else {
+              console.error("Error:", response.status);
+            }
+          });
+      }
+    };
+
 
   return (
     <div className='ml-24 mt-10'>
@@ -17,7 +137,7 @@ export const ActiveUsers = (props) => {
               <button
                 type="button"
                 className="text-primary hover:text-white border border-primary hover:bg-primary focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-7 py-2.5 text-center mr-2 mb-2 dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-500 dark:focus:ring-blue-800"
-                onClick={props.handleInvite}
+                onClick={handleInvite}
               >
                 Invite users
               </button>
@@ -53,8 +173,8 @@ export const ActiveUsers = (props) => {
               </thead>
               <tbody>
                 
-                {users &&
-                  users.map((user) => (
+                {teamMembers &&
+                  teamMembers.map((user) => (
                     <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700" key={user.uuid}>
                       <th
                         scope="row"
@@ -75,7 +195,7 @@ export const ActiveUsers = (props) => {
                                   name=""
                                   id={member.user_uuid}
                                   className="focus:outline-none"
-                                  onChange={props.handleRole}
+                                  onChange={handleRole}
                                   key={member.user_uuid}
                                 >
                                   <option value="1">admin</option>
@@ -94,7 +214,7 @@ export const ActiveUsers = (props) => {
                                   name=""
                                   id={member.user_uuid}
                                   className="focus:outline-none"
-                                  onChange={props.handleRole}
+                                  onChange={handleRole}
                                   key={member.user_uuid}
 
                                 >
@@ -113,7 +233,7 @@ export const ActiveUsers = (props) => {
                                   name=""
                                   id={member.user_uuid}
                                   className="focus:outline-none"
-                                  onChange={props.handleRole}
+                                  onChange={handleRole}
                                   key={member.user_uuid}
 
                                 >
@@ -140,15 +260,15 @@ export const ActiveUsers = (props) => {
           </div>
         </div>
       </div>
-      {props.invitePopup && (
+      {invitePopup && (
         <InviteUsers
-          setInvitePopup={props.setInvitePopup}
-          team={props.team}
-          handleInviteUsers={props.handleInviteUsers}
-          setInviteEmail={props.setInviteEmail}
-          setRole={props.setRole}
-          inviteError={props.inviteError}
-          setInviteError={props.setInviteError}
+          setInvitePopup={setInvitePopup}
+          team={teamName}
+          handleInviteUsers={handleInviteUsers}
+          setInviteEmail={setInviteEmail}
+          setRole={setRole}
+          inviteError={inviteError}
+          setInviteError={setInviteError}
         />
       )}
     </div>

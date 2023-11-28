@@ -18,7 +18,6 @@ export default function DefaultLayout() {
               <SideNavLarge />
               <Outlet />
             </div>
-          
           </div>
         </div>
       </MyContextProvider>

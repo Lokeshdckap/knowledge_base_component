@@ -67,7 +67,8 @@ export const EditorComponents = (props) => {
                   }
                 }
               },
-              autofocus: true,
+              autofocus: props.publish && props.publish.is_published ? true : false,
+              readOnly:props.publish && props.publish.is_published ? true : false,
               data: datas,
               tools: {
                 list: {
@@ -134,9 +135,7 @@ export const EditorComponents = (props) => {
               });
           }
         };
-
         initEditor(props.editorValue);
-
         return () => {
           isMounted = false;
           if (ejInstance.current) {
@@ -147,8 +146,6 @@ export const EditorComponents = (props) => {
       }
     } else {
       let isMounted = true;
-      console.log(props.editorValue);
-
       const initEditor = async (datas) => {
         if (isMounted && ejInstance.current == null) {
           const editor = new EditorJS({
@@ -168,7 +165,8 @@ export const EditorComponents = (props) => {
                 }
               }
             },
-            autofocus: true,
+            autofocus: props.publish && props.publish.is_published ? true : false,
+            readOnly:props.publish && props.publish.is_published ? true : false,
             data: datas,
             tools: {
               list: {
@@ -226,10 +224,7 @@ export const EditorComponents = (props) => {
           });
           editor.isReady
             .then(() => {
-
               if (isMounted) {
-                console.log(props.editorValue,"chec");
-
                 ejInstance.current = editor;
               }
             })

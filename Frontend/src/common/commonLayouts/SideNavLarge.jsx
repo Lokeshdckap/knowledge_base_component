@@ -45,7 +45,7 @@ export default function SideNavLarge(props) {
     addNewScript,
     getLoadScript,
     getScripts,
-    handleAfterAddedChildrenScripts
+    handleAfterAddedChildrenScripts,
   } = useMyContext();
 
   //param
@@ -237,8 +237,6 @@ export default function SideNavLarge(props) {
   useEffect(() => {
     setOverState(props.overStates);
     const closeOnOutsideClick = (e) => {
-
-
       if (
         teamDropDown &&
         !teamRef.current.contains(e.target) &&
@@ -284,7 +282,7 @@ export default function SideNavLarge(props) {
             showToastErrorMessage(res.data.message);
             getBatch();
             getScript();
-            if(batchId){
+            if (batchId) {
               handleAfterAddedChildrenScripts(batchId);
             }
           }
@@ -305,16 +303,12 @@ export default function SideNavLarge(props) {
   return (
     <div className="bg-primary h-screen  overflow-auto w-[280px] z-10 ">
       <div className="flex items-center space-x-3">
-        <img src={"https://i.postimg.cc/ydTtqjsF/book-2.png"} alt="" className="max-w-md ml-8 mt-6 h-6" />
+        <img
+          src={"https://i.postimg.cc/ydTtqjsF/book-2.png"}
+          alt=""
+          className="max-w-md ml-8 mt-6 h-6"
+        />
         <p className="mt-6 text-lg text-white font-medium">Rhino Tome</p>
-      </div>
-      <div
-        className="bg-slate-300 h-6 w-6 rounded-full absolute mt-4 left-[219px] cursor-pointer"
-        onClick={handleMove}
-      >
-        <span className="material-symbols-outlined cursor-pointer">
-          chevron_left
-        </span>
       </div>
 
       <div className="">
@@ -344,7 +338,7 @@ export default function SideNavLarge(props) {
             <div>
               <p className="font-semibold text-textPrimary">Change Team</p>
               {allTeam && (
-                <ul className={`space-y-2 pt-1 max-h-[200px] overflow-auto`}>
+                <ul className={`space-y-2 pt-1 max-h-[250px] overflow-auto`}>
                   {allTeam.map((team) => (
                     <li
                       key={team.uuid}
@@ -367,7 +361,7 @@ export default function SideNavLarge(props) {
                 <div className="flex items-center mb-2">
                   <i className="fa-solid fa-sliders"></i>
                   <p className="pl-1">
-                    <Link to={`/dashboard/${params.uuid}/teamsetting`}>
+                    <Link to={`/setting/${params.uuid}/teamsetting`}>
                       Team setting
                     </Link>
                   </p>
@@ -393,7 +387,7 @@ export default function SideNavLarge(props) {
             </div>
           </div>
         )}
-        <ul className="mt-5 space-y-1 h-[360px] overflow-auto ">
+        <ul className="mt-5 space-y-1 h-[430px] overflow-auto ">
           {batch.map((batch) => (
             <div className="">
               <li
@@ -520,7 +514,8 @@ export default function SideNavLarge(props) {
                                 onClick={handleTrash}
                                 data-set={child.batch_uuid}
                               >
-                                <i className="fa-solid fa-trash pr-[5px]"
+                                <i
+                                  className="fa-solid fa-trash pr-[5px]"
                                   id={child.uuid}
                                   onClick={handleTrash}
                                   data-set={child.batch_uuid}
@@ -536,7 +531,7 @@ export default function SideNavLarge(props) {
             </div>
           ))}
           {script.map((script) => (
-            <div>
+            <div className="">
               <li
                 key={script.id}
                 id={script.uuid}
@@ -548,6 +543,7 @@ export default function SideNavLarge(props) {
               >
                 <i
                   className="fa-solid fa-file pr-3"
+                  id={script.uuid}
                   onClick={redirectToScript}
                 ></i>
                 <span
@@ -588,7 +584,6 @@ export default function SideNavLarge(props) {
             </div>
           ))}
         </ul>
-
         <hr
           className={`h-px bg-[#477094] border-0 dark:bg-gray-300 m-auto mt-2`}
         />
@@ -630,19 +625,23 @@ export default function SideNavLarge(props) {
               <AddNew click={addNewBatch} scriptEvent={addNewScript} />
             </div>
           )}
-
-          <div className="bg-white h-8 w-8 rounded-full cursor-pointer  ">
-            <p className=" text-primary pl-[7px] pt-[2px]  ">
-              <i className="fa-solid fa-gear text-lg text-primary"></i>
-            </p>
-          </div>
+          <Link to={`/setting/${params.uuid}/teamsetting`}>
+            <div className="bg-white h-8 w-8 rounded-full cursor-pointer  ">
+              <p className=" text-primary pl-[7px] pt-[2px]  ">
+                <i className="fa-solid fa-gear text-lg text-primary"></i>
+              </p>
+            </div>
+          </Link>
         </div>
       </div>
       <ToastContainer />
       {loading && (
-        <p className="absolute top-72 left-[600px] z-40">
-          <HashLoader color="#3197e8" />
-        </p>
+        <>
+          <div className="bg-primary opacity-[0.5] w-[1289px] h-[664px] absolute top-0 left-0  z-10"></div>
+          <p className="absolute top-72 left-[600px] z-40">
+            <HashLoader color="#3197e8" />
+          </p>
+        </>
       )}
       {teamPopup && (
         <ModelPopup

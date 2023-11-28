@@ -83,7 +83,7 @@ const newDocuments = async (req, res) => {
         });
       })
       .catch((error) => {
-        return res.status(409).json({ error: error.message });
+        return res.status(404).json({ error: "Not Found" });
       });
   } catch (error) {
     return res.status(404).json({ error: error });

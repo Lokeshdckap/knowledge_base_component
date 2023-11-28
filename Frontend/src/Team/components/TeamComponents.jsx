@@ -2,7 +2,7 @@ import React from "react";
 import { TeamSideNav } from "../../common/commonLayouts/TeamSideNav";
 import { TeamProfile } from "../../common/commonLayouts/TeamProfile";
 import { useParams } from "react-router-dom";
-import { ActiveUsers } from "../../common/commonLayouts/ActiveUsers";
+import { ActiveUsers } from "./ActiveUsers";
 import Error from "../../Error/Error";
 import { Profile } from "./Profile";
 
@@ -41,9 +41,13 @@ export const TeamComponents = (props) => {
             setInviteError={props.setInviteError}
           />
         ) : params.slug === "profile" ? (
-          <Profile 
-          userInfos={props.userInfos}
-           />
+          <Profile
+            userInfos={props.userInfos}
+            handleUserDetail={props.handleUserDetail}
+            setUserInfo={props.setUserInfo}
+            userName={props.userName}
+            setUserName={props.setUserName}
+          />
         ) : (
           <Error />
         )}

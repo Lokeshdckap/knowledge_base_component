@@ -19,11 +19,37 @@ import { Dashboards } from "./Dashboard/container/Dashboards.jsx";
 import { JoinTeam } from "./joinTeam/JoinTeam.jsx";
 import { Trash } from "./Trash/container/Trash.jsx";
 import TeamLayout from "./components/TeamLayout.jsx";
-import { TeamProfile } from "./Team/components/TeamProfile.jsx";
 import { TeamSetting } from "./Team/components/TeamSetting.jsx";
 import { Profile } from "./Team/components/Profile.jsx";
+import { BlankLayout } from "./components/BlankLayout.jsx";
+import { ActiveUsers } from "./Team/components/ActiveUsers.jsx";
 
 const router = createBrowserRouter([
+  {
+    path: "/setting",
+    element: <TeamLayout />,
+    children: [
+       {
+        path: ":uuid/teamsetting", 
+        element: <TeamSetting 
+          
+        />  
+      },
+      {
+        path: ":uuid/profile", 
+        element:<Profile  
+      
+        />
+      },
+      {
+        path: ":uuid/activeusers", 
+        element:<ActiveUsers 
+       
+        />
+      },
+    ],
+  },  
+
   {
     path: "/",
     element: <DefaultLayout />,
@@ -31,10 +57,6 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: <Navigate to={`/dashboard`} />,
-      },
-      {
-        path: "/teampage",
-        element: <TeamPage />,
       },
       {
         path: "/dashboard",
@@ -62,10 +84,6 @@ const router = createBrowserRouter([
         element: <TeamPage />,
       },
       {
-        path: `/dashboard/:uuid/:slug`,
-        element: <Team />,
-      },
-      {
         path: "/signin/:uuid/:id",
         element: <Invited />,
       },
@@ -77,24 +95,16 @@ const router = createBrowserRouter([
   },
 
   {
-    path: "/dashboard/:uuid/:slug",
-    element: <TeamLayout />,
+    path: "/teampage",
+    element: <BlankLayout />,
     children: [
       {
-        path: "/dashboard/:uuid/:slug",
-        element: <Team />
+        path: "/teampage",
+        element: <TeamPage />
       },
-      // {
-      //   path: "/dashboard/:uuid/:slug",
-      //   element: <TeamSetting />
-      // },
-      // {
-      //   path: "/dashboard/:uuid/:slug",
-      //   element: <Profile />
-      // },
-
     ],
   },
+
   {
     path: "/",
     element: <GuestLayout />,

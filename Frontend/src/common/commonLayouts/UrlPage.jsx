@@ -17,6 +17,7 @@ import { Search } from "./Search";
 
 export const UrlPage = () => {
   const location = useLocation();
+  
   const navigate = useNavigate();
 
   const [script, setScript] = useState(null);
@@ -45,7 +46,9 @@ export const UrlPage = () => {
         .catch((err) => {
           const response = err.response;
 
-          if (response && response.status === 409) {
+          if (response && response.status === 404) {
+            navigate("/error");
+
           } else {
             console.error("Error:", response.status);
           }
@@ -62,7 +65,14 @@ export const UrlPage = () => {
           setScript(res.data.script);
         })
         .catch((err) => {
-          console.log(err);
+          const response = err.response;
+
+          if (response && response.status === 404) {
+            navigate("/error");
+
+          } else {
+            console.error("Error:", response.status);
+          }
         });
     }
     if (params.slug && params["*"] == "") {
@@ -78,7 +88,13 @@ export const UrlPage = () => {
           navigate(`/${params.uuid}${res.data.hierarchy[0].path}`);
         })
         .catch((err) => {
-          console.log(err);
+          const response = err.response;
+
+          if (response && response.status === 404) {
+            navigate("/error");
+          } else {
+            console.error("Error:", response.status);
+          }
         });
     }
   }, [params.slug, params["*"]]);
@@ -184,6 +200,8 @@ export const UrlPage = () => {
         }
       });
   };
+
+
   return (
     <div className="">
       <div className="flex justify-between w-[1200px] m-auto  mt-6 mb-6 items-center">
@@ -220,7 +238,7 @@ export const UrlPage = () => {
 
         <div className="h-[520px] overflow-auto pt-12 pl-14 w-[1000px]">
           <h1 className="text-3xl font-bold mb-5">
-            {page.length == 0 ? "Page Name" : loadPage.title}
+            {page.length == 0 ? "Page Name" : loadPage.title && loadPage.title.split("-")[0]}
           </h1>
           <h4 className="text-xl mb-5">
             {page.length == 0 ? "Page description" : loadPage.description}

@@ -7,23 +7,23 @@ export const BatchLayouts = (props) => {
   let scripts = props.scripts;
   let batch = props.batch;
 
-    const [inputValue, setInputValue] = useState('Initial Value');
-  
-    const handleBlur = () => {
-      console.log('Input field lost focus with value:', inputValue);
-      // Perform any actions you want when the input field loses focus
-    };
-  
-    const handleChange = (e) => {
-      setInputValue(e.target.value);
-    };
+  const [inputValue, setInputValue] = useState("Initial Value");
+
+  const handleBlur = () => {
+    console.log("Input field lost focus with value:", inputValue);
+    // Perform any actions you want when the input field loses focus
+  };
+
+  const handleChange = (e) => {
+    setInputValue(e.target.value);
+  };
   const handleScripts = (e) => {
     let TargetScriptId = e.target.id;
     navigate(`/dashboard/${params.uuid}/s/${TargetScriptId}`);
   };
 
   return (
-    <div className="pt-16 h-[550px]  overflow-y-auto z-0">
+    <div className="pt-5 h-[550px]  overflow-y-auto z-0">
       <div className=" ">
         <div className={`flex justify-between ${props.widths} m-auto  `}>
           <div>
@@ -32,7 +32,7 @@ export const BatchLayouts = (props) => {
                 className="text-[40px] ml-5  mt-8 font-bold focus:outline-none bg-[#ECEDEF] focus:bg-slate-100 h-14"
                 placeholder="Batch Name"
                 name="title"
-                value={props.batchTitle || ''}
+                value={props.batchTitle || ""}
                 onChange={props.changeEvent}
                 onBlur={props.handleBlur}
               />
@@ -42,15 +42,13 @@ export const BatchLayouts = (props) => {
                 className="text-2xl ml-5 mt-5 focus:outline-none  bg-[#ECEDEF] h-10"
                 placeholder="Batch Description"
                 name="descritpion"
-                value={
-                  props.batchDescription || ''}
+                value={props.batchDescription || ""}
                 onChange={props.changeEvent}
                 onBlur={props.handleDescriptionBlur}
               />
             </div>
           </div>
-
-          <div className="flex items-center space-x-5">
+          <div className="flex items-center space-x-5 pt-3 ">
             <button
               className="h-[45px] w-[160px] text-white rounded  bg-primary"
               onClick={props.AddScript}
@@ -64,8 +62,10 @@ export const BatchLayouts = (props) => {
             className={`h-px my-8 bg-[#D5D7DA] border-0 dark:bg-gray-900 ${props.widths} m-auto`}
           />
         </div>
+        <p className="font-semibold text-textPrimary text-xl  pl-6">SCRIPTS</p>
+
         <div
-          className={`${props.widths} m-auto flex flex-wrap gap-[30px] mt-10`}
+          className={`${props.widths} m-auto flex flex-wrap gap-[30px] mt-3`}
         >
           {scripts &&
             scripts.map((script) => (

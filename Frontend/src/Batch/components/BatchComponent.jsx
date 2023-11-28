@@ -12,13 +12,9 @@ export const BatchComponent = () => {
   const params = useParams();
   const {
     batch,
-    setBatch,
     getBatch,
     addNewScript,
-    childScript,
-    setChildScript,
     getLoadScript,
-    setScripts,
     batchTitle,
     setBatchTitle,
     batchDescription,
@@ -29,19 +25,8 @@ export const BatchComponent = () => {
   //hooks
 
   //state
-  const [formValues, setFormValues] = useState({});
-  const [errors, setError] = useState({});
-  const [teamPopup, setTeamPopup] = useState(false);
   const [state, setState] = useState(true);
-  const [data, setData] = useState(null);
-
-  const [invitePopup, setInvitePopup] = useState(false);
-  const [inviteEmail, setInviteEmail] = useState("");
-  const [role, setRole] = useState("");
-
   const [loading, setLoading] = useState(false);
-
-  const [inviteError, setInviteError] = useState(null);
 
   useEffect(() => {
     getScripts();
@@ -79,9 +64,9 @@ export const BatchComponent = () => {
     await axiosClient
       .post("/addBatchTitleAndDescription", payLoad)
       .then((res) => {
+        showToastMessage(res.data.message);
         getScripts();
         getBatch();
-        showToastMessage(res.data.message);
       })
       .catch((err) => {
         console.log(err);
@@ -93,58 +78,6 @@ export const BatchComponent = () => {
       setBatchTitle(e.target.value);
     } else {
       setbatchDescription(e.target.value);
-    }
-  };
-
-  const handleCancel = () => {
-    setTeamPopup(false);
-  };
-
-  const handleCreate = () => {
-    setTeamPopup(true);
-  };
-
-  const HandleChange = (e) => {
-    const { name, value } = e.target;
-    console.log(e.target.value);
-    setFormValues({ ...formValues, [name]: value });
-    delete errors[name];
-  };
-
-  const handleInviteUsers = () => {
-    setLoading(true);
-    console.log(inviteEmail);
-    if (!inviteEmail.trim()) {
-      setLoading(false);
-
-      setInviteError("Email is required");
-    } else if (!role.trim()) {
-      setLoading(false);
-
-      setInviteError("Role is required");
-    } else {
-      axiosClient
-        .post("/inviteUsers", {
-          email: inviteEmail,
-          role: role,
-          team_uuid: params.uuid,
-        })
-        .then((res) => {
-          showToastMessage(res.data);
-          setLoading(false);
-        })
-        .catch((err) => {
-          const response = err.response;
-          if (response && response.status === 400) {
-            setInviteError(response.data);
-            setTimeout(() => {
-              setInviteError("");
-            }, 1500);
-            setLoading(false);
-          } else {
-            console.error("Error:", response.status);
-          }
-        });
     }
   };
 
@@ -168,12 +101,13 @@ export const BatchComponent = () => {
         handleDescriptionBlur={handleDescriptionBlur}
       />
 
-      <ToastContainer />
-
       {loading && (
-        <p className="absolute top-72 left-[600px] z-40">
-          <HashLoader color="#3197e8" />
-        </p>
+        <>
+          <div className="bg-primary opacity-[0.5] w-[1289px] h-[664px] absolute top-0 left-0  z-10"></div>
+          <p className="absolute top-72 left-[600px] z-40">
+            <HashLoader color="#3197e8" />
+          </p>
+        </>
       )}
     </div>
   );

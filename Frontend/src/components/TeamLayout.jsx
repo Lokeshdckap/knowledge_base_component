@@ -1,6 +1,7 @@
 import { Link, Navigate, Outlet } from "react-router-dom";
 import { useStateContext } from "../context/ContextProvider.jsx";
 import { useEffect } from "react";
+import { TeamSideNav } from "../common/commonLayouts/TeamSideNav.jsx";
 
 
 export default function TeamLayout() {
@@ -13,8 +14,11 @@ export default function TeamLayout() {
       <>
         <div>
           <div className="flex bg-[#ECEDEF]">
-            {/* <TeamSideNav /> */}
-            <Outlet />
+            <TeamSideNav 
+            />
+            <Outlet
+        
+            />
           </div>
         </div>
       </>

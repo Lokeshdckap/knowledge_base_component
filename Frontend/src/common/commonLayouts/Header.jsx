@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import Main from "./Main";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 
 export default function Header(props) {
+
+  const params = useParams();
   const [profileState, setProfileState] = useState(false);
   const onLogout = () => {
     localStorage.removeItem("ACCESS_TOKEN");
@@ -13,7 +15,7 @@ export default function Header(props) {
     setProfileState((prevState) => !prevState);
   };
   return (
-    <div className="h-[75px] bg-white shadow-sm">
+    <div className="h-[75px] shadow-sm">
       <div
         className={`flex items-center justify-between m-auto relative ${props.widths}  pt-4`}
       >
@@ -56,10 +58,13 @@ export default function Header(props) {
         </div>
         {profileState && (
           <div className="bg-white h-[81px] w-28 absolute top-14 border-[1px] right-[-20px] shadow-md rounded-lg">
-            <p className="text-lg pl-3 pt-2 text-textPrimary cursor-pointer ">
-              <i class="fa-regular text-slate-600 fa-circle-user text-lg cursor-pointer pr-2 pb-0.5"></i>
-              Profile
-            </p>
+            <Link  to={`/setting/${params.uuid}/profile`}>
+              {" "}
+              <p className="text-lg pl-3 pt-2 text-textPrimary cursor-pointer ">
+                <i class="fa-regular text-slate-600 fa-circle-user text-lg cursor-pointer pr-2 pb-0.5"></i>
+                Profile
+              </p>
+            </Link>
             <hr />
             <p
               className="text-lg pl-3 pt-1 text-textPrimary cursor-pointer"

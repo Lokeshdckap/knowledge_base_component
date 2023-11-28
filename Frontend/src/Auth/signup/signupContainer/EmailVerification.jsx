@@ -8,9 +8,14 @@ export default function EmailVerification() {
 
   const userEmail = Cookies.get('userEmail');
 
+  let duration = 2000
   const showToastMessage = (data) => {
     toast.success(data, {
       position: toast.POSITION.TOP_CENTER,
+      autoClose: duration,
+      hideProgressBar: true,
+      draggable: true,
+      closeOnClick: true,
     });
   };
   const resendLink = () => {

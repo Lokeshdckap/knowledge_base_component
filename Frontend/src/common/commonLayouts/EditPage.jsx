@@ -30,8 +30,8 @@ export default function EditPage(props) {
 
   return (
     <div>
-      <div className="mt-14 flex">
-        <div className="bg-[#E4E8EC] w-[278px] h-[490px] overflow-auto">
+      <div className="mt-5 flex">
+        <div className="bg-[#E4E8EC] w-[278px] h-[560px] overflow-auto">
           <div className="space-y-2 ml-4 mt-4">
             <div className="p-4 rounded-lg shadow">
               {treeNode.map((topLevelPage, index) => (
@@ -92,13 +92,16 @@ export default function EditPage(props) {
             </div> */}
           </div>
         </div>
-        <div className={`bg-white h-[510px] ${props.widths} overflow-auto`}>
+        <div className={`bg-white h-[560px] ${props.widths} overflow-auto`}>
           <div>
             <input type="text"
               className="text-2xl ml-[80px] mt-8 focus:outline-none text-textPrimary font-bold"
               value={title}
               onChange={(e) => props.setParticularTitle(e.target.value)}
               placeholder="Page Name"
+              readOnly = {
+                props.publish &&
+                  props.publish.is_published ? (true) : (false)}
             />
           </div>
           <div>
@@ -107,6 +110,9 @@ export default function EditPage(props) {
               value={props.description}
               onChange={(e) => props.setDescription(e.target.value)}
               placeholder="Page Description"
+              readOnly = {
+                props.publish &&
+                  props.publish.is_published ? (true) : (false)}
             />
           </div>
           <div className={`pt-5 ${props.marginEditor}`}>
@@ -116,6 +122,7 @@ export default function EditPage(props) {
               editorValue={props.editorValue}
               editorContent={props.editorContent}
               particularTitle={props.particularTitle}
+              publish={props.publish}
             />
           </div>
         </div>

@@ -10,21 +10,10 @@ import { useMyContext } from "../../context/AppContext";
 export const ScriptComponents = () => {
   const navigate = useNavigate();
   const params = useParams();
-  const {getScript,script ,getScripts} = useMyContext();
+  const { getScript, getScripts } = useMyContext();
 
   //hooks
 
-  //state
-
-  const [formValues, setFormValues] = useState({});
-  const [errors, setError] = useState({});
-  const [state, setState] = useState(true);
-  const [team, setTeam] = useState([]);
-  const [allTeam, setAllTeam] = useState([]);
-  const [batch, setBatch] = useState([]);
-  const [teamPopup, setTeamPopup] = useState(false);
-
-  const [childScript, setChildScript] = useState([]);
   const [inputValue, setInputValue] = useState("");
   const [editorContent, setEditorContent] = useState([]);
 
@@ -51,19 +40,11 @@ export const ScriptComponents = () => {
 
   const [publish, setPublish] = useState([]);
 
-  const [invitePopup, setInvitePopup] = useState(false);
-
-  const [overStates, setOverStates] = useState(null);
-
-  const [inviteEmail, setInviteEmail] = useState("");
-
-  const [role, setRole] = useState("");
-
   const [scriptError, setScriptError] = useState(null);
 
   const [loading, setLoading] = useState(false);
 
-  const [inviteError, setInviteError] = useState(null);
+  const [state, setState] = useState(true);
 
   const [parentOpen, setParentOpen] = useState(null);
 
@@ -72,12 +53,6 @@ export const ScriptComponents = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const pageIds = queryParams.get("pageId");
-
-  const showToastMessage = (data) => {
-    toast.success(data, {
-      position: toast.POSITION.TOP_RIGHT,
-    });
-  };
 
   const showToastSaveMessage = (data) => {
     toast.success(data, {
@@ -92,6 +67,10 @@ export const ScriptComponents = () => {
   const showToastErrorMessage = (data) => {
     toast.error(data, {
       position: toast.POSITION.TOP_RIGHT,
+      autoClose: duration,
+      hideProgressBar: true,
+      draggable: true,
+      closeOnClick: true,
     });
   };
 
@@ -107,7 +86,6 @@ export const ScriptComponents = () => {
       getParticularOpenScript();
     }
   }, [params.slug, params, pageIds]);
-
 
   //Api
 
@@ -167,10 +145,9 @@ export const ScriptComponents = () => {
       });
   };
 
+  //Editor functionality
 
-   //Editor functionality
-
-  const handleSave = () => {
+  const handleSave = async () => {
     const postData = {
       id: pageIds,
       script_uuid: params.slug,
@@ -179,21 +156,20 @@ export const ScriptComponents = () => {
       content: editorContent,
     };
 
-    axiosClient
+    await axiosClient
       .post("/updatePageData", postData)
       .then((res) => {
         getParticularScript();
-
-        showToastMessage(res.data.msg);
-
+        console.log("ejej");
+        showToastSaveMessage(res.data.msg);
       })
       .catch((err) => {
         console.log(err);
       });
   };
 
-  const addPage = () => {
-    axiosClient
+  const addPage = async () => {
+    await axiosClient
       .post(`/addPageData/${params.slug}`)
       .then((res) => {
         getParticularScript();
@@ -203,9 +179,9 @@ export const ScriptComponents = () => {
       });
   };
 
-  const addChildPage = (uuid) => {
+  const addChildPage = async (uuid) => {
     let page_uuid = uuid;
-    axiosClient
+    await axiosClient
       .post(`/addChildPage/${params.slug}/${page_uuid}`)
       .then((res) => {
         getParticularScript();
@@ -225,7 +201,7 @@ export const ScriptComponents = () => {
     setInputValue(inputValue); // Update the state with the current value
 
     let paraId = params.slug;
-    const encodedInputValue = (inputValue);
+    const encodedInputValue = inputValue;
     let payload = {
       inputValue: encodedInputValue,
       queryParameter: paraId,
@@ -246,7 +222,6 @@ export const ScriptComponents = () => {
           console.error("Error:", response.status);
         }
       });
-
   };
 
   const contentPage = (e) => {
@@ -268,29 +243,8 @@ export const ScriptComponents = () => {
     addChildPage(e.target.id);
   };
 
-  const onDragEnd = (result) => {
-    // Handle the drag-and-drop logic here
-    if (!result.destination) {
-      return;
-    }
-    // Update your treeData based on the drag-and-drop result
-    const updatedTree = [...treeNode];
-    const [movedNode] = updatedTree.splice(result.source.index, 1);
-    updatedTree.splice(result.destination.index, 0, movedNode);
-
-    setTreeNode(updatedTree);
-    // setTreeData(/* Updated tree data */);
-  };
-
   const HandleShare = () => {
     setShareState(true);
-  };
-
-  const HandleChange = (e) => {
-    const { name, value } = e.target;
-    console.log(e.target.value);
-    setFormValues({ ...formValues, [name]: value });
-    delete errors[name];
   };
 
   const onChange = (checked) => {
@@ -299,50 +253,15 @@ export const ScriptComponents = () => {
       .then((res) => {
         setRenderScript(res.data.publicUrl);
         setTeamUuid(params.uuid);
-        {res.data.publicUrl.is_published ? showToastMessage(res.data.msg) :showToastErrorMessage(res.data.msg)}
-
+        {
+          res.data.publicUrl.is_published
+            ? showToastSaveMessage(res.data.msg)
+            : showToastErrorMessage(res.data.msg);
+        }
       })
       .catch((err) => {
         console.log(err);
       });
-  };
-
-
-  const handleInviteUsers = () => {
-    setLoading(true);
-    console.log(inviteEmail);
-    if (!inviteEmail.trim()) {
-      setLoading(false);
-
-      setInviteError("Email is required");
-    } else if (!role.trim()) {
-      setLoading(false);
-
-      setInviteError("Role is required");
-    } else {
-      axiosClient
-        .post("/inviteUsers", {
-          email: inviteEmail,
-          role: role,
-          team_uuid: params.uuid,
-        })
-        .then((res) => {
-          showToastMessage(res.data);
-          setLoading(false);
-        })
-        .catch((err) => {
-          const response = err.response;
-          if (response && response.status === 400) {
-            setInviteError(response.data);
-            setTimeout(() => {
-              setInviteError("");
-            }, 1500);
-            setLoading(false);
-          } else {
-            console.error("Error:", response.status);
-          }
-        });
-    }
   };
 
   return (
@@ -356,6 +275,7 @@ export const ScriptComponents = () => {
         renderScript={renderScript}
         HandleShare={HandleShare}
         scriptError={scriptError}
+        publish={publish}
       />
       <EditPage
         widths={state ? "w-[785px]" : "w-[933px]"}
@@ -375,7 +295,6 @@ export const ScriptComponents = () => {
         handleMore={handleMore}
         handleSave={handleSave}
         editorContent={editorContent}
-        onDragEnd={onDragEnd}
         shareState={shareState}
         setShareState={setShareState}
         onChange={onChange}

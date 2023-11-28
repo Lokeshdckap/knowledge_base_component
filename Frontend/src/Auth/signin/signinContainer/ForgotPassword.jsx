@@ -19,9 +19,16 @@ export default function ForgotPassword() {
   const [errors, setError] = useState({});
   const [loading, setLoading] = useState(false);
 
+
+  const duration = 2000;
+
   const showToastMessage = (data) => {
     toast.success(data, {
       position: toast.POSITION.TOP_CENTER,
+      autoClose: duration,
+      hideProgressBar: true,
+      draggable: true,
+      closeOnClick: true,
     });
   };
 
@@ -55,8 +62,6 @@ export default function ForgotPassword() {
 
             setError(error);
           setLoading(false)
-
-
           } else {
             console.error("Error:", response.status);
           }

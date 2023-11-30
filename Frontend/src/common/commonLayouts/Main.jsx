@@ -1,24 +1,59 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 export default function Main(props) {
+
+
+  const deleteIconRef = useRef({});
+  const deleteRef = useRef(null);
+
   const params = useParams();
   const navigate = useNavigate();
+
+  const [popUpState, setPopUpState] = useState(null);
+
   const batchList = props.batches;
   const scriptList = props.scripts;
   const scriptEvent = props.scriptEvent;
   const addBatchEvent = props.addBatchEvent;
   const scriptCount = props.scriptCount;
 
+
+  useEffect(() => {
+    const closeOnOutsideClick = (e) => {
+      if (deleteRef.current !== null) {
+        if (
+          popUpState &&
+          !deleteRef.current.contains(e.target) &&
+          !Object.values(deleteIconRef.current).includes(e.target)
+        ) {
+          setPopUpState(null);
+        }
+      }
+    };
+
+    window.addEventListener("click", closeOnOutsideClick);
+    return () => {
+      window.removeEventListener("click", closeOnOutsideClick);
+    };
+
+  }, [popUpState]);
+
   const handleBatch = (e) => {
     let TargetScriptId = e.target.id;
     navigate(`/dashboard/${params.uuid}/b/${TargetScriptId}`);
   };
   const handleScripts = (e) => {
-    console.log(e.target);
     let TargetScriptId = e.target.id;
     navigate(`/dashboard/${params.uuid}/s/${TargetScriptId}`);
   };
+
+  const deleteForeverPopup = (e) => {
+    setPopUpState(e.target.id);
+  
+  };
+
+
 
   return (
     <div className="pt-10 h-[584px] overflow-y-auto z-0 bg-white">
@@ -61,15 +96,23 @@ export default function Main(props) {
             batchList.map((batch, index) => (
               <div
                 key={batch.uuid}
-                className="bg-white w-[230px] h-[120px] rounded-[10px] shadow-lg hover:scale-105"
+                className="bg-white w-[230px] h-[120px] rounded-[10px] shadow-lg hover:scale-105 relative"
               >
                 <div className="bg-gradient-to-r from-primary to-[#226576] w-[230px] h-[36px] rounded-t-lg text-end pt-px">
-                  <span className="material-symbols-outlined text-white cursor-pointer text-2xl pr-1">
+                  <span
+                    className="material-symbols-outlined text-white cursor-pointer text-2xl pr-1"
+                    onClick={deleteForeverPopup}
+                    id={batch.uuid}
+                    ref={(ref) =>
+                      (deleteIconRef.current[batch.uuid] = ref)
+                    }
+                  >
                     more_vert
                   </span>
                 </div>
+
                 <div
-                  className="pl-5 pt-5 cursor-pointer"
+                  className="pl-5 pt-5 cursor-pointer "
                   id={batch.uuid}
                   onClick={handleBatch}
                 >
@@ -93,7 +136,22 @@ export default function Main(props) {
                       0 Scripts
                     </p>
                   )}
+            
                 </div>
+                {popUpState == batch.uuid && (
+                    <div
+                      className="bg-white shadow-lg h-[30px] border-2 border-slate-300 w-20 absolute top-8 z-10 right-[-10px] rounded-lg"
+                      ref={deleteRef}
+                    >
+                      <p
+                        className="cursor-pointer  pl-3.5 pb-0.5 pt-0 hover:bg-primary text-textPrimary hover:text-white hover:rounded-lg"
+                        id={batch.uuid}
+                        onClick={props.handleTrash}
+                      >
+                        Delete
+                      </p>
+                    </div>
+                  )}
               </div>
             ))
           ) : (
@@ -112,11 +170,18 @@ export default function Main(props) {
           {scriptList && scriptList.length > 0 ? (
             scriptList.map((script) => (
               <div
-                className="bg-white w-[230px] h-[120px] rounded-[10px] shadow-lg hover:scale-105"
+                className="bg-white w-[230px] h-[120px] rounded-[10px] shadow-lg hover:scale-105 relative"
                 key={script.uuid}
               >
                 <div className="bg-gradient-to-r from-primary to-[#226576] w-[230px] h-[36px] rounded-t-lg text-end pt-px ">
-                  <span className="material-symbols-outlined text-white cursor-pointer text-2xl pr-1">
+                  <span
+                    className="material-symbols-outlined text-white cursor-pointer text-2xl pr-1"
+                    onClick={deleteForeverPopup}
+                    id={script.uuid}
+                    ref={(ref) =>
+                      (deleteIconRef.current[script.uuid] = ref)
+                    }
+                  >
                     more_vert
                   </span>
                 </div>
@@ -135,7 +200,22 @@ export default function Main(props) {
                   >
                     0 page
                   </p>
+                 
                 </div>
+                {popUpState == script.uuid && (
+                    <div
+                      className="bg-white shadow-lg h-[30px] border-2 border-slate-300 w-20 absolute top-9 z-10 right-[-10px] rounded-lg"
+                      ref={deleteRef}
+                    >
+                      <p
+                        className="cursor-pointer  pl-3.5 pb-0.5 pt-0 hover:bg-primary text-textPrimary hover:text-white hover:rounded-lg"
+                        id={script.uuid}
+                        onClick={props.handleTrash}
+                      >
+                        Delete
+                      </p>
+                    </div>
+                  )}
               </div>
             ))
           ) : (

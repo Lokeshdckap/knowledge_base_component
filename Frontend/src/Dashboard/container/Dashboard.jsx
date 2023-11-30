@@ -23,6 +23,8 @@ export default function Dashboard() {
     addNewBatch,
     addNewScript,
     showToastMessage,
+    userInfo,
+    userDetail
   } = useMyContext();
 
   //hooks
@@ -58,14 +60,39 @@ export default function Dashboard() {
       })
       .catch((err) => {
         const response = err.response;
-        if (response && response.status === 404) {
+        if (response && response?.status === 404) {
           setSearchData(null);
         } else {
-          console.error("Error:", response.status);
+          console.error("Error:", response?.status);
         }
       });
   };
 
+
+  const handleTrash = (e) => {
+    let targetId = e.target.id;
+
+    if (targetId) {
+      setLoading(true);
+      axiosClient
+        .put(`/moveToTrash/${params.uuid}/${targetId}`)
+        .then((res) => {
+          if (res.status == 200) {
+            setLoading(false);
+            getBatch();
+            getScript();
+          }
+        })
+        .catch((err) => {
+          const response = err.response;
+          console.log(response);
+          if (response && response.status === 400) {
+          } else {
+            console.error("Error:", response.status);
+          }
+        });
+    } 
+  };
 
   return (
     <>
@@ -76,8 +103,9 @@ export default function Dashboard() {
             team={teamName}
             HandleSearch={HandleSearch}
             searchInpRef={searchInpRef}
+            userDetail={userDetail}
           />
-
+     
           <Main
             widths={state ? "w-[1010px]" : "w-[1120px]"}
             team={teamName}
@@ -86,6 +114,7 @@ export default function Dashboard() {
             scripts={script}
             addBatchEvent={addNewBatch}
             scriptEvent={addNewScript}
+            handleTrash={handleTrash}
           />
         </>
       </div>

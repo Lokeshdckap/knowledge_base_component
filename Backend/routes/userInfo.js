@@ -4,7 +4,21 @@ const router = express.Router();
 
 require("dotenv").config();
 
+const multer = require('multer');
+
 const path = require("path");
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/');
+  },
+  filename: (req, file, cb) => {
+    const filename = `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`;
+    cb(null, filename);
+  },
+});
+const upload = multer({storage});
+
 
 const verifyAuthMiddleware = require("../middleware/authenticationToken");
 
@@ -18,6 +32,7 @@ router.get(
 
 router.put(
   "/userUpdateProfile",
+  upload.single('image'),
   verifyAuthMiddleware.verifyToken,
   userController.userUpdateProfile
 );

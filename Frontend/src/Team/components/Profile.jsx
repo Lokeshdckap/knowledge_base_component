@@ -12,6 +12,10 @@ export const Profile = (props) => {
   const [changePasswordPopup, setChangePasswordPopup] = useState(false);
   const [userInfos, setUserInfo] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [selected, setSelected] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
+
+  const [image, setImage] = useState(null);
 
   const handlePopup = () => {
     setChangePasswordPopup((prevState) => !prevState);
@@ -43,6 +47,7 @@ export const Profile = (props) => {
       .get("/getUserInfo")
       .then((res) => {
         setUserInfo(res.data.userInfo);
+        setSelectedImage(res.data.userInfo.avatar);
         setUserName(res.data.userInfo.username);
       })
       .catch((err) => {
@@ -52,21 +57,51 @@ export const Profile = (props) => {
 
   const handleUserDetail = () => {
     let username = userName;
+
     if (username) {
+
       setLoading(true);
+      const formData = new FormData();
+      formData.append('username', username);
+      formData.append('image', image); // Assuming you have an 'avatar' file to upload
+      
       axiosClient
-        .put(`http://localhost:4000/userUpdateProfile`, { username: username })
+        .put(
+          'http://localhost:4000/userUpdateProfile',
+          formData,
+          {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          }
+        )
         .then(({ data }) => {
           showToastMessage(data.message);
           setLoading(false);
         })
         .catch((err) => {
           const response = err.response;
-          console.error("Error:", response.status);
+          console.error('Error:', response.status);
         });
+      
     } else {
       showToastErrorMessage("please fill the input field");
     }
+  };
+
+  const [selectedImage, setSelectedImage] = useState();
+
+  const handleImageChange = (event) => {
+    const file = event.target.files[0];
+
+    if (file) {
+      // You can perform additional checks here if needed
+      setSelectedImage(URL.createObjectURL(file));
+      setImage(file);
+    }
+  };
+  const handleRemoveImage = () => {
+    setSelectedImage(null);
   };
 
   return (
@@ -77,7 +112,56 @@ export const Profile = (props) => {
             <p className="text-2xl font-bold text-textPrimary pt-10">
               My Profile
             </p>
-            <div>img</div>
+            <div
+              className={`w-32 h-32 ${!selectedImage && "border-dotted"} ${
+                !selected && "border-2"
+              } border-gray-400 relative overflow-hidden`}
+              onMouseEnter={() => setIsHovered(true)}
+              onMouseLeave={() => setIsHovered(false)}
+            >
+              {selectedImage ? (
+                <>
+                  <img
+                    src={selectedImage}
+                    alt="Selected"
+                    className="object-cover w-full h-full"
+                  />
+                  {isHovered && (
+                    <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                      <label htmlFor="imageInput" className="cursor-pointer">
+                        <span className="text-white">Upload</span>
+                        <input
+                          type="file"
+                          id="imageInput"
+                          accept="image/*"
+                          className="hidden"
+                          onChange={handleImageChange}
+                        />
+                      </label>
+                    </div>
+                  )}
+                  <button
+                    className="absolute top-0 right-0 m-2 p-1 bg-white text-gray-600 hover:text-red-500 hover:bg-red-100 rounded-full focus:outline-none"
+                    onClick={handleRemoveImage}
+                  >
+                    X
+                  </button>
+                </>
+              ) : (
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <label htmlFor="imageInput" className="cursor-pointer">
+                    <span className="text-gray-500">Click to upload</span>
+                    <input
+                      type="file"
+                      id="imageInput"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={handleImageChange}
+                    />
+                  </label>
+                </div>
+              )}
+            </div>
             <div className="mt-3">
               <label className="">UserName</label>
               <div>
@@ -139,6 +223,8 @@ export const Profile = (props) => {
           </p>
         </>
       )}
+
+      {console.log(image)}
     </div>
   );
 };

@@ -8,7 +8,7 @@ const AppContext = createContext();
 const MyContextProvider = ({ children }) => {
   const params = useParams();
 
-  const [moveState,setMoveState] = useState(true);
+  const [moveState, setMoveState] = useState(true);
   const [teamName, setTeam] = useState([]);
   const [allTeam, setAllTeam] = useState([]);
   const [batch, setBatch] = useState([]);
@@ -16,6 +16,8 @@ const MyContextProvider = ({ children }) => {
   const [overState, setOverState] = useState(null);
   const [childScript, setChildScript] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [trashData, setTrashData] = useState([]);
+
   //Adding State
   const [AddNewMenu, setAddNewMenu] = useState(false);
   const [popUp, setPopup] = useState(null);
@@ -23,7 +25,7 @@ const MyContextProvider = ({ children }) => {
   const [scripts, setScripts] = useState(null);
   const [batchTitle, setBatchTitle] = useState("");
   const [batchDescription, setbatchDescription] = useState("");
-
+  const [userDetail,setUserDetail] = useState(null);
   const duration = 2000;
   const showToastMessage = (data) => {
     toast.success(data, {
@@ -35,13 +37,20 @@ const MyContextProvider = ({ children }) => {
     });
   };
 
+  const showToastErrorMessage = (data) => {
+    toast.error(data, {
+      position: toast.POSITION.TOP_RIGHT,
+      autoClose: duration,
+      hideProgressBar: true,
+      draggable: true,
+      closeOnClick: true,
+    });
+  };
 
   //move method
   const handleMove = () => {
-    setMoveState((prevState) => !prevState)
-    
-
-  }
+    setMoveState((prevState) => !prevState);
+  };
   //Team functions
   const getTeam = async () => {
     await axiosClient
@@ -116,8 +125,7 @@ const MyContextProvider = ({ children }) => {
   };
 
   const addNewScript = (e) => {
-    let batch_uuid = e.target.id ? e.target.id : params.slug;
-
+    let batch_uuid = e.target.id ? e.target.id : null;
     setLoading(true);
     axiosClient
       .post("/addNewScript", { uuid: params.uuid, batch_uuid: batch_uuid })
@@ -163,8 +171,64 @@ const MyContextProvider = ({ children }) => {
       });
   };
 
-  return (
 
+    //Trash
+
+    const handleTrash = (e) => {
+      let targetId = e.target.id;
+      let batchId = e.target.dataset.set;
+      if (targetId) {
+        setLoading(true);
+        axiosClient
+          .put(`/moveToTrash/${params.uuid}/${targetId}`)
+          .then((res) => {
+            if (res.status == 200) {
+              setLoading(false);
+              showToastErrorMessage(res.data.message);
+              getBatch();
+              getScript();
+              if (batchId) {
+                handleAfterAddedChildrenScripts(batchId);
+              }
+              getAllDeletedData()
+            }
+          })
+          .catch((err) => {
+            const response = err.response;
+            if (response && response.status === 400) {
+            } else {
+              console.error("Error:", response.status);
+            }
+          });
+      } else {
+        showToastErrorMessage("no Id");
+      }
+    };
+
+  const getAllDeletedData = () => {
+    axiosClient
+      .get(`/getAllTrash/${params.uuid}`)
+      .then((res) => {
+        setTrashData(res.data.itemsWithDaysLeft);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+
+  const userInfo = async () => {
+    await axiosClient
+      .get("/getUserInfo")
+      .then((res) => {
+        setUserDetail(res.data.userInfo);
+      })
+      .catch((err) => {
+        const response = err.response;
+      });
+  };
+
+  return (
     <AppContext.Provider
       value={{
         handleMove,
@@ -198,11 +262,17 @@ const MyContextProvider = ({ children }) => {
         scripts,
         getTeam,
         getAllTeam,
-        teamName, 
+        teamName,
         setTeam,
         allTeam,
         setAllTeam,
-        handleAfterAddedChildrenScripts
+        handleAfterAddedChildrenScripts,
+        getAllDeletedData,
+        trashData, 
+        setTrashData,
+        handleTrash,
+        userInfo,
+        userDetail
       }}
     >
       {children}

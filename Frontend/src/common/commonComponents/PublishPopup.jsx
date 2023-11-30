@@ -2,16 +2,17 @@ import React, { useEffect, useRef, useState } from "react";
 import { Switch } from "antd";
 import ClipboardJS from "clipboard";
 import { ToastContainer, toast } from "react-toastify";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 export const PublishPopup = (props) => {
+  const navigate = useNavigate();
   const textToCopyRef = useRef(null);
   const buttonRef = useRef(null);
   let clipboard = null;
   const params = useParams();
-  
+
   const [check, setCheck] = useState(props.renderScript);
 
-  let duration = 2000
+  let duration = 2000;
   const showToastMessage = (data) => {
     toast.success(data, {
       position: toast.POSITION.TOP_RIGHT,
@@ -38,6 +39,10 @@ export const PublishPopup = (props) => {
     };
   }, [props.renderScript]);
 
+  const handleNavigates = () => {
+    props.setShareState(false);
+    navigate(`/dashboard/${params.uuid}/s/${params.slug}`);
+  };
 
   return (
     <div>
@@ -56,9 +61,7 @@ export const PublishPopup = (props) => {
               <div className="">
                 <i
                   className="fa-solid fa-xmark text-[#8f97aa] pt-2 float-right text-2xl cursor-pointer mr-5"
-                  onClick={() => {
-                    props.setShareState(false);
-                  }}
+                  onClick={handleNavigates}
                 ></i>
               </div>
               <div className="w-[580px] m-auto mt-9 space-y-2">
@@ -128,7 +131,8 @@ export const PublishPopup = (props) => {
                     </div>
                     <div className="box-border border-[#c5ccd8] w-full border-[1px] rounded bg-sky-100 mt-4 ">
                       <div className="flex justify-between w-[450px] items-center m-auto">
-                        <p ref={textToCopyRef}
+                        <p
+                          ref={textToCopyRef}
                           className="text-sm text-textPrimary"
                         >
                           {!props.renderScript.is_published

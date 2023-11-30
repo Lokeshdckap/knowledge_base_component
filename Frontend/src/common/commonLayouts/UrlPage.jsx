@@ -46,11 +46,11 @@ export const UrlPage = () => {
         .catch((err) => {
           const response = err.response;
 
-          if (response && response.status === 404) {
+          if (response && response?.status === 404) {
             navigate("/error");
 
           } else {
-            console.error("Error:", response.status);
+            console.error("Error:", response?.status);
           }
         });
 
@@ -67,11 +67,11 @@ export const UrlPage = () => {
         .catch((err) => {
           const response = err.response;
 
-          if (response && response.status === 404) {
+          if (response && response?.status === 404) {
             navigate("/error");
 
           } else {
-            console.error("Error:", response.status);
+            console.error("Error:", response?.status);
           }
         });
     }
@@ -90,10 +90,10 @@ export const UrlPage = () => {
         .catch((err) => {
           const response = err.response;
 
-          if (response && response.status === 404) {
+          if (response && response?.status === 404) {
             navigate("/error");
           } else {
-            console.error("Error:", response.status);
+            console.error("Error:", response?.status);
           }
         });
     }
@@ -193,10 +193,10 @@ export const UrlPage = () => {
       })
       .catch((err) => {
         const response = err.response;
-        if (response && response.status === 404) {
+        if (response && response?.status === 404) {
           setSearchPageData(null);
         } else {
-          console.error("Error:", response.status);
+          console.error("Error:", response?.status);
         }
       });
   };

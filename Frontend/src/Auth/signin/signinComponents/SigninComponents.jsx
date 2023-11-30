@@ -64,7 +64,6 @@ export default function SigninComponents() {
       axiosClient
         .post("http://localhost:4000/login", formValues)
         .then(({ data }) => {
-          console.log(data);
           if (data.verify) {
             setAuth({
               token: data.token,
@@ -83,7 +82,7 @@ export default function SigninComponents() {
         })
         .catch((err) => {
           const response = err.response;
-          if (response && response.status === 401) {
+          if (response && response?.status === 401) {
             let error = {};
             let keys = Object.keys(response.data);
             let value = Object.values(response.data);
@@ -93,7 +92,7 @@ export default function SigninComponents() {
 
             setError(error);
           } else {
-            console.error("Error:", response.status);
+            console.error("Error:", response?.status);
           }
         });
     }

@@ -26,8 +26,14 @@ const userUpdateProfile = async (req, res) => {
     const user_id = req.user.id;
 
     const username = req.body.username;
+    let path;
+    if (req.file) {
+      const { filename } = req.file ? req.file : null;
+       path = `http://localhost:4000/uploads/${filename}`;
+    }
+    
 
-    console.log(username,"check");
+
     const oldPassword = req.body.oldPassword;
 
     const newPassword = req.body.newPassword;
@@ -43,6 +49,7 @@ const userUpdateProfile = async (req, res) => {
       if (userFind && username) {
         let updateData = {
           username: username,
+          avatar:path ? path : null
         };
         await User.update(updateData, {
           where: {

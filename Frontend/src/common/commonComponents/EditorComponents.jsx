@@ -22,6 +22,7 @@ export const EditorComponents = (props) => {
 
     formData.append("image", file);
 
+
     try {
       axiosClient
         .post("/uploadImage", formData, {
@@ -52,9 +53,7 @@ export const EditorComponents = (props) => {
       onReady: () => {
         ejInstance.current = editor;
       },
-      autofocus: false,
-      readOnly:true,
-
+      autofocus: true,
       data: props.editorValue,
       onChange: async () => {
         try {

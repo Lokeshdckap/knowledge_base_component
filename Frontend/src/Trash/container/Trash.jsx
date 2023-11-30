@@ -5,10 +5,18 @@ import axiosClient from "../../axios-client";
 import { useMyContext } from "../../context/AppContext";
 
 export const Trash = () => {
+
+  const {
+    getAllDeletedData,
+    trashData, 
+    setTrashData
+
+  } = useMyContext();
+ 
   const params = useParams();
 
   const [deletePopup, setDeletePopup] = useState(false);
-  const [trashData, setTrashData] = useState([]);
+  // const [trashData, setTrashData] = useState([]);
   const [styleState, setStyleState] = useState([]);
 
   useEffect(() => {
@@ -54,16 +62,16 @@ export const Trash = () => {
         });
     }
   };
-  const getAllDeletedData = () => {
-    axiosClient
-      .get(`/getAllTrash/${params.uuid}`)
-      .then((res) => {
-        setTrashData(res.data.itemsWithDaysLeft);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
+  // const getAllDeletedData = () => {
+  //   axiosClient
+  //     .get(`/getAllTrash/${params.uuid}`)
+  //     .then((res) => {
+  //       setTrashData(res.data.itemsWithDaysLeft);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // };
 
   const handleParticularDelete = async (e) => {
     if (e.target.id) {
@@ -81,6 +89,7 @@ export const Trash = () => {
 
   const handleParticularRestore = async (e) => {
     if (e.target.id) {
+      console.log(e.target.id);
       await axiosClient
         .put(`/restore/${params.uuid}/${e.target.id}`)
         .then((res) => {

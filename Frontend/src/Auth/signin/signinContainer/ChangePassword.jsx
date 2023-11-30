@@ -86,12 +86,11 @@ export default function ChangePassword() {
         })
         .catch((err) => {
           const response = err.response;
-          if (response && response.status === 400) {
+          if (response && response?.status === 400) {
             setLoading(false);
-            console.log(response.data.message);
             warnToastMessage(response.data.message);
           } else {
-            console.error("Error:", response.status);
+            console.error("Error:", response?.status);
           }
         });
     }

@@ -6,10 +6,13 @@ import EditHeader from "../../common/commonLayouts/EditHeader";
 import EditPage from "../../common/commonLayouts/EditPage";
 import { ToastContainer, toast } from "react-toastify";
 import { useMyContext } from "../../context/AppContext";
+import { ViewHeader } from "../../common/commonLayouts/ViewHeader";
+import { ViewPage } from "../../common/commonLayouts/ViewPage";
 
-export const ScriptComponents = () => {
+export const ScriptEditor = () => {
   const navigate = useNavigate();
   const params = useParams();
+
   const { getScript, script, getScripts } = useMyContext();
 
   //hooks
@@ -37,8 +40,6 @@ export const ScriptComponents = () => {
 
   const [editorValue, setEditorValue] = useState([]);
 
-  const [shareState, setShareState] = useState(false);
-
   const [publish, setPublish] = useState([]);
 
   const [scriptError, setScriptError] = useState(null);
@@ -54,26 +55,6 @@ export const ScriptComponents = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const pageIds = queryParams.get("pageId");
-
-  const showToastSaveMessage = (data) => {
-    toast.success(data, {
-      position: toast.POSITION.TOP_CENTER,
-      autoClose: duration,
-      hideProgressBar: true,
-      draggable: true,
-      closeOnClick: true,
-    });
-  };
-
-  const showToastErrorMessage = (data) => {
-    toast.error(data, {
-      position: toast.POSITION.TOP_RIGHT,
-      autoClose: duration,
-      hideProgressBar: true,
-      draggable: true,
-      closeOnClick: true,
-    });
-  };
 
   useEffect(() => {
     if (pageIds) {
@@ -97,8 +78,6 @@ export const ScriptComponents = () => {
         setParticularTitle(res.data.pages.title.split("-")[0]);
         setDescription(res.data.pages.description);
         setEditorValue(res.data.pages.content);
-        setEditorContent(res.data.pages.content)
-
       })
       .catch((err) => {
         console.log(err);
@@ -112,7 +91,7 @@ export const ScriptComponents = () => {
       .get(`/getScriptAndPage/${script_uuid}`)
       .then((res) => {
         navigate(
-          `/dashboard/${params.uuid}/s/${params.slug}/?pageId=${res.data.hierarchy[0].uuid}`
+          `/dashboard/${params.uuid}/changes/${params.slug}/?pageId=${res.data.hierarchy[0].uuid}`
         );
       })
       .catch((err) => {
@@ -137,105 +116,24 @@ export const ScriptComponents = () => {
       .get(`/getScriptAndPage/${script_uuid}`)
       .then((res) => {
         if (res.status == 200) {
-          if (res.data.getScriptAndPages.is_published) {
-            navigate(`/dashboard/${params.uuid}/changes/${params.slug}`);
-          }
           setInputValue(res.data.getScriptAndPages.title);
           setPageContent(res.data.hierarchy[0]);
           setTreeNode(res.data.hierarchy);
           setRenderScript(res.data.getScriptAndPages);
           setPublish(res.data.getScriptAndPages);
-
         }
       })
       .catch((err) => {
         console.log(err);
-      });
-  };
-
-  //Editor functionality
-
-  const handleSave = () => {
-    const postData = {
-      id: pageIds,
-      script_uuid: params.slug,
-      title: particularTitle ? particularTitle : "Page Name",
-      description: description ? description : "Page Description",
-      content: editorContent,
-    };
-    console.log(editorContent, "posted Data");
-    axiosClient
-      .post("/updatePageData", postData)
-      .then((res) => {
-        getParticularScript();
-        getParticularPage();
-        showToastSaveMessage(res.data.msg);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
-  const addPage = async () => {
-    await axiosClient
-      .post(`/addPageData/${params.slug}`)
-      .then((res) => {
-        getParticularScript();
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
-  const addChildPage = (uuid) => {
-    let page_uuid = uuid;
-    axiosClient
-      .post(`/addChildPage/${params.slug}/${page_uuid}`)
-      .then((res) => {
-        getParticularScript();
-        navigate(
-          `/dashboard/${params.uuid}/s/${params.slug}/?pageId=${res.data.Pages.uuid}`
-        );
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
-  const handleChange = async (event) => {
-    const inputValue = event;
-
-    setInputValue(inputValue); // Update the state with the current value
-
-    let paraId = params.slug;
-    const encodedInputValue = inputValue;
-    let payload = {
-      inputValue: encodedInputValue,
-      queryParameter: paraId,
-      teamParameter: params.uuid,
-    };
-
-    await axiosClient
-      .post("/addScriptTitle", payload)
-      .then((res) => {
-        getScripts();
-        getScript();
-      })
-      .catch((err) => {
-        const response = err.response;
-        if (response && response?.status === 403) {
-          showToastErrorMessage(response.data.errorMsg);
-        } else {
-          console.error("Error:", response?.status);
-        }
       });
   };
 
   const contentPage = async (e) => {
     setPageId(e.target.id);
     let pageId = e.target.id;
-
-    navigate(`/dashboard/${params.uuid}/s/${params.slug}/?pageId=${pageId}`);
+    navigate(
+      `/dashboard/${params.uuid}/changes/${params.slug}/?pageId=${pageId}`
+    );
   };
 
   const handleScriptMouseEnter = (e) => {
@@ -246,26 +144,12 @@ export const ScriptComponents = () => {
     setHoverPageId(null);
   };
 
-  const handleMore = (e) => {
-    setParticularPageId(e.target.id);
-    addChildPage(e.target.id);
-  };
-
-  const HandleShare = () => {
-    setShareState(true);
-  };
-
-  const onChange = (checked) => {
+  const handleEdit = () => {
     axiosClient
-      .get(`/scripts/${params.slug}/${checked}`)
+      .get(`/scripts/${params.slug}/${false}`)
       .then((res) => {
-        setRenderScript(res.data.publicUrl);
-        setTeamUuid(params.uuid);
-        {
-          res.data.publicUrl.is_published
-            ? showToastSaveMessage(res.data.msg)
-            : showToastErrorMessage(res.data.msg);
-        }
+        navigate(`/dashboard/${params.uuid}/s/${params.slug}`)
+
       })
       .catch((err) => {
         console.log(err);
@@ -274,22 +158,20 @@ export const ScriptComponents = () => {
 
   return (
     <div className="bg-white h-[85px]">
-      <EditHeader
+      <ViewHeader
         widths={state ? "w-[1040px]" : "w-[1200px]"}
-        clickPublish={handleSave}
-        changeEvent={handleChange}
         inputValue={inputValue}
         setInputValue={setInputValue}
         renderScript={renderScript}
-        HandleShare={HandleShare}
         scriptError={scriptError}
         publish={publish}
+        handleEdit={handleEdit}
       />
-      <EditPage
+
+      <ViewPage
         widths={state ? "w-[785px]" : "w-[933px]"}
         marginEditor={state ? "ml-[10px]" : "mr-[115px]"}
         treeNode={treeNode}
-        addPage={addPage}
         contentPage={contentPage}
         pageContent={pageContent}
         particularTitle={particularTitle}
@@ -298,12 +180,6 @@ export const ScriptComponents = () => {
         setDescription={setDescription}
         handleScriptMouseEnter={handleScriptMouseEnter}
         handleScriptMouseLeave={handleScriptMouseLeave}
-        hoverPageId={hoverPageId}
-        handleMore={handleMore}
-        handleSave={handleSave}
-        shareState={shareState}
-        setShareState={setShareState}
-        onChange={onChange}
         publish={publish}
         editorValue={editorValue}
         setEditorValue={setEditorValue}

@@ -110,14 +110,14 @@ export const ActiveUsers = (props) => {
           })
           .catch((err) => {
             const response = err.response;
-            if (response && response.status === 400) {
+            if (response && response?.status === 400) {
               setInviteError(response.data);
               setTimeout(() => {
                 setInviteError("");
               }, 1500);
               setLoading(false);
             } else {
-              console.error("Error:", response.status);
+              console.error("Error:", response?.status);
             }
           });
       }

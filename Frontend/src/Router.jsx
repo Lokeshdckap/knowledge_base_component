@@ -13,7 +13,6 @@ import TeamPage from "./Dashboard/components/TeamPage";
 import { Batch } from "./Batch/container/Batch";
 import { Scripts } from "./Scripts/container/Scripts";
 import { UrlPage } from "./common/commonLayouts/UrlPage";
-import { Team } from "./Team/container/Team.jsx";
 import { Invited } from "./Invited.jsx";
 import { Dashboards } from "./Dashboard/container/Dashboards.jsx";
 import { JoinTeam } from "./joinTeam/JoinTeam.jsx";
@@ -23,6 +22,7 @@ import { TeamSetting } from "./Team/components/TeamSetting.jsx";
 import { Profile } from "./Team/components/Profile.jsx";
 import { BlankLayout } from "./components/BlankLayout.jsx";
 import { ActiveUsers } from "./Team/components/ActiveUsers.jsx";
+import { ScriptEditor } from "./Scripts/components/ScriptEditor.jsx";
 
 const router = createBrowserRouter([
   {
@@ -73,6 +73,14 @@ const router = createBrowserRouter([
       {
         path: "/dashboard/:uuid/s/:slug/:pageId?",
         element: <Scripts />,
+      },
+      {
+        path: "/dashboard/:uuid/changes/:slug/:pageId?",
+        element: <ScriptEditor />,
+      },
+      {
+        path: "/dashboard/:uuid/changes/:slug",
+        element: <ScriptEditor />,
       },
       {
         path: "/dashboard/:uuid/s/:slug",

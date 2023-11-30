@@ -19,6 +19,7 @@ export const BatchComponent = () => {
     setBatchTitle,
     batchDescription,
     setbatchDescription,
+    handleAfterAddedChildrenScripts,
     scripts,
     showToastMessage,
   } = useMyContext();
@@ -37,6 +38,7 @@ export const BatchComponent = () => {
     let batch_uuid = params.slug;
 
     getLoadScript(team_uuid, batch_uuid);
+    
   };
 
   const handleBatchBlur = async () => {
@@ -73,6 +75,32 @@ export const BatchComponent = () => {
       });
   };
 
+  const handleTrash = (e) => {
+    let targetId = e.target.id;
+
+    if (targetId) {
+      setLoading(true);
+      axiosClient
+        .put(`/moveToTrash/${params.uuid}/${targetId}`)
+        .then((res) => {
+          if (res.status == 200) {
+            setLoading(false);
+            // getBatch();
+            getScripts();
+          
+          }
+        })
+        .catch((err) => {
+          const response = err.response;
+          console.log(response);
+          if (response && response.status === 400) {
+          } else {
+            console.error("Error:", response.status);
+          }
+        });
+    } 
+  };
+
   const handleTitleAndDescription = async (e) => {
     if (e.target.name == "title") {
       setBatchTitle(e.target.value);
@@ -99,6 +127,7 @@ export const BatchComponent = () => {
         batch={batch}
         handleBlur={handleBatchBlur}
         handleDescriptionBlur={handleDescriptionBlur}
+        handleTrash={handleTrash}
       />
 
       {loading && (

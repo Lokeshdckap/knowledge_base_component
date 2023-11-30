@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import deletes from "../../assets/images/delete.png";
 import HashLoader from "react-spinners/HashLoader";
+import { Checkbox } from 'antd';
 
 export const TrashMain = (props) => {
   const [deleteState, setDeleteState] = useState(null);
@@ -9,6 +10,7 @@ export const TrashMain = (props) => {
 
   const deleteForeverPopup = (e) => {
     setDeleteState(e.target.id);
+
   };
 
   useEffect(() => {
@@ -23,11 +25,14 @@ export const TrashMain = (props) => {
         }
       }
     };
+
     window.addEventListener("click", closeOnOutsideClick);
     return () => {
       window.removeEventListener("click", closeOnOutsideClick);
     };
+
   }, [deleteState]);
+
 
   return (
     <div className="mt-3 h-[500px] overflow-auto">
@@ -58,12 +63,13 @@ export const TrashMain = (props) => {
                   "scale-105"
                 }`}
                 id={trashScript.uuid}
-                onClick={props.handleSelect}
+              
               >
                 <div
-                  className="bg-gradient-to-r from-primary to-[#226576] w-[230px] h-[36px] rounded-t-lg text-end pt-px "
+                  className="bg-gradient-to-r from-primary to-[#226576] w-[230px] h-[36px] rounded-t-lg flex items-center justify-between  "
                   id={trashScript.uuid}
                 >
+                   <Checkbox onChange={props.handleSelect} id={trashScript.uuid}  className="ml-2"></Checkbox>
                   <span
                     className="material-symbols-outlined text-white cursor-pointer text-2xl pr-1"
                     onClick={deleteForeverPopup}
@@ -78,9 +84,8 @@ export const TrashMain = (props) => {
                 <div
                   className="pl-5 pt-5 cursor-pointer"
                   id={trashScript.uuid}
-                  // onClick={props.handleSelect}
                 >
-                  <p id={trashScript.uuid} onClick={props.handleSelect}>
+                  <p id={trashScript.uuid} >
                     {trashScript.title}
                   </p>
                   <p className="text-gray-500" id={trashScript.uuid}>
@@ -109,10 +114,6 @@ export const TrashMain = (props) => {
                     </p>
                   </div>
                 )}
-                {props.styleState &&
-                  props.styleState.includes(trashScript.uuid) && (
-                    <i className="fa-solid fa-circle-check  absolute top-2 left-2 z-10 text-white pl-1"></i>
-                  )}
               </div>
             ))
           ) : (

@@ -4,7 +4,7 @@ import { TrashMain } from "../../common/commonLayouts/TrashMain";
 
 
 export const TrashComponent = (props) => {
-  {console.log(props.styleState)}
+
   return (
     <div className="bg-[#F9FAFB] h-screen w-screen overflow-auto z-[10px]">
       <TrashHeader
@@ -20,8 +20,6 @@ export const TrashComponent = (props) => {
         handleSelect={props.handleSelect}
         styleState={props.styleState}
         setStyleState={props.setStyleState}
-        
-
       />
     </div>
   );

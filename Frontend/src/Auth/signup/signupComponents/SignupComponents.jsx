@@ -80,7 +80,7 @@ export default function SignupComponents() {
         .catch((err) => {
           // debugger;
           const response = err.response;
-          if (response && response.status === 409) {
+          if (response && response?.status === 409) {
             let error = {};
             let keys = Object.keys(response.data);
             let value = Object.values(response.data);
@@ -90,7 +90,7 @@ export default function SignupComponents() {
             setError(error);
             setLoading(false);
           } else {
-            console.error("Error:", response.status);
+            console.error("Error:", response?.status);
           }
         });
     }

@@ -1,22 +1,41 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 export const BatchLayouts = (props) => {
+  const deleteIconRef = useRef({});
+  const deleteRef = useRef(null);
+
+  const params = useParams();
   const navigate = useNavigate();
-  let params = useParams();
+
+  const [popUpState, setPopUpState] = useState(null);
+
   let scripts = props.scripts;
   let batch = props.batch;
 
-  const [inputValue, setInputValue] = useState("Initial Value");
+  useEffect(() => {
+    const closeOnOutsideClick = (e) => {
+      if (deleteRef.current !== null) {
+        if (
+          popUpState &&
+          !deleteRef.current.contains(e.target) &&
+          !Object.values(deleteIconRef.current).includes(e.target)
+        ) {
+          setPopUpState(null);
+        }
+      }
+    };
 
-  const handleBlur = () => {
-    console.log("Input field lost focus with value:", inputValue);
-    // Perform any actions you want when the input field loses focus
+    window.addEventListener("click", closeOnOutsideClick);
+    return () => {
+      window.removeEventListener("click", closeOnOutsideClick);
+    };
+  }, [popUpState]);
+
+  const deleteForeverPopup = (e) => {
+    setPopUpState(e.target.id);
   };
 
-  const handleChange = (e) => {
-    setInputValue(e.target.value);
-  };
   const handleScripts = (e) => {
     let TargetScriptId = e.target.id;
     navigate(`/dashboard/${params.uuid}/s/${TargetScriptId}`);
@@ -52,6 +71,7 @@ export const BatchLayouts = (props) => {
             <button
               className="h-[45px] w-[160px] text-white rounded  bg-primary"
               onClick={props.AddScript}
+              id={params.slug}
             >
               New Script
             </button>
@@ -70,11 +90,16 @@ export const BatchLayouts = (props) => {
           {scripts &&
             scripts.map((script) => (
               <div
-                className="bg-white w-[230px] h-[120px] rounded-[10px] shadow-lg hover:scale-105"
+                className="bg-white w-[230px] h-[120px] rounded-[10px] shadow-lg hover:scale-105 relative"
                 key={script.id}
               >
                 <div className="bg-gradient-to-r from-primary to-[#226576] w-[230px] h-[36px] rounded-t-lg text-end pt-px">
-                  <span className="material-symbols-outlined text-white cursor-pointer text-2xl pr-1">
+                  <span
+                    className="material-symbols-outlined text-white cursor-pointer text-2xl pr-1"
+                    id={script.uuid}
+                    onClick={deleteForeverPopup}
+                    ref={(ref) => (deleteIconRef.current[script.uuid] = ref)}
+                  >
                     more_vert
                   </span>
                 </div>
@@ -94,6 +119,20 @@ export const BatchLayouts = (props) => {
                     0 Pages
                   </p>
                 </div>
+                {popUpState == script.uuid && (
+                  <div
+                    className="bg-white shadow-lg h-[30px] border-2 border-slate-300 w-20 absolute top-9 z-10 right-[-10px] rounded-lg"
+                    ref={deleteRef}
+                  >
+                    <p
+                      className="cursor-pointer  pl-3.5 pb-0.5 pt-0 hover:bg-primary text-textPrimary hover:text-white hover:rounded-lg"
+                      id={script.uuid}
+                      onClick={props.handleTrash}
+                    >
+                      Delete
+                    </p>
+                  </div>
+                )}
               </div>
             ))}
         </div>

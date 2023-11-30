@@ -55,15 +55,14 @@ export default function ForgotPassword() {
         })
         .catch((err) => {
           const response = err.response;
-          if (response && response.status === 400) {
-            console.log(response);
+          if (response && response?.status === 400) {
             let error = {};
             error.email = response.data;
 
             setError(error);
           setLoading(false)
           } else {
-            console.error("Error:", response.status);
+            console.error("Error:", response?.status);
           }
         });
     }

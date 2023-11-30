@@ -12,13 +12,10 @@ import { useMyContext } from "../../context/AppContext";
 export default function SideNavLarge(props) {
   //navigate
   const navigate = useNavigate();
-  const showToastErrorMessage = (data) => {
-    toast.error(data, {
-      position: toast.POSITION.TOP_RIGHT,
-    });
-  };
+
   const {
     moveState,
+    handleTrash,
     handleMove,
     getTeam,
     getAllTeam,
@@ -46,6 +43,7 @@ export default function SideNavLarge(props) {
     getLoadScript,
     getScripts,
     handleAfterAddedChildrenScripts,
+    userInfo
   } = useMyContext();
 
   //param
@@ -84,6 +82,7 @@ export default function SideNavLarge(props) {
   useEffect(() => {
     getTeam();
     getAllTeam();
+    userInfo()
   }, [params.uuid]);
 
   //
@@ -265,40 +264,7 @@ export default function SideNavLarge(props) {
     getLoadScript(params.uuid, batch_uuid);
   };
 
-  //Trash
 
-  const handleTrash = (e) => {
-    let targetId = e.target.id;
-
-    let batchId = e.target.dataset.set;
-    if (targetId) {
-      setLoading(true);
-
-      axiosClient
-        .put(`/moveToTrash/${params.uuid}/${targetId}`)
-        .then((res) => {
-          if (res.status == 200) {
-            setLoading(false);
-            showToastErrorMessage(res.data.message);
-            getBatch();
-            getScript();
-            if (batchId) {
-              handleAfterAddedChildrenScripts(batchId);
-            }
-          }
-        })
-        .catch((err) => {
-          const response = err.response;
-          console.log(response);
-          if (response && response.status === 400) {
-          } else {
-            console.error("Error:", response.status);
-          }
-        });
-    } else {
-      showToastErrorMessage("no Id");
-    }
-  };
 
   return (
     <div className="bg-primary h-screen  overflow-auto w-[280px] z-10 ">
@@ -452,12 +418,6 @@ export default function SideNavLarge(props) {
                     </p>
                     <p
                       className="text-lg cursor-pointer text-textPrimary hover:bg-primary  hover:text-white hover:rounded"
-                      id="script"
-                    >
-                      <i className="fa-regular fa-file pr-[7px]"></i>Share
-                    </p>
-                    <p
-                      className="text-lg cursor-pointer text-textPrimary hover:bg-primary  hover:text-white hover:rounded"
                       id={batch.uuid}
                       onClick={handleTrash}
                     >
@@ -506,13 +466,6 @@ export default function SideNavLarge(props) {
                         {popUp == child.uuid && (
                           <div className="box-border bg-white  w-44 p-4 border-[1px] border-slate-300 rounded-xl shadow-lg absolute left-52 z-50">
                             <div className="w-[130px] m-auto space-y-3">
-                              <p
-                                className="text-lg cursor-pointer text-textPrimary hover:bg-primary  hover:text-white hover:rounded"
-                                id={child.uuid}
-                              >
-                                <i className="fa-regular fa-file pr-[7px]"></i>
-                                Share
-                              </p>
                               <p
                                 className={`text-lg cursor-pointer text-textPrimary hover:bg-primary  hover:text-white hover:rounded`}
                                 id={child.uuid}

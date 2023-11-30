@@ -5,7 +5,7 @@ const { Sequelize, DataTypes } = require("sequelize");
 //Database connection with dialect of postgres specifying the database we are using
 
 const sequelize = new Sequelize(
-  `postgres://dckap:admin@localhost:5432/knowledge_base`,
+  `postgres://dckap:admin@localhost:5432/knowledge_base_app`,
   { dialect: "postgres" }
 );
 
@@ -87,6 +87,7 @@ db.script.belongsTo(db.teams, { foreignKey: "team_uuid", targetKey: "uuid" });
 db.batch.hasMany(db.script, { foreignKey: "batch_uuid", targetKey: "uuid" });
 
 db.script.belongsTo(db.batch, { foreignKey: "batch_uuid", targetKey: "uuid" });
+
 
 db.script.hasMany(
   db.pages,

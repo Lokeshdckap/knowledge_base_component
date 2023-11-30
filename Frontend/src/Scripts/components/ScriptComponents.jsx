@@ -165,7 +165,7 @@ export const ScriptComponents = () => {
       .post("/updatePageData", postData)
       .then((res) => {
         getParticularScript();
-
+        getParticularPage()
         showToastSaveMessage(res.data.msg);
 
       })
@@ -299,7 +299,6 @@ export const ScriptComponents = () => {
         hoverPageId={hoverPageId}
         handleMore={handleMore}
         handleSave={handleSave}
-        onDragEnd={onDragEnd}
         shareState={shareState}
         setShareState={setShareState}
         onChange={onChange}

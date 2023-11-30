@@ -52,8 +52,8 @@ export const EditorComponents = (props) => {
       onReady: () => {
         ejInstance.current = editor;
       },
-      autofocus: false,
-      readOnly:true,
+      autofocus: true,
+      readOnly:false,
 
       data: props.editorValue,
       onChange: async () => {

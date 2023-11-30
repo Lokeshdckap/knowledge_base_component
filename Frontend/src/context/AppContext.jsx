@@ -69,6 +69,7 @@ const MyContextProvider = ({ children }) => {
     await axiosClient
       .get(`/getBatch/${params.uuid}`)
       .then((res) => {
+        console.log(res);
         setBatch(res.data.batchs);
         setScriptCount(res.data.results);
       })

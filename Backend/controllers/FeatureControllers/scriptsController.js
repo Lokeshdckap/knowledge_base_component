@@ -15,6 +15,7 @@ const addNewScripts = async (req, res) => {
     let slug = originalSlug;
 
     const team_uuid = req.body.uuid;
+
     const batch_uuid = req.body.batch_uuid ? req.body.batch_uuid : null;
 
     const script = await Script.create({
@@ -23,14 +24,34 @@ const addNewScripts = async (req, res) => {
       batch_uuid: batch_uuid ? batch_uuid : null,
     });
 
-    const existingDocument = await Script.findAll({
-      where: {
-        [Op.and]: [{ team_uuid: team_uuid }, { batch_uuid: batch_uuid }],
-      },
-    });
+    const existingDocument = await Script.findAll({});
+
+    async function generateUniqueRandomAlphanumeric(existingValues, length) {
+      const characters =
+        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+      let uniqueValue;
+
+      do {
+        uniqueValue = Array.from(
+          { length },
+          () => characters[Math.floor(Math.random() * characters.length)]
+        ).join("");
+      } while (uniqueValue.includes(existingValues));
+
+      return uniqueValue;
+    }
+    const length = 6;
+    const existingTitles = [];
+    for (let existingDocuments of existingDocument) {
+      existingTitles.push(existingDocuments.title.slice(-7));
+    }
+    const randomNumber = await generateUniqueRandomAlphanumeric(
+      existingTitles,
+      length
+    );
 
     if (existingDocument) {
-      slug = `/${originalSlug}-${existingDocument.length}`;
+      slug = `/${originalSlug}-${randomNumber}`;
     }
 
     const pathUpdate = await Script.update(
@@ -98,9 +119,9 @@ const getScript = async (req, res) => {
     const script = await Script.findAll({
       where: {
         [Op.and]: [{ team_uuid: req.params.uuid }, { batch_uuid: null }],
-        deleted_at:{
+        deleted_at: {
           [Op.is]: null,
-        }
+        },
       },
       order: [["createdAt", "DESC"]],
     });

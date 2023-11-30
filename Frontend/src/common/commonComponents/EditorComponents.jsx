@@ -54,6 +54,7 @@ export const EditorComponents = (props) => {
         ejInstance.current = editor;
       },
       autofocus: true,
+      readOnly:false,
       data: props.editorValue,
       onChange: async () => {
         try {

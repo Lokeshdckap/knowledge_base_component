@@ -28,6 +28,7 @@ const createTeams = async (req, res) => {
         .status(400)
         .send({ team_name: `${results[0].name} Team Is Already Exists` });
     } else {
+
       const newTeam = await Team.create({
         name: team_name,
         uuid: uuid.v4(),
@@ -37,7 +38,7 @@ const createTeams = async (req, res) => {
         user_uuid: req.user.id,
         uuid: uuid.v4(),
         team_uuid: newTeam.uuid,
-        role_id: "1",
+        role_id: 1,
       });
       if (newTeam && usersTeam) {
         return res.status(200).send({

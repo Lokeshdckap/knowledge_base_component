@@ -20,6 +20,13 @@ const inviteTeams = async (req, res) => {
     const exitsInviteUsers = await Invite.findOne({
       where: { email: email },
     });
+
+    const sameUsers = await User.findOne({
+      where: { email: email },
+    });
+    if (sameUsers.email == req.body.email) {
+      return res.status(400).json(`This is your Email Can't send the invite`);
+    }
     if (exitsInviteUsers) {
       return res.status(400).json(`${email} this email already sended invite`);
     } else {
@@ -29,7 +36,6 @@ const inviteTeams = async (req, res) => {
         uuid: uuid.v4(),
         team_uuid: team_uuid,
       });
-
       const exitsUsers = await User.findOne({
         where: { email: email },
       });
@@ -75,9 +81,29 @@ const updateInvite = async (req, res) => {
       uuid: uuid.v4(),
       user_uuid: req.body.id,
     });
-    return res
-      .status(200)
-      .json({ invitedData, msg: "User Invited Update Sucessfully" });
+
+    const userFinds = await User.findOne({
+      where: {
+        uuid: req.body.id,
+      },
+    });
+
+    const invitedDataProgress = await Invite.update(
+      {
+        is_progess: req.body.isProgress,
+      },
+      {
+        where: {
+          uuid: userFinds.email,
+        },
+      }
+    );
+
+    return res.status(200).json({
+      invitedData,
+      invitedDataProgress,
+      msg: "User Invited Update Sucessfully",
+    });
   } catch (error) {
     return res.status(500).json({ error: error });
   }

@@ -121,30 +121,7 @@ export default function SignupComponents() {
       });
   };
 
-  useEffect(() => {
-    axiosClient
-      .get(`http://localhost:4000/verify-email/${params.uuid}/${params.token}`)
-      .then(({ data }) => {
-        // console.log(data.userTeamAvailable);
-        console.log("jhk");
-        if (data.userTeamAvailable) {
-          setAuth({
-            token: data.jwttoken,
-            verify: data.verify,
-            state: true,
-          });
-        } else {
-          setAuth({
-            token: data.jwttoken,
-            verify: data.verify,
-          });
-        }
-        setLoading(false);
-      })
-      .catch((err) => {
-        // debugger;
-      });
-  }, []);
+ 
 
   return (
     <div className="">

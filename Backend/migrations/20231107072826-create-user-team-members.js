@@ -21,10 +21,10 @@ module.exports = {
       },
       role_id: {
         type: Sequelize.INTEGER,
-        references: {         
-          model: 'roles_types',
-          key: 'id'
-        }
+        // references: {         
+        //   model: 'roles_types',
+        //   key: 'id'
+        // }
       },
       team_uuid: {
         type: Sequelize.UUID,

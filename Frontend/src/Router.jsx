@@ -23,6 +23,7 @@ import { Profile } from "./Team/components/Profile.jsx";
 import { BlankLayout } from "./components/BlankLayout.jsx";
 import { ActiveUsers } from "./Team/components/ActiveUsers.jsx";
 import { ScriptEditor } from "./Scripts/components/ScriptEditor.jsx";
+import { EmailVerificationCheck } from "./Auth/signup/signupContainer/EmailVerificationCheck";
 
 const router = createBrowserRouter([
   {
@@ -139,8 +140,12 @@ const router = createBrowserRouter([
       },
       {
         path: "/email-verify/:uuid/:token",
-        element: <SignupContainer />,
+        element: <EmailVerificationCheck />,
       },
+      // {
+      //   path: "/email-verify/:uuid/:token",
+      //   element: <SignupContainer />,
+      // },
     ],
   },
 

@@ -120,21 +120,20 @@ const login = async (req, res) => {
   }
 };
 
+
 const verifyEmail = async (req, res) => {
   try {
-    const token = req.params.token;
-    console.log(req.params);
-    console.log(req.params.uuid);
-
+    const token = req.params.token ? req.params.token : null ;
+    const user_uuid = req.params.uuid ? req.params.uuid : null;
+  
     //find user by token using the where clause
-    if (req.params.uuid) {
+    if (user_uuid && token) {
       const usertoken = await emailVerificationToken.findOne({
         token,
         where: {
-          user_uuid: req.params.uuid,
+          user_uuid: user_uuid,
         },
       });
-
       const userTeamAvailable = await UserTeams.findOne({
         where: {
           user_uuid: req.params.uuid,

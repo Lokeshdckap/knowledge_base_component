@@ -89,6 +89,7 @@ export default function SignupComponents() {
 
             setError(error);
             setLoading(false);
+
           } else {
             console.error("Error:", response?.status);
           }
@@ -121,7 +122,7 @@ export default function SignupComponents() {
       });
   };
 
- 
+
 
   return (
     <div className="">
@@ -139,8 +140,8 @@ export default function SignupComponents() {
             className="max-w-[390px]  m-auto mt-[70px] mb-[112px] "
           />
         </div>
-        <div className="bg-secondary h-screen w-1/2">
-          <div className=" ml-[140px]  mt-[34px] space-y-1">
+        <div className="bg-secondary w-1/2 h-screen">
+          <div className=" ml-[140px]  mt-[25px] space-y-1">
             <h2 className="text-textPrimary font-bold text-2xl">
               Welcome to DCKAP Rhino Tome! 👋
             </h2>
@@ -150,7 +151,7 @@ export default function SignupComponents() {
                 <label className="text-textPrimary text-base	">
                   Username <span className="text-red-500">*</span>
                 </label>
-                <div className="pt-1">
+                <div className="">
                   <Input
                     name="username"
                     type="username"
@@ -169,7 +170,7 @@ export default function SignupComponents() {
                 <label className="text-textPrimary text-base">
                   Email <span className="text-red-500">*</span>
                 </label>
-                <div className="pt-1">
+                <div className="">
                   <Input
                     name="email"
                     type="email"
@@ -184,7 +185,7 @@ export default function SignupComponents() {
                   <span className="text-red-500">{errors.email}</span>
                 )}
               </div>
-              <div className="pt-1">
+              <div className="">
                 <label className="text-textPrimary text-base">
                   Password <span className="text-red-500">*</span>
                 </label>
@@ -223,7 +224,7 @@ export default function SignupComponents() {
                     </span>
                   )}
                 </div>
-                <div className="mt-11 f ">
+                <div className="mt-10 f ">
                   {!errors.password ? (
                     <div>
                       <p className="invisible">Required</p>

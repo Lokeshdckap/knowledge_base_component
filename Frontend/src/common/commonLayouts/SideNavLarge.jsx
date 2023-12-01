@@ -267,7 +267,7 @@ export default function SideNavLarge(props) {
 
 
   return (
-    <div className="bg-primary h-screen  overflow-auto w-[280px] z-10 ">
+    <div className="bg-primary  overflow-auto w-[280px] z-10 ">
       <div className="flex items-center space-x-3">
         <img
           src={"https://i.postimg.cc/ydTtqjsF/book-2.png"}
@@ -353,11 +353,10 @@ export default function SideNavLarge(props) {
             </div>
           </div>
         )}
-        <ul className="mt-5 space-y-1 h-[430px] overflow-auto ">
+        <ul className="mt-5 space-y-1 h-[355px] overflow-auto ">
           {batch.map((batch) => (
             <div className=""
             key={batch.uuid}
-            
             >
               <li
                 key={batch.uuid}

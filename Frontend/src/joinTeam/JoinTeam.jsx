@@ -17,17 +17,18 @@ export const JoinTeam = () => {
         team_uuid: decoded.team_uuid,
         role: decoded.role,
       };
-      console.log(payLoad);
+
       if (decoded.id) {
         let payLoad = {
           id: decoded.id,
           team_uuid: decoded.team_uuid,
           role: decoded.role,
+          isProgress:1
         };
         axiosClient
           .post("/updateInvite", payLoad)
           .then((res) => {
-            console.log(res);
+
             navigate("/dashboard");
           })
           .catch((err) => {

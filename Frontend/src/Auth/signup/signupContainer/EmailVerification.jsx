@@ -19,10 +19,8 @@ export default function EmailVerification() {
     });
   };
   const resendLink = () => {
-    console.log(userEmail);
     axiosClient.post("http://localhost:4000/resendVerifyEmail",{"email":userEmail})
     .then(({ data }) => {
-
       showToastMessage(data);
     })
   };

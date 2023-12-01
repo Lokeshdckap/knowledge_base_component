@@ -58,7 +58,7 @@ export const UrlPage = () => {
         .get(`/documents/${params.uuid}/${params.slug}/${params["*"]}`)
         .then((res) => {
           if (!res.data.script.is_published) {
-            navigate("/");
+            navigate("/error");
           }
           setParentOpen(res.data.parentPages);
           setPages(res.data.hierarchy);
@@ -80,7 +80,7 @@ export const UrlPage = () => {
         .get(`/documents/${params.uuid}/${params.slug}/${params["*"]}`)
         .then((res) => {
           if (!res.data.script.is_published) {
-            navigate("/");
+            navigate("/error");
           }
           setPages(res.data.hierarchy);
           setScript(res.data.script);

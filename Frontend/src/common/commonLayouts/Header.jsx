@@ -37,7 +37,7 @@ export default function Header(props) {
                 type="submit"
                 className="absolute top-0 right-0 p-2 text-sm font-medium h-full text-white bg-primary rounded-r-lg border border-primary  focus:outline-none "
               >
-                <i class="fa-solid fa-magnifying-glass"></i>
+                <i className="fa-solid fa-magnifying-glass"></i>
                 <span className="sr-only">Search</span>
               </button>
             </div>
@@ -51,7 +51,7 @@ export default function Header(props) {
               alt=""
             />
           ) : (
-            <i class="fa-regular text-slate-600 fa-circle-user text-2xl cursor-pointer pr-3"></i>
+            <i className="fa-regular text-slate-600 fa-circle-user text-2xl cursor-pointer pr-3"></i>
           )}
         </div>
         {profileState && (
@@ -59,7 +59,7 @@ export default function Header(props) {
             <Link to={`/setting/${params.uuid}/profile`}>
               {" "}
               <p className="text-lg pl-3 pt-2 text-textPrimary cursor-pointer ">
-                <i class="fa-regular text-slate-600 fa-circle-user text-lg cursor-pointer pr-2 pb-0.5"></i>
+                <i className="fa-regular text-slate-600 fa-circle-user text-lg cursor-pointer pr-2 pb-0.5"></i>
                 Profile
               </p>
             </Link>
@@ -68,13 +68,12 @@ export default function Header(props) {
               className="text-lg pl-3 pt-1 text-textPrimary cursor-pointer"
               onClick={onLogout}
             >
-              <i class="fa-solid fa-arrow-right-from-bracket text-slate-600 text-lg cursor-pointer pr-2"></i>
+              <i className="fa-solid fa-arrow-right-from-bracket text-slate-600 text-lg cursor-pointer pr-2"></i>
               Logout
             </p>
           </div>
         )}
 
-        {/* <button className="h-[35px] w-[120px] text-white rounded  bg-primary" onClick={onLogout}>Logout <i class="fa-solid fa-arrow-right-from-bracket mx-2"></i></button> */}
       </div>
     </div>
   );

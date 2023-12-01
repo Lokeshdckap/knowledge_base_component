@@ -42,7 +42,7 @@ export const BatchLayouts = (props) => {
   };
 
   return (
-    <div className="pt-5 h-[550px]  overflow-y-auto z-0">
+    <div className="pt-5 max-h-[550px]  overflow-y-auto z-0">
       <div className=" ">
         <div className={`flex justify-between ${props.widths} m-auto  `}>
           <div>

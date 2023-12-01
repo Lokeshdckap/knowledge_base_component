@@ -22,11 +22,18 @@ const inviteTeams = async (req, res) => {
     });
 
     const sameUsers = await User.findOne({
-      where: { email: email },
+
+      where: { uuid: req.user.id },
     });
-    if (sameUsers.email == req.body.email) {
+
+
+    if(sameUsers.email == req.body.email){
+    console.log(sameUsers.email,"ecjecle");
+
       return res.status(400).json(`This is your Email Can't send the invite`);
-    }
+    };
+
+
     if (exitsInviteUsers) {
       return res.status(400).json(`${email} this email already sended invite`);
     } else {
@@ -50,8 +57,6 @@ const inviteTeams = async (req, res) => {
 
       let link = `http://localhost:3000/join/${inviteToken}`;
 
-      console.log(link);
-
       const emailTemplate = fs.readFileSync(
         path.join(__dirname, "../../", "public", "emailTemplates/invite.html"),
         "utf8"
@@ -66,6 +71,7 @@ const inviteTeams = async (req, res) => {
         .json(`Invite Sended Sucucessfully to this ${email}`);
     }
   } catch (error) {
+    console.log(error,"errp");
     return res.status(404).json({ error: error });
   }
 };
@@ -83,27 +89,24 @@ const updateInvite = async (req, res) => {
     });
 
     const userFinds = await User.findOne({
-      where: {
-        uuid: req.body.id,
-      },
-    });
 
-    const invitedDataProgress = await Invite.update(
-      {
-        is_progess: req.body.isProgress,
-      },
-      {
-        where: {
-          uuid: userFinds.email,
-        },
+      where:{
+        uuid:req.body.id
       }
-    );
+    })
 
-    return res.status(200).json({
-      invitedData,
-      invitedDataProgress,
-      msg: "User Invited Update Sucessfully",
+    const invitedDataProgress = await Invite.update({
+      is_progess: req.body.isProgress ,
+    },
+    {
+      where: {
+        uuid: userFinds.email
+      },
     });
+
+    return res
+      .status(200)
+      .json({ invitedData,invitedDataProgress, msg: "User Invited Update Sucessfully" });
   } catch (error) {
     return res.status(500).json({ error: error });
   }
@@ -141,8 +144,12 @@ const pendingList = async (req, res) => {
   try {
     const pendingData = await Invite.findAll({
       where: {
-        team_uuid: teamuuid,
+        [Op.and]: [
+          { team_uuid: teamuuid},
+          { is_progress: 0},
+        ],
       },
+
     });
     return res
       .status(200)

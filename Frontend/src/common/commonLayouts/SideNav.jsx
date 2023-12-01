@@ -11,7 +11,7 @@ export default function SideNav(props) {
 
 
   return (
-    <div className="bg-primary h-[632px] w-[72px]">
+    <div className="bg-primary h-screen w-[72px]">
       <div>
         <img src={mainLogo} alt="" className="m-4" />
       </div>

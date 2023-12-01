@@ -38,7 +38,7 @@ export const InviteUsers = (props) => {
 
   return (
     <div>
-      <div className="bg-primary opacity-[0.5] w-[1294px] h-[664px] absolute top-0 left-0  z-10"></div>
+      <div className="bg-primary opacity-[0.5] w-screen h-screen absolute top-0 left-0  z-10"></div>
       <div className=" absolute left-0 top-0 z-20 ">
         <div className="bg-[#fff] h-[500px] w-[600px] ml-[340px] mt-[60px] rounded-lg -z-10">
           <div className="">
@@ -82,7 +82,7 @@ export const InviteUsers = (props) => {
                       props.setRole(e.target.value))}
                       
                   >
-                    <option disabled>select</option>
+                    <option>select</option>
                     <option value="1">Admin</option>
                     <option value="2">Viewer</option>
                     <option value="3">Editor</option>
@@ -108,7 +108,6 @@ export const InviteUsers = (props) => {
                   <p className="pr-3 pt-1.5">Action</p>
                 </div>
                 <div className="h-48 overflow-auto  bg-secondary">
-
                   {pendingData &&
                   pendingData.length > 0 ? 
                   (pendingData.map((data) => (

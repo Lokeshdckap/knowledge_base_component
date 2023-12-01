@@ -25,7 +25,7 @@ const MyContextProvider = ({ children }) => {
   const [scripts, setScripts] = useState(null);
   const [batchTitle, setBatchTitle] = useState("");
   const [batchDescription, setbatchDescription] = useState("");
-  const [userDetail,setUserDetail] = useState(null);
+  const [userDetail, setUserDetail] = useState(null);
   const duration = 2000;
   const showToastMessage = (data) => {
     toast.success(data, {
@@ -78,7 +78,6 @@ const MyContextProvider = ({ children }) => {
     await axiosClient
       .get(`/getBatch/${params.uuid}`)
       .then((res) => {
-        console.log(res);
         setBatch(res.data.batchs);
         setScriptCount(res.data.results);
       })
@@ -172,39 +171,38 @@ const MyContextProvider = ({ children }) => {
       });
   };
 
+  //Trash
 
-    //Trash
-
-    const handleTrash = (e) => {
-      let targetId = e.target.id;
-      let batchId = e.target.dataset.set;
-      if (targetId) {
-        setLoading(true);
-        axiosClient
-          .put(`/moveToTrash/${params.uuid}/${targetId}`)
-          .then((res) => {
-            if (res.status == 200) {
-              setLoading(false);
-              showToastErrorMessage(res.data.message);
-              getBatch();
-              getScript();
-              if (batchId) {
-                handleAfterAddedChildrenScripts(batchId);
-              }
-              getAllDeletedData()
+  const handleTrash = (e) => {
+    let targetId = e.target.id;
+    let batchId = e.target.dataset.set;
+    if (targetId) {
+      setLoading(true);
+      axiosClient
+        .put(`/moveToTrash/${params.uuid}/${targetId}`)
+        .then((res) => {
+          if (res.status == 200) {
+            setLoading(false);
+            showToastErrorMessage(res.data.message);
+            getBatch();
+            getScript();
+            if (batchId) {
+              handleAfterAddedChildrenScripts(batchId);
             }
-          })
-          .catch((err) => {
-            const response = err.response;
-            if (response && response.status === 400) {
-            } else {
-              console.error("Error:", response.status);
-            }
-          });
-      } else {
-        showToastErrorMessage("no Id");
-      }
-    };
+            getAllDeletedData();
+          }
+        })
+        .catch((err) => {
+          const response = err.response;
+          if (response && response.status === 400) {
+          } else {
+            console.error("Error:", response.status);
+          }
+        });
+    } else {
+      showToastErrorMessage("no Id");
+    }
+  };
 
   const getAllDeletedData = () => {
     axiosClient
@@ -216,7 +214,6 @@ const MyContextProvider = ({ children }) => {
         console.log(err);
       });
   };
-
 
   const userInfo = async () => {
     await axiosClient
@@ -269,11 +266,11 @@ const MyContextProvider = ({ children }) => {
         setAllTeam,
         handleAfterAddedChildrenScripts,
         getAllDeletedData,
-        trashData, 
+        trashData,
         setTrashData,
         handleTrash,
         userInfo,
-        userDetail
+        userDetail,
       }}
     >
       {children}

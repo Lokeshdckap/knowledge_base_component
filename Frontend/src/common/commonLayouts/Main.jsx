@@ -59,7 +59,7 @@ export default function Main(props) {
     <div className="pt-10 h-[584px] overflow-y-auto z-0 bg-white">
       <div className="   ">
         <div className={`flex justify-between ${props.widths} m-auto  `}>
-          <div className="flex space-x-3">
+          <div className="flex space-x-3 pt-2">
             <div className="rounded-full h-12 w-12 bg-[#DEE0E4]">
               <i className="fa-solid fa-user-group text-[25px] pl-2 pt-[10px] text-[#6E7E86]"></i>
             </div>

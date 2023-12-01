@@ -114,7 +114,7 @@ export default function SigninComponents() {
           className="max-w-[390px]  m-auto mt-[70px] mb-[112px] "
         />
       </div>
-      <div className="bg-secondary  w-1/2 p-32">
+      <div className="bg-secondary h-screen  w-1/2 p-32">
         <div>
           <h2 className="text-xl text-textPrimary">
             Happy To See You Back ! Our Rhino Tome{" "}

@@ -31,7 +31,7 @@ export const Search = (props) => {
   }, []);
   return (
     <div>
-      <div className="bg-primary opacity-[0.5] w-[1292px] h-screen absolute top-0 left-0  z-10"></div>
+      <div className="bg-primary opacity-[0.5] w-screen  h-screen absolute top-0 left-0  z-10"></div>
       <div className=" absolute left-0 top-0 z-20 ">
         <div
           className="bg-[#fff] max-h-[600px] w-[600px] ml-[380px] mt-[60px] rounded-lg -z-10"

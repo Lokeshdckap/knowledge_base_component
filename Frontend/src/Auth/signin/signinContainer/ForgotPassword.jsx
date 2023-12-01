@@ -71,7 +71,7 @@ export default function ForgotPassword() {
 
   return (
     <main className="flex">
-      <div className="bg-secondary h-[664px] w-1/2 pt-44 pl-32">
+      <div className="bg-secondary h-screen w-1/2 pt-32 pl-32">
         <div className="space-y-2">
           <h1 className="text-3xl text-primary font-bold">
             Forgot Your Password?
@@ -122,8 +122,8 @@ export default function ForgotPassword() {
           <Link to="/signin">Go to Signin</Link>
         </div>
       </div>
-      <div className="bg-primary w-1/2 h-[664px]">
-        <img src={forgotPassword} alt="" className="p-16" />
+      <div className="bg-primary w-1/2 h-screen">
+        <img src={forgotPassword} alt="" className="pl-24 pt-10" />
       </div>
       <ToastContainer />
       {loading && <p className="absolute top-72 left-[622px]">

@@ -142,7 +142,7 @@ const updatePageData = async (req, res) => {
           { length },
           () => characters[Math.floor(Math.random() * characters.length)]
         ).join("");
-      } while (uniqueValue.includes(existingValues));
+      } while (existingValues.includes(uniqueValue));
 
       return uniqueValue;
     }

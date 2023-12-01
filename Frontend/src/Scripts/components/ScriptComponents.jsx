@@ -163,7 +163,6 @@ export const ScriptComponents = () => {
       description: description ? description : "Page Description",
       content: editorContent,
     };
-    console.log(editorContent, "posted Data");
     axiosClient
       .post("/updatePageData", postData)
       .then((res) => {

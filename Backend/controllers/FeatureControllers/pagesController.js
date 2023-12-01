@@ -116,6 +116,7 @@ const addChildPage = async (req, res) => {
 };
 
 const updatePageData = async (req, res) => {
+  console.log("lokkkkk");
   try {
     let paths;
     const page = await Page.findOne({
@@ -157,9 +158,10 @@ const updatePageData = async (req, res) => {
     const existingTitles = [];
     for (let allPage of pages) {
       if (allPage.title != "Page Name") {
-        existingTitles.push(allPage.title.split("-")[0]);
+        existingTitles.push(allPage.title.split("-")[1]);
       }
     }
+    console.log(existingTitles,"lokkkk");
 
     let newTitle;
 
@@ -168,11 +170,9 @@ const updatePageData = async (req, res) => {
       length
     );
 
-    if (req.body.title != page.title.split("-")[0]) {
+    if (req.body.title != page.title) {
       newTitle = `${req.body.title}-${randomNumber}`;
-    } else {
-      newTitle = `${req.body.title}`;
-    }
+    } 
 
     titles = newTitle ? newTitle : req.body.title;
 
@@ -245,7 +245,6 @@ const updatePageData = async (req, res) => {
       .status(200)
       .json({ updateData, msg: "Your Content Was Updated Sucessfully" });
   } catch (err) {
-    console.log("err", err);
     return res.status(500).json({ error: err });
   }
 };

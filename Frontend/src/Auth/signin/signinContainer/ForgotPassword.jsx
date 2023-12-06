@@ -47,7 +47,7 @@ export default function ForgotPassword() {
       validationErrors.email = "email is required";
     } else {
       setLoading(true)
-      axiosClient.post("http://localhost:4000/forgotPassword", newItem)
+      axiosClient.post("http://localhost:4000/api/auth/forgotPassword", newItem)
         .then((res) => {
           setLoading(false)
 

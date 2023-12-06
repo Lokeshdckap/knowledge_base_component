@@ -94,7 +94,7 @@ export default function SideNavLarge(props) {
     if (teamId !== params.uuid) {
       setLoading(true);
       await axiosClient
-        .get(`/switchTeam/${teamId}`)
+        .get(`/api/teams/switchTeam/${teamId}`)
         .then((res) => {
           if (res.status == 200) {
             navigate(`/dashboard/${res.data.selectedTeam.uuid}`);
@@ -174,7 +174,7 @@ export default function SideNavLarge(props) {
     setError(validationErrors);
     if (Object.keys(validationErrors).length === 0) {
       axiosClient
-        .post("/team", formValues)
+        .post("/api/teams/team", formValues)
         .then((res) => {
           setTeamPopup(false);
           getAllTeam();
@@ -209,7 +209,7 @@ export default function SideNavLarge(props) {
       setInviteError("Role is required");
     } else {
       axiosClient
-        .post("/inviteUsers", {
+        .post("/api/invites/inviteUsers", {
           email: inviteEmail,
           role: role,
           team_uuid: params.uuid,

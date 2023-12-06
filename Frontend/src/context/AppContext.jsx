@@ -54,7 +54,7 @@ const MyContextProvider = ({ children }) => {
   //Team functions
   const getTeam = async () => {
     await axiosClient
-      .get(`/getTeam/${params.uuid}`)
+      .get(`/api/teams/getTeam/${params.uuid}`)
       .then((res) => {
         setTeam(res.data.Teams[0].name);
         getBatch();
@@ -67,7 +67,7 @@ const MyContextProvider = ({ children }) => {
 
   const getAllTeam = async () => {
     await axiosClient
-      .get(`/getAllTeam`)
+      .get(`/api/teams/getAllTeam`)
       .then((res) => {
         setAllTeam(res.data.getAllTeam);
       })
@@ -76,7 +76,7 @@ const MyContextProvider = ({ children }) => {
 
   const getBatch = async () => {
     await axiosClient
-      .get(`/getBatch/${params.uuid}`)
+      .get(`/api/batch/getBatch/${params.uuid}`)
       .then((res) => {
         console.log(res);
         setBatch(res.data.batchs);
@@ -89,7 +89,7 @@ const MyContextProvider = ({ children }) => {
 
   const getScript = async () => {
     await axiosClient
-      .get(`/getScript/${params.uuid}`)
+      .get(`/api/scripts/getScript/${params.uuid}`)
       .then((res) => {
         setScript(res.data.script);
       })
@@ -100,7 +100,7 @@ const MyContextProvider = ({ children }) => {
 
   const getScripts = async () => {
     await axiosClient
-      .get(`/getScripts/${params.uuid}/${params.slug}`)
+      .get(`/api/dashboard/getScripts/${params.uuid}/${params.slug}`)
       .then((res) => {
         setOverState(res.data.script_batch.batch_uuid);
         setChildScript(res.data.result);
@@ -110,7 +110,7 @@ const MyContextProvider = ({ children }) => {
   const addNewBatch = () => {
     setLoading(true);
     axiosClient
-      .post("/addNewBatch", { uuid: params.uuid })
+      .post("/api/batch/addNewBatch", { uuid: params.uuid })
       .then((res) => {
         if (res.status == 200) {
           getBatch();
@@ -129,7 +129,7 @@ const MyContextProvider = ({ children }) => {
     let batch_uuid = e.target.id ? e.target.id : null;
     setLoading(true);
     axiosClient
-      .post("/addNewScript", { uuid: params.uuid, batch_uuid: batch_uuid })
+      .post("/api/scripts/addNewScript", { uuid: params.uuid, batch_uuid: batch_uuid })
       .then((res) => {
         setLoading(false);
         getScript();
@@ -148,7 +148,7 @@ const MyContextProvider = ({ children }) => {
   const handleAfterAddedChildrenScripts = async (uuid) => {
     let batch_uuid = uuid;
     await axiosClient
-      .get(`/getBatchAndScripts/${params.uuid}/${batch_uuid}`)
+      .get(`/api/dashboard/getBatchAndScripts/${params.uuid}/${batch_uuid}`)
       .then((res) => {
         setChildScript(res.data.result);
         setScripts(res.data.result);
@@ -160,7 +160,7 @@ const MyContextProvider = ({ children }) => {
 
   const getLoadScript = async (team_uuid, batch_uuid) => {
     await axiosClient
-      .get(`/getBatchAndScripts/${team_uuid}/${batch_uuid}`)
+      .get(`/api/dashboard/getBatchAndScripts/${team_uuid}/${batch_uuid}`)
       .then((res) => {
         setBatchTitle(res.data.result[0].batch.title);
         setbatchDescription(res.data.result[0].batch.description);
@@ -181,7 +181,7 @@ const MyContextProvider = ({ children }) => {
       if (targetId) {
         setLoading(true);
         axiosClient
-          .put(`/moveToTrash/${params.uuid}/${targetId}`)
+          .put(`/api/trash/moveToTrash/${params.uuid}/${targetId}`)
           .then((res) => {
             if (res.status == 200) {
               setLoading(false);
@@ -208,7 +208,7 @@ const MyContextProvider = ({ children }) => {
 
   const getAllDeletedData = () => {
     axiosClient
-      .get(`/getAllTrash/${params.uuid}`)
+      .get(`/api/trash/getAllTrash/${params.uuid}`)
       .then((res) => {
         setTrashData(res.data.itemsWithDaysLeft);
       })
@@ -220,7 +220,7 @@ const MyContextProvider = ({ children }) => {
 
   const userInfo = async () => {
     await axiosClient
-      .get("/getUserInfo")
+      .get("/api/user/getUserInfo")
       .then((res) => {
         setUserDetail(res.data.userInfo);
       })

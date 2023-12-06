@@ -1,4 +1,4 @@
-const GoogleStrategy = require("passport-google-oauth20").Strategy;
+const GoogleStrategy = require('passport-google-oauth20').Strategy
 const passport = require("passport");
 const db = require("../../utils/database");
 const User = db.users;
@@ -10,9 +10,10 @@ const google = () => {
     new GoogleStrategy(
       {
         clientID:
-          "1009276001337-11l7egfk4ujh49irtc9io18ki6lapv80.apps.googleusercontent.com",
-        clientSecret: "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",
-        callbackURL: "http://localhost:4000/auth/google/callback",
+          "1009276001337-tvc5n33me839uroo68b4iamrll2bj1uc.apps.googleusercontent.com",
+        clientSecret: "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",
+        callbackURL: "http://localhost:3000/api/auth/auth/google/callback",
+        passReqToCallback : true
       },
       async (accessToken, refreshToken, profile, done) => {
         const newUser = {

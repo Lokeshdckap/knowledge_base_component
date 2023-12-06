@@ -25,7 +25,7 @@ export const JoinTeam = () => {
           role: decoded.role,
         };
         axiosClient
-          .post("/updateInvite", payLoad)
+          .post("/api/invites/updateInvite", payLoad)
           .then((res) => {
             console.log(res);
             navigate("/dashboard");

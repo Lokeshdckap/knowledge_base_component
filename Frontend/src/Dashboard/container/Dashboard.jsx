@@ -49,7 +49,7 @@ export default function Dashboard() {
     let value = e.target.value;
 
     await axiosClient
-      .get(`${params.uuid}/search/items?q=${value}`)
+      .get(`/api/dashboard/${params.uuid}/search/items?q=${value}`)
       .then((res) => {
         if (res.data.length > 0) {
           console.log(res);
@@ -75,7 +75,7 @@ export default function Dashboard() {
     if (targetId) {
       setLoading(true);
       axiosClient
-        .put(`/moveToTrash/${params.uuid}/${targetId}`)
+        .put(`/api/trash/moveToTrash/${params.uuid}/${targetId}`)
         .then((res) => {
           if (res.status == 200) {
             setLoading(false);

@@ -72,8 +72,12 @@ export default function SignupComponents() {
 
       Cookies.set("userEmail", formValues.email, { expires: 7 });
       axiosClient
-        .post("http://localhost:4000/register", formValues)
+        .post("http://localhost:4000/api/auth/register", formValues)
         .then(({ data }) => {
+          console.log(data);
+               setAuth({
+              token: data.access_token,
+            });
           setLoading(false);
           navigate("/emailverify");
         })
@@ -113,13 +117,13 @@ export default function SignupComponents() {
     delete errors[name];
   };
 
-  const google = async () => {
-    const data = await axiosClient
-      .get("http://localhost:4000/auth/google")
-      .then((res) => {
-        console.log(res);
-      });
-  };
+  // const google = async () => {
+  //    await axiosClient
+  //     .get("/auth/google")
+  //     .then((res) => {
+  //       console.log(res);
+  //     });
+  // };
 
  
 
@@ -300,11 +304,12 @@ export default function SignupComponents() {
               <div className="bg-white w-10 h-10 ">
                 <img src={googles} className="p-2" />
               </div>
-              <button
+                <button
                 className="bg-primary w-40 h-10   text-white rounded backdrop-blur-[2px]"
-                onClick={google}
+                // onClick={google}
               >
-                Signup with google
+              <a href="http://localhost:4000/api/auth/auth/google">
+                Signup with google</a>
               </button>
             </div>
           </div>

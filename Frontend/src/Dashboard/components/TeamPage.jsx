@@ -26,7 +26,7 @@ export default function TeamPage() {
     setError(validationErrors);
     if (Object.keys(validationErrors).length === 0) {
       axiosClient
-        .post("/team", formValues)
+        .post("/api/teams/team", formValues)
         .then((res) => {
           navigate(`/dashboard/${res.data.newTeam.uuid}`)
         })

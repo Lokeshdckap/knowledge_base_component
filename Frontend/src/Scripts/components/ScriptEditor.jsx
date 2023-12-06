@@ -73,7 +73,7 @@ export const ScriptEditor = () => {
 
   const getParticularPage = async () => {
     await axiosClient
-      .get(`/getPage/${pageIds}`)
+      .get(`/api/pages/getPage/${pageIds}`)
       .then((res) => {
         setParticularTitle(res.data.pages.title.split("-")[0]);
         setDescription(res.data.pages.description);
@@ -88,7 +88,7 @@ export const ScriptEditor = () => {
     let script_uuid = params.slug;
 
     await axiosClient
-      .get(`/getScriptAndPage/${script_uuid}`)
+      .get(`/api/dashboard/getScriptAndPage/${script_uuid}`)
       .then((res) => {
         navigate(
           `/dashboard/${params.uuid}/changes/${params.slug}/?pageId=${res.data.hierarchy[0].uuid}`
@@ -101,7 +101,7 @@ export const ScriptEditor = () => {
 
   const getParentOpen = async () => {
     await axiosClient
-      .get(`/getOpenParent/${pageIds}`)
+      .get(`/api/dashboard/getOpenParent/${pageIds}`)
       .then((res) => {
         setParentOpen(res.data.parentPages);
       })
@@ -113,7 +113,7 @@ export const ScriptEditor = () => {
   const getParticularScript = async () => {
     let script_uuid = params.slug;
     await axiosClient
-      .get(`/getScriptAndPage/${script_uuid}`)
+      .get(`/api/dashboard/getScriptAndPage/${script_uuid}`)
       .then((res) => {
         if (res.status == 200) {
           setInputValue(res.data.getScriptAndPages.title);
@@ -146,7 +146,7 @@ export const ScriptEditor = () => {
 
   const handleEdit = () => {
     axiosClient
-      .get(`/scripts/${params.slug}/${false}`)
+      .get(`/api/public/scripts/${params.slug}/${false}`)
       .then((res) => {
         navigate(`/dashboard/${params.uuid}/s/${params.slug}`)
 

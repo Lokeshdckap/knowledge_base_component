@@ -36,7 +36,7 @@ export const UrlPage = () => {
   useEffect(() => {
     if (params["*"]) {
       axiosClient
-        .get(`/pages/${params.slug}/${params["*"]}`)
+        .get(`/api/public/pages/${params.slug}/${params["*"]}`)
         .then((res) => {
           if (res.status == 200) {
             setLoadPage(res.data.publicUrl);
@@ -55,7 +55,7 @@ export const UrlPage = () => {
         });
 
       axiosClient
-        .get(`/documents/${params.uuid}/${params.slug}/${params["*"]}`)
+        .get(`/api/public/documents/${params.uuid}/${params.slug}/${params["*"]}`)
         .then((res) => {
           if (!res.data.script.is_published) {
             navigate("/");
@@ -77,7 +77,7 @@ export const UrlPage = () => {
     }
     if (params.slug && params["*"] == "") {
       axiosClient
-        .get(`/documents/${params.uuid}/${params.slug}/${params["*"]}`)
+        .get(`/api/public/documents/${params.uuid}/${params.slug}/${params["*"]}`)
         .then((res) => {
           if (!res.data.script.is_published) {
             navigate("/");
@@ -183,7 +183,7 @@ export const UrlPage = () => {
     let path = params.slug + "/" + params["*"];
 
     await axiosClient
-      .get(`${params.uuid}/${params.slug}/pageSearch/items?q=${value}`)
+      .get(`/api/dashboard/${params.uuid}/${params.slug}/pageSearch/items?q=${value}`)
       .then((res) => {
         if (res.data.length > 0) {
           setSearchPageData(res.data);

@@ -24,6 +24,7 @@ import { BlankLayout } from "./components/BlankLayout.jsx";
 import { ActiveUsers } from "./Team/components/ActiveUsers.jsx";
 import { ScriptEditor } from "./Scripts/components/ScriptEditor.jsx";
 import { EmailVerificationCheck } from "./Auth/signup/signupContainer/EmailVerificationCheck";
+import GoogleCallback from "./Auth/signup/signupComponents/GoogleCallback";
 
 const router = createBrowserRouter([
   {
@@ -142,6 +143,10 @@ const router = createBrowserRouter([
         path: "/email-verify/:uuid/:token",
         element: <EmailVerificationCheck />,
       },
+      {
+        path:'/auth/google',
+        element:<GoogleCallback />
+    }
       // {
       //   path: "/email-verify/:uuid/:token",
       //   element: <SignupContainer />,

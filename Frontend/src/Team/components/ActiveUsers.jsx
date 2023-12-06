@@ -38,7 +38,7 @@ export const ActiveUsers = (props) => {
   
   const allUsers = () => {
     axiosClient
-      .get(`/getAciveUsers/${params.uuid}`)
+      .get(`/api/teams/getAciveUsers/${params.uuid}`)
       .then((res) => {
         setTeamMembers(res.data.userDetail);
       })
@@ -50,7 +50,7 @@ export const ActiveUsers = (props) => {
 
   const team = () => {
     axiosClient
-      .get(`/getTeam/${params.uuid}`)
+      .get(`/api/teams/getTeam/${params.uuid}`)
       .then((res) => {
         setTeamName(res.data.Teams[0].name);
       })
@@ -74,7 +74,7 @@ export const ActiveUsers = (props) => {
         user_uuid: e.target.id,
       };
       await axiosClient
-        .post("/updateRole", payload)
+        .post("/api/invites/updateRole", payload)
         .then((res) => {
           console.log(res.data);
         })
@@ -99,7 +99,7 @@ export const ActiveUsers = (props) => {
         setInviteError("Role is required");
       } else {
         axiosClient
-          .post("/inviteUsers", {
+          .post("/api/invites/inviteUsers", {
             email: inviteEmail,
             role: role,
             team_uuid: params.uuid,

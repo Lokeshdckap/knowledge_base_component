@@ -37,6 +37,8 @@ const register = async (req, res) => {
       uuid: uuid.v4(),
     });
 
+    let jwttoken = generateAuthToken(user);
+
     if (req.body.team_uuid) {
       const UserTeam = await UserTeams.create({
         user_uuid: user.uuid,
@@ -68,10 +70,12 @@ const register = async (req, res) => {
       } else {
         return res.status(400).send("token not created");
       }
-      return res.status(200).send({ verify: user.isVerified });
+      // return res.status(200).send({ verify: user.isVerified });
     } else {
       return res.status(409).send("Details are not correct");
     }
+
+    return res.status(200).json({ access_token: jwttoken });
   } catch (err) {
     return res.status(500).send("Error in registering user");
   }
@@ -120,12 +124,11 @@ const login = async (req, res) => {
   }
 };
 
-
 const verifyEmail = async (req, res) => {
   try {
-    const token = req.params.token ? req.params.token : null ;
+    const token = req.params.token ? req.params.token : null;
     const user_uuid = req.params.uuid ? req.params.uuid : null;
-  
+
     //find user by token using the where clause
     if (user_uuid && token) {
       const usertoken = await emailVerificationToken.findOne({
@@ -134,6 +137,7 @@ const verifyEmail = async (req, res) => {
           user_uuid: user_uuid,
         },
       });
+
       const userTeamAvailable = await UserTeams.findOne({
         where: {
           user_uuid: req.params.uuid,
@@ -144,8 +148,9 @@ const verifyEmail = async (req, res) => {
       if (usertoken.expires_at < new Date()) {
         return res
           .status(400)
-          .json({ message: "Token has expired or Invaild Token" });
+          .json({ message: "Token has expired or Invalid Token" });
       }
+
       if (!usertoken) {
         return res.status(400).send({
           msg: "Your verification link may have expired. Please click on resend for verify your Email.",
@@ -161,11 +166,10 @@ const verifyEmail = async (req, res) => {
 
           //if user is already verified, tell the user to login
         } else if (user.isVerified) {
-          let jwttoken = generateAuthToken(user);
           // JWT TokeN
-          return res
-            .status(200)
-            .send({ verify: user.isVerified, jwttoken, userTeamAvailable });
+          return res.status(409).send({
+            msg: "User has been already verified. Please Login",
+          });
 
           //if user is not verified, change the verified to true by updating the field
         } else {
@@ -187,19 +191,19 @@ const verifyEmail = async (req, res) => {
           //if not updated sencsrfd error message
           if (!updated) {
             return res.status(500).send({ msg: err.message });
-            //else send status of 200
           } else {
+            // let jwttoken = generateAuthToken(user);
             return res.status(200).send({
               Success: "Your account has been successfully verified",
               verify: user.isVerified,
-              token,
             });
           }
         }
       }
     }
   } catch (error) {
-    console.log(error);
+    return res.status(500).json({ message: error });
+    // console.log(error);
   }
 };
 
@@ -241,9 +245,7 @@ const resendEmailLink = async (req, res) => {
             ),
             "utf8"
           );
-
           const emailink = emailTemplate.replace("{{link}}", link);
-
           await sendEmail(user.email, "Email Verification", emailink);
         } else {
           return res.status(400).send("token not created");

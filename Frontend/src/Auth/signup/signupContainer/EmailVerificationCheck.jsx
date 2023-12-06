@@ -1,49 +1,62 @@
 import React, { useEffect, useState } from "react";
 import HashLoader from "react-spinners/HashLoader";
 import axiosClient from "../../../axios-client";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useStateContext } from "../../../context/ContextProvider";
 
 export const EmailVerificationCheck = () => {
   const params = useParams();
-  const { setAuth } = useStateContext();
+  const navigate = useNavigate()
+  const { auth,setAuth } = useStateContext();
 
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-
+    console.log("Before axios call");
+  
     setLoading(true);
+  
     if (params.uuid && params.token) {
+      console.log("Making axios call with params:", params);
+  
       axiosClient
-        .get(
-          `http://localhost:4000/verify-email/${params.uuid}/${params.token}`
-        )
+        .get(`http://localhost:4000/api/auth/verify-email/${params.uuid}/${params.token}`)
         .then(({ data }) => {
-            console.log(data);
+          console.log(data);
           if (data.userTeamAvailable) {
             setAuth({
-              token: data.jwttoken,
+              token:auth,
               verify: data.verify,
               state: true,
             });
-            setLoading(false);
-          } 
-          else {
+          } else {
             setAuth({
-              token: data.jwttoken,
+              token:auth,
               verify: data.verify,
             });
-            setLoading(false);
           }
-          setLoading(false);
         })
+
         .catch((err) => {
-          // debugger;
+          console.error("Axios error:", err);
+  
+          const response = err.response;
+          if (response && response?.status === 409) {
+            navigate("/signin");
+          } else {
+            console.error("Error:", response?.status);
+          }
+        })
+        .finally(() => {
+          console.log("Finally block, setLoading(false)");
+          setLoading(false);
         });
     } else {
       console.log("Token Is Not Valid Please Click Again the Link");
+      setLoading(false);
     }
-  }, []);
+  }, [params.uuid, params.token]);
+    
   return (
     <div>
       {loading && (

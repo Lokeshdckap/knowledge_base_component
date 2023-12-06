@@ -25,7 +25,7 @@ export const EditorComponents = (props) => {
 
     try {
       axiosClient
-        .post("/uploadImage", formData, {
+        .post("/api/dashboard/uploadImage", formData, {
           headers: {
             "Content-Type": "multipart/form-data",
           },
@@ -37,7 +37,7 @@ export const EditorComponents = (props) => {
       console.error("Error parsing JSON or response undefined:", error);
     }
     try {
-      axiosClient.get("/fetchImage").then((res) => {
+      axiosClient.get("/api/dashboard/fetchImage").then((res) => {
         setImageUrl(res.data.image.filename);
       });
     } catch (error) {

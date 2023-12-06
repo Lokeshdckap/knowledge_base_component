@@ -47,7 +47,7 @@ export const BatchComponent = () => {
       title: batchTitle,
     };
     await axiosClient
-      .post("/addBatchTitleAndDescription", payLoad)
+      .post("/api/batch/addBatchTitleAndDescription", payLoad)
       .then((res) => {
         getScripts();
         getBatch();
@@ -64,7 +64,7 @@ export const BatchComponent = () => {
       description: batchDescription,
     };
     await axiosClient
-      .post("/addBatchTitleAndDescription", payLoad)
+      .post("/api/batch/addBatchTitleAndDescription", payLoad)
       .then((res) => {
         showToastMessage(res.data.message);
         getScripts();
@@ -81,7 +81,7 @@ export const BatchComponent = () => {
     if (targetId) {
       setLoading(true);
       axiosClient
-        .put(`/moveToTrash/${params.uuid}/${targetId}`)
+        .put(`/api/trash/moveToTrash/${params.uuid}/${targetId}`)
         .then((res) => {
           if (res.status == 200) {
             setLoading(false);

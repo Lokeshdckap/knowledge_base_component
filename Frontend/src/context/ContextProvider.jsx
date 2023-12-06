@@ -6,13 +6,16 @@ import { createContext, useState } from "react";
         auth: null,
         setAuth: () =>{},
     })
+
     export const ContextProvider = ({children}) => {
 
     const [auth, _setAuth] = useState(localStorage.getItem('ACCESS_TOKEN'));
 
+
     const setAuth = (auth) => {
+        console.log(auth.verify);
         _setAuth(auth)
-        if(auth.token && auth.verify){
+        if(auth.token){
             localStorage.setItem('ACCESS_TOKEN',auth.token);
             Cookies.remove('userEmail');
         }

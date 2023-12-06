@@ -26,7 +26,7 @@ export const JoinTeam = () => {
           isProgress:1
         };
         axiosClient
-          .post("/updateInvite", payLoad)
+          .post("/api/invites/updateInvite", payLoad)
           .then((res) => {
 
             navigate("/dashboard");

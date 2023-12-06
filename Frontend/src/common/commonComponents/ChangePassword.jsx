@@ -50,7 +50,7 @@ export const ChangePassword = (props) => {
       setLoading(true);
 
       axiosClient
-        .put(`http://localhost:4000/userUpdateProfile`, formValues)
+        .put(`http://localhost:4000/api/user/userUpdateProfile`, formValues)
 
         .then(({ data }) => {
           setLoading(false);

@@ -92,7 +92,7 @@ export const ScriptComponents = () => {
 
   const getParticularPage = async () => {
     await axiosClient
-      .get(`/getPage/${pageIds}`)
+      .get(`/api/pages/getPage/${pageIds}`)
       .then((res) => {
         setParticularTitle(res.data.pages.title.split("-")[0]);
         setDescription(res.data.pages.description);
@@ -109,7 +109,7 @@ export const ScriptComponents = () => {
     let script_uuid = params.slug;
 
     await axiosClient
-      .get(`/getScriptAndPage/${script_uuid}`)
+      .get(`/api/dashboard/getScriptAndPage/${script_uuid}`)
       .then((res) => {
         navigate(
           `/dashboard/${params.uuid}/s/${params.slug}/?pageId=${res.data.hierarchy[0].uuid}`
@@ -122,7 +122,7 @@ export const ScriptComponents = () => {
 
   const getParentOpen = async () => {
     await axiosClient
-      .get(`/getOpenParent/${pageIds}`)
+      .get(`/api/dashboard/getOpenParent/${pageIds}`)
       .then((res) => {
         setParentOpen(res.data.parentPages);
       })
@@ -134,7 +134,7 @@ export const ScriptComponents = () => {
   const getParticularScript = async () => {
     let script_uuid = params.slug;
     await axiosClient
-      .get(`/getScriptAndPage/${script_uuid}`)
+      .get(`/api/dashboard/getScriptAndPage/${script_uuid}`)
       .then((res) => {
         if (res.status == 200) {
           if (res.data.getScriptAndPages.is_published) {
@@ -164,7 +164,7 @@ export const ScriptComponents = () => {
       content: editorContent,
     };
     axiosClient
-      .post("/updatePageData", postData)
+      .post("/api/pages/updatePageData", postData)
       .then((res) => {
         getParticularScript();
         getParticularPage();
@@ -177,7 +177,7 @@ export const ScriptComponents = () => {
 
   const addPage = async () => {
     await axiosClient
-      .post(`/addPageData/${params.slug}`)
+      .post(`/api/pages/addPageData/${params.slug}`)
       .then((res) => {
         getParticularScript();
       })
@@ -189,7 +189,7 @@ export const ScriptComponents = () => {
   const addChildPage = (uuid) => {
     let page_uuid = uuid;
     axiosClient
-      .post(`/addChildPage/${params.slug}/${page_uuid}`)
+      .post(`/api/pages/addChildPage/${params.slug}/${page_uuid}`)
       .then((res) => {
         getParticularScript();
         navigate(
@@ -215,7 +215,7 @@ export const ScriptComponents = () => {
     };
 
     await axiosClient
-      .post("/addScriptTitle", payload)
+      .post("/api/scripts/addScriptTitle", payload)
       .then((res) => {
         getScripts();
         getScript();
@@ -256,7 +256,7 @@ export const ScriptComponents = () => {
 
   const onChange = (checked) => {
     axiosClient
-      .get(`/scripts/${params.slug}/${checked}`)
+      .get(`/api/public/scripts/${params.slug}/${checked}`)
       .then((res) => {
         setRenderScript(res.data.publicUrl);
         setTeamUuid(params.uuid);

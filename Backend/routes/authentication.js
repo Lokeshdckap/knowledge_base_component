@@ -13,6 +13,9 @@ const authController = require("../controllers/Authentication/authentication");
 const forgotPassword = require("../controllers/Authentication/passwordReset");
 
 
+const {google}  = require("../controllers/Authentication/googleLogin");
+google();
+
 router.post("/register", authMiddleware.saveUser, authController.register);
 
 router.post("/login", authController.login);
@@ -22,8 +25,7 @@ router.post("/forgotPassword", forgotPassword.forgotPassword);
 router.post("/resetPassword/:uuid/:token", forgotPassword.resetPassword);
 
 router.get(
-  "/auth/google",
-  passport.authenticate("google", { scope: ["profile", "email"] })
+  "/auth/google", passport.authenticate("google", { scope: ["profile", "email"] })
 );
 
 router.get(
@@ -33,7 +35,6 @@ router.get(
     failureRedirect: "http://localhost:3000/login",
   }),
   (req, res) => {
-    // Redirect or send a response after successful Google OAuth login
     res.redirect("http://localhost:3000/dashboard");
   }
 );
@@ -42,6 +43,4 @@ router.get("/verify-email/:uuid/:token", authController.verifyEmail);
 
 router.post("/resendVerifyEmail", authController.resendEmailLink);
 
-// router.route('/:id')
-//     .get(employeeController.getEmployee)
 module.exports = router;

@@ -14,7 +14,7 @@ export const InviteUsers = (props) => {
   useEffect(() => {
     if(changeState == "pending")
     {
-      axiosClient.get(`/pendingList/${params.uuid}`)
+      axiosClient.get(`/api/invites/pendingList/${params.uuid}`)
       .then((res) => {
         setPendingData(res.data.pendingData);
       })

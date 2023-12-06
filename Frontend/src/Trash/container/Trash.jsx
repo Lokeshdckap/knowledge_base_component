@@ -33,7 +33,7 @@ export const Trash = () => {
     console.log(styleState.length > 0);
     if (styleState.length > 0) {
       await axiosClient
-        .delete(`/selectedTrash/${params.uuid}`, {
+        .delete(`/api/trash/selectedTrash/${params.uuid}`, {
           data: styleState,
         })
         .then((res) => {
@@ -49,7 +49,7 @@ export const Trash = () => {
         });
     } else {
       await axiosClient
-        .delete(`/permanentDeleteAll/${params.uuid}`)
+        .delete(`/api/trash/permanentDeleteAll/${params.uuid}`)
         .then((res) => {
           if (res.status == 200) {
             getAllDeletedData();
@@ -76,7 +76,7 @@ export const Trash = () => {
   const handleParticularDelete = async (e) => {
     if (e.target.id) {
       await axiosClient
-        .delete(`/permanentDelete/${params.uuid}/${e.target.id}`)
+        .delete(`/api/trash/permanentDelete/${params.uuid}/${e.target.id}`)
         .then((res) => {
           getAllDeletedData();
           showToastMessage(res.data.message);
@@ -91,7 +91,7 @@ export const Trash = () => {
     if (e.target.id) {
       console.log(e.target.id);
       await axiosClient
-        .put(`/restore/${params.uuid}/${e.target.id}`)
+        .put(`/api/trash/restore/${params.uuid}/${e.target.id}`)
         .then((res) => {
           getAllDeletedData();
           showToastMessage(res.data.message);

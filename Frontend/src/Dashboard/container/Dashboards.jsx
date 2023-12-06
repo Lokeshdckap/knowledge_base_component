@@ -14,7 +14,7 @@ export const Dashboards = () => {
 
   const getAllTeam = () => {
     axiosClient
-      .get(`/getAllTeam`)
+      .get(`/api/teams/getAllTeam`)
       .then((res) => {
         if (res.data.getAllTeam.length > 0) {
           navigate(`/dashboard/${res.data.getAllTeam[0].team_uuid}`);

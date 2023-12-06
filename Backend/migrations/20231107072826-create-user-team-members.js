@@ -14,10 +14,10 @@ module.exports = {
       },
       user_uuid: {
         type: Sequelize.UUID,
-        references: {         
-          model: 'users',
-          key: 'uuid'
-        }
+        // references: {         
+        //   model: 'users',
+        //   key: 'uuid'
+        // }
       },
       role_id: {
         type: Sequelize.INTEGER,

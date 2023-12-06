@@ -44,7 +44,7 @@ export const Profile = (props) => {
 
   const userInfo = async () => {
     await axiosClient
-      .get("/getUserInfo")
+      .get("/api/user/getUserInfo")
       .then((res) => {
         setUserInfo(res.data.userInfo);
         setSelectedImage(res.data.userInfo.avatar);
@@ -67,7 +67,7 @@ export const Profile = (props) => {
       
       axiosClient
         .put(
-          'http://localhost:4000/userUpdateProfile',
+          'http://localhost:4000/api/user/userUpdateProfile',
           formData,
           {
             headers: {

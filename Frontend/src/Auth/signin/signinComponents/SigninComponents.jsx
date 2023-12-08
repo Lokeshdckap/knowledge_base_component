@@ -62,7 +62,7 @@ export default function SigninComponents() {
     if (validation()) {
       setLoading(true);
       axiosClient
-        .post("http://localhost:4000/login", formValues)
+        .post("/login", formValues)
         .then(({ data }) => {
           if (data.verify) {
             setAuth({

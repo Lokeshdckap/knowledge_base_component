@@ -38,7 +38,6 @@ export const BatchComponent = () => {
     let batch_uuid = params.slug;
 
     getLoadScript(team_uuid, batch_uuid);
-    
   };
 
   const handleBatchBlur = async () => {
@@ -87,7 +86,6 @@ export const BatchComponent = () => {
             setLoading(false);
             // getBatch();
             getScripts();
-          
           }
         })
         .catch((err) => {
@@ -98,7 +96,7 @@ export const BatchComponent = () => {
             console.error("Error:", response.status);
           }
         });
-    } 
+    }
   };
 
   const handleTitleAndDescription = async (e) => {
@@ -110,8 +108,25 @@ export const BatchComponent = () => {
   };
 
   return (
-    <div className="bg-[#F9FAFB] h-screen w-screen overflow-auto z-[10px]">
-      <BatchHeader
+    <>
+      <BatchHeader batchTitle={batchTitle} />
+
+      <BatchLayouts
+        AddScript={addNewScript}
+        scripts={scripts}
+        batchTitle={batchTitle}
+        setBatchTitle={setBatchTitle}
+        batchDescription={batchDescription}
+        setbatchDescription={setbatchDescription}
+        changeEvent={handleTitleAndDescription}
+        batch={batch}
+        handleBlur={handleBatchBlur}
+        handleDescriptionBlur={handleDescriptionBlur}
+        handleTrash={handleTrash}
+      />
+
+      {/* // <div className="bg-[#F9FAFB] h-screen w-screen overflow-auto z-[10px]"> */}
+      {/* <BatchHeader
         widths={state ? "w-[1000px]" : "w-[1160px]"}
         batchTitle={batchTitle}
       />
@@ -128,16 +143,16 @@ export const BatchComponent = () => {
         handleBlur={handleBatchBlur}
         handleDescriptionBlur={handleDescriptionBlur}
         handleTrash={handleTrash}
-      />
+      /> */}
 
-      {loading && (
+      {/* {loading && (
         <>
           <div className="bg-primary opacity-[0.5] w-[1289px] h-[664px] absolute top-0 left-0  z-10"></div>
           <p className="absolute top-72 left-[600px] z-40">
             <HashLoader color="#3197e8" />
           </p>
         </>
-      )}
-    </div>
+      )} */}
+    </>
   );
 };

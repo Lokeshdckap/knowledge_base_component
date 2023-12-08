@@ -14,9 +14,9 @@ export default function Header(props) {
     setProfileState((prevState) => !prevState);
   };
   return (
-    <div className="h-[75px] shadow-sm">
+    <div className="bg-[#fbfbff] h-[70px] border-b-[1px] " >
       <div
-        className={`flex items-center justify-between m-auto relative ${props.widths}  pt-4`}
+        className={`flex items-center  m-auto justify-between  relative  xl:max-w-[1100px] lg:max-w-[1000px]  pt-3.5` } 
       >
         <h2> {props.team}'s Team</h2>
         <div>
@@ -25,7 +25,7 @@ export default function Header(props) {
               <input
                 type="search"
                 id="search-dropdown"
-                className="block p-[10px] w-[380px] z-20 text-sm text-gray-900 bg-white rounded-lg focus:outline-primary  placeholder-gray-400 dark:text-white cursor-pointer outline outline-1 "
+                className="block p-[10px] w-[380px] z-20 text-sm text-gray-900 bg-white rounded-lg focus:outline-slate-300  placeholder-gray-400 dark:text-white cursor-pointer border-[1px] "
                 placeholder="Search here"
                 autoComplete="off"
                 required
@@ -37,7 +37,7 @@ export default function Header(props) {
                 type="submit"
                 className="absolute top-0 right-0 p-2 text-sm font-medium h-full text-white bg-primary rounded-r-lg border border-primary  focus:outline-none "
               >
-                <i className="fa-solid fa-magnifying-glass"></i>
+                <i className="fa-solid fa-magnifying-glass "></i>
                 <span className="sr-only">Search</span>
               </button>
             </div>

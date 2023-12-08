@@ -97,8 +97,7 @@ export const ScriptComponents = () => {
         setParticularTitle(res.data.pages.title.split("-")[0]);
         setDescription(res.data.pages.description);
         setEditorValue(res.data.pages.content);
-        setEditorContent(res.data.pages.content)
-
+        setEditorContent(res.data.pages.content);
       })
       .catch((err) => {
         console.log(err);
@@ -145,7 +144,6 @@ export const ScriptComponents = () => {
           setTreeNode(res.data.hierarchy);
           setRenderScript(res.data.getScriptAndPages);
           setPublish(res.data.getScriptAndPages);
-
         }
       })
       .catch((err) => {
@@ -213,7 +211,6 @@ export const ScriptComponents = () => {
       queryParameter: paraId,
       teamParameter: params.uuid,
     };
-
     await axiosClient
       .post("/addScriptTitle", payload)
       .then((res) => {
@@ -272,9 +269,8 @@ export const ScriptComponents = () => {
   };
 
   return (
-    <div className="bg-white h-[85px]">
+    <>
       <EditHeader
-        widths={state ? "w-[1040px]" : "w-[1200px]"}
         clickPublish={handleSave}
         changeEvent={handleChange}
         inputValue={inputValue}
@@ -285,8 +281,6 @@ export const ScriptComponents = () => {
         publish={publish}
       />
       <EditPage
-        widths={state ? "w-[785px]" : "w-[933px]"}
-        marginEditor={state ? "ml-[10px]" : "mr-[115px]"}
         treeNode={treeNode}
         addPage={addPage}
         contentPage={contentPage}
@@ -312,6 +306,47 @@ export const ScriptComponents = () => {
         parentOpen={parentOpen}
         teamUuid={teamUuid}
       />
-    </div>
+    </>
+    // <div className="bg-[#F9FAFB] h-screen w-screen overflow-auto z-[10px]">
+    //   <EditHeader
+    //     widths={state ? "w-[1040px]" : "w-[1200px]"}
+    //     clickPublish={handleSave}
+    //     changeEvent={handleChange}
+    //     inputValue={inputValue}
+    //     setInputValue={setInputValue}
+    //     renderScript={renderScript}
+    //     HandleShare={HandleShare}
+    //     scriptError={scriptError}
+    //     publish={publish}
+    //   />
+    //   <EditPage
+    //     widths={state ? "w-[785px]" : "w-[933px]"}
+    //     marginEditor={state ? "ml-[10px]" : "mr-[115px]"}
+    //     treeNode={treeNode}
+    //     addPage={addPage}
+    //     contentPage={contentPage}
+    //     pageContent={pageContent}
+    //     particularTitle={particularTitle}
+    //     setParticularTitle={setParticularTitle}
+    //     description={description}
+    //     setDescription={setDescription}
+    //     handleScriptMouseEnter={handleScriptMouseEnter}
+    //     handleScriptMouseLeave={handleScriptMouseLeave}
+    //     hoverPageId={hoverPageId}
+    //     handleMore={handleMore}
+    //     handleSave={handleSave}
+    //     shareState={shareState}
+    //     setShareState={setShareState}
+    //     onChange={onChange}
+    //     publish={publish}
+    //     editorValue={editorValue}
+    //     setEditorValue={setEditorValue}
+    //     editorContent={editorContent}
+    //     setEditorContent={setEditorContent}
+    //     renderScript={renderScript}
+    //     parentOpen={parentOpen}
+    //     teamUuid={teamUuid}
+    //   />
+    // </div>
   );
 };

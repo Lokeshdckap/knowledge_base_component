@@ -42,13 +42,13 @@ export const BatchLayouts = (props) => {
   };
 
   return (
-    <div className="pt-5 max-h-[550px]  overflow-y-auto z-0">
-      <div className=" ">
-        <div className={`flex justify-between ${props.widths} m-auto  `}>
+    <div className="max-h-[490px] overflow-auto z-0 bg-white">
+      <div className="xl:max-w-[1080px] lg:max-w-[1000px]  m-auto ">
+        <div className={`flex justify-between `}>
           <div>
             <div>
               <input
-                className="text-[40px] ml-5  mt-8 font-bold focus:outline-none bg-[#ECEDEF] focus:bg-slate-100 h-14"
+                className="text-[40px] ml-5 pl-2 mt-8 font-bold focus:outline-none bg-[#ECEDEF] rounded focus:bg-slate-100 h-14"
                 placeholder="Batch Name"
                 name="title"
                 value={props.batchTitle || ""}
@@ -58,7 +58,7 @@ export const BatchLayouts = (props) => {
             </div>
             <div className="mt-4">
               <input
-                className="text-2xl ml-5 mt-5 focus:outline-none  bg-[#ECEDEF] h-10"
+                className="text-2xl ml-5 mt-5 pl-2 focus:outline-none  bg-[#ECEDEF] h-10 rounded"
                 placeholder="Batch Description"
                 name="descritpion"
                 value={props.batchDescription || ""}
@@ -79,18 +79,15 @@ export const BatchLayouts = (props) => {
         </div>
         <div className="mt-8">
           <hr
-            className={`h-px my-8 bg-[#D5D7DA] border-0 dark:bg-gray-900 ${props.widths} m-auto`}
+            className={`h-px my-8 bg-[#D5D7DA] border-0 dark:bg-gray-900 m-auto`}
           />
         </div>
         <p className="font-semibold text-textPrimary text-xl  pl-6">SCRIPTS</p>
-
-        <div
-          className={`${props.widths} m-auto flex flex-wrap gap-[30px] mt-3`}
-        >
+        <div className={`m-auto grid grid-cols-4  mt-2`}>
           {scripts &&
             scripts.map((script) => (
               <div
-                className="bg-white w-[230px] h-[120px] rounded-[10px] shadow-lg hover:scale-105 relative"
+                className="bg-white w-[230px] h-[120px] rounded-[10px] shadow-lg hover:scale-105 relative mb-[20px]"
                 key={script.id}
               >
                 <div className="bg-gradient-to-r from-primary to-[#226576] w-[230px] h-[36px] rounded-t-lg text-end pt-px">

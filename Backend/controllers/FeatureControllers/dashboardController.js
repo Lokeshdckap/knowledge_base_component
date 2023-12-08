@@ -33,7 +33,6 @@ const getBatchAndScripts = async (req, res) => {
           ],
         },
       ],
-
       order: [["createdAt", "DESC"]],
     });
     const batchData = await Batch.findOne({

@@ -11,30 +11,32 @@ export const EmailVerificationCheck = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-
+    console.log("gjhkl");
     setLoading(true);
     if (params.uuid && params.token) {
+    console.log("checked");
+
       axiosClient
         .get(
           `http://localhost:4000/verify-email/${params.uuid}/${params.token}`
         )
         .then(({ data }) => {
-            console.log(data);
-          if (data.userTeamAvailable) {
-            setAuth({
-              token: data.jwttoken,
-              verify: data.verify,
-              state: true,
-            });
-            setLoading(false);
-          } 
-          else {
-            setAuth({
-              token: data.jwttoken,
-              verify: data.verify,
-            });
-            setLoading(false);
-          }
+          console.log(data);
+          // if (data.userTeamAvailable) {
+          //   setAuth({
+          //     token: data.jwttoken,
+          //     verify: data.verify,
+          //     state: true,
+          //   });
+          //   setLoading(false);
+          // } 
+          // else {
+          //   setAuth({
+          //     token: data.jwttoken,
+          //     verify: data.verify,
+          //   });
+          //   setLoading(false);
+          // }
           setLoading(false);
         })
         .catch((err) => {

@@ -19,7 +19,7 @@ export default function EmailVerification() {
     });
   };
   const resendLink = () => {
-    axiosClient.post("http://localhost:4000/resendVerifyEmail",{"email":userEmail})
+    axiosClient.post("resendVerifyEmail",{"email":userEmail})
     .then(({ data }) => {
       showToastMessage(data);
     })
@@ -29,7 +29,7 @@ export default function EmailVerification() {
       <div className='bg-primary w-screen h-64 absolute'>
 
       </div>
-      <div className='bg-white mt-10 ml-[350px] shadow-2xl rounded w-[600px] h-[550px] absolute '>
+      <div className='bg-white ml-[350px] mt-1 shadow-2xl rounded w-[600px] h-[550px] absolute '>
         <h1 className='text-primary text-center text-lg font-semibold pt-10'>Verify your Email Address</h1>
         <img src={emailverify} alt="" className='h-[350px] w-96 m-auto' />
         <h2 className='w-[350px] m-auto text-textPrimary'> Before proceeding Our Knowledge Base, please check your email for a verification</h2>

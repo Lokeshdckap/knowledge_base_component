@@ -6,18 +6,16 @@ import { MyContextProvider, useMyContext } from "../context/AppContext.jsx";
 
 export default function DefaultLayout() {
   const { auth, setAuth } = useStateContext();
-    
+
   if (!auth) {
     return <Navigate to="/signin" />;
   } else {
     return (
       <MyContextProvider>
-        <div>
-          <div className="relative">
-            <div className="flex bg-[#ECEDEF]">
-              <SideNavLarge />
-              <Outlet />
-            </div>
+        <div className="flex">
+          <SideNavLarge />
+          <div className=""style={{width: "calc(100% - 220px)"}}>
+            <Outlet />
           </div>
         </div>
       </MyContextProvider>

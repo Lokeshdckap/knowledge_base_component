@@ -4,17 +4,18 @@ import { PageTree } from "../commonComponents/PageTree";
 import { PublishPopup } from "../commonComponents/PublishPopup";
 
 export default function EditPage(props) {
-  const {renderScript} = props;
-
+  const { renderScript } = props;
   const [newPagePopup, setNewPagePopup] = useState(false);
   const [OverPage, setOverPage] = useState(null);
   const treeNode = props.treeNode;
+
   useEffect(() => {
     props.setParticularTitle(props.particularTitle);
     props.setDescription(props.description);
   }, [props.particularTitle, props.description, props.editorContent]);
 
   const title = props.particularTitle;
+
   const handleMouseEnter = (e) => {
     let targetId = e.target.id;
     setOverPage(targetId);
@@ -30,8 +31,8 @@ export default function EditPage(props) {
 
   return (
     <div>
-      <div className="mt-5 flex">
-        <div className="bg-[#E4E8EC] w-[278px] h-[560px] overflow-auto">
+      <div className="flex">
+        <div className="bg-[#fbfbfc] w-[278px] h-[524px] overflow-auto border-r-[1px]">
           <div className="space-y-2 ml-4 mt-4">
             <div className="p-4 rounded-lg shadow">
               {treeNode.map((topLevelPage, index) => (
@@ -52,7 +53,6 @@ export default function EditPage(props) {
               ))}
             </div>
           </div>
-   
           <hr
             className={`h-px w-[250px] bg-[#D5D7DA] border-0 m-auto dark:bg-gray-900 mt-4`}
           />
@@ -90,7 +90,9 @@ export default function EditPage(props) {
             </div> */}
           </div>
         </div>
-        <div className={`bg-white h-[560px] ${props.widths} overflow-auto`}>
+        <div className={`bg-[#ffff] max-h-[520px]  overflow-auto`} 
+        style={{width: "calc(100% - 278px)"}}
+        >
           <div>
             <input
               type="text"
@@ -98,9 +100,9 @@ export default function EditPage(props) {
               value={title}
               onChange={(e) => props.setParticularTitle(e.target.value)}
               placeholder="Page Name"
-              readOnly = {
-                props.publish &&
-                  props.publish.is_published ? (true) : (false)}
+              readOnly={
+                props.publish && props.publish.is_published ? true : false
+              }
             />
           </div>
           <div>
@@ -109,14 +111,14 @@ export default function EditPage(props) {
               value={props.description}
               onChange={(e) => props.setDescription(e.target.value)}
               placeholder="Page Description"
-              readOnly = {
-                props.publish &&
-                  props.publish.is_published ? (true) : (false)}
+              readOnly={
+                props.publish && props.publish.is_published ? true : false
+              }
             />
           </div>
 
-          <div className={`pt-5 ${props.marginEditor}`}>
-            {renderScript &&
+          <div className={`pt-5`}>
+            {renderScript && (
               <EditorComponents
                 handleSave={props.handleSave}
                 editorContent={props.editorContent}
@@ -127,7 +129,7 @@ export default function EditPage(props) {
                 publish={props.publish}
                 renderScript={renderScript}
               />
-            }
+            )}
           </div>
         </div>
       </div>

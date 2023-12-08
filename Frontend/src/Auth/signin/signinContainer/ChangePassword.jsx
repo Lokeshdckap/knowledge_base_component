@@ -73,7 +73,7 @@ export default function ChangePassword() {
 
       axiosClient
         .post(
-          `http://localhost:4000/api/auth/resetPassword/${params.uuid}/${params.token}`,
+          `/api/auth/resetPassword/${params.uuid}/${params.token}`,
           newPassword
         )
 

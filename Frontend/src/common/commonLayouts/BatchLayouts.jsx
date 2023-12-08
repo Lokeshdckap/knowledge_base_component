@@ -48,7 +48,7 @@ export const BatchLayouts = (props) => {
           <div>
             <div>
               <input
-                className="text-[40px] ml-5 pl-2 mt-8 font-bold focus:outline-none bg-[#ECEDEF] rounded focus:bg-slate-100 h-14"
+                className="text-[40px] ml-5 pl-2 mt-8 font-bold focus:outline-none  rounded focus:bg-slate-100 h-14"
                 placeholder="Batch Name"
                 name="title"
                 value={props.batchTitle || ""}
@@ -58,7 +58,7 @@ export const BatchLayouts = (props) => {
             </div>
             <div className="mt-4">
               <input
-                className="text-2xl ml-5 mt-5 pl-2 focus:outline-none  bg-[#ECEDEF] h-10 rounded"
+                className="text-2xl ml-5 mt-5 pl-2 focus:outline-none  focus:bg-slate-100 h-10 rounded"
                 placeholder="Batch Description"
                 name="descritpion"
                 value={props.batchDescription || ""}
@@ -82,17 +82,17 @@ export const BatchLayouts = (props) => {
             className={`h-px my-8 bg-[#D5D7DA] border-0 dark:bg-gray-900 m-auto`}
           />
         </div>
-        <p className="font-semibold text-textPrimary text-xl  pl-6">SCRIPTS</p>
+        <p className="font-semibold text-textPrimary text-xl  pl-1">SCRIPTS</p>
         <div className={`m-auto grid grid-cols-4  mt-2`}>
           {scripts &&
             scripts.map((script) => (
               <div
-                className="bg-white w-[230px] h-[120px] rounded-[10px] shadow-lg hover:scale-105 relative mb-[20px]"
+                className="bg-white w-[230px] h-[100px] border-[1px] rounded-[10px]  hover:scale-105 relative mb-[20px]"
                 key={script.id}
               >
-                <div className="bg-gradient-to-r from-primary to-[#226576] w-[230px] h-[36px] rounded-t-lg text-end pt-px">
+                <div className="w-[230px] h-[36px] rounded-t-lg text-end pt-px">
                   <span
-                    className="material-symbols-outlined text-white cursor-pointer text-2xl pr-1"
+                    className="material-symbols-outlined text-primary cursor-pointer text-2xl pr-1"
                     id={script.uuid}
                     onClick={deleteForeverPopup}
                     ref={(ref) => (deleteIconRef.current[script.uuid] = ref)}
@@ -101,7 +101,7 @@ export const BatchLayouts = (props) => {
                   </span>
                 </div>
                 <div
-                  className="pl-5 pt-5 cursor-pointer"
+                  className="px-5 font-medium cursor-pointer"
                   id={script.uuid}
                   onClick={handleScripts}
                 >
@@ -111,7 +111,7 @@ export const BatchLayouts = (props) => {
                   <p
                     id={script.uuid}
                     onClick={handleScripts}
-                    className="text-gray-500"
+                    className="text-gray-500 pt-1"
                   >
                     0 Pages
                   </p>

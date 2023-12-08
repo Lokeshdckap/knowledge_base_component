@@ -50,7 +50,7 @@ export const BatchComponent = () => {
       .then((res) => {
         getScripts();
         getBatch();
-        showToastMessage(res.data.message);
+      
       })
       .catch((err) => {
         console.log(err);
@@ -65,7 +65,7 @@ export const BatchComponent = () => {
     await axiosClient
       .post("/api/batch/addBatchTitleAndDescription", payLoad)
       .then((res) => {
-        showToastMessage(res.data.message);
+
         getScripts();
         getBatch();
       })

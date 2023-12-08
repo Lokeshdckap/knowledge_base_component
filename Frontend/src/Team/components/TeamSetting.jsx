@@ -23,7 +23,7 @@ export const TeamSetting = (props) => {
 
   const team = () => {
     axiosClient
-      .get(`/getTeam/${params.uuid}`)
+      .get(`/api/teams/getTeam/${params.uuid}`)
       .then((res) => {
         setTeamName(res.data.Teams[0].name);
       })

@@ -72,7 +72,7 @@ export default function SignupComponents() {
 
       Cookies.set("userEmail", formValues.email, { expires: 7 });
       axiosClient
-        .post("http://localhost:4000/api/auth/register", formValues)
+        .post("/api/auth/register", formValues)
         .then(({ data }) => {
           console.log(data);
                setAuth({
@@ -149,10 +149,10 @@ export default function SignupComponents() {
             <h2 className="text-textPrimary font-bold text-2xl">
               Welcome to DCKAP Rhino Tome! 👋
             </h2>
-            <h3 className="text-textPrimary">Please sign into your account</h3>
+            <h3 className="text-textPrimary font-medium">Please Sign Into Your Account</h3>
             <form className="space-y-1" onSubmit={handleSumbit}>
               <div>
-                <label className="text-textPrimary text-base	">
+                <label className="text-textPrimary text-base pt-2">
                   Username <span className="text-red-500">*</span>
                 </label>
                 <div className="">
@@ -198,7 +198,7 @@ export default function SignupComponents() {
                     type={PasswordVisible ? "text" : "password"}
                     onChange={HandleChange}
                     value={formValues.password}
-                    className="w-96 h-10 p-2 rounded-lg focus:outline-gray-400"
+                    className="w-96 h-9 mt-1 rounded-sm border-slate-900 p-2 text-sm outline-none outline-gray-200"
                     placeholder="Password"
                     name="password"
                     onPaste={(e) => {
@@ -249,9 +249,9 @@ export default function SignupComponents() {
                     type={ConfirmPasswordVisible ? "text" : "password"}
                     value={formValues.confirmPassword}
                     onChange={HandleChange}
-                    className="w-96 h-10 p-2 rounded-lg focus:outline-gray-400"
+                    className="w-96 h-9 mt-1 rounded-sm border-slate-900 p-2 text-sm outline-none outline-gray-200"
                     name="confirmPassword"
-                    placeholder="Password"
+                    placeholder="Confirm Password"
                     onPaste={(e) => {
                       e.preventDefault();
                       return false;
@@ -289,7 +289,7 @@ export default function SignupComponents() {
                   )}
                 </div>
               </div>
-              <div className="mt-64">
+              <div className="">
                 <Button name="Signup" />
               </div>
             </form>
@@ -306,11 +306,11 @@ export default function SignupComponents() {
                 <img src={googles} className="p-2" />
               </div>
                 <button
-                className="bg-primary w-40 h-10   text-white rounded backdrop-blur-[2px]"
+                className="bg-white w-40 h-10 text-primary rounded backdrop-blur-[2px] border-[1px]"
                 // onClick={google}
               >
               <a href="http://localhost:4000/api/auth/auth/google">
-                Signup with google</a>
+                Signup With Google</a>
               </button>
             </div>
           </div>

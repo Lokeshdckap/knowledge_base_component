@@ -62,7 +62,7 @@ export default function SigninComponents() {
     if (validation()) {
       setLoading(true);
       axiosClient
-        .post("http://localhost:4000/api/auth/login", formValues)
+        .post("/api/auth/login", formValues)
         .then(({ data }) => {
           if (data.verify) {
             setAuth({
@@ -134,7 +134,7 @@ export default function SigninComponents() {
                 type="text"
                 event={HandleChange}
                 value={formValues.email}
-                placeholder="email"
+                placeholder="Email"
               />
             </div>
             {!errors.email ? (

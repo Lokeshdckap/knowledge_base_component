@@ -88,7 +88,7 @@ export default function Main(props) {
             className={`h-px my-8 bg-[#D5D7DA] border-0 dark:bg-gray-900  m-auto`}
           />
         </div>
-        <p className="font-semibold text-textPrimary text-xl pl-6">BATCHS</p>
+        <p className="font-semibold text-textPrimary text-xl pl-1">BATCHS</p>
         <div
           className={` m-auto grid grid-cols-4  mt-2`}
         >
@@ -96,7 +96,7 @@ export default function Main(props) {
             batchList.map((batch, index) => (
               <div
                 key={batch.uuid}
-                className="bg-white w-[230px] h-[90px] border-[1px] rounded-[10px]  hover:scale-105 relative mb-[20px]"
+                className="bg-white w-[230px] h-[100px] border-[1px] rounded-[10px]  hover:scale-105 relative mb-[20px]"
               >
                 <div className="w-[230px]  rounded-t-lg text-end pt-px">
                   <span
@@ -112,7 +112,7 @@ export default function Main(props) {
                 </div>
 
                 <div
-                  className="cursor-pointer "
+                  className="cursor-pointer px-5 font-medium"
                   id={batch.uuid}
                   onClick={handleBatch}
                 >
@@ -123,7 +123,7 @@ export default function Main(props) {
                     <p
                       id={batch.uuid}
                       onClick={handleBatch}
-                      className="text-gray-500"
+                      className="text-gray-500 pt-1"
                     >
                       {scriptCount[index].script_count} Scripts
                     </p>
@@ -160,7 +160,7 @@ export default function Main(props) {
             </div>
           )}
         </div>
-        <p className="font-semibold text-textPrimary text-xl pt-5 pl-6">
+        <p className="font-semibold text-textPrimary text-xl pt-5 pl-1">
           SCRIPTS
         </p>
 
@@ -170,12 +170,12 @@ export default function Main(props) {
           {scriptList && scriptList.length > 0 ? (
             scriptList.map((script) => (
               <div
-                className="bg-white w-[230px] h-[120px] rounded-[10px] shadow-lg hover:scale-105 relative mb-[20px]"
+                className="bg-white w-[230px] h-[100px] border-[1px] rounded-[10px]  hover:scale-105 relative mb-[20px]"
                 key={script.uuid}
               >
-                <div className="bg-gradient-to-r from-primary to-[#226576] w-[230px] h-[36px] rounded-t-lg text-end pt-px ">
+                <div className="w-[230px] h-[36px] rounded-t-lg text-end pt-px ">
                   <span
-                    className="material-symbols-outlined text-white cursor-pointer text-2xl pr-1"
+                    className="material-symbols-outlined text-primary cursor-pointer text-2xl pr-1"
                     onClick={deleteForeverPopup}
                     id={script.uuid}
                     ref={(ref) =>
@@ -186,7 +186,7 @@ export default function Main(props) {
                   </span>
                 </div>
                 <div
-                  className="pl-5 pt-5 cursor-pointer"
+                  className="px-5 font-medium cursor-pointer"
                   id={script.uuid}
                   onClick={handleScripts}
                 >
@@ -196,9 +196,9 @@ export default function Main(props) {
                   <p
                     id={script.uuid}
                     onClick={handleScripts}
-                    className="text-gray-500"
+                    className="text-gray-500 pt-1"
                   >
-                    0 page
+                    0 Pages
                   </p>
                  
                 </div>

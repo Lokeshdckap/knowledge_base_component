@@ -70,6 +70,7 @@ const MyContextProvider = ({ children }) => {
     await axiosClient
       .get(`/api/teams/getAllTeam`)
       .then((res) => {
+        console.log(res);
         setAllTeam(res.data.getAllTeam);
         getTeam();
         userInfo();

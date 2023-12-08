@@ -12,7 +12,6 @@ import ImageTool from "@editorjs/image";
 import axiosClient from "../../axios-client";
 
 export const ViewEditorComponents = (props) => {
-    console.log("eahfsk");
     const [imageUrl, setImageUrl] = useState("");
     const handleUpload = async (file) => {
       const formData = new FormData();
@@ -25,7 +24,7 @@ export const ViewEditorComponents = (props) => {
             headers: {
               "Content-Type": "multipart/form-data",
             },
-          })
+          })  
           .then((res) => {
             setImageUrl(res.data.image.filename);
           });

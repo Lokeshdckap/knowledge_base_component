@@ -23,7 +23,7 @@ export const TeamSetting = (props) => {
 
   const team = () => {
     axiosClient
-      .get(`/getTeam/${params.uuid}`)
+      .get(`/api/teams/getTeam/${params.uuid}`)
       .then((res) => {
         setTeamName(res.data.Teams[0].name);
       })
@@ -88,7 +88,7 @@ export const TeamSetting = (props) => {
 
         {loading && (
           <>
-            <div className="bg-primary opacity-[0.5] w-[1289px] h-[664px] absolute top-0 left-0  z-10"></div>
+            <div className="bg-primary opacity-[0.5] w-screen h-[664px] absolute top-0 left-0  z-10"></div>
             <p className="absolute top-72 left-[600px] z-40">
               <HashLoader color="#3197e8" />
             </p>

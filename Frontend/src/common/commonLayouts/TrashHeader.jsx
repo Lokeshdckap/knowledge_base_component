@@ -5,13 +5,13 @@ export const TrashHeader = (props) => {
 
 
   return (
-    <div className="h-[80px] bg-white shadow-sm">
-      <div className={`w-[1000px] flex justify-between m-auto items-end pt-5 `}>
+    <div className="bg-[#fbfbff] h-[70px] border-b-[1px]">
+      <div className={`flex items-center m-auto justify-between relative xl:max-w-[1100px] lg:max-w-[1000px] pt-3`}>
         <p className="text-xl text-primary">
           <i className="fa-solid fa-trash text-lg pr-[10px]"></i>Trash
         </p>
         <button
-          class="bg-primary hover:bg-textPrimary text-white  py-1.5 px-3 rounded"
+          className="bg-primary hover:bg-textPrimary text-white  py-1.5 px-3 rounded"
           onClick={props.deleteAllPopup}
         >
           Delete All

@@ -79,7 +79,7 @@ export const TeamSideNav = (props) => {
           <i className="fa-solid fa-arrow-left text-white"></i>
           <Link to={`/dashboard/${params.uuid}`}>
             {" "}
-            <p className="text-white">Back to dashboard</p>
+            <p className="text-white">Back to Home</p>
           </Link>
         </div>
       </div>

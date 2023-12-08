@@ -17,7 +17,7 @@ export const EmailVerificationCheck = () => {
     if (params.uuid && params.token) {
       axiosClient
         .get(
-          `http://localhost:4000/api/auth/verify-email/${params.uuid}/${params.token}`
+          `/api/auth/verify-email/${params.uuid}/${params.token}`
         )
         .then(({ data }) => {
           if (data.userTeamAvailable) {

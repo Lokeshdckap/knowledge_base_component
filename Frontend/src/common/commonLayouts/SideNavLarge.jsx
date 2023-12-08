@@ -282,7 +282,7 @@ export default function SideNavLarge(props) {
       <div className="flex items-center pt-6 pl-7 space-x-2 ">
         <div>
           <img
-            src={"https://i.postimg.cc/ydTtqjsF/book-2.png"}
+            src={"https://i.postimg.cc/q7jqHKxQ/book.png"}
             alt=""
             className="h-6 text-textPrimary"
           />
@@ -657,7 +657,7 @@ export default function SideNavLarge(props) {
             } h-8 w-8    rounded-full cursor-pointer `}
           >
             <Link to={`/dashboard/${params.uuid}/t/trash`}>
-              <p className={` text-primary pl-[8px] pt-[3px]  `}>
+              <p className={` text-slate-500 pl-[8px] pt-[3px]  `}>
                 <i
                   className={`fa-solid fa-trash pr-[5px] ${
                     params.slug == "trash" && "text-white"
@@ -691,7 +691,7 @@ export default function SideNavLarge(props) {
           <Link to={`/setting/${params.uuid}/teamsetting`}>
             <div className="bg-white h-8 w-8 rounded-full cursor-pointer  ">
               <p className=" text-primary pl-[7px] pt-[2px]  ">
-                <i className="fa-solid fa-gear text-lg text-primary"></i>
+                <i className="fa-solid fa-gear text-lg text-slate-500"></i>
               </p>
             </div>
           </Link>

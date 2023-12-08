@@ -57,7 +57,7 @@ export const TrashMain = (props) => {
             props.trashData.map((trashScript) => (
               <div
                 key={trashScript.uuid}
-                className={`bg-white w-[230px] h-[120px] relative rounded-[10px] shadow-lg hover:scale-105 ${
+                className={`bg-white w-[230px] h-[100px] border-[1px] rounded-[10px]  hover:scale-105 relative mb-[20px]${
                   props.styleState &&
                   props.styleState.includes(trashScript.uuid) &&
                   "scale-105"
@@ -65,12 +65,12 @@ export const TrashMain = (props) => {
                 id={trashScript.uuid}
               >
                 <div
-                  className="bg-gradient-to-r from-primary to-[#226576] w-[230px] h-[36px] rounded-t-lg flex items-center justify-between  "
+                  className="rounded-t-lg flex items-center justify-between  "
                   id={trashScript.uuid}
                 >
                    <Checkbox onChange={props.handleSelect} id={trashScript.uuid}  className="ml-2"></Checkbox>
                   <span
-                    className="material-symbols-outlined text-white cursor-pointer text-2xl pr-1"
+                    className="material-symbols-outlined text-primary cursor-pointer text-2xl pr-1"
                     onClick={deleteForeverPopup}
                     ref={(ref) =>
                       (deleteIconRef.current[trashScript.uuid] = ref)
@@ -81,13 +81,13 @@ export const TrashMain = (props) => {
                   </span>
                 </div>
                 <div
-                  className="pl-5 pt-5 cursor-pointer"
+                  className="px-5 font-medium cursor-pointer"
                   id={trashScript.uuid}
                 >
                   <p id={trashScript.uuid} >
                     {trashScript.title}
                   </p>
-                  <p className="text-gray-500" id={trashScript.uuid}>
+                  <p className="text-gray-500 pt-1" id={trashScript.uuid}>
                     {trashScript.deleted_at}
                   </p>
                 </div>

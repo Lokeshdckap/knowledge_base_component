@@ -12,10 +12,12 @@ export const Dashboards = () => {
     getAllTeam();
   }, []);
 
-  const getAllTeam = () => {
+  const getAllTeam = () => { 
+    console.log("res");
     axiosClient
       .get(`/api/teams/getAllTeam`)
       .then((res) => {
+       
         console.log(res,"jh");
         if (res.data.getAllTeam.length > 0) {
           navigate(`/dashboard/${res.data.getAllTeam[0].team_uuid}`);

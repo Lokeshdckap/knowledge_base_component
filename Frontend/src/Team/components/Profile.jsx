@@ -209,7 +209,7 @@ export const Profile = (props) => {
               className="bg-primary mt-5 h-12 w-48 text-white rounded text-center"
               onClick={handleUserDetail}
             >
-              update
+              Update
             </button>
           </div>
           {changePasswordPopup && <ChangePassword handlePopup={handlePopup} />}

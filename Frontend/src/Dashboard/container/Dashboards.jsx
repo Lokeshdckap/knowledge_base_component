@@ -16,13 +16,25 @@ export const Dashboards = () => {
     axiosClient
       .get(`/api/teams/getAllTeam`)
       .then((res) => {
+        console.log(res,"jh");
         if (res.data.getAllTeam.length > 0) {
           navigate(`/dashboard/${res.data.getAllTeam[0].team_uuid}`);
         } else {
           navigate("/teampage");
         }
       })
-      .catch((err) => {});
+      .catch((err) => {
+        const response = err.response;
+        console.log(response.status);
+        if (response && response?.status === 401) {
+
+        //   // localStorage.removeItem("ACCESS_TOKEN");
+          navigate("/signin");
+        } 
+        // else {
+        //   console.error("Error:", response?.status);
+        // }
+      });
   };
 
   return (

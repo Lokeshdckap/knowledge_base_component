@@ -35,6 +35,8 @@ const createTeams = async (req, res) => {
         name: team_name,
         uuid: uuid.v4(),
       });
+      
+      
       const usersTeam = await UserTeams.create({
         user_uuid: req.user.id,
         uuid: uuid.v4(),
@@ -70,7 +72,6 @@ const getTeam = async (req, res) => {
     const Teams = await Team.findAll({
       where: { uuid: req.params.uuid },
     });
-
     return res
       .status(200)
       .json({ Teams, msg: "Sucessfully Fetched All Teams" });

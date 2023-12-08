@@ -4,14 +4,14 @@ import { ToastContainer, toast } from "react-toastify";
 // import axiosClient from "../../axios-client";
 // import { useParams } from "react-router-dom";
 
-export default function EditHeader(props) {
+export default function EditHeader(props) { 
   return (
-    <div className="h-[75px] bg-white">
+    <div className="bg-[#fbfbff] h-[70px] border-b-[1px]">
       <div
-        className={`flex items-center justify-between m-auto ${props.widths} pt-3 space-y-2`}
+        className={`flex items-center m-auto justify-between relative xl:max-w-[1100px] lg:max-w-[1000px]  pt-3`}
       >
         <input
-          className="text-primary font-bold text-2xl bg-[#EEEEEE] focus:outline-gray-300 w-80 h-11 pl-2 rounded"
+          className="text-[#444449] font-bold text-2xl bg-[#EEEEEE] focus:outline-gray-300 w-80 h-11 pl-2 rounded"
           value={props.inputValue}
           onChange={(e) => props.changeEvent(e.target.value)}
         />
@@ -20,21 +20,20 @@ export default function EditHeader(props) {
             props.publish.is_published ? (
               <button
               type="button"
-              className="text-white bg-primary hover:bg-primary pb-1  font-medium rounded-lg text-lg h-9 w-24 mr-2 mb-2  focus:outline-none "
+              className="text-white bg-primary hover:bg-primary pb-1 font-medium rounded-lg text-lg h-9 w-24 mr-2 mb-2  focus:outline-none "
             >
               Edit
             </button>
             ):(
               <button
               type="button"
-              className="text-white bg-primary hover:bg-primary pb-1  font-medium rounded-lg text-lg h-9 w-24 mr-2 mb-2  focus:outline-none "
+              className="text-white bg-primary hover:bg-primary pb-1 font-medium text-lg h-9 w-24 mr-2 mb-2 focus:outline-none rounded "
               onClick={props.clickPublish}
             >
               Save
             </button>
             )
           }
-
           <Link to={`dashboard/*`}>
             <button
               type="button"

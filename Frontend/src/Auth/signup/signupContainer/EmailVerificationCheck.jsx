@@ -6,40 +6,38 @@ import { useStateContext } from "../../../context/ContextProvider";
 
 export const EmailVerificationCheck = () => {
   const params = useParams();
-  const navigate = useNavigate()
-  const { auth,setAuth } = useStateContext();
+  const navigate = useNavigate();
+  const { auth, setAuth } = useStateContext();
 
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    console.log("Before axios call");
-  
     setLoading(true);
-  
+
     if (params.uuid && params.token) {
-      console.log("Making axios call with params:", params);
-  
       axiosClient
-        .get(`http://localhost:4000/api/auth/verify-email/${params.uuid}/${params.token}`)
+        .get(
+          `http://localhost:4000/api/auth/verify-email/${params.uuid}/${params.token}`
+        )
         .then(({ data }) => {
-          console.log(data);
           if (data.userTeamAvailable) {
             setAuth({
-              token:auth,
+              token: auth,
               verify: data.verify,
               state: true,
             });
           } else {
             setAuth({
-              token:auth,
+              token: auth,
               verify: data.verify,
             });
           }
+          setLoading(false);
         })
 
         .catch((err) => {
           console.error("Axios error:", err);
-  
+
           const response = err.response;
           if (response && response?.status === 409) {
             navigate("/signin");
@@ -56,7 +54,7 @@ export const EmailVerificationCheck = () => {
       setLoading(false);
     }
   }, [params.uuid, params.token]);
-    
+
   return (
     <div>
       {loading && (

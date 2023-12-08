@@ -157,7 +157,7 @@ export const ScriptEditor = () => {
   };
 
   return (
-    <div className="bg-white h-[85px]">
+    <div className="bg-[#F9FAFB] h-screen w-screen overflow-auto z-[10px]">
       <ViewHeader
         widths={state ? "w-[1040px]" : "w-[1200px]"}
         inputValue={inputValue}

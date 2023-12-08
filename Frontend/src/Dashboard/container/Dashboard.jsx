@@ -24,7 +24,7 @@ export default function Dashboard() {
     addNewScript,
     showToastMessage,
     userInfo,
-    userDetail
+    userDetail,
   } = useMyContext();
 
   //hooks
@@ -32,8 +32,6 @@ export default function Dashboard() {
   //state
   const [state, setState] = useState(true);
   const [loading, setLoading] = useState(false);
-
-
 
   //search states
   const [searchPopup, setsearchPopup] = useState(false);
@@ -68,7 +66,6 @@ export default function Dashboard() {
       });
   };
 
-
   const handleTrash = (e) => {
     let targetId = e.target.id;
 
@@ -91,23 +88,19 @@ export default function Dashboard() {
             console.error("Error:", response.status);
           }
         });
-    } 
+    }
   };
 
   return (
     <>
-      <div className=" h-screen w-screen z-[10px] overflow-auto ">
-        <>
-          <Header
-            widths={state ? "w-[1000px]" : "w-[1160px]"}
-            team={teamName}
-            HandleSearch={HandleSearch}
-            searchInpRef={searchInpRef}
-            userDetail={userDetail}
-          />
-     
-          <Main
-            widths={state ? "w-[1010px]" : "w-[1120px]"}
+      
+        <Header
+          team={teamName}
+          HandleSearch={HandleSearch}
+          searchInpRef={searchInpRef}
+          userDetail={userDetail}
+        />
+        <Main
             team={teamName}
             batches={batch}
             scriptCount={scriptCount}
@@ -116,8 +109,7 @@ export default function Dashboard() {
             scriptEvent={addNewScript}
             handleTrash={handleTrash}
           />
-        </>
-      </div>
+      
       {searchPopup && (
         <Search
           searchEvent={searchEvent}

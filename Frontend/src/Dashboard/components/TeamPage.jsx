@@ -51,7 +51,7 @@ export default function TeamPage() {
   return (
     <div>
       {/* <div className='bg-secondary h-[664px] w-screen '> */}
-      <div className="bg-white h-[550px] w-[550px] mt-12 ml-[360px] drop-shadow-lg rounded">
+      <div className="bg-white h-[500px] w-[550px] mt-12 ml-[390px] drop-shadow-lg rounded">
         <div className="bg-primary h-5 rounded-t-lg"></div>
         <div className="mt-24">
           <div className="w-[0px] m-auto">

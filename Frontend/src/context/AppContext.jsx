@@ -1,12 +1,13 @@
 import React, { createContext, useContext, useState } from "react";
 import axiosClient from "../axios-client";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 
 const AppContext = createContext();
 
 const MyContextProvider = ({ children }) => {
   const params = useParams();
+  const navigate = useNavigate();
 
   const [moveState, setMoveState] = useState(true);
   const [teamName, setTeam] = useState([]);
@@ -70,8 +71,16 @@ const MyContextProvider = ({ children }) => {
       .get(`/api/teams/getAllTeam`)
       .then((res) => {
         setAllTeam(res.data.getAllTeam);
+        getTeam();
+        userInfo();
       })
-      .catch((err) => {});
+      .catch((err) => {
+        const response = err.response;
+        console.log(response.status);
+        if (response && response?.status === 401) {
+          navigate("/signin");
+        }
+      });
   };
 
   const getBatch = async () => {
@@ -280,6 +289,7 @@ const MyContextProvider = ({ children }) => {
     </AppContext.Provider>
   );
 };
+
 const useMyContext = () => {
   return useContext(AppContext);
 };

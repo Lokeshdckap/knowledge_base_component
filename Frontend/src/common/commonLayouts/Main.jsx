@@ -56,9 +56,9 @@ export default function Main(props) {
 
 
   return (
-    <div className="pt-10 h-[584px] overflow-y-auto z-0 bg-white">
-      <div className="   ">
-        <div className={`flex justify-between ${props.widths} m-auto  `}>
+    <div className="pt-10 max-h-[490px] overflow-auto  z-0 bg-white">
+      <div className="xl:max-w-[1080px] lg:max-w-[1000px]  m-auto">
+        <div className={`flex justify-between  `}>
           <div className="flex space-x-3 pt-2">
             <div className="rounded-full h-12 w-12 bg-[#DEE0E4]">
               <i className="fa-solid fa-user-group text-[25px] pl-2 pt-[10px] text-[#6E7E86]"></i>
@@ -70,7 +70,7 @@ export default function Main(props) {
           </div>
           <div className="flex items-center space-x-5">
             <button
-              className="h-[40px] w-[121px] text-primary rounded border-primary  border-[1px] "
+              className="h-[40px] w-[121px] text-slate-500 rounded border-slate-400  border-[1px] "
               onClick={addBatchEvent}
             >
               New Batch
@@ -85,22 +85,22 @@ export default function Main(props) {
         </div>
         <div className="mt-10">
           <hr
-            className={`h-px my-8 bg-[#D5D7DA] border-0 dark:bg-gray-900 ${props.widths} m-auto`}
+            className={`h-px my-8 bg-[#D5D7DA] border-0 dark:bg-gray-900  m-auto`}
           />
         </div>
         <p className="font-semibold text-textPrimary text-xl pl-6">BATCHS</p>
         <div
-          className={`${props.widths} m-auto flex flex-wrap gap-[30px] mt-2`}
+          className={` m-auto grid grid-cols-4  mt-2`}
         >
           {batchList && batchList.length > 0 ? (
             batchList.map((batch, index) => (
               <div
                 key={batch.uuid}
-                className="bg-white w-[230px] h-[120px] rounded-[10px] shadow-lg hover:scale-105 relative"
+                className="bg-white w-[230px] h-[90px] border-[1px] rounded-[10px]  hover:scale-105 relative mb-[20px]"
               >
-                <div className="bg-gradient-to-r from-primary to-[#226576] w-[230px] h-[36px] rounded-t-lg text-end pt-px">
+                <div className="w-[230px]  rounded-t-lg text-end pt-px">
                   <span
-                    className="material-symbols-outlined text-white cursor-pointer text-2xl pr-1"
+                    className="material-symbols-outlined text-primary cursor-pointer text-2xl pr-1 "
                     onClick={deleteForeverPopup}
                     id={batch.uuid}
                     ref={(ref) =>
@@ -112,7 +112,7 @@ export default function Main(props) {
                 </div>
 
                 <div
-                  className="pl-5 pt-5 cursor-pointer "
+                  className="cursor-pointer "
                   id={batch.uuid}
                   onClick={handleBatch}
                 >
@@ -165,12 +165,12 @@ export default function Main(props) {
         </p>
 
         <div
-          className={`${props.widths} m-auto flex flex-wrap gap-[30px] mt-3`}
+          className={` m-auto grid grid-cols-4 mt-3`}
         >
           {scriptList && scriptList.length > 0 ? (
             scriptList.map((script) => (
               <div
-                className="bg-white w-[230px] h-[120px] rounded-[10px] shadow-lg hover:scale-105 relative"
+                className="bg-white w-[230px] h-[120px] rounded-[10px] shadow-lg hover:scale-105 relative mb-[20px]"
                 key={script.uuid}
               >
                 <div className="bg-gradient-to-r from-primary to-[#226576] w-[230px] h-[36px] rounded-t-lg text-end pt-px ">

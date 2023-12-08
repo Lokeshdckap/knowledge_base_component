@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useLocation, useParams } from "react-router-dom";
 import axiosClient from "../../axios-client";
-import { TeamProfile } from "./TeamProfile";
+
 
 export const TeamSideNav = (props) => {
 
@@ -33,7 +33,7 @@ export const TeamSideNav = (props) => {
             {teamName && teamName}
           </p>
         </div>
-        <div className="w-48 m-auto h-[532px] ">
+        <div className="w-48 m-auto  xl:h-[464px] lg:h-[500px]">
           <p className="text-textPrimary font-bold text-lg mt-3 ">
             Team Setting
           </p>

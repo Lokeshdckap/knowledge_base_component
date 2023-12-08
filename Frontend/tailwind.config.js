@@ -5,16 +5,16 @@ module.exports = {
   ],
   theme: {
     extend: {
-      colors:{
-        // primary: '#DEE0E4',
-        primary: '#234E70',
-
-        secondary: '#F2F2F2',
-        textPrimary: "#23313E",
-        // textPrimary: "black",
+      colors: {
+        primary: "#7573FA",
+        textPrimary: "#2d2d35",
       }
     },
+    screens: {
+      'lg': {'min': '1024px', 'max': '1299px'},
+      'xl': {'min': '1300px', 'max': '1440px'},
+    }
   },
-  plugins: [],
+plugins: [],
 }
 

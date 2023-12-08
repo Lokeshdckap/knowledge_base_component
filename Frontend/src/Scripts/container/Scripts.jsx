@@ -6,8 +6,8 @@ export const Scripts = () => {
 
   
   return (
-    <div>
+    <>
         <ScriptComponents />
-    </div>
+    </>
   )
 }

@@ -2,11 +2,13 @@ import React from "react";
 
 export const BatchHeader = (props) => {
   return (
-    <div className="h-[75px] bg-white shadow-sm">
+    <div className="bg-[#fbfbff] h-[70px] border-b-[1px]">
       <div
-        className={`flex justify-between items-center ${props.widths} m-auto pt-[20px]`}
+        className={`flex items-center  m-auto justify-between  relative  xl:max-w-[1100px] lg:max-w-[1000px]  pt-4`}
       >
-        <div className="text-[20px] font-medium text-textPrimary">{props.batchTitle}</div>
+        <div className="text-[22px] font-medium text-textPrimary">
+          {props.batchTitle}
+        </div>
       </div>
     </div>
   );

@@ -1,11 +1,10 @@
 import React from "react";
-import { Link } from "react-router-dom";
 
 export const ViewHeader = (props) => {
   return (
-    <div className="h-[75px] bg-white">
+    <div className="bg-[#fbfbff] h-[70px] border-b-[1px]">
       <div
-        className={`flex items-center justify-between m-auto ${props.widths} pt-3 space-y-2`}
+        className={`flex items-center m-auto justify-between relative xl:max-w-[1100px] lg:max-w-[1000px]  pt-3`}
       >
         <input
           className="text-primary font-bold text-2xl bg-[#EEEEEE] focus:outline-gray-300 w-80 h-11 pl-2 rounded"
@@ -15,7 +14,7 @@ export const ViewHeader = (props) => {
         <div>
           <button
             type="button"
-            className="text-white bg-primary hover:bg-primary pb-1  font-medium rounded-lg text-lg h-9 w-24 mr-2 mb-2  focus:outline-none "
+            className="text-textPrimary border-[1px] border-gray-400 font-medium rounded-lg text-sm h-9 w-24 mr-2 mb-2 "
             onClick={props.handleEdit}
           >
             Edit

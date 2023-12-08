@@ -1,46 +1,40 @@
-
-
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axiosClient from "../../axios-client";
 
 export const InviteUsers = (props) => {
-
   const params = useParams();
 
   const [changeState, setChangeState] = useState("invite");
 
-  const [pendingData,setPendingData] = useState(null);
+  const [pendingData, setPendingData] = useState(null);
   useEffect(() => {
-    if(changeState == "pending")
-    {
-      axiosClient.get(`/api/invites/pendingList/${params.uuid}`)
-      .then((res) => {
-        setPendingData(res.data.pendingData);
-      })
-      .catch((err) => {
-        const response = err.response;
-        if (response && response.status === 400) {
-          console.log(response);
-        } else {
-          console.error("Error:", response.status);
-        }
-      });
+    if (changeState == "pending") {
+      axiosClient
+        .get(`/api/invites/pendingList/${params.uuid}`)
+        .then((res) => {
+          setPendingData(res.data.pendingData);
+        })
+        .catch((err) => {
+          const response = err.response;
+          if (response && response.status === 400) {
+            console.log(response);
+          } else {
+            console.error("Error:", response.status);
+          }
+        });
     }
-  },[changeState])
+  }, [changeState]);
 
-
- const invite  = (e) => {
-  
-  props.setInviteEmail(e.target.value)
-
-  }
+  const invite = (e) => {
+    props.setInviteEmail(e.target.value);
+  };
 
   return (
     <div>
       <div className="bg-primary opacity-[0.5] w-screen h-screen absolute top-0 left-0  z-10"></div>
       <div className=" absolute left-0 top-0 z-20 ">
-        <div className="bg-[#fff] h-[500px] w-[600px] ml-[340px] mt-[60px] rounded-lg -z-10">
+        <div className="bg-[#fff] h-[500px] w-[600px] ml-[365px] mt-[60px] rounded-lg -z-10">
           <div className="">
             <i
               className="fa-solid fa-xmark text-red-500 pt-3 float-right text-2xl cursor-pointer mr-5"
@@ -57,10 +51,20 @@ export const InviteUsers = (props) => {
               </p>
             </div>
             <div className="flex pt-8 space-x-8 items-center">
-              <p className={` ${changeState == "invite" && "text-primary"}  ${changeState == "invite" && "decoration-primary"}  hover:underline underline underline-offset-8 cursor-pointer hover:underline-offset-8 decoration-2 `} onClick={(() => setChangeState("invite"))}>
+              <p
+                className={` ${changeState == "invite" && "text-primary"}  ${
+                  changeState == "invite" && "decoration-primary underline underline-offset-8"
+                }  hover:underline  cursor-pointer hover:underline-offset-8 decoration-2 `}
+                onClick={() => setChangeState("invite")}
+              >
                 Invite
               </p>
-              <p className={` ${changeState == "pending" && "text-primary"} ${changeState == "pending" && "decoration-primary"} hover:underline underline underline-offset-8 cursor-pointer hover:underline-offset-8 decoration-2`} onClick={(() => setChangeState("pending"))}>
+              <p
+                className={` ${changeState == "pending" && "text-primary"} ${
+                  changeState == "pending" && "decoration-primary underline underline-offset-8"
+                } hover:underline cursor-pointer hover:underline-offset-8 decoration-2`}
+                onClick={() => setChangeState("pending")}
+              >
                 Pending
               </p>
             </div>
@@ -78,9 +82,7 @@ export const InviteUsers = (props) => {
                   <select
                     id="countries"
                     className="bg-gray-50 border absolute right-2.5 bottom-2.5 border-gray-300 text-gray-900 text-sm rounded-lg block w-20 p-1.5  "
-                    onChange={((e) => 
-                      props.setRole(e.target.value))}
-                      
+                    onChange={(e) => props.setRole(e.target.value)}
                   >
                     <option>select</option>
                     <option value="1">Admin</option>
@@ -89,9 +91,10 @@ export const InviteUsers = (props) => {
                   </select>
                 </div>
                 {props.inviteError && (
-                  <p className="text-red-500 text-sm pt-1">{props.inviteError}</p>
-                )
-                }
+                  <p className="text-red-500 text-sm pt-1">
+                    {props.inviteError}
+                  </p>
+                )}
                 <button
                   type="button"
                   className="text-white bg-primary font-medium rounded-lg text-sm px-12 py-3 text-center mt-5 ml-[150px] mr-2 mb-2"
@@ -99,7 +102,6 @@ export const InviteUsers = (props) => {
                 >
                   Send Invite
                 </button>
-
               </div>
             ) : (
               <div>
@@ -108,29 +110,24 @@ export const InviteUsers = (props) => {
                   <p className="pr-3 pt-1.5">Action</p>
                 </div>
                 <div className="h-48 overflow-auto  bg-secondary">
-                  {pendingData &&
-                  pendingData.length > 0 ? 
-                  (pendingData.map((data) => (
-
-                     <div className=" flex justify-between mt-3 cursor-pointer ml-1 mr-1 rounded-sm hover:bg-blue-100 p-2 ">
-                     <p className="pl-3">{data.email}</p>
-                     <p className="pr-8">X</p>
-                      </div>)
-                  )
-                  ):(
-                    <div className="  mt-16 text-center">
-                     <p className="text-lg">NO Records Found</p>
-
+                  {pendingData && pendingData.length > 0 ? (
+                    pendingData.map((data) => (
+                      <div className=" flex justify-between mt-3 cursor-pointer ml-1 mr-1 rounded-sm hover:bg-blue-100 p-2 ">
+                        <p className="pl-3">{data.email}</p>
+                        <p className="pr-8">X</p>
                       </div>
-                  )
-                  }
+                    ))
+                  ) : (
+                    <div className="  mt-16 text-center">
+                      <p className="text-lg">NO Records Found</p>
+                    </div>
+                  )}
                 </div>
               </div>
             )}
           </div>
         </div>
       </div>
-      
     </div>
   );
 };

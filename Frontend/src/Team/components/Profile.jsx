@@ -195,6 +195,7 @@ export const Profile = (props) => {
                   value={(userInfos && userInfos.password) || ""}
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded  block w-[500px] pl-2 p-2.5 focus:outline-none mt-2"
                   placeholder="Password"
+                  readOnly
                 />
               </div>
               <button
@@ -217,14 +218,13 @@ export const Profile = (props) => {
       <ToastContainer />
       {loading && (
         <>
-          <div className="bg-primary opacity-[0.5] w-[1289px] h-[664px] absolute top-0 left-0  z-10"></div>
+          <div className="bg-primary opacity-[0.5] w-screen h-[664px] absolute top-0 left-0  z-10"></div>
           <p className="absolute top-72 left-[600px] z-40">
             <HashLoader color="#3197e8" />
           </p>
         </>
       )}
 
-      {console.log(image)}
     </div>
   );
 };

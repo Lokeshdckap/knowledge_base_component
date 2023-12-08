@@ -45,9 +45,6 @@ export const ScriptEditor = () => {
   const [scriptError, setScriptError] = useState(null);
 
   const [loading, setLoading] = useState(false);
-
-  const [state, setState] = useState(true);
-
   const [parentOpen, setParentOpen] = useState(null);
 
   const duration = 2000;
@@ -148,8 +145,7 @@ export const ScriptEditor = () => {
     axiosClient
       .get(`/api/public/scripts/${params.slug}/${false}`)
       .then((res) => {
-        navigate(`/dashboard/${params.uuid}/s/${params.slug}`)
-
+        navigate(`/dashboard/${params.uuid}/s/${params.slug}`);
       })
       .catch((err) => {
         console.log(err);
@@ -157,9 +153,9 @@ export const ScriptEditor = () => {
   };
 
   return (
-    <div className="bg-[#F9FAFB] h-screen w-screen overflow-auto z-[10px]">
+    // <div className="bg-[#F9FAFB] h-screen w-screen overflow-auto z-[10px]">
+    <>
       <ViewHeader
-        widths={state ? "w-[1040px]" : "w-[1200px]"}
         inputValue={inputValue}
         setInputValue={setInputValue}
         renderScript={renderScript}
@@ -169,8 +165,6 @@ export const ScriptEditor = () => {
       />
 
       <ViewPage
-        widths={state ? "w-[785px]" : "w-[933px]"}
-        marginEditor={state ? "ml-[10px]" : "mr-[115px]"}
         treeNode={treeNode}
         contentPage={contentPage}
         pageContent={pageContent}
@@ -189,6 +183,6 @@ export const ScriptEditor = () => {
         parentOpen={parentOpen}
         teamUuid={teamUuid}
       />
-    </div>
+    </>
   );
 };

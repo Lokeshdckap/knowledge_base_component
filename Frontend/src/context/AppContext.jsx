@@ -171,9 +171,11 @@ const MyContextProvider = ({ children }) => {
   };
 
   const getLoadScript = async (team_uuid, batch_uuid) => {
+  
     await axiosClient
       .get(`/api/dashboard/getBatchAndScripts/${team_uuid}/${batch_uuid}`)
       .then((res) => {
+        
         setBatchTitle(res.data.result[0].batch.title);
         setbatchDescription(res.data.result[0].batch.description);
         setScripts(res.data.result);
@@ -183,6 +185,18 @@ const MyContextProvider = ({ children }) => {
         console.log(err);
       });
   };
+
+  const getChildScript =  async (team_uuid, batch_uuid) => {
+    await axiosClient
+    .get(`/api/dashboard/getBatchAndScripts/${team_uuid}/${batch_uuid}`)
+    .then((res) => {
+      setChildScript(res.data.result);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+    
+  }
 
   //Trash
   const handleTrash = (e) => {
@@ -277,6 +291,7 @@ const MyContextProvider = ({ children }) => {
         setTeam,
         allTeam,
         setAllTeam,
+        getChildScript,
         handleAfterAddedChildrenScripts,
         getAllDeletedData,
         trashData,

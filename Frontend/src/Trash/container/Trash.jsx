@@ -30,7 +30,7 @@ export const Trash = () => {
   };
 
   const handleDelete = async () => {
-    console.log(styleState.length > 0);
+
     if (styleState.length > 0) {
       await axiosClient
         .delete(`/api/trash/selectedTrash/${params.uuid}`, {

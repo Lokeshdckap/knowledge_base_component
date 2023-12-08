@@ -30,6 +30,7 @@ export const BatchComponent = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+ 
     getScripts();
   }, [params.slug]);
 
@@ -124,35 +125,8 @@ export const BatchComponent = () => {
         handleDescriptionBlur={handleDescriptionBlur}
         handleTrash={handleTrash}
       />
+      
 
-      {/* // <div className="bg-[#F9FAFB] h-screen w-screen overflow-auto z-[10px]"> */}
-      {/* <BatchHeader
-        widths={state ? "w-[1000px]" : "w-[1160px]"}
-        batchTitle={batchTitle}
-      />
-      <BatchLayouts
-        widths={state ? "w-[1010px]" : "w-[1120px]"}
-        AddScript={addNewScript}
-        scripts={scripts}
-        batchTitle={batchTitle}
-        setBatchTitle={setBatchTitle}
-        batchDescription={batchDescription}
-        setbatchDescription={setbatchDescription}
-        changeEvent={handleTitleAndDescription}
-        batch={batch}
-        handleBlur={handleBatchBlur}
-        handleDescriptionBlur={handleDescriptionBlur}
-        handleTrash={handleTrash}
-      /> */}
-
-      {/* {loading && (
-        <>
-          <div className="bg-primary opacity-[0.5] w-[1289px] h-[664px] absolute top-0 left-0  z-10"></div>
-          <p className="absolute top-72 left-[600px] z-40">
-            <HashLoader color="#3197e8" />
-          </p>
-        </>
-      )} */}
     </>
   );
 };

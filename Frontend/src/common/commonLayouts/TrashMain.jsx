@@ -36,7 +36,7 @@ export const TrashMain = (props) => {
 
   return (
     <div className="mt-3 h-[500px] overflow-auto">
-      <p className="text-2xl  text-textPrimary  ml-6 mb-5 mt-3">
+      <div className="text-2xl  text-textPrimary  ml-6 mb-5 mt-3">
         {props.trashData ? (
           props.trashData.length > 0 ? (
             // Render if there are items in the trash
@@ -49,7 +49,7 @@ export const TrashMain = (props) => {
           // Render if trashData is undefined or null
           <div>Loading or No Data</div>
         )}
-      </p>
+      </div>
 
       <div className="m-auto flex flex-wrap gap-[30px] w-[1020px] ">
         {props.trashData ? (
@@ -63,7 +63,6 @@ export const TrashMain = (props) => {
                   "scale-105"
                 }`}
                 id={trashScript.uuid}
-              
               >
                 <div
                   className="bg-gradient-to-r from-primary to-[#226576] w-[230px] h-[36px] rounded-t-lg flex items-center justify-between  "

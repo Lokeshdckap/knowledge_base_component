@@ -119,14 +119,6 @@ export default function Dashboard() {
         />
       )}
 
-      {loading && (
-        <>
-          <div className="bg-primary opacity-[0.5] w-screen h-screen absolute top-0 left-0  z-10"></div>
-          <p className="absolute top-72 left-[600px] z-40">
-            <HashLoader color="#3197e8" />
-          </p>
-        </>
-      )}
     </>
   );
 }

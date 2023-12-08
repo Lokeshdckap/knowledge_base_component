@@ -44,6 +44,7 @@ export default function SideNavLarge(props) {
     getScripts,
     handleAfterAddedChildrenScripts,
     userInfo,
+    getChildScript,
   } = useMyContext();
 
   //param
@@ -61,6 +62,7 @@ export default function SideNavLarge(props) {
 
   //Script
   const [overScriptState, setOverScriptState] = useState(null);
+  const [childOpen, setChildOpen] = useState(false);
 
   //create Team state
   const [teamPopup, setTeamPopup] = useState(false);
@@ -119,6 +121,8 @@ export default function SideNavLarge(props) {
 
   //Batch Popup
   const addPopUp = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
     let targetId = e.target.id;
     if (popUp) {
       setPopup(null);
@@ -127,11 +131,11 @@ export default function SideNavLarge(props) {
     }
   };
 
-  //Redirect to Batch
-  const redirectToBatch = (e) => {
-    let TargetScriptId = e.target.id;
-    navigate(`/dashboard/${params.uuid}/b/${TargetScriptId}`);
-  };
+  // //Redirect to Batch
+  // const redirectToBatch = (e) => {
+  //   let TargetScriptId = e.target.id;
+  //   navigate(`/dashboard/${params.uuid}/b/${TargetScriptId}`);
+  // };
   //
 
   //Script Hover
@@ -176,6 +180,7 @@ export default function SideNavLarge(props) {
         .then((res) => {
           setTeamPopup(false);
           getAllTeam();
+          showToastMessage(res.data.Success);
         })
         .catch((err) => {
           const response = err.response;
@@ -183,8 +188,6 @@ export default function SideNavLarge(props) {
             let error = {};
             let keys = Object.keys(response.data);
             let value = Object.values(response.data);
-            console.log(value);
-
             error[keys] = value;
 
             setError(error);
@@ -240,7 +243,6 @@ export default function SideNavLarge(props) {
         e.target !== iconRef.current
       ) {
         setteamDropDown(false);
-        console.log("j");
       }
       if (
         AddNewMenu &&
@@ -256,12 +258,25 @@ export default function SideNavLarge(props) {
     };
   }, [teamDropDown, AddNewMenu, props.overStates]);
 
-  const handleChildrenScripts = async (e) => {
-    let batch_uuid = e.target.id;
+  const handleChildrenScriptsState = async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
 
-    getLoadScript(params.uuid, batch_uuid);
+    let batch_uuid = e.target.id;
+    setChildOpen(e.target.id);
+    // getLoadScript(params.uuid, batch_uuid)
+    getChildScript(params.uuid, batch_uuid);
   };
 
+  const  handleChildrenScriptsStateClose = async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+ 
+    setChildOpen(null);
+  };
+
+
+ 
   return (
     <div className="bg-[#efeffa] h-screen border-r-[1px] w-[220px] shadow">
       <div className="flex items-center pt-6 pl-7 space-x-2 ">
@@ -272,13 +287,14 @@ export default function SideNavLarge(props) {
             className="h-6 text-textPrimary"
           />
         </div>
-
         <p className=" text-lg text-textPrimary font-medium">Rhino Tome</p>
       </div>
 
       <div className="">
         <div className="mt-8  flex items-center justify-between w-[200px] m-auto ">
-          <span className="material-symbols-outlined text-textPrimary">group</span>
+          <span className="material-symbols-outlined text-textPrimary">
+            group
+          </span>
           <p className="text-xl font-bold  text-textPrimary  truncate ">
             <Link to={`/dashboard/${params.uuid}`}>{teamName}'s Team</Link>
           </p>
@@ -297,16 +313,16 @@ export default function SideNavLarge(props) {
         </div>
         {teamDropDown && (
           <div
-            className="box-border bg-white  w-52 p-4 border-[1px] rounded-xl shadow-lg absolute left-48 top-28 z-10"
+            className="box-border bg-white  w-52 pt-4 pl-4 pb-4 border-[1px] rounded-xl shadow-lg absolute left-48 top-28 z-10"
             ref={teamRef}
           >
             <div>
               <p className="font-semibold text-textPrimary">Change Team</p>
               {allTeam && (
-                <ul className={`space-y-2 pt-1 max-h-[250px] overflow-auto`}>
-                  {allTeam.map((team) => (
+                <ul className={`space-y-2 pt-2 max-h-[250px] overflow-auto`}>
+                  {allTeam.map((team, index) => (
                     <li
-                      key={team.uuid}
+                      key={index}
                       id={team.team_uuid}
                       onClick={switchTeamEvent}
                       className="text-base cursor-pointer hover:text-purple-400 "
@@ -352,18 +368,105 @@ export default function SideNavLarge(props) {
             </div>
           </div>
         )}
+        {console.log(batch)}
+
         <ul className="mt-5 space-y-1 h-[350px] overflow-auto ">
           {batch.map((batch) => (
-            <div className=""
-            key={batch.uuid}
-            >
-              <li
+            <div>
+              <Link to={`/dashboard/${params.uuid}/b/${batch.uuid}`}>
+                <div
+                  className={`flex items-center  justify-between cursor-pointer hover:bg-[#e0e0e6] pl-6 pt-1 pb-1 pr-6 ${
+                    params.slug == batch.uuid ? "bg-[#e0e0e6]" : ""
+                  }`}
+                  key={batch.uuid}
+                  id={batch.uuid}
+                  onMouseEnter={handleMouseEnter}
+                  onMouseLeave={handleMouseLeave}
+                >
+                  <div className="flex items-center">
+                    {childOpen == batch.uuid ? (
+                    <i
+                      className="fa-solid fa-caret-down text-[#b9b9bd] pr-3"
+                      id={batch.uuid}
+                      onMouseEnter={handleMouseEnter}
+                      onMouseLeave={handleMouseLeave}
+                      onClick={handleChildrenScriptsStateClose}
+                    ></i>
+                  ) : (
+                    <i
+                      className="fa-solid fa-caret-right text-[#b9b9bd] pr-3"
+                      id={batch.uuid}
+                      onMouseEnter={handleMouseEnter}
+                      onMouseLeave={handleMouseLeave}
+                      onClick={handleChildrenScriptsState}
+                    ></i>
+                  )}
+                    <i
+                      className="fa-solid fa-folder text-[#424244] pr-2.5"
+                      id={batch.uuid}
+                      onMouseEnter={handleMouseEnter}
+                      onMouseLeave={handleMouseLeave}
+                      
+                    ></i>
+                    {/* {(overState == batch.uuid) ? (
+                    <i
+                      className="fa-solid fa-angle-down pr-3 "
+                      id={batch.uuid}
+                      onMouseEnter={handleMouseEnter}
+                      onMouseLeave={handleMouseLeave}
+                      onClick={handleChildrenScripts}
+                    ></i>
+                  ) : childScript.length > 0 &&
+                    childScript[0].batch_uuid == batch.uuid ? (
+                    <i
+                      className="fa-solid fa-angle-down pr-3"
+                      id={batch.uuid}
+                      onMouseEnter={handleMouseEnter}
+                      onMouseLeave={handleMouseLeave}
+                      onClick={handleChildrenScripts}
+                    ></i>
+                  ) : (
+                    <i
+                      className="fa-solid fa-folder text-[#424244] pr-2.5"
+                      id={batch.uuid}
+                      onMouseEnter={handleMouseEnter}
+                      onMouseLeave={handleMouseLeave}
+                    ></i>
+                  )} */}
+                    <li
+                      key={batch.uuid}
+                      id={batch.uuid}
+                      className={`text-textPrimary  cursor-pointer  hover:bg-[#e0e0e6]  ${
+                        params.slug == batch.uuid ? "bg-[#e0e0e6]" : ""
+                      }
+                      -z-0 truncate relative`}
+                      onMouseEnter={handleMouseEnter}
+                      onMouseLeave={handleMouseLeave}
+                      // onClick={redirectToBatch}
+                    >
+                      {batch.title.slice(0, 7) +
+                        (batch.title.length > 6 ? ".." : "")}
+                    </li>
+                  </div>
+                  <div>
+                    {overState == batch.uuid && (
+                      <i
+                        className="fa-solid fa-ellipsis-vertical text-textPrimary p-1"
+                        id={batch.uuid}
+                        onClick={addPopUp}
+                      ></i>
+                    )}
+                  </div>
+                </div>
+              </Link>
+           
+              {/* <li
                 key={batch.uuid}
                 id={batch.uuid}
                 className={`text-textPrimary pl-8 cursor-pointer hover:bg-[#e0e0e6] pt-1 pb-1  ${
                   params.slug == batch.uuid ? "bg-[#e0e0e6]" : ""
                 }
-                -z-0 truncate relative `}
+                -z-0 truncate relative`}
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}
               >
@@ -381,7 +484,10 @@ export default function SideNavLarge(props) {
                     onClick={handleChildrenScripts}
                   ></i>
                 ) : (
-                  <i className="fa-solid fa-folder pr-3 text-[#424244]" id={batch.uuid}></i>
+                  <i
+                    className="fa-solid fa-folder pr-3 text-[#424244]"
+                    id={batch.uuid}
+                  ></i>
                 )}
                 <span
                   onClick={redirectToBatch}
@@ -398,7 +504,7 @@ export default function SideNavLarge(props) {
                     onClick={addPopUp}
                   ></i>
                 )}
-              </li>
+              </li> */}
               {popUp == batch.uuid && (
                 <div className="box-border bg-white  w-44 p-4 border-[1px] border-slate-300 rounded-xl shadow-lg absolute left-48 z-50">
                   <div className="w-[130px] m-auto space-y-3">
@@ -425,17 +531,16 @@ export default function SideNavLarge(props) {
                 </div>
               )}
               {childScript &&
+                childOpen &&
                 childScript.map(
                   (child) =>
                     child.batch_uuid == batch.uuid && (
-                      <div className=""
-                      key={child.id}
-                      >
+                      <div className="" key={child.id}>
                         <li
                           key={child.id}
                           id={child.uuid}
                           data-set={child.batch_uuid}
-                          className={`text-textPrimary pl-11 cursor-pointer hover:bg-[#e0e0e6] pt-1 pb-1 truncate ${
+                          className={`text-textPrimary pl-14 cursor-pointer hover:bg-[#e0e0e6] pt-1 pb-1 truncate ${
                             params.slug == child.uuid && "bg-[#e0e0e6]"
                           } `}
                           onMouseEnter={handleScriptMouseEnter}
@@ -488,13 +593,11 @@ export default function SideNavLarge(props) {
             </div>
           ))}
           {script.map((script) => (
-            <div
-            key={script.id}
-            >
+            <div key={script.id}>
               <li
                 key={script.id}
                 id={script.uuid}
-                className={`text-textPrimary pl-8 cursor-pointer hover:bg-[#e0e0e6] pt-1 pb-1 truncate ${
+                className={`text-textPrimary pl-6 cursor-pointer hover:bg-[#e0e0e6] pt-1 pb-1 truncate ${
                   params.slug == script.uuid && "bg-[#e0e0e6]"
                 } `}
                 onMouseEnter={handleScriptMouseEnter}
@@ -505,7 +608,7 @@ export default function SideNavLarge(props) {
                   id={script.uuid}
                   onClick={redirectToScript}
                 ></i>
-                
+
                 <span
                   onClick={redirectToScript}
                   id={script.uuid}
@@ -581,7 +684,7 @@ export default function SideNavLarge(props) {
             )}
           </div>
           {AddNewMenu && (
-            <div className="absolute left-28 bottom-20" ref={AddNewRef}>
+            <div className="absolute left-28 bottom-14 z-10" ref={AddNewRef}>
               <AddNew click={addNewBatch} scriptEvent={addNewScript} />
             </div>
           )}
@@ -594,10 +697,11 @@ export default function SideNavLarge(props) {
           </Link>
         </div>
       </div>
+     
       <ToastContainer />
       {loading && (
         <>
-          <div className="bg-primary opacity-[0.5] w-[1289px] h-[664px] absolute top-0 left-0  z-10"></div>
+          <div className="bg-primary opacity-[0.5] w-screen h-[664px] absolute top-0 left-0  z-10"></div>
           <p className="absolute top-72 left-[600px] z-40">
             <HashLoader color="#3197e8" />
           </p>
@@ -612,7 +716,6 @@ export default function SideNavLarge(props) {
           error={errors}
         />
       )}
-
       {invitePopup && (
         <InviteUsers
           team={teamName}

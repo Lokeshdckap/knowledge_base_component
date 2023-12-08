@@ -74,10 +74,9 @@ export default function SignupComponents() {
       axiosClient
         .post("http://localhost:4000/api/auth/register", formValues)
         .then(({ data }) => {
-          console.log(data);
-               setAuth({
-              token: data.access_token,
-            });
+          setAuth({
+            token: data.access_token,
+          });
           setLoading(false);
           navigate("/emailverify");
         })
@@ -93,7 +92,6 @@ export default function SignupComponents() {
 
             setError(error);
             setLoading(false);
-
           } else {
             console.error("Error:", response?.status);
           }
@@ -125,8 +123,6 @@ export default function SignupComponents() {
   //       console.log(res);
   //     });
   // };
-
-
 
   return (
     <div className="">
@@ -305,22 +301,26 @@ export default function SignupComponents() {
               <div className="bg-white w-10 h-10 ">
                 <img src={googles} className="p-2" />
               </div>
-                <button
+              <button
                 className="bg-primary w-40 h-10   text-white rounded backdrop-blur-[2px]"
                 // onClick={google}
               >
-              <a href="http://localhost:4000/api/auth/auth/google">
-                Signup with google</a>
+                <a href="http://localhost:4000/api/auth/auth/google">
+                  Signup with google
+                </a>
               </button>
             </div>
           </div>
         </div>
       </div>
       {loading && (
-        <p className="absolute top-72 left-[600px]">
-          <HashLoader color="#3197e8" />
-        </p>
-      )}
+          <>
+            <div className="bg-primary opacity-[0.5] w-screen h-[664px] absolute top-0 left-0  z-10"></div>
+            <p className="absolute top-72 left-[600px] z-40">
+              <HashLoader color="#3197e8" />
+            </p>
+          </>
+        )}
     </div>
   );
 }

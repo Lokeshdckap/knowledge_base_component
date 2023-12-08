@@ -46,7 +46,7 @@ export const PublishPopup = (props) => {
 
   return (
     <div>
-      <div className="bg-primary opacity-[0.5] w-[1289px] h-[664px] absolute top-0 left-0  z-10"></div>
+      <div className="bg-primary opacity-[0.5] w-screen h-[664px] absolute top-0 left-0  z-10"></div>
       <div className=" absolute left-0 top-0 z-20">
         <div className="bg-white h-[500px] w-[900px] ml-[200px] mt-[60px] rounded-lg -z-10">
           <div className="flex">

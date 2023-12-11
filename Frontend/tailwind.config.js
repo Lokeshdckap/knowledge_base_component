@@ -6,13 +6,14 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: "#7573FA",
-        textPrimary: "#2d2d35",
+        primary: "#1F72FD",
+        textPrimary: "#241825",
       }
     },
     screens: {
         'lg': {'min': '1024px', 'max': '1299px'},
         'xl': {'min': '1300px', 'max': '1440px'},
+        'md': {'min': '1440px', 'max': '1920px'},
     }
   },
 plugins: [],

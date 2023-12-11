@@ -2,8 +2,6 @@ import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 export default function Main(props) {
-
-
   const deleteIconRef = useRef({});
   const deleteRef = useRef(null);
 
@@ -17,7 +15,6 @@ export default function Main(props) {
   const scriptEvent = props.scriptEvent;
   const addBatchEvent = props.addBatchEvent;
   const scriptCount = props.scriptCount;
-
 
   useEffect(() => {
     const closeOnOutsideClick = (e) => {
@@ -36,7 +33,6 @@ export default function Main(props) {
     return () => {
       window.removeEventListener("click", closeOnOutsideClick);
     };
-
   }, [popUpState]);
 
   const handleBatch = (e) => {
@@ -50,95 +46,87 @@ export default function Main(props) {
 
   const deleteForeverPopup = (e) => {
     setPopUpState(e.target.id);
-  
   };
 
-
-
   return (
-    <div className="pt-10 max-h-[490px] overflow-auto  z-0 bg-white">
-      <div className="xl:max-w-[1080px] lg:max-w-[1000px]  m-auto">
-        <div className={`flex justify-between  `}>
-          <div className="flex space-x-3 pt-2">
-            <div className="rounded-full h-12 w-12 bg-[#DEE0E4]">
-              <i className="fa-solid fa-user-group text-[25px] pl-2 pt-[10px] text-[#6E7E86]"></i>
+    <div className="pt-10 bg-[#F4F7FC]" style={{ height: "calc(100% - 70px)" }}>
+      <div className="xl:max-h-[510px]  lg:max-h-[580px] md:max-h-[1000px] overflow-auto">
+        <div className="xl:max-w-[1080px] lg:max-w-[1000px] md:max-w-[1600px] m-auto">
+          <div className={`flex justify-between  `}>
+            <div className="flex space-x-3 pt-2">
+              <div className="rounded-full h-12 w-12 bg-[#DEE0E4]">
+                <i className="fa-solid fa-user-group text-[25px] pl-2 pt-[10px] text-[#6E7E86]"></i>
+              </div>
+              <div>
+                <h1 className="text-xl font-bold">Team Documents</h1>
+                <h3 className="text-sm">{props.team} 's Teams</h3>
+              </div>
             </div>
-            <div>
-              <h1 className="text-xl font-bold">Team Documents</h1>
-              <h3 className="text-sm">{props.team} 's Teams</h3>
-            </div>
-          </div>
-          <div className="flex items-center space-x-5">
-            <button
-              className="h-[40px] w-[121px] text-slate-500 rounded border-slate-400  border-[1px] "
-              onClick={addBatchEvent}
-            >
-              New Batch
-            </button>
-            <button
-              className="h-[45px] w-[160px] text-white rounded  bg-primary"
-              onClick={scriptEvent}
-            >
-              New Script
-            </button>
-          </div>
-        </div>
-        <div className="mt-10">
-          <hr
-            className={`h-px my-8 bg-[#D5D7DA] border-0 dark:bg-gray-900  m-auto`}
-          />
-        </div>
-        <p className="font-semibold text-textPrimary text-xl pl-1">BATCHS</p>
-        <div
-          className={` m-auto grid grid-cols-4  mt-2`}
-        >
-          {batchList && batchList.length > 0 ? (
-            batchList.map((batch, index) => (
-              <div
-                key={batch.uuid}
-                className="bg-white w-[230px] h-[100px] border-[1px] rounded-[10px]  hover:border-primary relative mb-[20px]"
+            <div className="flex items-center space-x-5">
+              <button
+                className="h-[40px] w-[121px] text-slate-500 rounded border-slate-400  border-[1px] "
+                onClick={addBatchEvent}
               >
-                <div className="w-[230px]  rounded-t-lg text-end pt-px">
-                  <span
-                    className="material-symbols-outlined text-primary cursor-pointer text-2xl pr-1 "
-                    onClick={deleteForeverPopup}
-                    id={batch.uuid}
-                    ref={(ref) =>
-                      (deleteIconRef.current[batch.uuid] = ref)
-                    }
-                  >
-                    more_vert
-                  </span>
-                </div>
-
+                New Batch
+              </button>
+              <button
+                className="h-[45px] w-[160px] text-white rounded  bg-primary"
+                onClick={scriptEvent}
+              >
+                New Script
+              </button>
+            </div>
+          </div>
+          <div className="mt-10">
+            <hr
+              className={`h-px my-8 bg-[#D5D7DA] border-0 dark:bg-gray-900  m-auto`}
+            />
+          </div>
+          <p className="font-semibold text-textPrimary text-xl pl-1">BATCHS</p>
+          <div className={` m-auto grid grid-cols-4 md:grid-cols-6 mt-2`}>
+            {batchList && batchList.length > 0 ? (
+              batchList.map((batch, index) => (
                 <div
-                  className="cursor-pointer px-5 font-medium"
-                  id={batch.uuid}
-                  onClick={handleBatch}
+                  key={batch.uuid}
+                  className="bg-white w-[230px] h-[100px] border-[1px] rounded-[10px]  hover:border-primary relative mb-[20px]"
                 >
-                  <p id={batch.uuid} onClick={handleBatch}>
-                    {batch.title}
-                  </p>
-                  {scriptCount[index] ? (
-                    <p
+                  <div className="w-[230px]  rounded-t-lg text-end pt-px">
+                    <span
+                      className="material-symbols-outlined text-primary cursor-pointer text-2xl pr-1 "
+                      onClick={deleteForeverPopup}
                       id={batch.uuid}
-                      onClick={handleBatch}
-                      className="text-gray-500 pt-1"
+                      ref={(ref) => (deleteIconRef.current[batch.uuid] = ref)}
                     >
-                      {scriptCount[index].script_count} Scripts
+                      more_vert
+                    </span>
+                  </div>
+                  <div
+                    className="cursor-pointer px-5 font-medium"
+                    id={batch.uuid}
+                    onClick={handleBatch}
+                  >
+                    <p id={batch.uuid} onClick={handleBatch}>
+                      {batch.title}
                     </p>
-                  ) : (
-                    <p
-                      id={batch.uuid}
-                      onClick={handleBatch}
-                      className="text-gray-500"
-                    >
-                      0 Scripts
-                    </p>
-                  )}
-            
-                </div>
-                {popUpState == batch.uuid && (
+                    {scriptCount[index] ? (
+                      <p
+                        id={batch.uuid}
+                        onClick={handleBatch}
+                        className="text-gray-500 pt-1"
+                      >
+                        {scriptCount[index].script_count} Scripts
+                      </p>
+                    ) : (
+                      <p
+                        id={batch.uuid}
+                        onClick={handleBatch}
+                        className="text-gray-500"
+                      >
+                        0 Scripts
+                      </p>
+                    )}
+                  </div>
+                  {popUpState == batch.uuid && (
                     <div
                       className="bg-white shadow-lg h-[30px] border-2 border-slate-300 w-20 absolute top-8 z-10 right-[-10px] rounded-lg"
                       ref={deleteRef}
@@ -152,57 +140,52 @@ export default function Main(props) {
                       </p>
                     </div>
                   )}
-              </div>
-            ))
-          ) : (
-            <div className="text-xl text-textPrimary ">
-              No records of Batchs
-            </div>
-          )}
-        </div>
-        <p className="font-semibold text-textPrimary text-xl pt-5 pl-1">
-          SCRIPTS
-        </p>
-
-        <div
-          className={` m-auto grid grid-cols-4 mt-3`}
-        >
-          {scriptList && scriptList.length > 0 ? (
-            scriptList.map((script) => (
-              <div
-                className="bg-white w-[230px] h-[100px] border-[1px] rounded-[10px]  hover:border-primary  relative mb-[20px]"
-                key={script.uuid}
-              >
-                <div className="w-[230px] h-[36px] rounded-t-lg text-end pt-px ">
-                  <span
-                    className="material-symbols-outlined text-primary cursor-pointer text-2xl pr-1"
-                    onClick={deleteForeverPopup}
-                    id={script.uuid}
-                    ref={(ref) =>
-                      (deleteIconRef.current[script.uuid] = ref)
-                    }
-                  >
-                    more_vert
-                  </span>
                 </div>
+              ))
+            ) : (
+              <div className="text-xl text-textPrimary ">
+                No records of Batchs
+              </div>
+            )}
+          </div>
+          <p className="font-semibold text-textPrimary text-xl pt-5 pl-1">
+            SCRIPTS
+          </p>
+
+          <div className={` m-auto grid grid-cols-4 md:grid-cols-6 mt-3`}>
+            {scriptList && scriptList.length > 0 ? (
+              scriptList.map((script) => (
                 <div
-                  className="px-5 font-medium cursor-pointer"
-                  id={script.uuid}
-                  onClick={handleScripts}
+                  className="bg-white w-[230px] h-[100px] border-[1px] rounded-[10px]  hover:border-primary  relative mb-[20px]"
+                  key={script.uuid}
                 >
-                  <p id={script.uuid} onClick={handleScripts}>
-                    {script.title}
-                  </p>
-                  <p
+                  <div className="w-[230px] h-[36px] rounded-t-lg text-end pt-px ">
+                    <span
+                      className="material-symbols-outlined text-primary cursor-pointer text-2xl pr-1"
+                      onClick={deleteForeverPopup}
+                      id={script.uuid}
+                      ref={(ref) => (deleteIconRef.current[script.uuid] = ref)}
+                    >
+                      more_vert
+                    </span>
+                  </div>
+                  <div
+                    className="px-5 font-medium cursor-pointer"
                     id={script.uuid}
                     onClick={handleScripts}
-                    className="text-gray-500 pt-1"
                   >
-                    0 Pages
-                  </p>
-                 
-                </div>
-                {popUpState == script.uuid && (
+                    <p id={script.uuid} onClick={handleScripts}>
+                      {script.title}
+                    </p>
+                    <p
+                      id={script.uuid}
+                      onClick={handleScripts}
+                      className="text-gray-500 pt-1"
+                    >
+                      0 Pages
+                    </p>
+                  </div>
+                  {popUpState == script.uuid && (
                     <div
                       className="bg-white shadow-lg h-[30px] border-2 border-slate-300 w-20 absolute top-9 z-10 right-[-10px] rounded-lg"
                       ref={deleteRef}
@@ -216,15 +199,16 @@ export default function Main(props) {
                       </p>
                     </div>
                   )}
+                </div>
+              ))
+            ) : (
+              <div className="text-xl text-textPrimary ">
+                No records of Scripts
               </div>
-            ))
-          ) : (
-            <div className="text-xl text-textPrimary ">
-              No records of Scripts
-            </div>
-          )}
+            )}
+          </div>
         </div>
-    </div>
+      </div>
     </div>
   );
 }

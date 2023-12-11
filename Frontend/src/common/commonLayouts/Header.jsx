@@ -35,9 +35,9 @@ export default function Header(props) {
   };
 
   return (
-    <div className="bg-[#fbfbff] h-[70px] border-b-[1px] " >
+    <div className="bg-[#ffff] h-[70px] shadow-md " >
       <div
-        className={`flex items-center  m-auto justify-between  relative  xl:max-w-[1100px] lg:max-w-[1000px]  pt-3.5` } 
+        className={`flex items-center  m-auto justify-between  relative md:max-w-[1600px] xl:max-w-[1100px] lg:max-w-[1000px]  pt-3.5` } 
       >
         <h2> {props.team}'s Team</h2>
         <div>
@@ -56,7 +56,7 @@ export default function Header(props) {
               />
               <button
                 type="submit"
-                className="absolute top-0 right-0 p-2 text-sm font-medium h-full text-white bg-primary rounded-r-lg border border-primary  focus:outline-none "
+                className="absolute top-0 right-0 p-2 text-sm font-medium h-full text-white bg-[#99a5b8] rounded-r-lg  focus:outline-none "
               >
                 <i className="fa-solid fa-magnifying-glass "></i>
                 <span className="sr-only">Search</span>

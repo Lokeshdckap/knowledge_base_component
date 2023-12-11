@@ -30,9 +30,9 @@ export default function EditPage(props) {
   };
 
   return (
-    <div>
+    <div className="bg-[#F4F7FC]" style={{ height: "calc(100% - 70px)" }}>
       <div className="flex">
-        <div className="bg-[#fbfbfc] w-[278px] h-[524px] overflow-auto border-r-[1px]">
+        <div className=" w-[278px] xl:max-h-[510px] lg:max-h-[570px] md:max-h-[1000px] overflow-auto border-r-[1px]">
           <div className="space-y-2 ml-4 mt-4">
             <div className="p-4 rounded-lg shadow">
               {treeNode.map((topLevelPage, index) => (
@@ -66,37 +66,16 @@ export default function EditPage(props) {
                 New Page
               </p>
             </div>
-            {/* <div>
-              {newPagePopup && (
-                <div className="box-border bg-white h-28 w-56 p-4 mt-1 border-[1px] m-auto rounded shadow-lg ">
-                  <p
-                    className="text-lg mb-2 pl-2 cursor-pointer"
-                    onClick={props.addPage}
-                  >
-                    <i
-                      className="fa-regular fa-file pr-2 ml-6"
-                      onClick={props.addPage}
-                    ></i>
-                    New Page
-                  </p>
-                  <hr
-                    className={`h-px  bg-[#D5D7DA] border-0 dark:bg-gray-900 `}
-                  />
-                  <p className="text-lg mt-2 pl-2 cursor-pointer">
-                    <i className="fa-regular fa-file pr-2 ml-6"></i>New Group
-                  </p>
-                </div>
-              )}
-            </div> */}
           </div>
         </div>
-        <div className={`bg-[#ffff] max-h-[520px]  overflow-auto`} 
-        style={{width: "calc(100% - 278px)"}}
+        <div className={`bg-[#fbfbfc] xl:max-h-[510px]  lg:max-h-[580px] md:max-h-[1000px] overflow-auto`} 
+            style={{width: "calc(100% - 278px)"}}
         >
+    
           <div>
             <input
               type="text"
-              className="text-2xl ml-[80px] mt-8 focus:outline-none text-textPrimary font-bold"
+              className="text-2xl ml-10 mt-8 focus:outline-none text-textPrimary font-bold"
               value={title}
               onChange={(e) => props.setParticularTitle(e.target.value)}
               placeholder="Page Name"
@@ -107,7 +86,7 @@ export default function EditPage(props) {
           </div>
           <div>
             <input
-              className="text-xl ml-[80px] mt-5 focus:outline-none text-textPrimary "
+              className="text-xl ml-10  mt-5 focus:outline-none text-textPrimary "
               value={props.description}
               onChange={(e) => props.setDescription(e.target.value)}
               placeholder="Page Description"
@@ -117,7 +96,7 @@ export default function EditPage(props) {
             />
           </div>
 
-          <div className={`pt-3`}>
+          <div className={`pt-3 mr-12 md:mr-`}>
             {renderScript && (
               <EditorComponents
                 handleSave={props.handleSave}
@@ -132,6 +111,7 @@ export default function EditPage(props) {
             )}
           </div>
         </div>
+
       </div>
       {props.shareState && (
         <PublishPopup

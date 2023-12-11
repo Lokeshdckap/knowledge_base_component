@@ -31,26 +31,20 @@ const router = createBrowserRouter([
     path: "/setting",
     element: <TeamLayout />,
     children: [
-       {
-        path: ":uuid/teamsetting", 
-        element: <TeamSetting 
-          
-        />  
+      {
+        path: ":uuid/teamsetting",
+        element: <TeamSetting />,
       },
       {
-        path: ":uuid/profile", 
-        element:<Profile  
-      
-        />
+        path: ":uuid/profile",
+        element: <Profile />,
       },
       {
-        path: ":uuid/activeusers", 
-        element:<ActiveUsers 
-       
-        />
+        path: ":uuid/activeusers",
+        element: <ActiveUsers />,
       },
     ],
-  },  
+  },
 
   {
     path: "/",
@@ -110,7 +104,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/teampage",
-        element: <TeamPage />
+        element: <TeamPage />,
       },
     ],
   },
@@ -144,9 +138,9 @@ const router = createBrowserRouter([
         element: <EmailVerificationCheck />,
       },
       {
-        path:'/auth/google',
-        element:<GoogleCallback />
-    }
+        path: "/auth/google",
+        element: <GoogleCallback />,
+      },
       // {
       //   path: "/email-verify/:uuid/:token",
       //   element: <SignupContainer />,

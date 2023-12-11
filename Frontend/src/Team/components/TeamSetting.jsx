@@ -36,7 +36,7 @@ export const TeamSetting = (props) => {
     if (teamName) {
       setLoading(true);
       axiosClient
-        .post("/updateTeamName", {
+        .post("/api/teams/updateTeamName", {
           uuid: params.uuid,
           name: teamName,
         })

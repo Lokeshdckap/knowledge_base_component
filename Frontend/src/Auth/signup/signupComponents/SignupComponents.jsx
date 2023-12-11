@@ -10,6 +10,13 @@ import HashLoader from "react-spinners/HashLoader";
 import Cookies from "js-cookie";
 
 export default function SignupComponents() {
+  const googleAuth = () => {
+    window.open(
+      `http://localhost:4000/api/auth/auth/google/callback`,
+      "_self"
+    );
+	};
+
   const [errors, setError] = useState({});
   const params = useParams();
   const navigate = useNavigate();
@@ -116,13 +123,6 @@ export default function SignupComponents() {
     delete errors[name];
   };
 
-  // const google = async () => {
-  //    await axiosClient
-  //     .get("/auth/google")
-  //     .then((res) => {
-  //       console.log(res);
-  //     });
-  // };
 
   return (
     <div className="">
@@ -145,7 +145,9 @@ export default function SignupComponents() {
             <h2 className="text-textPrimary font-bold text-2xl">
               Welcome to DCKAP Rhino Tome! 👋
             </h2>
-            <h3 className="text-textPrimary font-medium">Please Sign Into Your Account</h3>
+            <h3 className="text-textPrimary font-medium">
+              Please Sign Into Your Account
+            </h3>
             <form className="space-y-1" onSubmit={handleSumbit}>
               <div>
                 <label className="text-textPrimary text-base pt-2">
@@ -302,12 +304,12 @@ export default function SignupComponents() {
                 <img src={googles} className="p-2" />
               </div>
 
-                <button
+              <button onClick={googleAuth}
                 className="bg-white w-40 h-10 text-primary rounded backdrop-blur-[2px] border-[1px]"
                 // onClick={google}
               >
-              <a href="http://localhost:4000/api/auth/auth/google">
-                Signup With Google</a>
+
+                  Signup With Google
 
               </button>
             </div>
@@ -315,13 +317,13 @@ export default function SignupComponents() {
         </div>
       </div>
       {loading && (
-          <>
-            <div className="bg-primary opacity-[0.5] w-screen h-[664px] absolute top-0 left-0  z-10"></div>
-            <p className="absolute top-72 left-[600px] z-40">
-              <HashLoader color="#3197e8" />
-            </p>
-          </>
-        )}
+        <>
+          <div className="bg-primary opacity-[0.5] w-screen h-[664px] absolute top-0 left-0  z-10"></div>
+          <p className="absolute top-72 left-[600px] z-40">
+            <HashLoader color="#3197e8" />
+          </p>
+        </>
+      )}
     </div>
   );
 }

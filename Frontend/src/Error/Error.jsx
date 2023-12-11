@@ -6,7 +6,7 @@ export default function Error() {
     <div className="text-center mt-60">
       <div className="text-3xl">404 Not Found</div>
       <div className="mt-5">
-        <p>Please Republish the Content </p>
+        <p>This site has been changed Please contact the site owner</p>
         {/* <Link to={`/dashboard`}>
           <button
             type="button"

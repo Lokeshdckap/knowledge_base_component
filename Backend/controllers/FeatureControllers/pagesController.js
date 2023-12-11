@@ -116,9 +116,10 @@ const addChildPage = async (req, res) => {
 };
 
 const updatePageData = async (req, res) => {
-  console.log("lokkkkk");
   try {
+
     let paths;
+
     const page = await Page.findOne({
       where: {
         uuid: req.body.id,
@@ -161,7 +162,6 @@ const updatePageData = async (req, res) => {
         existingTitles.push(allPage.title.split("-")[1]);
       }
     }
-    console.log(existingTitles,"lokkkk");
 
     let newTitle;
 
@@ -172,7 +172,10 @@ const updatePageData = async (req, res) => {
 
     if (req.body.title != page.title) {
       newTitle = `${req.body.title}-${randomNumber}`;
-    } 
+    }
+    else if(req.body.title == "Page Name"){
+      newTitle = `${req.body.title}-${randomNumber}`;
+    }
 
     titles = newTitle ? newTitle : req.body.title;
 

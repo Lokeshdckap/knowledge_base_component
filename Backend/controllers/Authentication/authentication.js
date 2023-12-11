@@ -99,7 +99,8 @@ const login = async (req, res) => {
     });
 
     //if user email is found, compare password with bcrypt
-    if (user) {
+    if (user && user.password) {
+      
       const isSame = await bcrypt.compare(password, user.password);
       //if password is the same
       //generate token with the user's id and the secretKey in the env file
@@ -260,6 +261,7 @@ const resendEmailLink = async (req, res) => {
     return res.status(500).send("Error in resend link send to user");
   }
 };
+
 
 module.exports = {
   register,

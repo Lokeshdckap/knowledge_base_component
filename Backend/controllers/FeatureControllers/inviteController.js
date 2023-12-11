@@ -1,6 +1,5 @@
 const db = require("../../utils/database");
 const { Op, where } = require("sequelize");
-const { sequelize, col } = require("../../utils/database");
 const Invite = db.invites;
 const User = db.users;
 const UserTeams = db.user_team_members;
@@ -36,39 +35,50 @@ const inviteTeams = async (req, res) => {
 
     if (exitsInviteUsers) {
       return res.status(400).json(`${email} this email already sended invite`);
-    } else {
-      await Invite.create({
-        email: email,
-        is_progess: is_progress,
-        uuid: uuid.v4(),
-        team_uuid: team_uuid,
-      });
-      const exitsUsers = await User.findOne({
-        where: { email: email },
-      });
+    } 
+    
+    else {
+         // Create the invite in the database
+    const invite = await Invite.create({
+      email: email,
+      is_progess: is_progress,
+      uuid: uuid.v4(),
+      team_uuid: team_uuid,
+    });
 
-      let userId = exitsUsers ? exitsUsers.uuid : null;
+    // Find the user in the database
+    const existingUser = await User.findOne({
+      where: { email: email },
+    });
 
-      let payload = { id: userId, team_uuid: team_uuid, role: role };
+    // Get the user's ID or set it to null if the user doesn't exist
+    const userId = existingUser ? existingUser.uuid : null;
 
-      let inviteToken = jwt.sign(payload, process.env.secretKey, {
-        expiresIn: 1 * 24 * 60 * 60 * 1000,
-      });
+    // Create a payload for the JWT token
+    const payload = { id: userId, team_uuid: team_uuid, role: role };
 
-      let link = `http://localhost:3000/join/${inviteToken}`;
+    // Sign the JWT token
+    const inviteToken = jwt.sign(payload, process.env.secretKey, {
+      expiresIn: 1 * 24 * 60 * 60 * 1000,
+    });
 
-      const emailTemplate = fs.readFileSync(
-        path.join(__dirname, "../../", "public", "emailTemplates/invite.html"),
-        "utf8"
-      );
+    // Construct the invitation link
+    const link = `http://localhost:3000/join/${inviteToken}`;
 
-      const emailink = emailTemplate.replace("{{link}}", link);
+    // Read the email template
+    const emailTemplate = fs.readFileSync(
+      path.join(__dirname, '../../', 'public','emailTemplates/invite.html'),
+      'utf8'
+    );
 
-      await sendEmail(email, "Invite Notification", emailink);
+    // Replace the placeholder in the email template with the actual link
+    const emailContent = emailTemplate.replace('{{link}}', link);
 
-      return res
-        .status(200)
-        .json(`Invite Sended Sucucessfully to this ${email}`);
+    // Send the email
+    await sendEmail(email, 'Invite Notification', emailContent);
+
+    // Return a success response
+    return res.status(200).json(`Invite Sent Successfully to ${email}`)
     }
   } catch (error) {
     console.log(error,"errp");

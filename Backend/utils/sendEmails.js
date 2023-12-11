@@ -10,13 +10,13 @@ const sendEmail = async (email, subject, html) => {
       port: 465,
       secure: true,
       auth: {
-        user: "dckapjournal@gmail.com",
-        pass: "okrcsfogyorqnjqo",
+        user: "lokeshcdckap@gmail.com",
+        pass: "dudnxkzqtjqswagk",
       },
     });
 
     await transporter.sendMail({
-      from: "dckapjournal@gmail.com",
+      from: "lokeshcdckap@gmail.com",
       to: email,
       subject: subject,
       html: html,

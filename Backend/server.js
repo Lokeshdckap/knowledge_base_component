@@ -4,11 +4,11 @@ const cors = require("cors");
 
 const app = express();
 
+app.use(cors({ credentials: true }))
+
+
 require("dotenv").config();
 
-const bodyParser = require("body-parser");
-
-const PORT = process.env.PORT || 3000;
 
 const passport = require("passport");
 
@@ -22,26 +22,21 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // Middlewares
+
+app.use(cors({
+  origin:"http://localhost:3000",
+  methods:"GET,POST,PUT,DELETE",
+  credentials:true,
+}))
+
+
 const path = require("path");
 
 app.use(express.json());
 
 app.use(express.urlencoded({ extended: true }));
 
-const whitelist = ['http://localhost:3000', 'http://127.0.0.1:3001']; // Add your allowed origins
-const corsOptions = {
-  origin: (origin, callback) => {
-    if (whitelist.indexOf(origin) !== -1 || !origin) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  optionsSuccessStatus: 204, // Some legacy browsers (IE11, various SmartTVs) choke on 204
-  credentials: true, // enable set cookie
-};
 
-app.use(cors(corsOptions));
 
 
 // Routes for user API
@@ -84,6 +79,7 @@ app.use("/uploads", express.static("uploads"));
 
 
 
+const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () =>
   console.log(`Serpassportver running server on port ${PORT}`)

@@ -81,7 +81,7 @@ export const TeamSetting = (props) => {
             className="bg-primary mt-5 h-12 w-48 text-white rounded text-center"
             onClick={handleUpdate}
           >
-            update
+            Update
           </button>
         </div>
         <ToastContainer />

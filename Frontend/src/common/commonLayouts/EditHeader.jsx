@@ -5,9 +5,9 @@ import React, { useEffect } from "react";
 
 export default function EditHeader(props) { 
   return (
-  <div className="bg-[#fbfbff] h-[70px] border-b-[1px]">
+  <div className="bg-[#ffff] h-[70px] border-b-[1px]">
       <div
-        className={`flex items-center m-auto justify-between relative xl:max-w-[1100px] lg:max-w-[1000px]  pt-3`}
+        className={`flex items-center m-auto justify-between relative xl:max-w-[1100px] md:max-w-[1600px] lg:max-w-[1000px]  pt-3`}
       >
         <input
           className="text-[#444449] font-bold text-2xl bg-[#EEEEEE] focus:outline-gray-300 w-80 h-11 pl-2 rounded"

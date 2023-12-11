@@ -182,6 +182,7 @@ const uploadImage = async (req, res) => {
       const image = await Image.create({
         filename: path,
         uuid: uuid.v4(),
+        page_uuid:page_uuid
       });
 
       return res
@@ -216,22 +217,6 @@ const globalSearch = async (req, res) => {
           [Op.and]: [whereClause, { team_uuid: team_uuid }],
         },
       });
-
-    //   let array = []
-
-    //   for(let script of scripts){
-    //      array.push(script.uuid)
-    //   }
-    //   const pages = await Page.findAll({
-    //     // where: whereClause,
-    //     where: {
-    //       script_uuid:array
-    //     },
-        
-    //   });
-    //   for(let page of pages){
-    //     scripts.push(page)
-    //  }
       return res.status(200).json(scripts);
     } catch (error) {
       console.error(error);
@@ -283,7 +268,7 @@ const pageSearch = async (req, res) => {
 const fetchImage = async (req, res) => {
   try {
     const image = await Image.findOne({
-      where: { uuid: "43943438-3b6c-4c26-820e-d0ca3810244a" },
+      where: { uuid: "f87ab704-648e-40b4-93b2-40e103ba30cb" },
     });
 
     return res

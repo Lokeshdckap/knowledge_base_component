@@ -9,9 +9,7 @@ export const Search = (props) => {
 
   const handleScriptGo = (e) => {
     navigate(e.target.id);
-    props.setsearchPopup(false);
-    // props.setSearchPageData(null);
-    
+    props.setsearchPopup(false);    
   };
 
   useEffect(() => {
@@ -31,7 +29,7 @@ export const Search = (props) => {
   }, []);
   return (
     <div>
-      <div className="bg-primary opacity-[0.5] w-screen  h-screen absolute top-0 left-0  z-10"></div>
+      <div className="bg-[#a3a2e9] opacity-[0.5] w-screen  h-screen absolute top-0 left-0  z-10"></div>
       <div className=" absolute left-0 top-0 z-20 ">
         <div
           className="bg-[#fff] max-h-[600px] w-[600px] ml-[380px] mt-[60px] rounded-lg -z-10"
@@ -90,7 +88,7 @@ export const Search = (props) => {
                     id={`/${params.uuid}${search.path}`}
                     className="text-textPrimary"
                   >
-                    {search.title}
+                    {search.title.split("-")[0]}
                   </p>
                   <p
                     id={`/${params.uuid}${search.path}`}

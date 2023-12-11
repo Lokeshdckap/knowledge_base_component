@@ -1,7 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { EditorComponents } from "../commonComponents/EditorComponents";
 import { PageTree } from "../commonComponents/PageTree";
-import { PublishPopup } from "../commonComponents/PublishPopup";
 import { ViewEditorComponents } from "../commonComponents/ViewEditorComponents";
 
 export const ViewPage = (props) => {
@@ -10,24 +8,13 @@ export const ViewPage = (props) => {
   const [newPagePopup, setNewPagePopup] = useState(false);
   const [OverPage, setOverPage] = useState(null);
   const treeNode = props.treeNode;
+
   useEffect(() => {
     props.setParticularTitle(props.particularTitle);
     props.setDescription(props.description);
   }, [props.particularTitle, props.description, props.editorContent]);
 
   const title = props.particularTitle;
-  const handleMouseEnter = (e) => {
-    let targetId = e.target.id;
-    setOverPage(targetId);
-  };
-
-  const handleMouseLeave = () => {
-    setOverPage(null);
-  };
-
-  const handlePopupPage = () => {
-    setNewPagePopup((prevState) => !prevState);
-  };
 
   return (
     <div>

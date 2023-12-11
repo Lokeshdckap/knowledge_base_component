@@ -1,18 +1,39 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Main from "./Main";
 import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 
 export default function Header(props) {
   const params = useParams();
+  const profileRef = useRef(null);
+
+  const profileIconRef = useRef(null);
+
   const [profileState, setProfileState] = useState(false);
   const onLogout = () => {
     localStorage.removeItem("ACCESS_TOKEN");
     window.location.href = "/signin";
   };
 
+  useEffect(() => {
+    const closeOnOutsideClick = (e) => {
+      if (
+        profileState &&
+        e.target !== profileIconRef.current
+      ) {
+        setProfileState(false);
+      }
+    };
+
+    window.addEventListener("click", closeOnOutsideClick);
+    return () => {
+      window.removeEventListener("click", closeOnOutsideClick);
+    };
+  }, [profileState]);
+
   const handleProfile = () => {
     setProfileState((prevState) => !prevState);
   };
+
   return (
     <div className="bg-[#fbfbff] h-[70px] border-b-[1px] " >
       <div
@@ -43,19 +64,26 @@ export default function Header(props) {
             </div>
           </div>
         </div>
-        <div className=" cursor-pointer p-1" onClick={handleProfile}>
+        <div className=" cursor-pointer p-1" onClick={handleProfile}
+       
+        >
           {props.userDetail?.avatar ? (
             <img
               src={props.userDetail?.avatar}
               className="w-10 h-10 rounded-full"
               alt=""
+              ref={profileIconRef}
             />
           ) : (
-            <i className="fa-regular text-slate-600 fa-circle-user text-2xl cursor-pointer pr-3"></i>
+            <i className="fa-regular text-slate-600 fa-circle-user text-2xl cursor-pointer pr-3"
+            ref={profileIconRef}
+            ></i>
           )}
         </div>
         {profileState && (
-          <div className="bg-white h-[81px] w-28 absolute top-14 border-[1px] right-[-20px] shadow-md rounded-lg">
+          <div className="bg-white h-[81px] w-28 absolute top-14 border-[1px] right-[-20px] shadow-md rounded-lg"
+          ref={profileRef}
+          >
             <Link to={`/setting/${params.uuid}/profile`}>
               {" "}
               <p className="text-lg pl-3 pt-2 text-textPrimary cursor-pointer ">

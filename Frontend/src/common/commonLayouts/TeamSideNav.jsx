@@ -75,7 +75,7 @@ export const TeamSideNav = (props) => {
           </div>
         </div>
 
-        <div className="bg-primary h-16 p-5  flex items-center space-x-2">
+        <div className="bg-primary h-16 p-6 flex items-center space-x-2">
           <i className="fa-solid fa-arrow-left text-white"></i>
           <Link to={`/dashboard/${params.uuid}`}>
             {" "}

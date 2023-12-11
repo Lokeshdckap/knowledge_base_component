@@ -4,7 +4,7 @@ import { PopupButton } from "./PopupButton";
 export const DeleteConfirmation = (props) => {
   return (
     <div>
-      <div className="bg-primary opacity-[0.5] w-screen h-screen absolute top-0 left-0  z-10"></div>
+      <div className="bg-[#a3a2e9] opacity-[0.5] w-screen h-screen absolute top-0 left-0  z-10"></div>
       <div className=" absolute left-0 top-0 z-20">
         <div className="bg-white h-[290px] w-[600px] ml-[350px] mt-[140px] rounded -z-10">
           <div className="" onClick={props.deleteAllPopup}>

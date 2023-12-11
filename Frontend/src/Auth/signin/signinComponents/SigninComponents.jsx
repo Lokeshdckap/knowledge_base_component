@@ -139,11 +139,11 @@ export default function SigninComponents() {
             </div>
             {!errors.email ? (
               <div>
-                <p className="invisible">Required</p>
+                <p className="invisible mt-1">Required</p>
               </div>
             ) : (
               <div>
-                <p className="text-red-500">{errors.email}</p>
+                <p className="text-red-500 mt-1">{errors.email}</p>
               </div>
             )}
           </div>
@@ -178,7 +178,7 @@ export default function SigninComponents() {
                   </span>
                 )}
 
-                <div className="mt-0 flex items-center justify-between ">
+                <div className="mt-1 flex items-center justify-between ">
                   {!errors.password ? (
                     <div>
                       <p className="invisible">Required</p>
@@ -215,7 +215,7 @@ export default function SigninComponents() {
         </div>
         {loading && (
           <>
-            <div className="bg-primary opacity-[0.5] w-screen h-[664px] absolute top-0 left-0  z-10"></div>
+            <div className="bg-[#a3a2e9] opacity-[0.5] w-screen h-screen absolute top-0 left-0  z-10"></div>
             <p className="absolute top-72 left-[600px] z-40">
               <HashLoader color="#3197e8" />
             </p>

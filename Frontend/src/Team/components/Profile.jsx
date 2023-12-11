@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { ChangePassword } from "../../common/commonComponents/ChangePassword";
 import { useParams } from "react-router-dom";
 import axiosClient from "../../axios-client";
@@ -17,6 +17,7 @@ export const Profile = (props) => {
 
   const [image, setImage] = useState(null);
 
+
   const handlePopup = () => {
     setChangePasswordPopup((prevState) => !prevState);
   };
@@ -24,6 +25,7 @@ export const Profile = (props) => {
   useEffect(() => {
     userInfo();
   }, [params]);
+
 
   let duration = 2000;
   const showToastMessage = (data) => {
@@ -218,7 +220,7 @@ export const Profile = (props) => {
       <ToastContainer />
       {loading && (
         <>
-          <div className="bg-primary opacity-[0.5] w-screen h-[664px] absolute top-0 left-0  z-10"></div>
+          <div className="bg-[#a3a2e9] opacity-[0.5] w-screen h-screen absolute top-0 left-0  z-10"></div>
           <p className="absolute top-72 left-[600px] z-40">
             <HashLoader color="#3197e8" />
           </p>

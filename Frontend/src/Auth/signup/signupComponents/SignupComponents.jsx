@@ -46,6 +46,7 @@ export default function SignupComponents() {
   const handleSumbit = (e) => {
     e.preventDefault();
     const validationErrors = {};
+    let passwordRegex = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
 
     if (!formValues.username.trim()) {
       validationErrors.username = "username is required";
@@ -61,7 +62,9 @@ export default function SignupComponents() {
     }
 
     if (!formValues.password.trim()) {
-      validationErrors.password = "password is required";
+      validationErrors.password = "Password is required";
+    } else if (!passwordRegex.test(formValues.password)) {
+      validationErrors.password = "Password is not valid";
     }
     if (!formValues.confirmPassword.trim()) {
       validationErrors.confirmPassword = "confirmPassword is required";
@@ -72,7 +75,6 @@ export default function SignupComponents() {
 
     setError(validationErrors);
 
-    // setLoading(false)
 
     if (Object.keys(validationErrors).length === 0) {
       setLoading(true);
@@ -123,7 +125,6 @@ export default function SignupComponents() {
     delete errors[name];
   };
 
-
   return (
     <div className="">
       <div className="flex ">
@@ -141,7 +142,7 @@ export default function SignupComponents() {
           />
         </div>
         <div className="bg-secondary w-1/2 h-screen">
-          <div className=" ml-[140px]  mt-[25px] space-y-1">
+          <div className=" ml-[140px]  mt-[2px] space-y-1">
             <h2 className="text-textPrimary font-bold text-2xl">
               Welcome to DCKAP Rhino Tome! 👋
             </h2>
@@ -229,11 +230,11 @@ export default function SignupComponents() {
                 <div className="mt-10 f ">
                   {!errors.password ? (
                     <div>
-                      <p className="invisible">Required</p>
+                      <p className="invisible p-1">Required</p>
                     </div>
                   ) : (
                     <div>
-                      <p className="text-red-500">{errors.password}</p>
+                      <p className="text-red-500 p-1">{errors.password}</p>
                     </div>
                   )}
                 </div>
@@ -303,14 +304,10 @@ export default function SignupComponents() {
               <div className="bg-white w-10 h-10 ">
                 <img src={googles} className="p-2" />
               </div>
-
               <button onClick={googleAuth}
                 className="bg-white w-40 h-10 text-primary rounded backdrop-blur-[2px] border-[1px]"
-                // onClick={google}
               >
-
                   Signup With Google
-
               </button>
             </div>
           </div>
@@ -318,7 +315,7 @@ export default function SignupComponents() {
       </div>
       {loading && (
         <>
-          <div className="bg-primary opacity-[0.5] w-screen h-[664px] absolute top-0 left-0  z-10"></div>
+          <div className="bg-[#a3a2e9] opacity-[0.5] w-screen h-screen absolute top-0 left-0  z-10"></div>
           <p className="absolute top-72 left-[600px] z-40">
             <HashLoader color="#3197e8" />
           </p>

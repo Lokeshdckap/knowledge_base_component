@@ -3,7 +3,6 @@ import EditorJS from "@editorjs/editorjs";
 import List from "@editorjs/list";
 import Table from "@editorjs/table";
 import Header from '@editorjs/header';
-// import InlineCode from "@editorjs/inline-code";
 import Underline from "@editorjs/underline";
 import Marker from "@editorjs/marker";
 import Quote from "@editorjs/quote";
@@ -13,10 +12,7 @@ import axiosClient from "../../axios-client";
 
 export const EditorComponents = (props) => {
   const [imageUrl, setImageUrl] = useState("");
-  // editorContent={props.editorContent}
-  // setEditorContent={props.setEditorContent}
-  // editorValue={props.editorValue}
-  // setEditorValue={props.setEditorValue}
+
   const handleUpload = async (file) => {
     const formData = new FormData();
 

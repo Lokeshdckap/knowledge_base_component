@@ -32,7 +32,7 @@ export const InviteUsers = (props) => {
 
   return (
     <div>
-      <div className="bg-primary opacity-[0.5] w-screen h-screen absolute top-0 left-0  z-10"></div>
+      <div className="bg-[#a3a2e9] opacity-[0.5] w-screen h-screen absolute top-0 left-0  z-10"></div>
       <div className=" absolute left-0 top-0 z-20 ">
         <div className="bg-[#fff] h-[500px] w-[600px] ml-[365px] mt-[60px] rounded-lg -z-10">
           <div className="">

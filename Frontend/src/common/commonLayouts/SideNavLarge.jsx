@@ -14,21 +14,13 @@ export default function SideNavLarge(props) {
   const navigate = useNavigate();
 
   const {
-    moveState,
     handleTrash,
-    handleMove,
-    getTeam,
     getAllTeam,
     teamName,
-    setTeam,
     allTeam,
-    setAllTeam,
     batch,
-    getBatch,
-    getScript,
     script,
     setOverState,
-    setChildScript,
     overState,
     childScript,
     addNewBatch,
@@ -40,11 +32,6 @@ export default function SideNavLarge(props) {
     popUp,
     showToastMessage,
     addNewScript,
-    getLoadScript,
-    getScripts,
-    handleAfterAddedChildrenScripts,
-    userInfo,
-    getChildScript,
   } = useMyContext();
 
   //param
@@ -57,6 +44,8 @@ export default function SideNavLarge(props) {
   const AddIconRef = useRef(null);
   const AddNewRef = useRef(null);
 
+  const addPopup = useRef(null);
+  const addIconRef = useRef(null);
   //TeamState
   const [teamDropDown, setteamDropDown] = useState(false);
 
@@ -83,9 +72,10 @@ export default function SideNavLarge(props) {
 
   useEffect(() => {
     getAllTeam();
+    if (localStorage.getItem("mainId")) {
+      localStorage.removeItem("mainId");
+    }
   }, [params.uuid]);
-
-  //
 
   //Team Switch Event
 
@@ -124,19 +114,11 @@ export default function SideNavLarge(props) {
     e.preventDefault();
     e.stopPropagation();
     let targetId = e.target.id;
-    if (popUp) {
-      setPopup(null);
-    } else {
-      setPopup(targetId);
-    }
+    localStorage.setItem("mainId", targetId);
+    setOverState(targetId);
+    setPopup(targetId);
+    setOverScriptState(targetId);
   };
-
-  // //Redirect to Batch
-  // const redirectToBatch = (e) => {
-  //   let TargetScriptId = e.target.id;
-  //   navigate(`/dashboard/${params.uuid}/b/${TargetScriptId}`);
-  // };
-  //
 
   //Script Hover
   const handleScriptMouseEnter = (e) => {
@@ -148,16 +130,11 @@ export default function SideNavLarge(props) {
     setOverScriptState(null);
   };
 
-  //Redirect to Script
-  const redirectToScript = (e) => {
-    let TargetScriptId = e.target.id;
-    navigate(`/dashboard/${params.uuid}/s/${TargetScriptId}`);
-  };
+
 
   //Create Team Functionalities
   const HandleChange = (e) => {
     const { name, value } = e.target;
-    console.log(e.target.value);
     setFormValues({ ...formValues, [name]: value });
     delete errors[name];
   };
@@ -234,11 +211,12 @@ export default function SideNavLarge(props) {
     }
   };
 
+
   useEffect(() => {
-    setOverState(props.overStates);
     const closeOnOutsideClick = (e) => {
       if (
         teamDropDown &&
+        teamRef.current &&
         !teamRef.current.contains(e.target) &&
         e.target !== iconRef.current
       ) {
@@ -246,37 +224,33 @@ export default function SideNavLarge(props) {
       }
       if (
         AddNewMenu &&
+        AddNewRef.current &&
         !AddNewRef.current.contains(e.target) &&
         e.target !== AddIconRef.current
       ) {
         setAddNewMenu(false);
       }
+      if (
+        popUp &&
+        addPopup.current &&
+        !addPopup.current.contains(e.target) &&
+        e.target !== addIconRef.current
+      ) {
+        setPopup(null);
+        setOverScriptState(null);
+        if (localStorage.getItem("mainId")) {
+          localStorage.removeItem("mainId");
+        }
+      }
     };
+
     window.addEventListener("click", closeOnOutsideClick);
+
     return () => {
       window.removeEventListener("click", closeOnOutsideClick);
     };
-  }, [teamDropDown, AddNewMenu, props.overStates]);
+  }, [teamDropDown, AddNewMenu, props.overStates, popUp]);
 
-  const handleChildrenScriptsState = async (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-
-    let batch_uuid = e.target.id;
-    setChildOpen(e.target.id);
-    // getLoadScript(params.uuid, batch_uuid)
-    getChildScript(params.uuid, batch_uuid);
-  };
-
-  const  handleChildrenScriptsStateClose = async (e) => {
-    e.preventDefault();
-    e.stopPropagation();
- 
-    setChildOpen(null);
-  };
-
-
- 
   return (
     <div className="bg-[#efeffa] h-screen border-r-[1px] w-[220px] shadow">
       <div className="flex items-center pt-6 pl-7 space-x-2 ">
@@ -339,8 +313,8 @@ export default function SideNavLarge(props) {
                 className={`h-px  bg-[#D5D7DA] border-0 dark:bg-gray-900 mt-2`}
               />
               <div className="mt-2">
-                <div className="flex items-center mb-2">
-                  <i className="fa-solid fa-sliders"></i>
+                <div className="flex items-center mb-2 hover:text-primary">
+                  <i className="fa-solid fa-sliders cursor-pointer"></i>
                   <p className="pl-1">
                     <Link to={`/setting/${params.uuid}/teamsetting`}>
                       Team setting
@@ -348,7 +322,7 @@ export default function SideNavLarge(props) {
                   </p>
                 </div>
                 <div
-                  className="flex items-center mb-2"
+                  className="flex items-center mb-2 hover:text-primary"
                   onClick={() => setInvitePopup(true)}
                 >
                   <i className="fa-solid fa-user-plus cursor-pointer"></i>
@@ -368,281 +342,212 @@ export default function SideNavLarge(props) {
             </div>
           </div>
         )}
-        {console.log(batch)}
 
-        <ul className="mt-5 space-y-1 h-[350px] overflow-auto ">
-          {batch.map((batch) => (
-            <div>
+        <ul className="mt-5 space-y-1 h-[350px] overflow-auto">
+          {batch.map((batch,index) => (
+            <div  key={index}>
               <Link to={`/dashboard/${params.uuid}/b/${batch.uuid}`}>
                 <div
-                  className={`flex items-center  justify-between cursor-pointer hover:bg-[#e0e0e6] pl-6 pt-1 pb-1 pr-6 ${
+                  className={`flex items-center  justify-between cursor-pointer hover:bg-[#e0e0e6] pl-6 pt-1 pb-1 pr-5 ${
                     params.slug == batch.uuid ? "bg-[#e0e0e6]" : ""
-                  }`}
-                  key={batch.uuid}
+                  }`
+                
+                }
+                  key={index}
                   id={batch.uuid}
                   onMouseEnter={handleMouseEnter}
                   onMouseLeave={handleMouseLeave}
                 >
                   <div className="flex items-center">
-                    {childOpen == batch.uuid ? (
-                    <i
-                      className="fa-solid fa-caret-down text-[#b9b9bd] pr-3"
-                      id={batch.uuid}
-                      onMouseEnter={handleMouseEnter}
-                      onMouseLeave={handleMouseLeave}
-                      onClick={handleChildrenScriptsStateClose}
-                    ></i>
-                  ) : (
-                    <i
-                      className="fa-solid fa-caret-right text-[#b9b9bd] pr-3"
-                      id={batch.uuid}
-                      onMouseEnter={handleMouseEnter}
-                      onMouseLeave={handleMouseLeave}
-                      onClick={handleChildrenScriptsState}
-                    ></i>
-                  )}
                     <i
                       className="fa-solid fa-folder text-[#424244] pr-2.5"
                       id={batch.uuid}
-                      onMouseEnter={handleMouseEnter}
-                      onMouseLeave={handleMouseLeave}
-                      
                     ></i>
-                    {/* {(overState == batch.uuid) ? (
-                    <i
-                      className="fa-solid fa-angle-down pr-3 "
-                      id={batch.uuid}
-                      onMouseEnter={handleMouseEnter}
-                      onMouseLeave={handleMouseLeave}
-                      onClick={handleChildrenScripts}
-                    ></i>
-                  ) : childScript.length > 0 &&
-                    childScript[0].batch_uuid == batch.uuid ? (
-                    <i
-                      className="fa-solid fa-angle-down pr-3"
-                      id={batch.uuid}
-                      onMouseEnter={handleMouseEnter}
-                      onMouseLeave={handleMouseLeave}
-                      onClick={handleChildrenScripts}
-                    ></i>
-                  ) : (
-                    <i
-                      className="fa-solid fa-folder text-[#424244] pr-2.5"
-                      id={batch.uuid}
-                      onMouseEnter={handleMouseEnter}
-                      onMouseLeave={handleMouseLeave}
-                    ></i>
-                  )} */}
                     <li
                       key={batch.uuid}
                       id={batch.uuid}
                       className={`text-textPrimary  cursor-pointer  hover:bg-[#e0e0e6]  ${
                         params.slug == batch.uuid ? "bg-[#e0e0e6]" : ""
                       }
-                      -z-0 truncate relative`}
-                      onMouseEnter={handleMouseEnter}
-                      onMouseLeave={handleMouseLeave}
-                      // onClick={redirectToBatch}
+                      -z-0 truncate`}
                     >
                       {batch.title.slice(0, 7) +
                         (batch.title.length > 6 ? ".." : "")}
                     </li>
                   </div>
                   <div>
-                    {overState == batch.uuid && (
+                    {(overState == batch.uuid ||
+                      localStorage.getItem("mainId") == batch.uuid) && (
                       <i
-                        className="fa-solid fa-ellipsis-vertical text-textPrimary p-1"
+                        className="fa-solid fa-ellipsis-vertical text-textPrimary hover: border border-solid inline-block bg-[#d5d5db]  pt-[3px] pb-[3px] pl-[7px] pr-[7px] rounded-[4px] "
                         id={batch.uuid}
                         onClick={addPopUp}
+                        ref={addIconRef}
                       ></i>
                     )}
                   </div>
                 </div>
               </Link>
-           
-              {/* <li
-                key={batch.uuid}
-                id={batch.uuid}
-                className={`text-textPrimary pl-8 cursor-pointer hover:bg-[#e0e0e6] pt-1 pb-1  ${
-                  params.slug == batch.uuid ? "bg-[#e0e0e6]" : ""
-                }
-                -z-0 truncate relative`}
-                onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseLeave}
-              >
-                {overState == batch.uuid ? (
-                  <i
-                    className="fa-solid fa-angle-down pr-3.5 "
-                    id={batch.uuid}
-                    onClick={handleChildrenScripts}
-                  ></i>
-                ) : childScript.length > 0 &&
-                  childScript[0].batch_uuid == batch.uuid ? (
-                  <i
-                    className="fa-solid fa-angle-down pr-3"
-                    id={batch.uuid}
-                    onClick={handleChildrenScripts}
-                  ></i>
-                ) : (
-                  <i
-                    className="fa-solid fa-folder pr-3 text-[#424244]"
-                    id={batch.uuid}
-                  ></i>
-                )}
-                <span
-                  onClick={redirectToBatch}
-                  id={batch.uuid}
-                  className="truncate max-w-[20px]"
-                >
-                  {batch.title.slice(0, 7) +
-                    (batch.title.length > 6 ? ".." : "")}
-                </span>
-                {overState == batch.uuid && (
-                  <i
-                    className="fa-solid fa-ellipsis-vertical text-textPrimary  pl-14"
-                    id={batch.uuid}
-                    onClick={addPopUp}
-                  ></i>
-                )}
-              </li> */}
+
               {popUp == batch.uuid && (
-                <div className="box-border bg-white  w-44 p-4 border-[1px] border-slate-300 rounded-xl shadow-lg absolute left-48 z-50">
-                  <div className="w-[130px] m-auto space-y-3">
-                    <p
-                      className="text-lg cursor-pointer text-textPrimary hover:bg-primary  hover:text-white hover:rounded
+                <>
+                  <div className="bg-[#a3a2e9] opacity-[0] w-screen h-screen absolute top-0 left-0  z-10"></div>
+                  <div
+                    className="box-border bg-white  w-40   border-[1px] border-slate-300 rounded-lg shadow-lg absolute  left-40 z-10"
+                    ref={addPopup}
+                  >
+                    <div className="w-[145px] m-auto space-y-3 pt-3 pb-3">
+                      <p
+                        className="text-lg cursor-pointer  text-textPrimary hover:bg-primary  hover:text-white hover:rounded
                       "
-                      id={batch.uuid}
-                      onClick={addNewScript}
-                    >
-                      <i
-                        className="fa-regular fa-file pr-[7px]"
                         id={batch.uuid}
-                      ></i>
-                      New Script
-                    </p>
-                    <p
-                      className="text-lg cursor-pointer text-textPrimary hover:bg-primary  hover:text-white hover:rounded"
-                      id={batch.uuid}
-                      onClick={handleTrash}
-                    >
-                      <i className="fa-solid fa-trash pr-[5px]"></i>Trash
-                    </p>
+                        onClick={addNewScript}
+                      >
+                        <i
+                          className="fa-regular fa-file p-2 "
+                          id={batch.uuid}
+                        ></i>
+                        New Script
+                      </p>
+                      <p
+                        className="text-lg cursor-pointer  text-textPrimary  hover:bg-primary  hover:text-white hover:rounded"
+                        id={batch.uuid}
+                        onClick={handleTrash}
+                      >
+                        <i className="fa-solid fa-trash p-2"></i>Trash
+                      </p>
+                    </div>
                   </div>
-                </div>
+                </>
               )}
               {childScript &&
-                childOpen &&
                 childScript.map(
-                  (child) =>
+                  (child,index) =>
                     child.batch_uuid == batch.uuid && (
-                      <div className="" key={child.id}>
-                        <li
-                          key={child.id}
-                          id={child.uuid}
-                          data-set={child.batch_uuid}
-                          className={`text-textPrimary pl-14 cursor-pointer hover:bg-[#e0e0e6] pt-1 pb-1 truncate ${
-                            params.slug == child.uuid && "bg-[#e0e0e6]"
-                          } `}
-                          onMouseEnter={handleScriptMouseEnter}
-                          onMouseLeave={handleScriptMouseLeave}
+                      <div className="pt-1" key={index}>
+                        <Link to={`/dashboard/${params.uuid}/s/${child.uuid}`}
                         >
-                          <i
-                            className="fa-solid fa-file pr-3 text-[#424244]"
+                          <div
+                            className={`flex items-center justify-between pl-10  cursor-pointer hover:bg-[#e0e0e6] pt-1 pb-1 pr-7  ${
+                              params.slug == child.uuid && "bg-[#e0e0e6]"
+                            }`}
                             id={child.uuid}
-                            onClick={redirectToScript}
-                          ></i>
-                          <span
-                            onClick={redirectToScript}
-                            id={child.uuid}
-                            className="truncate max-w-[20px] text-textPrimary"
+                            data-set={child.batch_uuid}
+                            onMouseEnter={handleScriptMouseEnter}
+                            onMouseLeave={handleScriptMouseLeave}
                           >
-                            {child.title.slice(0, 7) +
-                              (child.title.length > 6 ? ".." : "")}
-                          </span>
-                          {overScriptState == child.uuid && (
-                            <i
-                              className="fa-solid fa-ellipsis-vertical text-textPrimary  pl-14"
-                              id={child.uuid}
-                              onClick={addPopUp}
-                            ></i>
-                          )}
-                        </li>
-                        {popUp == child.uuid && (
-                          <div className="box-border bg-white  w-44 p-4 border-[1px] border-slate-300 rounded-xl shadow-lg absolute left-52 z-50">
-                            <div className="w-[130px] m-auto space-y-3">
-                              <p
-                                className={`text-lg cursor-pointer text-textPrimary hover:bg-primary  hover:text-white hover:rounded`}
+                            <div className={`flex items-center truncate`}>
+                              <i
+                                className="fa-solid fa-file  text-[#424244] pr-2"
                                 id={child.uuid}
-                                onClick={handleTrash}
+                              ></i>
+                              <li
+                                key={child.id}
+                                id={child.uuid}
                                 data-set={child.batch_uuid}
+                                className={`text-textPrimary  cursor-pointer truncate `}
                               >
-                                <i
-                                  className="fa-solid fa-trash pr-[5px]"
+                                {child.title.slice(0, 7) +
+                                  (child.title.length > 6 ? ".." : "")}
+                              </li>
+                            </div>
+                            {(overScriptState == child.uuid ||
+                              localStorage.getItem("mainId") == child.uuid) && (
+                              <i
+                                className="fa-solid fa-ellipsis-vertical text-textPrimary border border-solid inline-block bg-[#d5d5db]  pt-[3px] pb-[3px] pl-[7px] pr-[7px] rounded-[4px] "
+                                id={child.uuid}
+                                onClick={addPopUp}
+                                ref={addIconRef}
+                              ></i>
+                            )}
+                          </div>
+                        </Link>
+                        {popUp == child.uuid && (
+                          <>
+                            <div className="box-border bg-white w-40 p-2.5 border-[1px] border-slate-300 rounded-xl shadow-lg absolute left-40 z-50">
+                              <div
+                                className="w-[140px] m-auto space-y-3"
+                                ref={addPopup}
+                              >
+                                <p
+                                  className={`text-lg cursor-pointer text-textPrimary hover:bg-primary  hover:text-white hover:rounded p-0.5`}
                                   id={child.uuid}
                                   onClick={handleTrash}
                                   data-set={child.batch_uuid}
-                                ></i>
-                                Trash
-                              </p>
+                                >
+                                  <i
+                                    className="fa-solid fa-trash pr-[5px]"
+                                    id={child.uuid}
+                                    onClick={handleTrash}
+                                    data-set={child.batch_uuid}
+                                  ></i>
+                                  Trash
+                                </p>
+                              </div>
                             </div>
-                          </div>
+                          </>
                         )}
                       </div>
                     )
                 )}
             </div>
           ))}
-          {script.map((script) => (
-            <div key={script.id}>
-              <li
-                key={script.id}
-                id={script.uuid}
-                className={`text-textPrimary pl-6 cursor-pointer hover:bg-[#e0e0e6] pt-1 pb-1 truncate ${
-                  params.slug == script.uuid && "bg-[#e0e0e6]"
-                } `}
-                onMouseEnter={handleScriptMouseEnter}
-                onMouseLeave={handleScriptMouseLeave}
+          {script.map((script,index) => (
+            <div key={script.uuid}>
+              <Link to={`/dashboard/${params.uuid}/s/${script.uuid}`} 
               >
-                <i
-                  className="fa-solid fa-file pr-3 text-[#424244] "
+                <div
+                  className={`flex items-center justify-between hover:bg-[#e0e0e6] cursor-pointer pl-6 pt-[4px] pb-[4px] pr-6 ${
+                    params.slug == script.uuid && "bg-[#e0e0e6]"
+                  } `}
                   id={script.uuid}
-                  onClick={redirectToScript}
-                ></i>
-
-                <span
-                  onClick={redirectToScript}
-                  id={script.uuid}
-                  className="truncate max-w-[20px] text-textPrimary"
+                  key={script.uuid}
+                  onMouseEnter={handleScriptMouseEnter}
+                  onMouseLeave={handleScriptMouseLeave}
                 >
-                  {script.title.slice(0, 7) +
-                    (script.title.length > 6 ? ".." : "")}
-                </span>
-                {overScriptState == script.uuid && (
-                  <i
-                    className="fa-solid fa-ellipsis-vertical text-textPrimary  pl-14"
-                    id={script.uuid}
-                    onClick={addPopUp}
-                  ></i>
-                )}
-              </li>
-              {popUp == script.uuid && (
-                <div className="box-border bg-white  w-44 p-4 border-[1px] border-slate-300 rounded-xl shadow-lg absolute left-52 z-50">
-                  <div className="w-[130px] m-auto space-y-3">
-                    <p
-                      className="text-lg cursor-pointer text-textPrimary hover:bg-primary  hover:text-white hover:rounded"
+                  <div className="flex items-center hover:bg-[#e0e0e6] cursor-pointer">
+                    <i
+                      className="fa-solid fa-file pr-2.5  text-[#424244] "
                       id={script.uuid}
-                    >
-                      <i className="fa-regular fa-file pr-[7px]"></i>Share
-                    </p>
-                    <p
-                      className={`text-lg cursor-pointer text-textPrimary hover:bg-primary  hover:text-white hover:rounded`}
+                    ></i>
+                    <li
+                      key={script.id}
                       id={script.uuid}
-                      onClick={handleTrash}
+                      className={`text-textPrimary  cursor-pointer truncate `}
                     >
-                      <i className="fa-solid fa-trash pr-[5px]"></i>Trash
-                    </p>
+                      {script.title.slice(0, 7) +
+                        (script.title.length > 6 ? ".." : "")}
+                    </li>
                   </div>
+                  {(overScriptState == script.uuid ||
+                    localStorage.getItem("mainId") == script.uuid) && (
+                    <i
+                      className="fa-solid fa-ellipsis-vertical text-textPrimary border border-solid inline-block bg-[#d5d5db]  pt-[3px] pb-[3px] pl-[7px] pr-[7px] rounded-[4px] "
+                      id={script.uuid}
+                      onClick={addPopUp}
+                    ></i>
+                  )}
                 </div>
+              </Link>
+
+              {popUp == script.uuid && (
+                <>
+                  <div className="bg-[#a3a2e9] opacity-[0] w-screen h-screen absolute top-0 left-0  z-10"></div>
+                  <div
+                    className="box-border bg-white  w-40   border-[1px] border-slate-300 rounded-lg shadow-lg absolute left-40 z-50"
+                    ref={addPopup}
+                  >
+                    <div className="w-[145px] m-auto space-y-3 pt-3 pb-3">
+                      <p
+                        className="text-lg cursor-pointer  text-textPrimary  hover:bg-primary  hover:text-white hover:rounded"
+                        id={script.uuid}
+                        onClick={handleTrash}
+                      >
+                        <i className="fa-solid fa-trash p-2"></i>Trash
+                      </p>
+                    </div>
+                  </div>
+                </>
               )}
             </div>
           ))}
@@ -659,7 +564,7 @@ export default function SideNavLarge(props) {
             <Link to={`/dashboard/${params.uuid}/t/trash`}>
               <p className={` text-slate-500 pl-[8px] pt-[3px]  `}>
                 <i
-                  className={`fa-solid fa-trash pr-[5px] ${
+                  className={`fa-solid fa-trash  ${
                     params.slug == "trash" && "text-white"
                   }`}
                 ></i>
@@ -697,11 +602,11 @@ export default function SideNavLarge(props) {
           </Link>
         </div>
       </div>
-     
+
       <ToastContainer />
       {loading && (
         <>
-          <div className="bg-primary opacity-[0.5] w-screen h-[664px] absolute top-0 left-0  z-10"></div>
+          <div className="bg-[#a3a2e9] opacity-[0.5] w-screen h-screen absolute top-0 left-0  z-10"></div>
           <p className="absolute top-72 left-[600px] z-40">
             <HashLoader color="#3197e8" />
           </p>

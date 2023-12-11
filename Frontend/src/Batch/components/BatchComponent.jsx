@@ -19,9 +19,7 @@ export const BatchComponent = () => {
     setBatchTitle,
     batchDescription,
     setbatchDescription,
-    handleAfterAddedChildrenScripts,
     scripts,
-    showToastMessage,
   } = useMyContext();
   //hooks
 
@@ -31,7 +29,11 @@ export const BatchComponent = () => {
 
   useEffect(() => {
  
-    getScripts();
+    // getScripts();
+    let team_uuid = params.uuid;
+    let batch_uuid = params.slug;
+
+    getLoadScript(team_uuid, batch_uuid);
   }, [params.slug]);
 
   const getScripts = async () => {
@@ -85,13 +87,11 @@ export const BatchComponent = () => {
         .then((res) => {
           if (res.status == 200) {
             setLoading(false);
-            // getBatch();
             getScripts();
           }
         })
         .catch((err) => {
           const response = err.response;
-          console.log(response);
           if (response && response.status === 400) {
           } else {
             console.error("Error:", response.status);

@@ -46,11 +46,9 @@ export const EmailVerificationCheck = () => {
           }
         })
         .finally(() => {
-          console.log("Finally block, setLoading(false)");
           setLoading(false);
         });
     } else {
-      console.log("Token Is Not Valid Please Click Again the Link");
       setLoading(false);
     }
   }, [params.uuid, params.token]);

@@ -7,7 +7,6 @@ export const TrashComponent = (props) => {
 
   return (
     <>
-    {/* // <div className="bg-[#F9FAFB] h-screen w-screen overflow-auto z-[10px]"> */}
       <TrashHeader
         setDeletePopup={props.setDeletePopup}
         deletePopup={props.deletePopup}

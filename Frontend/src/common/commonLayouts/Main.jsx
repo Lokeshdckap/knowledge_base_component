@@ -96,7 +96,7 @@ export default function Main(props) {
             batchList.map((batch, index) => (
               <div
                 key={batch.uuid}
-                className="bg-white w-[230px] h-[100px] border-[1px] rounded-[10px]  hover:scale-105 relative mb-[20px]"
+                className="bg-white w-[230px] h-[100px] border-[1px] rounded-[10px]  hover:border-primary relative mb-[20px]"
               >
                 <div className="w-[230px]  rounded-t-lg text-end pt-px">
                   <span
@@ -170,7 +170,7 @@ export default function Main(props) {
           {scriptList && scriptList.length > 0 ? (
             scriptList.map((script) => (
               <div
-                className="bg-white w-[230px] h-[100px] border-[1px] rounded-[10px]  hover:scale-105 relative mb-[20px]"
+                className="bg-white w-[230px] h-[100px] border-[1px] rounded-[10px]  hover:border-primary  relative mb-[20px]"
                 key={script.uuid}
               >
                 <div className="w-[230px] h-[36px] rounded-t-lg text-end pt-px ">
@@ -224,7 +224,7 @@ export default function Main(props) {
             </div>
           )}
         </div>
-      </div>
+    </div>
     </div>
   );
 }

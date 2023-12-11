@@ -13,7 +13,6 @@ import { createContext, useState } from "react";
 
 
     const setAuth = (auth) => {
-        console.log(auth.verify);
         _setAuth(auth)
         if(auth.token){
             localStorage.setItem('ACCESS_TOKEN',auth.token);

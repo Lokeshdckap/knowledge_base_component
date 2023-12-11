@@ -62,16 +62,6 @@ export const Trash = () => {
         });
     }
   };
-  // const getAllDeletedData = () => {
-  //   axiosClient
-  //     .get(`/getAllTrash/${params.uuid}`)
-  //     .then((res) => {
-  //       setTrashData(res.data.itemsWithDaysLeft);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  // };
 
   const handleParticularDelete = async (e) => {
     if (e.target.id) {
@@ -89,7 +79,6 @@ export const Trash = () => {
 
   const handleParticularRestore = async (e) => {
     if (e.target.id) {
-      console.log(e.target.id);
       await axiosClient
         .put(`/api/trash/restore/${params.uuid}/${e.target.id}`)
         .then((res) => {

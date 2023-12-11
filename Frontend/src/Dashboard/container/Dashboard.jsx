@@ -30,6 +30,9 @@ export default function Dashboard() {
   //hooks
 
   //state
+
+
+
   const [state, setState] = useState(true);
   const [loading, setLoading] = useState(false);
 
@@ -82,7 +85,6 @@ export default function Dashboard() {
         })
         .catch((err) => {
           const response = err.response;
-          console.log(response);
           if (response && response.status === 400) {
           } else {
             console.error("Error:", response.status);

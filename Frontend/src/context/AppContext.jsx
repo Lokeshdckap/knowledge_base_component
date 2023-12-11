@@ -70,14 +70,12 @@ const MyContextProvider = ({ children }) => {
     await axiosClient
       .get(`/api/teams/getAllTeam`)
       .then((res) => {
-        console.log(res);
         setAllTeam(res.data.getAllTeam);
         getTeam();
         userInfo();
       })
       .catch((err) => {
         const response = err.response;
-        console.log(response.status);
         if (response && response?.status === 401) {
           navigate("/signin");
         }
@@ -111,7 +109,7 @@ const MyContextProvider = ({ children }) => {
     await axiosClient
       .get(`/api/dashboard/getScripts/${params.uuid}/${params.slug}`)
       .then((res) => {
-        setOverState(res.data.script_batch.batch_uuid);
+        // setOverState(res.data.script_batch.batch_uuid);
         setChildScript(res.data.result);
       });
   };
@@ -151,6 +149,9 @@ const MyContextProvider = ({ children }) => {
         setAddNewMenu(false);
         setPopup(null);
         showToastMessage(res.data.Success);
+        if (localStorage.getItem("mainId")) {
+          localStorage.removeItem("mainId");
+        }
       })
       .catch((err) => {
         console.log(err);
@@ -171,11 +172,9 @@ const MyContextProvider = ({ children }) => {
   };
 
   const getLoadScript = async (team_uuid, batch_uuid) => {
-  
     await axiosClient
       .get(`/api/dashboard/getBatchAndScripts/${team_uuid}/${batch_uuid}`)
       .then((res) => {
-        
         setBatchTitle(res.data.result[0].batch.title);
         setbatchDescription(res.data.result[0].batch.description);
         setScripts(res.data.result);
@@ -186,17 +185,16 @@ const MyContextProvider = ({ children }) => {
       });
   };
 
-  const getChildScript =  async (team_uuid, batch_uuid) => {
+  const getChildScript = async (team_uuid, batch_uuid) => {
     await axiosClient
-    .get(`/api/dashboard/getBatchAndScripts/${team_uuid}/${batch_uuid}`)
-    .then((res) => {
-      setChildScript(res.data.result);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-    
-  }
+      .get(`/api/dashboard/getBatchAndScripts/${team_uuid}/${batch_uuid}`)
+      .then((res) => {
+        setChildScript(res.data.result);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   //Trash
   const handleTrash = (e) => {
@@ -215,7 +213,11 @@ const MyContextProvider = ({ children }) => {
             if (batchId) {
               handleAfterAddedChildrenScripts(batchId);
             }
+
             getAllDeletedData();
+            if (localStorage.getItem("mainId")) {
+              localStorage.removeItem("mainId");
+            }
           }
           getAllDeletedData();
         })

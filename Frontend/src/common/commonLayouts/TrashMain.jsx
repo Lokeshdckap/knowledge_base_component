@@ -57,7 +57,7 @@ export const TrashMain = (props) => {
             props.trashData.map((trashScript) => (
               <div
                 key={trashScript.uuid}
-                className={`bg-white w-[230px] h-[100px] border-[1px] rounded-[10px]  hover:scale-105 relative mb-[20px]${
+                className={`bg-white w-[230px] h-[100px] border-[1px] rounded-[10px]  hover:border-primary  relative mb-[20px]${
                   props.styleState &&
                   props.styleState.includes(trashScript.uuid) &&
                   "scale-105"

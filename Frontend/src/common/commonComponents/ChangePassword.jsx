@@ -73,9 +73,9 @@ export const ChangePassword = (props) => {
 
   return (
     <div>
-      <div className="bg-primary opacity-[0.5] w-screen h-screen absolute top-0 left-0  z-10"></div>
-      <div className=" absolute left-0 top-0 z-20">
-        <div className="bg-white h-[430px] w-[450px] ml-[420px] mt-[90px] rounded -z-10">
+      <div className="bg-[#a3a2e9] opacity-[0.5] w-screen h-screen absolute top-0 left-0  z-10"></div>
+      <div className=" absolute left-0 top-0 z-20 flex justify-center items-center">
+        <div className="bg-white h-[430px] w-[450px]rounded -z-10">
           <div className="" onClick={props.handlePopup}>
             <i className="fa-solid fa-xmark text-red-500 pt-3 float-right text-2xl cursor-pointer mr-5"></i>
           </div>
@@ -152,7 +152,7 @@ export const ChangePassword = (props) => {
               </div>
             </div>
             <button
-              className="bg-primary mt-4 ml-6 h-12 w-48 text-white rounded text-center"
+              className="bg-[#a3a2e9] mt-4 ml-6 h-12 w-48 text-white rounded text-center"
               onClick={resetPassword}
             >
               Update
@@ -161,7 +161,7 @@ export const ChangePassword = (props) => {
         </div>
         {loading && (
           <>
-            <div className="bg-primary opacity-[0.5] w-screen h-[664px] absolute top-0 left-0  z-10"></div>
+            <div className="bg-[#a3a2e9] opacity-[0.5] w-screen h-screen absolute top-0 left-0  z-10"></div>
             <p className="absolute top-72 left-[600px] z-40">
               <HashLoader color="#3197e8" />
             </p>

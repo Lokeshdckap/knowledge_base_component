@@ -11,8 +11,8 @@ module.exports = {
       }
     },
     screens: {
-      'lg': {'min': '1024px', 'max': '1299px'},
-      'xl': {'min': '1300px', 'max': '1440px'},
+        'lg': {'min': '1024px', 'max': '1299px'},
+        'xl': {'min': '1300px', 'max': '1440px'},
     }
   },
 plugins: [],

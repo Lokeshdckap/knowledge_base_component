@@ -153,7 +153,6 @@ export const ScriptEditor = () => {
   };
 
   return (
-    // <div className="bg-[#F9FAFB] h-screen w-screen overflow-auto z-[10px]">
     <>
       <ViewHeader
         inputValue={inputValue}

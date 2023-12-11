@@ -10,7 +10,7 @@ import { useMyContext } from "../../context/AppContext";
 export const ScriptComponents = () => {
   const navigate = useNavigate();
   const params = useParams();
-  const { getScript, script, getScripts } = useMyContext();
+  const { getScript, script, getScripts,setLoading } = useMyContext();
 
   //hooks
 
@@ -42,8 +42,6 @@ export const ScriptComponents = () => {
   const [publish, setPublish] = useState([]);
 
   const [scriptError, setScriptError] = useState(null);
-
-  const [loading, setLoading] = useState(false);
 
   const [state, setState] = useState(true);
 
@@ -154,6 +152,8 @@ export const ScriptComponents = () => {
   //Editor functionality
 
   const handleSave = () => {
+    setLoading(true)
+
     const postData = {
       id: pageIds,
       script_uuid: params.slug,
@@ -167,9 +167,11 @@ export const ScriptComponents = () => {
         getParticularScript();
         getParticularPage();
         showToastSaveMessage(res.data.msg);
+        setLoading(false)
       })
       .catch((err) => {
         console.log(err);
+        setLoading(false)
       });
   };
 
@@ -307,46 +309,5 @@ export const ScriptComponents = () => {
         teamUuid={teamUuid}
       />
     </>
-    // <div className="bg-[#F9FAFB] h-screen w-screen overflow-auto z-[10px]">
-    //   <EditHeader
-    //     widths={state ? "w-[1040px]" : "w-[1200px]"}
-    //     clickPublish={handleSave}
-    //     changeEvent={handleChange}
-    //     inputValue={inputValue}
-    //     setInputValue={setInputValue}
-    //     renderScript={renderScript}
-    //     HandleShare={HandleShare}
-    //     scriptError={scriptError}
-    //     publish={publish}
-    //   />
-    //   <EditPage
-    //     widths={state ? "w-[785px]" : "w-[933px]"}
-    //     marginEditor={state ? "ml-[10px]" : "mr-[115px]"}
-    //     treeNode={treeNode}
-    //     addPage={addPage}
-    //     contentPage={contentPage}
-    //     pageContent={pageContent}
-    //     particularTitle={particularTitle}
-    //     setParticularTitle={setParticularTitle}
-    //     description={description}
-    //     setDescription={setDescription}
-    //     handleScriptMouseEnter={handleScriptMouseEnter}
-    //     handleScriptMouseLeave={handleScriptMouseLeave}
-    //     hoverPageId={hoverPageId}
-    //     handleMore={handleMore}
-    //     handleSave={handleSave}
-    //     shareState={shareState}
-    //     setShareState={setShareState}
-    //     onChange={onChange}
-    //     publish={publish}
-    //     editorValue={editorValue}
-    //     setEditorValue={setEditorValue}
-    //     editorContent={editorContent}
-    //     setEditorContent={setEditorContent}
-    //     renderScript={renderScript}
-    //     parentOpen={parentOpen}
-    //     teamUuid={teamUuid}
-    //   />
-    // </div>
   );
 };

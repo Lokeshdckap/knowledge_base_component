@@ -6,8 +6,7 @@ import { ToastContainer, toast } from "react-toastify";
 import HashLoader from "react-spinners/HashLoader";
 
 export const ActiveUsers = (props) => {
-  
-  // let users = props.teamMember;
+
   const params = useParams();
 
   const [invitePopup, setInvitePopup] = useState(false);
@@ -76,7 +75,7 @@ export const ActiveUsers = (props) => {
       await axiosClient
         .post("/api/invites/updateRole", payload)
         .then((res) => {
-          console.log(res.data);
+
         })
         .catch((err) => {
           console.log(err);

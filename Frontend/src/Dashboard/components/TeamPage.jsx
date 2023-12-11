@@ -36,7 +36,6 @@ export default function TeamPage() {
             let error = {};
             let keys = Object.keys(response.data);
             let value = Object.values(response.data);
-            console.log(value);
 
             error[keys] = value;
 

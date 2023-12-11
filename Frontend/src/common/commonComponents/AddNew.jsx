@@ -2,8 +2,6 @@ import React, { useState } from "react";
 import axiosClient from "../../axios-client";
 
 export default function AddNew(props) {
-    // console.log(props.team.uuid);
-
 
   return (
     <div>

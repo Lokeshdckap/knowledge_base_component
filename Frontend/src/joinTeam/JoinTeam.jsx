@@ -6,7 +6,6 @@ import axiosClient from "../axios-client";
 export const JoinTeam = () => {
   const params = useParams();
   const navigate = useNavigate();
-  // // console.log(params.token);
   const [decodedToken, setDecodedToken] = useState(null);
   let hasEffectRun = false;
   useEffect(() => {

@@ -9,8 +9,21 @@
     margin: 0px;
     padding: 0px;
     box-sizing: border-box;
-    /* color: #444449; */
+    /* color: #a3a2e9; */
 }
+@keyframes blink {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+.animate-blink {
+  animation: blink 2s infinite;
+}
+
 /* d3d3d6 */
 
 /* 

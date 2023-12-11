@@ -306,7 +306,6 @@ export default function SignupComponents() {
 
               <button onClick={googleAuth}
                 className="bg-white w-40 h-10 text-primary rounded backdrop-blur-[2px] border-[1px]"
-                // onClick={google}
               >
 
                   Signup With Google
@@ -318,7 +317,7 @@ export default function SignupComponents() {
       </div>
       {loading && (
         <>
-          <div className="bg-primary opacity-[0.5] w-screen h-[664px] absolute top-0 left-0  z-10"></div>
+          <div className="bg-primary opacity-[0.5] w-screen h-screen absolute top-0 left-0  z-10"></div>
           <p className="absolute top-72 left-[600px] z-40">
             <HashLoader color="#3197e8" />
           </p>

@@ -13,6 +13,8 @@ import axiosClient from "../../axios-client";
 export const EditorComponents = (props) => {
   const [imageUrl, setImageUrl] = useState("");
 
+  // console.log(imageUrl);
+
   const handleUpload = async (file) => {
     const formData = new FormData();
 
@@ -29,13 +31,6 @@ export const EditorComponents = (props) => {
         .then((res) => {
           setImageUrl(res.data.image.filename);
         });
-    } catch (error) {
-      console.error("Error parsing JSON or response undefined:", error);
-    }
-    try {
-      axiosClient.get("/api/dashboard/fetchImage").then((res) => {
-        setImageUrl(res.data.image.filename);
-      });
     } catch (error) {
       console.error("Error parsing JSON or response undefined:", error);
     }
@@ -121,6 +116,15 @@ export const EditorComponents = (props) => {
   useEffect(() => {
     if (ejInstance.current === null) {
       initEditor();
+    }
+
+    try {
+      axiosClient.get("/api/dashboard/fetchImage").then((res) => {
+        console.log(res);
+        setImageUrl(res.data.image.filename);
+      });
+    } catch (error) {
+      console.error("Error parsing JSON or response undefined:", error);
     }
 
     return () => {

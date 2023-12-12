@@ -5,8 +5,8 @@ export const TrashHeader = (props) => {
 
 
   return (
-    <div className="bg-[#fbfbff] h-[70px] border-b-[1px]">
-      <div className={`flex items-center m-auto justify-between relative xl:max-w-[1100px] lg:max-w-[1000px] pt-3`}>
+    <div className="bg-[#fbfbff] border-b-[1px] w-[100%]">
+      <div className={`flex items-center m-auto justify-between relative w-[100%]  2xl:py-[30px] pt-[11px] pb-[11px] pl-[30px] pr-[30px]`}>
         <p className="text-xl text-primary">
           <i className="fa-solid fa-trash text-lg pr-[10px]"></i>Trash
         </p>

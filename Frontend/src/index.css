@@ -24,10 +24,24 @@
   animation: blink 2s infinite;
 }
 
+/* @media screen and (max-width:2560px){ 
+  .custom-height{
+    height: calc(100%-108px);
+    background-color: aqua;
+  }
+}
+
+@media screen and (max-width: 1440px) {
+  .custom-height{
+    height: calc(100%-70px);
+    background-color: red;
+  }
+} */
+
 /* d3d3d6 */
 
 /* 
-* {
+* 
   scrollbar-width: thin;
   scrollbar-color: var(--secondary) #ffff;
 }

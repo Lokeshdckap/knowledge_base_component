@@ -11,9 +11,11 @@ module.exports = {
       }
     },
     screens: {
-        'lg': {'min': '1024px', 'max': '1299px'},
-        'xl': {'min': '1300px', 'max': '1440px'},
-        'md': {'min': '1440px', 'max': '1920px'},
+      'sm' :	'640px',
+      'md' :	'768px',
+      'lg' :	'1024px',
+      'xl' :	'1280px',
+      '2xl':	'1530px',
     }
   },
 plugins: [],

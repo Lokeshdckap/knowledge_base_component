@@ -131,8 +131,6 @@ export default function SideNavLarge(props) {
     setOverScriptState(null);
   };
 
-
-
   //Create Team Functionalities
   const HandleChange = (e) => {
     const { name, value } = e.target;
@@ -212,7 +210,6 @@ export default function SideNavLarge(props) {
     }
   };
 
-
   useEffect(() => {
     const closeOnOutsideClick = (e) => {
       if (
@@ -253,7 +250,7 @@ export default function SideNavLarge(props) {
   }, [teamDropDown, AddNewMenu, props.overStates, popUp]);
 
   return (
-    <div className="bg-[#181F38] h-screen border-r-[1px] w-[220px] shadow">
+    <div className="bg-[#181F38] h-screen border-r-[1px] 2xl:w-[260px] xl:w-[220px] lg:w-[220px] shadow">
       <div className="flex items-center pt-6 pl-7 space-x-2 ">
         <div>
           <img
@@ -291,7 +288,7 @@ export default function SideNavLarge(props) {
             ref={teamRef}
           >
             <div>
-              <p className="font-semibold text-[#F9EFD4]">Change Team</p>
+              <p className="font-semibold text-textPrimary">Change Team</p>
               {allTeam && (
                 <ul className={`space-y-2 pt-2 max-h-[250px] overflow-auto`}>
                   {allTeam.map((team, index) => (
@@ -343,16 +340,14 @@ export default function SideNavLarge(props) {
           </div>
         )}
 
-        <ul className="mt-5 space-y-1 h-[250px] overflow-auto">
-          {batch.map((batch,index) => (
-            <div  key={index}>
+        <ul className="mt-5 space-y-1 2xl:max-h-[650px] xl:max-h-[380px] overflow-auto">
+          {batch.map((batch, index) => (
+            <div key={index}>
               <Link to={`/dashboard/${params.uuid}/b/${batch.uuid}`}>
                 <div
                   className={`flex items-center  justify-between cursor-pointer font-sans font-medium text-base hover:bg-[#323F5E] pl-6 pt-1 pb-1 pr-5 ${
                     params.slug == batch.uuid ? "bg-[#323F5E]" : ""
-                  }`
-                
-                }
+                  }`}
                   key={index}
                   id={batch.uuid}
                   onMouseEnter={handleMouseEnter}
@@ -422,11 +417,10 @@ export default function SideNavLarge(props) {
               )}
               {childScript &&
                 childScript.map(
-                  (child,index) =>
+                  (child, index) =>
                     child.batch_uuid == batch.uuid && (
                       <div className="pt-1" key={index}>
-                        <Link to={`/dashboard/${params.uuid}/s/${child.uuid}`}
-                        >
+                        <Link to={`/dashboard/${params.uuid}/s/${child.uuid}`}>
                           <div
                             className={`flex items-center justify-between pl-10 font-medium text-base cursor-pointer hover:bg-[#323F5E] pt-1 pb-1 pr-7  ${
                               params.slug == child.uuid && "bg-[#323F5E]"
@@ -492,10 +486,9 @@ export default function SideNavLarge(props) {
                 )}
             </div>
           ))}
-          {script.map((script,index) => (
+          {script.map((script, index) => (
             <div key={script.uuid}>
-              <Link to={`/dashboard/${params.uuid}/s/${script.uuid}`} 
-              >
+              <Link to={`/dashboard/${params.uuid}/s/${script.uuid}`}>
                 <div
                   className={`flex items-center justify-between hover:bg-[#323F5E] font-medium text-base cursor-pointer pl-6 pt-[4px] pb-[4px] pr-6 ${
                     params.slug == script.uuid && "bg-[#323F5E]"
@@ -552,9 +545,14 @@ export default function SideNavLarge(props) {
             </div>
           ))}
         </ul>
-        <hr
-          className={`h-px bg-[#c2c2c9] border-0 dark:bg-gray-300 m-auto mt-2`}
-        />
+      </div>
+      <div className="">
+        <div className="h-px bg-[#c2c2c9] w-[100%]">
+
+        </div>
+        {/* <hr
+          className={`h-px bg-[#c2c2c9] border-0 dark:bg-gray-300 m-auto mt-2 align-bottom`}
+        /> */}
         <div className=" flex items-center  justify-around w-[200px] m-auto  mt-6">
           <div
             className={` ${

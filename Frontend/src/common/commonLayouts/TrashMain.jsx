@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import deletes from "../../assets/images/delete.png";
 import HashLoader from "react-spinners/HashLoader";
-import { Checkbox } from 'antd';
+import { Checkbox } from "antd";
 
 export const TrashMain = (props) => {
   const [deleteState, setDeleteState] = useState(null);
@@ -10,7 +10,6 @@ export const TrashMain = (props) => {
 
   const deleteForeverPopup = (e) => {
     setDeleteState(e.target.id);
-
   };
 
   useEffect(() => {
@@ -30,13 +29,11 @@ export const TrashMain = (props) => {
     return () => {
       window.removeEventListener("click", closeOnOutsideClick);
     };
-
   }, [deleteState]);
 
-
   return (
-    <div className="mt-3 h-[500px] overflow-auto">
-      <div className="text-2xl  text-textPrimary  ml-6 mb-5 mt-3">
+    <div className="bg-[#F4F7FC]  h-[500px] overflow-auto  pl-[30px] pr-[30px]">
+      <div className="text-2xl  text-textPrimary  pt-3 pb-3">
         {props.trashData ? (
           props.trashData.length > 0 ? (
             // Render if there are items in the trash
@@ -51,45 +48,49 @@ export const TrashMain = (props) => {
         )}
       </div>
 
-      <div className="m-auto flex flex-wrap gap-[30px] w-[1020px] ">
+      <div className="m-auto grid 2xl:grid-cols-5 xl:grid-cols-4 gap-4  ">
         {props.trashData ? (
           props.trashData.length > 0 ? (
             props.trashData.map((trashScript) => (
               <div
                 key={trashScript.uuid}
-                className={`bg-white w-[230px] h-[100px] border-[1px] rounded-[10px]  hover:border-primary  relative mb-[20px]${
+                className={`bg-white  border-[1px] rounded-[10px]  hover:border-primary  relative xl:p-[10px] 2xl:p-[20px] 
                   props.styleState &&
                   props.styleState.includes(trashScript.uuid) &&
                   "scale-105"
                 }`}
                 id={trashScript.uuid}
               >
-                <div
-                  className="rounded-t-lg flex items-center justify-between  "
-                  id={trashScript.uuid}
-                >
-                   <Checkbox onChange={props.handleSelect} id={trashScript.uuid}  className="ml-2"></Checkbox>
-                  <span
-                    className="material-symbols-outlined text-primary cursor-pointer text-2xl pr-1"
-                    onClick={deleteForeverPopup}
-                    ref={(ref) =>
-                      (deleteIconRef.current[trashScript.uuid] = ref)
-                    }
+                <div className="w-[100%] ">
+                  <div
+                    className="rounded-t-lg flex items-center justify-between  "
                     id={trashScript.uuid}
                   >
-                    more_vert
-                  </span>
-                </div>
-                <div
-                  className="px-5 font-medium cursor-pointer"
-                  id={trashScript.uuid}
-                >
-                  <p id={trashScript.uuid} >
-                    {trashScript.title}
-                  </p>
-                  <p className="text-gray-500 pt-1" id={trashScript.uuid}>
-                    {trashScript.deleted_at}
-                  </p>
+                    <Checkbox
+                      onChange={props.handleSelect}
+                      id={trashScript.uuid}
+                      className="ml-2"
+                    ></Checkbox>
+                    <span
+                      className="material-symbols-outlined text-primary cursor-pointer text-2xl"
+                      onClick={deleteForeverPopup}
+                      ref={(ref) =>
+                        (deleteIconRef.current[trashScript.uuid] = ref)
+                      }
+                      id={trashScript.uuid}
+                    >
+                      more_vert
+                    </span>
+                  </div>
+                  <div
+                    className="font-medium cursor-pointer"
+                    id={trashScript.uuid}
+                  >
+                    <p id={trashScript.uuid}>{trashScript.title}</p>
+                    <p className="text-gray-500 pt-1" id={trashScript.uuid}>
+                      {trashScript.deleted_at}
+                    </p>
+                  </div>
                 </div>
                 {deleteState == trashScript.uuid && (
                   <div

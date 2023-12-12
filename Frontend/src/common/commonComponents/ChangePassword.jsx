@@ -5,7 +5,6 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 export const ChangePassword = (props) => {
-
   const duration = 2000;
 
   const showToastMessage = (data) => {
@@ -74,7 +73,7 @@ export const ChangePassword = (props) => {
   return (
     <div>
       <div className="bg-[#a3a2e9] opacity-[0.5] w-screen h-screen absolute top-0 left-0  z-10"></div>
-      <div className=" absolute left-0 top-0 z-20 flex justify-center items-center">
+      <div className=" flex items-center justify-center h-screen w-screen absolute top-2/4 left-2/4 transform -translate-x-1/2 -translate-y-1/2 z-20 ">
         <div className="bg-white h-[430px] w-[450px]rounded -z-10">
           <div className="" onClick={props.handlePopup}>
             <i className="fa-solid fa-xmark text-red-500 pt-3 float-right text-2xl cursor-pointer mr-5"></i>

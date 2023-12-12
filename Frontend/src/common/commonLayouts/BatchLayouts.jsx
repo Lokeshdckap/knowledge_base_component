@@ -43,8 +43,8 @@ export const BatchLayouts = (props) => {
 
   return (
     <div className="bg-[#F4F7FC] " style={{ height: "calc(100% - 70px)" }}>
-      <div className="xl:max-h-[510px]  lg:max-h-[580px] md:max-h-[1000px] overflow-auto">
-        <div className="xl:max-w-[1080px] lg:max-w-[1000px] md:max-w-[1600px]  m-auto">
+      <div className="2xl:max-h-[510px]  xl:max-h-[580px] pl-[30px] pr-[30px] overflow-auto">
+        <div className="w-[100%] m-auto">
           <div className={`flex justify-between`}>
             <div>
               <div>
@@ -86,38 +86,44 @@ export const BatchLayouts = (props) => {
           <p className="font-semibold text-textPrimary text-xl  pl-1">
             SCRIPTS
           </p>
-          <div className={`m-auto grid grid-cols-4 md:grid-cols-6 mt-2`}>
+          <div
+            className={`m-auto grid 2xl:grid-cols-5 xl:grid-cols-4 gap-2 mt-2`}
+          >
             {scripts &&
               scripts.map((script) => (
                 <div
-                  className="bg-white w-[230px] h-[100px] border-[1px] rounded-[10px] hover:border-primary  relative mb-[20px]"
+                  className="bg-white  border-[1px] rounded-[10px] hover:border-primary  relative xl:p-[10px] 2xl:p-[20px]"
                   key={script.id}
                 >
-                  <div className="w-[230px] h-[36px] rounded-t-lg text-end pt-px">
-                    <span
-                      className="material-symbols-outlined text-primary cursor-pointer text-2xl pr-1"
-                      id={script.uuid}
-                      onClick={deleteForeverPopup}
-                      ref={(ref) => (deleteIconRef.current[script.uuid] = ref)}
-                    >
-                      more_vert
-                    </span>
-                  </div>
-                  <div
-                    className="px-5 font-medium cursor-pointer"
-                    id={script.uuid}
-                    onClick={handleScripts}
-                  >
-                    <p id={script.uuid} onClick={handleScripts}>
-                      {script.title}
-                    </p>
-                    <p
+                  <div className="w-[100%]">
+                    <div className="rounded-t-lg text-end pt-px">
+                      <span
+                        className="material-symbols-outlined text-primary cursor-pointer text-2xl "
+                        id={script.uuid}
+                        onClick={deleteForeverPopup}
+                        ref={(ref) =>
+                          (deleteIconRef.current[script.uuid] = ref)
+                        }
+                      >
+                        more_vert
+                      </span>
+                    </div>
+                    <div
+                      className=" font-medium cursor-pointer"
                       id={script.uuid}
                       onClick={handleScripts}
-                      className="text-gray-500 pt-1"
                     >
-                      0 Pages
-                    </p>
+                      <p className="2xl:text-2xl" id={script.uuid} onClick={handleScripts}>
+                        {script.title}
+                      </p>
+                      <p
+                        id={script.uuid}
+                        onClick={handleScripts}
+                        className="text-gray-500 pt-1"
+                      >
+                        0 Pages
+                      </p>
+                    </div>
                   </div>
                   {popUpState == script.uuid && (
                     <div

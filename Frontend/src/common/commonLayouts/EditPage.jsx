@@ -68,14 +68,14 @@ export default function EditPage(props) {
             </div>
           </div>
         </div>
-        <div className={`bg-[#fbfbfc] xl:max-h-[510px]  lg:max-h-[580px] md:max-h-[1000px] overflow-auto`} 
+        <div className={`bg-[#fbfbfc] xl:max-h-[510px] px-[30px] lg:max-h-[580px] md:max-h-[1000px] overflow-auto`} 
             style={{width: "calc(100% - 278px)"}}
         >
     
           <div>
             <input
               type="text"
-              className="text-2xl ml-10 mt-8 focus:outline-none text-textPrimary font-bold"
+              className="text-2xl mt-8 focus:outline-none text-textPrimary font-bold"
               value={title}
               onChange={(e) => props.setParticularTitle(e.target.value)}
               placeholder="Page Name"
@@ -86,7 +86,7 @@ export default function EditPage(props) {
           </div>
           <div>
             <input
-              className="text-xl ml-10  mt-5 focus:outline-none text-textPrimary "
+              className="text-xl  mt-5 focus:outline-none text-textPrimary "
               value={props.description}
               onChange={(e) => props.setDescription(e.target.value)}
               placeholder="Page Description"
@@ -96,7 +96,7 @@ export default function EditPage(props) {
             />
           </div>
 
-          <div className={`pt-3 mr-12 md:mr-`}>
+          <div className={`pt-3`}>
             {renderScript && (
               <EditorComponents
                 handleSave={props.handleSave}

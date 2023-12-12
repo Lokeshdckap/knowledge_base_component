@@ -2,9 +2,9 @@ import React from "react";
 
 export const ViewHeader = (props) => {
   return (
-    <div className="bg-[#fbfbff] h-[70px] border-b-[1px]">
+    <div className="bg-[#fbfbff] w-[100%] border-b-[1px]">
       <div
-        className={`flex items-center m-auto justify-between relative xl:max-w-[1100px] md:max-w-[1600px] lg:max-w-[1000px]  pt-3`}
+        className={`flex items-center m-auto justify-between relative w-[100%]  2xl:py-[30px] pt-[11px] pb-[11px] pl-[30px] pr-[30px]`}
       >
         <input
           className="text-textPrimary font-bold font-sans text-2xl bg-[#EEEEEE] focus:outline-gray-300 w-80 h-11 pl-2 rounded"

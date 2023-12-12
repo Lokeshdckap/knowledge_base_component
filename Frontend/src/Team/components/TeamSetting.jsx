@@ -57,7 +57,7 @@ export const TeamSetting = (props) => {
   };
 
   return (
-    <div className="ml-28 mt-10">
+    <div className="m-auto">
       <div className="bg-white w-[900px] h-[550px]  shadow-md">
         <div className="w-[800px] m-auto">
           <p className="text-2xl font-bold text-textPrimary pt-10">

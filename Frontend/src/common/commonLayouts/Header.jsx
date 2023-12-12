@@ -35,9 +35,9 @@ export default function Header(props) {
   };
 
   return (
-    <div className="bg-[#ffff] h-[70px] shadow-md " >
+    <div className="bg-[#ffff]  shadow-md w-[100%]" >
       <div
-        className={`flex items-center  m-auto justify-between  relative md:max-w-[1600px] xl:max-w-[1100px] lg:max-w-[1000px]  pt-3.5` } 
+        className={`flex items-center  m-auto justify-between  relative  w-[100%]  2xl:py-[30px] pt-[11px] pb-[11px] pl-[30px] pr-[30px]` } 
       >
         <h2> {props.team}'s Team</h2>
         <div>
@@ -81,7 +81,7 @@ export default function Header(props) {
           )}
         </div>
         {profileState && (
-          <div className="bg-white h-[81px] w-28 absolute top-14 border-[1px] right-[-20px] shadow-md rounded-lg"
+          <div className="bg-white h-[81px] w-28 absolute top-14 border-[1px] right-0 z-30 shadow-md rounded-lg"
           ref={profileRef}
           >
             <Link to={`/setting/${params.uuid}/profile`}>

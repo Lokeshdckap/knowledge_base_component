@@ -8,6 +8,7 @@ import Marker from "@editorjs/marker";
 import Quote from "@editorjs/quote";
 import Embed from "@editorjs/embed";
 import ImageTool from "@editorjs/image";
+import BreakLine from 'editorjs-break-line';
 import axiosClient from "../../axios-client";
 
 export const ViewEditorComponents = (props) => {
@@ -109,6 +110,11 @@ export const ViewEditorComponents = (props) => {
           embed: {
             class: Embed,
             inlineToolbar: true,
+          },
+          breakLine: {
+            class: BreakLine,
+            inlineToolbar: true,
+            shortcut: 'CMD+SHIFT+ENTER',
           },
           underline: Underline,
         },

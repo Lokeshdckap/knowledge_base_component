@@ -11,6 +11,7 @@ import Cookies from "js-cookie";
 
 export default function SignupComponents() {
   const googleAuth = () => {
+    
     window.open(
       `http://localhost:4000/api/auth/auth/google/callback`,
       "_self"

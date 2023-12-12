@@ -176,6 +176,7 @@ const getScripts = async (req, res) => {
 const uploadImage = async (req, res) => {
   try {
     const { filename } = req.file;
+    console.log(filename);
     const path = `http://localhost:4000/uploads/${filename}`;
     const page_uuid = req.body.uuid;
     try {
@@ -265,10 +266,13 @@ const pageSearch = async (req, res) => {
   }
 };
 
+
+
+
 const fetchImage = async (req, res) => {
   try {
     const image = await Image.findOne({
-      where: { uuid: "f87ab704-648e-40b4-93b2-40e103ba30cb" },
+      where: { uuid: "3e0477be-24e5-4ffe-ad3a-e4eb60dabd22" },
     });
 
     return res

@@ -2,39 +2,17 @@ import React, { useEffect, useRef, useState } from "react";
 import EditorJS from "@editorjs/editorjs";
 import List from "@editorjs/list";
 import Table from "@editorjs/table";
-import Header from '@editorjs/header';
+import Header from "@editorjs/header";
 import Underline from "@editorjs/underline";
 import Marker from "@editorjs/marker";
 import Quote from "@editorjs/quote";
 import Embed from "@editorjs/embed";
 import ImageTool from "@editorjs/image";
+import BreakLine from "editorjs-break-line";
 import axiosClient from "../../axios-client";
 
 export const EditorComponents = (props) => {
   const [imageUrl, setImageUrl] = useState("");
-
-  // console.log(imageUrl);
-
-  const handleUpload = async (file) => {
-    const formData = new FormData();
-
-    formData.append("image", file);
-
-
-    try {
-      axiosClient
-        .post("/api/dashboard/uploadImage", formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        })
-        .then((res) => {
-          setImageUrl(res.data.image.filename);
-        });
-    } catch (error) {
-      console.error("Error parsing JSON or response undefined:", error);
-    }
-  };
 
   const ejInstance = useRef();
 
@@ -45,7 +23,7 @@ export const EditorComponents = (props) => {
         ejInstance.current = editor;
       },
       autofocus: true,
-      readOnly:false,
+      readOnly: false,
       data: props.editorValue,
       onChange: async () => {
         try {
@@ -76,14 +54,46 @@ export const EditorComponents = (props) => {
         },
         image: {
           class: ImageTool,
-          inlineToolbar: true,
           config: {
             uploader: {
-              uploadByFile(file) {
-                return handleUpload(file);
+              async uploadByFile(file) {
+                
+                const formData = new FormData();
+
+                formData.append("image", file);
+
+                const response = await axiosClient.post(
+                  `/api/dashboard/uploadImage`,
+                  formData,
+                  {
+                    headers: {
+                      "Content-Type": "multipart/form-data",
+                    },
+                    withCredentials: false,
+                  }
+                );
+                return Promise.resolve({
+                  success: 1,
+                  file: {
+                    url: response.data.image.filename,
+                  },
+                });
+              },
+
+              async uploadByUrl(url) {
+                const response = await axiosClient.post(
+                  `http://localhost:4001/api/uploadImage/createByUrl`,
+                  {
+                    url,
+                  }
+                );
+
+                if (response.data.success === 1) {
+                  return response.data;
+                }
               },
             },
-            byUrl: imageUrl, // Make sure imageUrl contains a valid URL
+            inlineToolbar: true,
           },
         },
         table: {
@@ -105,7 +115,17 @@ export const EditorComponents = (props) => {
         },
         embed: {
           class: Embed,
+          config: {
+            services: {
+              youtube: true,
+              coub: true,
+            },
+          },
+        },
+        breakLine: {
+          class: BreakLine,
           inlineToolbar: true,
+          shortcut: "CMD+SHIFT+ENTER",
         },
         underline: Underline,
       },
@@ -138,4 +158,3 @@ export const EditorComponents = (props) => {
     </>
   );
 };
-

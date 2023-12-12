@@ -10,11 +10,11 @@ import Checklist from "@editorjs/checklist";
 import Quote from "@editorjs/quote";
 import Embed from "@editorjs/embed";
 import ImageTool from "@editorjs/image";
+import BreakLine from 'editorjs-break-line';
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import axiosClient from "../../axios-client";
 import { PageTree } from "../commonComponents/PageTree";
 import { Search } from "./Search";
-
 export const UrlPage = () => {
   const location = useLocation();
   
@@ -131,6 +131,9 @@ export const UrlPage = () => {
           },
         },
         header: Header,
+        image: {
+          class: ImageTool
+        },
         checklist: {
           class: Checklist,
           inlineToolbar: true,
@@ -159,6 +162,11 @@ export const UrlPage = () => {
         embed: {
           class: Embed,
           inlineToolbar: true,
+        },
+        breakLine: {
+          class: BreakLine,
+          inlineToolbar: true,
+          shortcut: 'CMD+SHIFT+ENTER',
         },
         underline: Underline,
       },

@@ -6,6 +6,7 @@ const bcrypt = require("bcrypt");
 const fs = require("fs");
 const path = require("path");
 const sendEmail = require("../../utils/sendEmails");
+
 const getUserInfo = async (req, res) => {
   const userInfo = await User.findOne({
     where: {
@@ -31,8 +32,6 @@ const userUpdateProfile = async (req, res) => {
       const { filename } = req.file ? req.file : null;
        path = `http://localhost:4000/uploads/${filename}`;
     }
-    
-
 
     const oldPassword = req.body.oldPassword;
 

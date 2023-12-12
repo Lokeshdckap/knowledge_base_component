@@ -112,6 +112,8 @@ export default function SideNavLarge(props) {
 
   //Batch Popup
   const addPopUp = (e) => {
+    console.log(e.target);
+
     e.preventDefault();
     e.stopPropagation();
     let targetId = e.target.id;
@@ -254,7 +256,7 @@ export default function SideNavLarge(props) {
       <div className="flex items-center pt-6 pl-7 space-x-2 ">
         <div>
           <img
-            src={"https://i.postimg.cc/q7jqHKxQ/book.png"}
+            src={"https://i.postimg.cc/W11rypJ7/book-3.png"}
             alt=""
             className="h-6 text-[#F9EFD4]"
           />
@@ -341,6 +343,7 @@ export default function SideNavLarge(props) {
         )}
 
         <ul className="mt-5 space-y-1 2xl:max-h-[650px] xl:max-h-[380px] overflow-auto">
+
           {batch.map((batch, index) => (
             <div key={index}>
               <Link to={`/dashboard/${params.uuid}/b/${batch.uuid}`}>

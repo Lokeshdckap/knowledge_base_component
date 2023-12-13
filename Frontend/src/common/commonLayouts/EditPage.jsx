@@ -68,8 +68,11 @@ export default function EditPage(props) {
             </div>
           </div>
         </div>
-        <div className={`bg-[#fbfbfc] xl:max-h-[510px] px-[30px] lg:max-h-[580px] md:max-h-[1000px] overflow-auto`} 
-            style={{width: "calc(100% - 278px)"}}
+        <div className={`bg-[#fbfbfc] xl:max-h-[610px] px-[30px] lg:max-h-[580px] md:max-h-[1000px] overflow-auto`} 
+            style={{width: "calc(100% - 278px)",height: "calc(100%-70)"}
+                
+          
+          }
         >
     
           <div>

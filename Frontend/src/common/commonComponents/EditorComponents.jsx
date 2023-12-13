@@ -138,15 +138,6 @@ export const EditorComponents = (props) => {
       initEditor();
     }
 
-    try {
-      axiosClient.get("/api/dashboard/fetchImage").then((res) => {
-        console.log(res);
-        setImageUrl(res.data.image.filename);
-      });
-    } catch (error) {
-      console.error("Error parsing JSON or response undefined:", error);
-    }
-
     return () => {
       ejInstance?.current?.destroy();
       ejInstance.current = null;

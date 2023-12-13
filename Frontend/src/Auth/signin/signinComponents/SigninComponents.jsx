@@ -100,11 +100,14 @@ export default function SigninComponents() {
 
   return (
     <main className="flex">
-      <div className="bg-primary w-1/2 h-screen">
+      <div className="  2xl:bg-primary 2xl:w-1/2 2xl:h-screen 
+      xl:bg-primary xl:w-1/2 xl:h-screen
+      lg:bg-primary lg:w-1/2 lg:h-screen
+           ">
         <img
           src={"https://i.postimg.cc/ydTtqjsF/book-2.png"}
           alt=""
-          className="max-w-md ml-11 mt-6 h-6"
+          className="max-w-md ml-11 mt-6 h-6 "
         />
 
         <p className="mx-6 text-white text-sm font-medium pt-2">Rhino Tome</p>

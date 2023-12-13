@@ -53,7 +53,7 @@ export default function Main(props) {
       className="bg-[#F4F7FC]"
 
     >
-      <div className="pt-2 2xl:max-h-[1000px] xl:max-h-[580px] overflow-auto  pl-[30px] pr-[30px]">
+      <div className="pt-5 2xl:max-h-[800px] xl:max-h-[580px] lg:max-h-[560px] overflow-auto  pl-[30px] pr-[30px]">
         <div className=" w-[100%] m-auto">
           <div className={`flex justify-between  `}>
             <div className="flex space-x-3 pt-2">
@@ -87,13 +87,13 @@ export default function Main(props) {
           </div>
           <p className="font-semibold text-textPrimary text-xl pl-1">BATCHS</p>
           <div
-            className={` m-auto grid 2xl:grid-cols-5 xl:grid-cols-4 gap-2 mt-2`}
+            className={` m-auto grid 2xl:grid-cols-5 xl:grid-cols-4 lg:grid-cols-3 gap-2 mt-2`}
           >
             {batchList && batchList.length > 0 ? (
               batchList.map((batch, index) => (
                 <div
                   key={batch.uuid}
-                  className="bg-white border-[1px] rounded-[10px]  hover:border-primary relative xl:p-[10px] 2xl:p-[20px]"
+                  className="bg-white border-[1px] rounded-[10px]  hover:border-primary relative lg:p-[5px] xl:p-[10px] 2xl:p-[20px]"
                 >
                   <div className="w-[100%] ">
                     <div className="rounded-t-lg text-end ">
@@ -164,12 +164,12 @@ export default function Main(props) {
           </p>
 
           <div
-            className={` m-auto grid 2xl:grid-cols-5 xl:grid-cols-4 gap-2  mt-2`}
+            className={` m-auto grid 2xl:grid-cols-5 xl:grid-cols-4 lg:grid-cols-3 gap-2  mt-2`}
           >
             {scriptList && scriptList.length > 0 ? (
               scriptList.map((script) => (
                 <div
-                  className="bg-white  border-[1px] rounded-[10px]  hover:border-primary  relative xl:p-[10px] 2xl:p-[20px]"
+                  className="bg-white  border-[1px] rounded-[10px]  hover:border-primary  relative lg:p-[5px] xl:p-[10px] 2xl:p-[20px]"
                   key={script.uuid}
                 >
                   <div className="w-[100%]">
@@ -186,7 +186,7 @@ export default function Main(props) {
                       </span>
                     </div>
                     <div
-                      className="px-5 font-medium cursor-pointer"
+                      className="font-medium cursor-pointer"
                       id={script.uuid}
                       onClick={handleScripts}
                     >

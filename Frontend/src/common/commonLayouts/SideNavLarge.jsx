@@ -47,6 +47,7 @@ export default function SideNavLarge(props) {
 
   const addPopup = useRef(null);
   const addIconRef = useRef(null);
+  
   //TeamState
   const [teamDropDown, setteamDropDown] = useState(false);
 
@@ -69,6 +70,7 @@ export default function SideNavLarge(props) {
 
   const [inviteError, setInviteError] = useState(null);
 
+  const [topState,setTopState] = useState(null)
   //
 
   useEffect(() => {
@@ -114,6 +116,15 @@ export default function SideNavLarge(props) {
   const addPopUp = (e) => {
     e.preventDefault();
     e.stopPropagation();
+ 
+    const element = addIconRef.current;  
+    // Check if the element is available
+    if (element) {
+      // Use getBoundingClientRect to get the size and position
+      const top = element.getBoundingClientRect().top;
+      setTopState(top+30);
+    }
+
     let targetId = e.target.id;
     localStorage.setItem("mainId", targetId);
     setOverState(targetId);
@@ -340,7 +351,7 @@ export default function SideNavLarge(props) {
           </div>
         )}
 
-        <ul className="mt-5 space-y-1 2xl:max-h-[650px] xl:max-h-[380px] overflow-auto">
+        <ul className="mt-5 space-y-1 2xl:max-h-[650px] xl:max-h-[380px] lg:max-h-[350px] overflow-auto">
           {batch.map((batch, index) => (
             <div key={index}>
               <Link to={`/dashboard/${params.uuid}/b/${batch.uuid}`}>
@@ -388,8 +399,11 @@ export default function SideNavLarge(props) {
                 <>
                   <div className="bg-[#a3a2e9] opacity-[0] w-screen h-screen absolute top-0 left-0  z-10"></div>
                   <div
-                    className="box-border bg-white  w-40   border-[1px] border-slate-300 rounded-lg shadow-lg absolute  left-40 z-10"
+                    className="box-border bg-white  w-40   border-[1px] border-slate-300 rounded-lg shadow-lg absolute  left-40  z-10"
                     ref={addPopup}
+                    style={{
+                      top:topState
+                    }}
                   >
                     <div className="w-[145px] m-auto space-y-3 pt-3 pb-3">
                       <p
@@ -458,10 +472,15 @@ export default function SideNavLarge(props) {
                         </Link>
                         {popUp == child.uuid && (
                           <>
-                            <div className="box-border bg-white w-40 p-2.5 border-[1px] border-slate-300 rounded-xl shadow-lg absolute left-40 z-50">
+                            <div className="box-border bg-white w-40 p-2.5 border-[1px] border-slate-300 rounded-xl shadow-lg absolute left-40 z-50"
+                             style={{
+                              top: topState
+                            }}
+                            >
                               <div
                                 className="w-[140px] m-auto space-y-3"
                                 ref={addPopup}
+                               
                               >
                                 <p
                                   className={`text-lg cursor-pointer text-textPrimary hover:bg-primary  hover:text-white hover:rounded p-0.5`}
@@ -517,6 +536,7 @@ export default function SideNavLarge(props) {
                     <i
                       className="fa-solid fa-ellipsis-vertical text-[#F9EFD4]   pt-[3px] pb-[3px] pl-[7px] pr-[7px] rounded-[4px] "
                       id={script.uuid}
+                      ref={addIconRef}
                       onClick={addPopUp}
                     ></i>
                   )}
@@ -529,6 +549,9 @@ export default function SideNavLarge(props) {
                   <div
                     className="box-border bg-white  w-40   border-[1px] border-slate-300 rounded-lg shadow-lg absolute left-40 z-50"
                     ref={addPopup}
+                    style={{
+                      top:topState
+                    }}
                   >
                     <div className="w-[145px] m-auto space-y-3 pt-3 pb-3">
                       <p

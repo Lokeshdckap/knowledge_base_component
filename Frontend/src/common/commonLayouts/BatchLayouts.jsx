@@ -43,7 +43,7 @@ export const BatchLayouts = (props) => {
 
   return (
     <div className="bg-[#F4F7FC] " style={{ height: "calc(100% - 70px)" }}>
-      <div className="2xl:max-h-[510px]  xl:max-h-[580px] pl-[30px] pr-[30px] overflow-auto">
+      <div className="2xl:max-h-[580px]  xl:max-h-[600px] lg:max-h-[440px] pl-[30px] pr-[30px] overflow-auto">
         <div className="w-[100%] m-auto">
           <div className={`flex justify-between`}>
             <div>
@@ -87,12 +87,12 @@ export const BatchLayouts = (props) => {
             SCRIPTS
           </p>
           <div
-            className={`m-auto grid 2xl:grid-cols-5 xl:grid-cols-4 gap-2 mt-2`}
+            className={`m-auto grid 2xl:grid-cols-5 xl:grid-cols-4 lg:grid-cols-3 gap-2 mt-2`}
           >
             {scripts &&
               scripts.map((script) => (
                 <div
-                  className="bg-white  border-[1px] rounded-[10px] hover:border-primary  relative xl:p-[10px] 2xl:p-[20px]"
+                  className="bg-white  border-[1px] rounded-[10px] hover:border-primary  relative lg:p-[5px] xl:p-[10px] 2xl:p-[20px]"
                   key={script.id}
                 >
                   <div className="w-[100%]">

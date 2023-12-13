@@ -2,16 +2,27 @@ import React, { useEffect, useRef, useState } from "react";
 import { EditorComponents } from "../commonComponents/EditorComponents";
 import { PageTree } from "../commonComponents/PageTree";
 import { PublishPopup } from "../commonComponents/PublishPopup";
+import { useMyContext } from "../../context/AppContext";
 
 export default function EditPage(props) {
   const { renderScript } = props;
   const [newPagePopup, setNewPagePopup] = useState(false);
   const [OverPage, setOverPage] = useState(null);
   const treeNode = props.treeNode;
+  const { screenHeight, setScreenHeight } = useMyContext();
 
   useEffect(() => {
     props.setParticularTitle(props.particularTitle);
     props.setDescription(props.description);
+
+    const updateScreenHeight = () => {
+      setScreenHeight(window.innerHeight);
+    };
+    window.addEventListener("resize", updateScreenHeight);
+
+    return () => {
+      window.removeEventListener("resize", updateScreenHeight);
+    };
   }, [props.particularTitle, props.description, props.editorContent]);
 
   const title = props.particularTitle;
@@ -30,9 +41,14 @@ export default function EditPage(props) {
   };
 
   return (
-    <div className="bg-[#F4F7FC]" style={{ height: "calc(100% - 70px)" }}>
+    <div className="bg-[#F4F7FC]" style={{ height: "calc(100% - 64px)" }}>
       <div className="flex">
-        <div className=" w-[278px] xl:max-h-[510px] lg:max-h-[570px] md:max-h-[1000px] overflow-auto border-r-[1px]">
+        <div
+          className=" w-[278px] overflow-auto border-r-[1px]"
+          style={{
+            height: `calc(${screenHeight}px - 64px)`,
+          }}
+        >
           <div className="space-y-2 ml-4 mt-4">
             <div className="p-4 rounded-lg shadow">
               {treeNode.map((topLevelPage, index) => (
@@ -68,10 +84,13 @@ export default function EditPage(props) {
             </div>
           </div>
         </div>
-        <div className={`bg-[#fbfbfc] xl:max-h-[510px] px-[30px] lg:max-h-[580px] md:max-h-[1000px] overflow-auto`} 
-            style={{width: "calc(100% - 278px)"}}
+        <div
+          className={`bg-[#fbfbfc] px-[30px]  overflow-auto`}
+          style={{
+            width: "calc(100% - 278px)",
+            maxHeight: `calc(${screenHeight}px - 64px)`,
+          }}
         >
-    
           <div>
             <input
               type="text"
@@ -111,7 +130,6 @@ export default function EditPage(props) {
             )}
           </div>
         </div>
-
       </div>
       {props.shareState && (
         <PublishPopup

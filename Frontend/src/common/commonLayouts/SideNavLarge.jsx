@@ -33,7 +33,10 @@ export default function SideNavLarge(props) {
     popUp,
     showToastMessage,
     addNewScript,
+    screenHeight, 
+    setScreenHeight
   } = useMyContext();
+
 
   //param
   const params = useParams();
@@ -255,10 +258,18 @@ export default function SideNavLarge(props) {
       }
     };
 
+    const updateScreenHeight = () => {
+      setScreenHeight(window.innerHeight);
+    };
+
+    // Attach the event listener for window resize
+    window.addEventListener('resize', updateScreenHeight);
     window.addEventListener("click", closeOnOutsideClick);
 
     return () => {
       window.removeEventListener("click", closeOnOutsideClick);
+      window.removeEventListener("resize", updateScreenHeight);
+
     };
   }, [teamDropDown, AddNewMenu, props.overStates, popUp]);
 
@@ -303,7 +314,9 @@ export default function SideNavLarge(props) {
             <div>
               <p className="font-semibold text-textPrimary">Change Team</p>
               {allTeam && (
-                <ul className={`space-y-2 pt-2 max-h-[250px] overflow-auto`}>
+                <ul className={`space-y-2 pt-2 overflow-auto`}
+             
+                >
                   {allTeam.map((team, index) => (
                     <li
                       key={index}
@@ -353,7 +366,11 @@ export default function SideNavLarge(props) {
           </div>
         )}
 
-        <ul className="mt-5 space-y-1 2xl:max-h-[650px] xl:max-h-[380px] lg:max-h-[350px] overflow-auto">
+        <ul className="mt-1 space-y-1  overflow-auto"
+        style={{ 
+          maxHeight: `calc(${screenHeight}px - 189px)` 
+        }}
+        >
           {batch.map((batch, index) => (
             <div key={index}>
               <Link to={`/dashboard/${params.uuid}/b/${batch.uuid}`}>
@@ -571,13 +588,11 @@ export default function SideNavLarge(props) {
           ))}
         </ul>
       </div>
-      <div className="">
-        <div className="h-px bg-[#c2c2c9] w-[100%]">
+      <div className="absolute bottom-5 ">
+        <div className="h-px bg-[#c2c2c9] w-[220px] ">
 
         </div>
-        {/* <hr
-          className={`h-px bg-[#c2c2c9] border-0 dark:bg-gray-300 m-auto mt-2 align-bottom`}
-        /> */}
+ 
         <div className=" flex items-center  justify-around w-[200px] m-auto  mt-6">
           <div
             className={` ${

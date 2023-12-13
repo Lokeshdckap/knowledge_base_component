@@ -5,13 +5,13 @@ import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 export default function Header(props) {
   const params = useParams();
   const profileRef = useRef(null);
-
+  const navigate = useNavigate();
   const profileIconRef = useRef(null);
 
   const [profileState, setProfileState] = useState(false);
   const onLogout = () => {
     localStorage.removeItem("ACCESS_TOKEN");
-    window.location.href = "/signin";
+    navigate("/")
   };
 
   useEffect(() => {
@@ -40,7 +40,7 @@ export default function Header(props) {
         className={`flex items-center  m-auto justify-between  relative  w-[100%]  2xl:py-[30px] pt-[11px] pb-[11px] pl-[30px] pr-[30px]` } 
       >
         <h2> {props.team}'s Team</h2>
-        <div>
+        <div> 
           <div className="flex">
             <div className="relative w-[380px]">
               <input

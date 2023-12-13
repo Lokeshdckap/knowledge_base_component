@@ -2,9 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useLocation, useParams } from "react-router-dom";
 import axiosClient from "../../axios-client";
 
-
 export const TeamSideNav = (props) => {
-
   const params = useParams();
 
   const [teamName, setTeamName] = useState("");
@@ -24,16 +22,13 @@ export const TeamSideNav = (props) => {
       });
   };
 
-
   return (
-    <div>
+    <div className="relative">
       <div className="bg-white h-screen overflow-auto w-56 shadow-md">
         <div className="bg-slate-300 h-14">
-          <p className="w-20 m-auto pt-4 truncate">
-            {teamName && teamName}
-          </p>
+          <p className="w-20 m-auto pt-4 truncate">{teamName && teamName}</p>
         </div>
-        <div className="w-48 m-auto  xl:h-[464px] lg:h-[500px]">
+        <div className="w-48 m-auto ">
           <p className="text-textPrimary font-bold text-lg mt-3 ">
             Team Setting
           </p>
@@ -74,13 +69,14 @@ export const TeamSideNav = (props) => {
             </Link>
           </div>
         </div>
-
-        <div className="bg-primary h-16 p-6 flex items-center space-x-2">
-          <i className="fa-solid fa-arrow-left text-white"></i>
-          <Link to={`/dashboard/${params.uuid}`}>
-            {" "}
-            <p className="text-white">Back to Home</p>
-          </Link>
+        <div className="absolute bottom-0  w-[100%]">
+          <div className="bg-primary p-5 flex items-center space-x-2 ">
+            <i className="fa-solid fa-arrow-left text-white"></i>
+            <Link to={`/dashboard/${params.uuid}`}>
+              {" "}
+              <p className="text-white text-xl">Back to Home</p>
+            </Link>
+          </div>
         </div>
       </div>
     </div>

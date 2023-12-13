@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { useMyContext } from "../../context/AppContext";
 
 export default function Main(props) {
   const deleteIconRef = useRef({});
@@ -7,8 +8,13 @@ export default function Main(props) {
 
   const params = useParams();
   const navigate = useNavigate();
+  const {
+    screenHeight, setScreenHeight
+  } = useMyContext();
+
 
   const [popUpState, setPopUpState] = useState(null);
+  
 
   const batchList = props.batches;
   const scriptList = props.scripts;
@@ -17,6 +23,7 @@ export default function Main(props) {
   const scriptCount = props.scriptCount;
 
   useEffect(() => {
+    console.log(window.innerHeight);
     const closeOnOutsideClick = (e) => {
       if (deleteRef.current !== null) {
         if (
@@ -28,10 +35,17 @@ export default function Main(props) {
         }
       }
     };
+    const updateScreenHeight = () => {
+      setScreenHeight(window.innerHeight);
+    };
 
+    // Attach the event listener for window resize
+    window.addEventListener('resize', updateScreenHeight);
     window.addEventListener("click", closeOnOutsideClick);
+
     return () => {
       window.removeEventListener("click", closeOnOutsideClick);
+      window.removeEventListener("resize", updateScreenHeight);
     };
   }, [popUpState]);
 
@@ -49,11 +63,13 @@ export default function Main(props) {
   };
 
   return (
-    <div
-      className="bg-[#F4F7FC]"
-
+    <div className="bg-[#F4F7FC]"
+    style={{ height: `calc(${screenHeight}px - 64px)` }}
     >
-      <div className="pt-5 2xl:max-h-[800px] xl:max-h-[580px] lg:max-h-[560px] overflow-auto  pl-[30px] pr-[30px]">
+      <div
+        className="pt-5  overflow-auto  pl-[30px] pr-[30px]"
+        style={{ maxHeight: `calc(${screenHeight}px - 64px)` }}
+      >
         <div className=" w-[100%] m-auto">
           <div className={`flex justify-between  `}>
             <div className="flex space-x-3 pt-2">
@@ -202,7 +218,7 @@ export default function Main(props) {
                         onClick={handleScripts}
                         className="text-gray-500 pt-1"
                       >
-                        0 Pages
+                      Pages
                       </p>
                     </div>
                     {popUpState == script.uuid && (

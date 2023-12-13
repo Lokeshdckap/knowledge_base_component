@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { useMyContext } from "../../context/AppContext";
 
 export const BatchLayouts = (props) => {
   const deleteIconRef = useRef({});
@@ -7,7 +8,7 @@ export const BatchLayouts = (props) => {
 
   const params = useParams();
   const navigate = useNavigate();
-
+  const { screenHeight, setScreenHeight } = useMyContext();
   const [popUpState, setPopUpState] = useState(null);
 
   let scripts = props.scripts;
@@ -26,9 +27,15 @@ export const BatchLayouts = (props) => {
       }
     };
 
+    const updateScreenHeight = () => {
+      setScreenHeight(window.innerHeight);
+    };
+
     window.addEventListener("click", closeOnOutsideClick);
+    window.addEventListener("resize", updateScreenHeight);
     return () => {
       window.removeEventListener("click", closeOnOutsideClick);
+      window.removeEventListener("resize", updateScreenHeight);
     };
   }, [popUpState]);
 
@@ -42,8 +49,11 @@ export const BatchLayouts = (props) => {
   };
 
   return (
-    <div className="bg-[#F4F7FC] " style={{ height: "calc(100% - 70px)" }}>
-      <div className="2xl:max-h-[580px]  xl:max-h-[600px] lg:max-h-[440px] pl-[30px] pr-[30px] overflow-auto">
+    <div className="bg-[#F4F7FC] " style={{ height: "calc(100% - 64px)" }}>
+      <div
+        className=" pl-[30px] pr-[30px] overflow-auto"
+        style={{ maxHeight: `calc(${screenHeight}px - 64px)` }}
+      >
         <div className="w-[100%] m-auto">
           <div className={`flex justify-between`}>
             <div>
@@ -113,7 +123,11 @@ export const BatchLayouts = (props) => {
                       id={script.uuid}
                       onClick={handleScripts}
                     >
-                      <p className="2xl:text-2xl" id={script.uuid} onClick={handleScripts}>
+                      <p
+                        className="2xl:text-2xl"
+                        id={script.uuid}
+                        onClick={handleScripts}
+                      >
                         {script.title}
                       </p>
                       <p

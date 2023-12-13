@@ -19,6 +19,9 @@ const MyContextProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const [trashData, setTrashData] = useState([]);
 
+  //style State
+  const [screenHeight, setScreenHeight] = useState(window.innerHeight);
+
   //Adding State
   const [AddNewMenu, setAddNewMenu] = useState(false);
   const [popUp, setPopup] = useState(null);
@@ -301,6 +304,8 @@ const MyContextProvider = ({ children }) => {
         handleTrash,
         userInfo,
         userDetail,
+        screenHeight, 
+        setScreenHeight
       }}
     >
       {children}

@@ -12,8 +12,7 @@ const google = () => {
         clientID:
           "1009276001337-tvc5n33me839uroo68b4iamrll2bj1uc.apps.googleusercontent.com",
         clientSecret: "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",
-        callbackURL: "http://localhost:4000/api/auth/auth/google/callback",
-        scope: ['openid', 'profile', 'email']
+        callbackURL: "/api/auth/auth/google/callback",
       },
       async (req, accessToken, refreshToken, profile, done) => {
         // console.log(req);
@@ -33,6 +32,7 @@ const google = () => {
         
           if (user) {
             let token = generateAuthToken.generateAuthToken(user);
+
             return done(null, user, { access_token: token }); // Pass the token as additional info
           } else {
             user = await User.create(newUser);

@@ -12,10 +12,7 @@ import Cookies from "js-cookie";
 export default function SignupComponents() {
   const googleAuth = () => {
     
-    window.open(
-      `http://localhost:4000/api/auth/auth/google/callback`,
-      "_self"
-    );
+    window.location.href = 'http://localhost:4000/api/auth/auth/google';
 	};
 
   const [errors, setError] = useState({});
@@ -50,16 +47,16 @@ export default function SignupComponents() {
     let passwordRegex = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
 
     if (!formValues.username.trim()) {
-      validationErrors.username = "username is required";
+      validationErrors.username = "Username is required";
     }
     if (!formValues.email.trim()) {
-      validationErrors.email = "email is required";
+      validationErrors.email = "Email is required";
     } else if (
       !/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/.test(
         formValues.email
       )
     ) {
-      validationErrors.email = "email is not valid";
+      validationErrors.email = "Email is not valid";
     }
 
     if (!formValues.password.trim()) {
@@ -68,7 +65,7 @@ export default function SignupComponents() {
       validationErrors.password = "Password is not valid";
     }
     if (!formValues.confirmPassword.trim()) {
-      validationErrors.confirmPassword = "confirmPassword is required";
+      validationErrors.confirmPassword = "ConfirmPassword is required";
     }
     if (formValues.password !== formValues.confirmPassword) {
       validationErrors.confirmPassword = "Password not match";

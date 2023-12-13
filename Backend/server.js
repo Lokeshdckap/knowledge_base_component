@@ -4,8 +4,7 @@ const cors = require("cors");
 
 const app = express();
 
-app.use(cors({ credentials: true }))
-
+app.use(cors({ origin: true }));
 
 require("dotenv").config();
 
@@ -23,11 +22,6 @@ app.use(passport.session());
 
 // Middlewares
 
-app.use(cors({
-  origin:"http://localhost:3000",
-  methods:"GET,POST,PUT,DELETE",
-  credentials:true,
-}))
 
 
 const path = require("path");

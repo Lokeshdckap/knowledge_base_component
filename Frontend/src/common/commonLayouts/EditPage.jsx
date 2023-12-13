@@ -84,6 +84,7 @@ export default function EditPage(props) {
             </div>
           </div>
         </div>
+
         <div
           className={`bg-[#fbfbfc] px-[30px]  overflow-auto`}
           style={{

@@ -350,7 +350,7 @@ export default function SideNavLarge(props) {
                 >
                   <i className="fa-solid fa-user-plus cursor-pointer"></i>
                   <p className="pl-1 cursor-pointer">Invite Teamates</p>
-                </div>
+              </div>
               </div>
             </div>
             <hr

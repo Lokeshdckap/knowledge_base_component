@@ -3,11 +3,12 @@ import Button from "../../../common/commonComponents/Button";
 import Input from "../../../common/commonComponents/Input";
 import googles from "../../../assets/images/google.png";
 import logo from "../../../assets/images/onboard.png";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { useStateContext } from "../../../context/ContextProvider";
 import axiosClient from "../../../axios-client";
 import HashLoader from "react-spinners/HashLoader";
 import Cookies from "js-cookie";
+import { ToastContainer, toast } from "react-toastify";
 
 export default function SignupComponents() {
   const googleAuth = () => {
@@ -17,6 +18,7 @@ export default function SignupComponents() {
   const [errors, setError] = useState({});
   const params = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const { setAuth } = useStateContext();
 
@@ -92,6 +94,7 @@ export default function SignupComponents() {
         .then(({ data }) => {
           setAuth({
             token: data.access_token,
+            refresh_token: data.refresh_token,
           });
           setLoading(false);
           navigate("/emailverify");
@@ -132,6 +135,21 @@ export default function SignupComponents() {
     delete errors[name];
   };
 
+  let duration = 2000;
+  const showToastMessage = (data) => {
+    toast.error(data, {
+      position: toast.POSITION.TOP_RIGHT,
+      autoClose: duration,
+      hideProgressBar: true,
+      draggable: true,
+      closeOnClick: true,
+    });
+  };
+  const errorMessage = localStorage.getItem("errorMessage");
+  if (errorMessage) {
+    showToastMessage(errorMessage);
+    localStorage.removeItem("errorMessage");
+  }
   return (
     <>
       <main className="flex h-[100vh] max-w-[100%]">

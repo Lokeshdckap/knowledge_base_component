@@ -5,6 +5,7 @@ import Input from "./Input";
 import { useStateContext } from "../../../context/ContextProvider";
 import axiosClient from "../../../axios-client";
 import HashLoader from "react-spinners/HashLoader";
+import googles from "../../../assets/images/google.png";
 
 export default function SigninComponents() {
   const params = useParams();
@@ -15,7 +16,7 @@ export default function SigninComponents() {
 
   const [loading, setLoading] = useState(false);
 
-  const { setAuth } = useStateContext();
+  const { auth, setAuth } = useStateContext();
 
   function togglePassword() {
     setPasswordVisible((prevState) => !prevState);
@@ -58,11 +59,12 @@ export default function SigninComponents() {
       axiosClient
         .post("/api/auth/login", formValues)
         .then(({ data }) => {
+          console.log(data);
           if (data.verify) {
             setAuth({
-              token: data.token,
+              token: data.access_token,
+              refresh_token: data.refresh_token,
               verify: data.verify,
-              state: true,
             });
           } else {
             {
@@ -212,6 +214,17 @@ export default function SigninComponents() {
             <Link to="/signup" className="text-primary">
               Signup
             </Link>
+          </div>
+          <div className="flex justify-center">
+            <div className="bg-white w-10 h-10 ">
+              <img src={googles} className="p-2" />
+            </div>
+
+            <button className="bg-white w-40 h-10 text-primary rounded font-medium text-sm backdrop-blur-[2px] border-[1px]">
+              <a href="http://localhost:4000/api/auth/google">
+                Continue With Google
+              </a>
+            </button>
           </div>
           {loading && (
             <>

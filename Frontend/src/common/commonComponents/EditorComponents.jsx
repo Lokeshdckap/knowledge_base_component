@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from "react";
 import EditorJS from "@editorjs/editorjs";
 import List from "@editorjs/list";
 import Table from "@editorjs/table";
-import Header from "@editorjs/header";
 import Underline from "@editorjs/underline";
 import Marker from "@editorjs/marker";
 import Quote from "@editorjs/quote";
@@ -10,10 +9,9 @@ import Embed from "@editorjs/embed";
 import ImageTool from "@editorjs/image";
 import BreakLine from "editorjs-break-line";
 import axiosClient from "../../axios-client";
-
+import AttachesTool from "@editorjs/attaches";
+import Header from '@editorjs/header';
 export const EditorComponents = (props) => {
-  const [imageUrl, setImageUrl] = useState("");
-
   const ejInstance = useRef();
 
   const initEditor = () => {
@@ -26,6 +24,8 @@ export const EditorComponents = (props) => {
       readOnly: false,
       data: props.editorValue,
       onChange: async () => {
+        // console.log(props.editorContent);
+
         try {
           // Check if editor is defined before calling save method
           if (editor) {
@@ -39,7 +39,11 @@ export const EditorComponents = (props) => {
       tools: {
         header: {
           class: Header,
-          inlineToolbar: true,
+          config: {
+            placeholder: 'Enter a header',
+            levels: [2, 3, 4],
+            defaultLevel: 3
+          }
         },
         list: {
           class: List,
@@ -57,7 +61,6 @@ export const EditorComponents = (props) => {
           config: {
             uploader: {
               async uploadByFile(file) {
-                
                 const formData = new FormData();
 
                 formData.append("image", file);
@@ -72,12 +75,14 @@ export const EditorComponents = (props) => {
                     withCredentials: false,
                   }
                 );
-                return Promise.resolve({
-                  success: 1,
-                  file: {
-                    url: response.data.image.filename,
-                  },
-                });
+                if (response.data.success === true) {
+                  return Promise.resolve({
+                    success: 1,
+                    file: {
+                      url: response?.data?.image?.filename,
+                    },
+                  });
+                }
               },
 
               async uploadByUrl(url) {
@@ -94,6 +99,37 @@ export const EditorComponents = (props) => {
               },
             },
             inlineToolbar: true,
+          },
+        },
+        attaches: {
+          class: AttachesTool,
+          config: {
+            uploader: {
+              async uploadByFile(file) {
+                const formData = new FormData();
+
+                formData.append("image", file);
+
+                const response = await axiosClient.post(
+                  `/api/dashboard/uploadImage`,
+                  formData,
+                  {
+                    headers: {
+                      "Content-Type": "multipart/form-data",
+                    },
+                    withCredentials: false,
+                  }
+                );
+                if (response.data.success === true) {
+                  return Promise.resolve({
+                    success: 1,
+                    file: {
+                      url: response?.data?.image?.filename,
+                    },
+                  });
+                }
+              },
+            },
           },
         },
         table: {
@@ -119,6 +155,8 @@ export const EditorComponents = (props) => {
             services: {
               youtube: true,
               coub: true,
+              facebook: true,
+              instagram: true,
             },
           },
         },
@@ -142,7 +180,7 @@ export const EditorComponents = (props) => {
       ejInstance?.current?.destroy();
       ejInstance.current = null;
     };
-  }, [props.editorValue]);
+  }, [props.editorValue,]);
   return (
     <>
       <div id="editorjs"></div>

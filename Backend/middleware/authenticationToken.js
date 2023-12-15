@@ -2,6 +2,10 @@ const jwt = require("jsonwebtoken");
 
 const config = process.env;
 
+const tokens = require("../utils/generateAuthToken");
+
+const generateAuthToken = tokens.generateAuthToken;
+
 const verifyToken = (req, res, next) => {
   const token =
     req.body.token || req.query.token || req.headers["authorization"];
@@ -19,6 +23,26 @@ const verifyToken = (req, res, next) => {
   }
   return next();
 };
+
+const refreshToken = async (req, res, next) => {
+
+  const refreshToken = req.body.refreshToken;
+
+  if (!refreshToken) return res.sendStatus(401);
+
+  jwt.verify(refreshToken,config.secretKey,
+     async (err, user) => {
+    if (err) return res.status(401).send("Unauthorization Token");
+
+    let access_token = generateAuthToken(user);
+
+    // console.log(access_token);
+
+    return res.status(200).json({access_token: access_token });
+  });
+};
+
 module.exports = {
   verifyToken,
+  refreshToken,
 };

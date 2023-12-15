@@ -15,6 +15,7 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import axiosClient from "../../axios-client";
 import { PageTree } from "../commonComponents/PageTree";
 import { Search } from "./Search";
+import AttachesTool from "@editorjs/attaches";
 export const UrlPage = () => {
   const location = useLocation();
 
@@ -181,6 +182,9 @@ export const UrlPage = () => {
           class: BreakLine,
           inlineToolbar: true,
           shortcut: "CMD+SHIFT+ENTER",
+        },
+        attaches: {
+          class: AttachesTool,
         },
         underline: Underline,
       },

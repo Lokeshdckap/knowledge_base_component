@@ -29,7 +29,7 @@ export const PublishPopup = (props) => {
     });
     clipboard.on("success", (e) => {
       e.clearSelection(); // Deselect the text
-      showToastMessage("Text copied to clipboard!");
+      showToastMessage("Link Copied !");
     });
 
     return () => {

@@ -1,6 +1,25 @@
 import React from "react";
-
+import { useParams } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
 export const ViewHeader = (props) => {
+  console.log(props.publish);
+
+  const params = useParams()
+  let duration = 2000;
+  const showToastMessage = (data) => {
+    toast.success(data, {
+      position: toast.POSITION.TOP_RIGHT,
+      autoClose: duration,
+      hideProgressBar: true,
+      draggable: true,
+      closeOnClick: true,
+    });
+  };
+  const copyLink = ()=>{
+   let path =  `http://localhost:3000/${params.uuid}${props.renderScript.path}`
+   navigator.clipboard.writeText(path)
+   showToastMessage("Link Copied !");
+  }
   return (
     <div className="bg-[#ffff] w-[100%] ">
       <div
@@ -12,6 +31,13 @@ export const ViewHeader = (props) => {
           readOnly={true}
         />
         <div>
+        <button
+            type="button"
+            className="text-white bg-primary hover:bg-sky-600 font-medium text-sm h-9 w-24  focus:outline-none rounded mr-2 mb-2"
+            onClick={copyLink}
+          >
+            Copy Link
+          </button>
           <button
             type="button"
             className="text-textPrimary border-[1px] border-gray-400 phone:text-sm font-medium rounded-lg text-sm h-9 w-24  phone:w-16 phone:h-7 mr-2 mb-2 "

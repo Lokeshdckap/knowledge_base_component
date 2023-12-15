@@ -76,6 +76,7 @@ export default function SideNavLarge(props) {
   //
 
   useEffect(() => {
+    
     getAllTeam();
     if (localStorage.getItem("mainId")) {
       localStorage.removeItem("mainId");
@@ -281,7 +282,7 @@ export default function SideNavLarge(props) {
             className="h-6 text-[#F9EFD4]"
           />
         </div>
-        <p className=" text-lg text-[#F9EFD4] font-medium">Rhino Tome</p>
+        <p className=" text-lg text-[#F9EFD4] font-medium">DCKAP Tome</p>
       </div>
       <div className="">
         <div className="mt-8 flex items-center justify-between w-[200px] m-auto ">

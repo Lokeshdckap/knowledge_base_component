@@ -11,7 +11,10 @@ export default function Header(props) {
   const [profileState, setProfileState] = useState(false);
   const onLogout = () => {
     localStorage.removeItem("ACCESS_TOKEN");
-    navigate("/");
+    localStorage.removeItem("REFRESH_TOKEN");
+
+    window.location.reload("/signin")
+
   };
 
   useEffect(() => {

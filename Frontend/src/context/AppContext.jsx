@@ -77,19 +77,25 @@ const MyContextProvider = ({ children }) => {
         console.log(err);
       });
   };
-
   const getAllTeam = async () => {
     await axiosClient
       .get(`/api/teams/getAllTeam`)
       .then((res) => {
-        setAllTeam(res.data.getAllTeam);
-        getTeam();
-        userInfo();
+        if (
+          res.data.getAllTeam.length > 0 &&
+          localStorage.getItem("ACCESS_TOKEN")
+        ) {
+          setAllTeam(res.data.getAllTeam);
+          getTeam();
+          userInfo();
+        } else if (localStorage.getItem("ACCESS_TOKEN")) {
+          navigate("/teampage");
+        } 
       })
       .catch((err) => {
         const response = err.response;
         if (response && response?.status === 401) {
-          navigate("/signin");
+          window.location.reload("/signin")
         }
       });
   };
@@ -264,8 +270,10 @@ const MyContextProvider = ({ children }) => {
       })
       .catch((err) => {
         const response = err.response;
+        console.log(response);
       });
   };
+
 
   return (
     <AppContext.Provider

@@ -37,7 +37,9 @@ const register = async (req, res) => {
       uuid: uuid.v4(),
     });
 
-    let jwttoken = generateAuthToken(user);
+    let access_token = generateAuthToken(user);
+
+    let refreshToken = generateAuthRefreshToken(user)
 
     if (req.body.team_uuid) {
       const UserTeam = await UserTeams.create({
@@ -75,7 +77,7 @@ const register = async (req, res) => {
       return res.status(409).send("Details are not correct");
     }
 
-    return res.status(200).json({ access_token: jwttoken });
+    return res.status(200).json({ access_token: access_token,refresh_token:refreshToken });
   } catch (err) {
     return res.status(500).send("Error in registering user");
   }
@@ -100,19 +102,18 @@ const login = async (req, res) => {
 
     //if user email is found, compare password with bcrypt
     if (user && user.password) {
-      
       const isSame = await bcrypt.compare(password, user.password);
       //if password is the same
       //generate token with the user's id and the secretKey in the env file
 
       if (isSame) {
-        let token = generateAuthToken(user);
+        let access_token = generateAuthToken(user);
 
         let refresh_token = generateAuthRefreshToken(user);
 
         return res
           .status(200)
-          .send({ token, refresh_token, verify: user.isVerified });
+          .send({ access_token, refresh_token, verify: user.isVerified });
       } else {
         return res.status(401).send({ password: "Invaild Crendtials" });
       }

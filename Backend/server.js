@@ -4,10 +4,7 @@ const cors = require("cors");
 
 const app = express();
 
-app.use(cors({ origin: true }));
-
 require("dotenv").config();
-
 
 const passport = require("passport");
 
@@ -22,20 +19,20 @@ app.use(passport.session());
 
 // Middlewares
 
-
-
 const path = require("path");
+
+app.use(cors({ origin: "http://localhost:3000", credentials: true }));
 
 app.use(express.json());
 
 app.use(express.urlencoded({ extended: true }));
 
-
-
+const { googleLogin } = require("./controllers/Authentication/googleLogin");
+googleLogin();
 
 // Routes for user API
 
-const apiBasePath = "/api"; 
+const apiBasePath = "/api";
 
 const authRoute = require("./routes/authentication");
 const dashboardRoute = require("./routes/dashboard");
@@ -61,17 +58,11 @@ app.use(`${apiBasePath}/public`, publicRoute);
 app.use(`${apiBasePath}/user`, userRoute);
 app.use(`${apiBasePath}/tags`, tagRoute);
 
-
-app.set("view engine", "pug");
-
 app.set("views", path.join(__dirname, "views"));
 
 //listening to server connection
 
 app.use("/uploads", express.static("uploads"));
-
-
-
 
 const PORT = process.env.PORT || 3000;
 

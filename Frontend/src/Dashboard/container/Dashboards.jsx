@@ -9,23 +9,34 @@ export const Dashboards = () => {
   //hooks
 
   useEffect(() => {
-    getAllTeam();
+
+      getAllTeam();
   }, []);
 
   const getAllTeam = () => {
     axiosClient
       .get(`/api/teams/getAllTeam`)
       .then((res) => {
-        if (res.data.getAllTeam.length > 0) {
-          navigate(`/dashboard/${res.data.getAllTeam[0].team_uuid}`);
-        } else {
-          navigate("/teampage");
+        if(res.status == 200){
+          if (
+            res.data.getAllTeam.length > 0 &&
+            localStorage.getItem("ACCESS_TOKEN")
+          ) {
+            navigate(`/dashboard/${res.data.getAllTeam[0].team_uuid}`);
+          } else if (localStorage.getItem("ACCESS_TOKEN")) {
+            navigate("/teampage");
+          } 
         }
+        else {
+          console.log("sdfsdf");
+          navigate("/signin");
+        }
+       
       })
       .catch((err) => {
         const response = err.response;
         if (response && response?.status === 401) {
-          navigate("/signin");
+          window.location.reload("/signin");
         } else {
           console.error("Error:", response?.status);
         }

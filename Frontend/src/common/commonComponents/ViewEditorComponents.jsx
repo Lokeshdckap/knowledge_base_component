@@ -10,7 +10,7 @@ import Embed from "@editorjs/embed";
 import ImageTool from "@editorjs/image";
 import BreakLine from 'editorjs-break-line';
 import axiosClient from "../../axios-client";
-
+import AttachesTool from "@editorjs/attaches";
 export const ViewEditorComponents = (props) => {
     const [imageUrl, setImageUrl] = useState("");
     const handleUpload = async (file) => {
@@ -115,6 +115,9 @@ export const ViewEditorComponents = (props) => {
             class: BreakLine,
             inlineToolbar: true,
             shortcut: 'CMD+SHIFT+ENTER',
+          },
+          attaches: {
+            class: AttachesTool,
           },
           underline: Underline,
         },

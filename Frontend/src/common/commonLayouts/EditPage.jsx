@@ -118,6 +118,7 @@ export default function EditPage(props) {
           <div className={`pt-3`}>
             {renderScript && (
               <EditorComponents
+                contentPage={props.contentPage}
                 handleSave={props.handleSave}
                 editorContent={props.editorContent}
                 setEditorContent={props.setEditorContent}

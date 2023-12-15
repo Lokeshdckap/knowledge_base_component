@@ -48,7 +48,7 @@ const userUpdateProfile = async (req, res) => {
       if (userFind && username) {
         let updateData = {
           username: username,
-          avatar:path ? path : null
+          avatar: path ? path : null
         };
         await User.update(updateData, {
           where: {

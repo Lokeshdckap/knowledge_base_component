@@ -138,7 +138,7 @@ const router = createBrowserRouter([
         element: <EmailVerificationCheck />,
       },
       {
-        path: "/auth/google",
+        path: "/google/callback",
         element: <GoogleCallback />,
       },
       // {
@@ -155,6 +155,10 @@ const router = createBrowserRouter([
   {
     path: "/error",
     element: <Error />,
+  },
+  {
+    path: "/auth/google/*",
+    element: <GoogleCallback />,
   },
   {
     path: "/:uuid/:slug/*",

@@ -3,21 +3,18 @@ import Button from "../../../common/commonComponents/Button";
 import Input from "../../../common/commonComponents/Input";
 import googles from "../../../assets/images/google.png";
 import logo from "../../../assets/images/onboard.png";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { useStateContext } from "../../../context/ContextProvider";
 import axiosClient from "../../../axios-client";
 import HashLoader from "react-spinners/HashLoader";
 import Cookies from "js-cookie";
+import { ToastContainer, toast } from "react-toastify";
 
 export default function SignupComponents() {
-  const googleAuth = () => {
-    
-    window.location.href = 'http://localhost:4000/api/auth/auth/google';
-	};
-
   const [errors, setError] = useState({});
   const params = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const { setAuth } = useStateContext();
 
@@ -73,7 +70,6 @@ export default function SignupComponents() {
 
     setError(validationErrors);
 
-
     if (Object.keys(validationErrors).length === 0) {
       setLoading(true);
 
@@ -83,6 +79,7 @@ export default function SignupComponents() {
         .then(({ data }) => {
           setAuth({
             token: data.access_token,
+            refresh_token:data.refresh_token,
           });
           setLoading(false);
           navigate("/emailverify");
@@ -123,6 +120,21 @@ export default function SignupComponents() {
     delete errors[name];
   };
 
+  let duration = 2000;
+  const showToastMessage = (data) => {
+    toast.error(data, {
+      position: toast.POSITION.TOP_RIGHT,
+      autoClose: duration,
+      hideProgressBar: true,
+      draggable: true,
+      closeOnClick: true,
+    });
+  };
+  const errorMessage = localStorage.getItem("errorMessage");
+  if (errorMessage) {
+    showToastMessage(errorMessage);
+    localStorage.removeItem("errorMessage");
+  }
   return (
     <div className="">
       <div className="flex ">
@@ -302,10 +314,10 @@ export default function SignupComponents() {
               <div className="bg-white w-10 h-10 ">
                 <img src={googles} className="p-2" />
               </div>
-              <button onClick={googleAuth}
-                className="bg-white w-40 h-10 text-primary rounded backdrop-blur-[2px] border-[1px]"
-              >
-                  Signup With Google
+              <button className="bg-white w-40 h-10 text-primary rounded font-medium text-sm backdrop-blur-[2px] border-[1px]">
+                <a href="http://localhost:4000/api/auth/google">
+                  Continue With Google
+                </a>
               </button>
             </div>
           </div>
@@ -319,6 +331,7 @@ export default function SignupComponents() {
           </p>
         </>
       )}
+      <ToastContainer />
     </div>
   );
 }

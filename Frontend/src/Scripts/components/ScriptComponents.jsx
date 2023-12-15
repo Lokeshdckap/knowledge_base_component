@@ -232,8 +232,10 @@ export const ScriptComponents = () => {
   const contentPage = async (e) => {
     setPageId(e.target.id);
     let pageId = e.target.id;
-
-    navigate(`/dashboard/${params.uuid}/s/${params.slug}/?pageId=${pageId}`);
+    getParticularScript();
+    getParticularPage();
+     navigate(`/dashboard/${params.uuid}/s/${params.slug}/?pageId=${pageId}`);
+    
   };
 
   const handleScriptMouseEnter = (e) => {

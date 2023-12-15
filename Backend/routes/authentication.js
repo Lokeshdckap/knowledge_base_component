@@ -6,6 +6,11 @@ const authMiddleware = require("../middleware/auth");
 
 const generateAuthToken = require("../utils/generateAuthToken");
 
+const {
+  verifyToken,
+  refreshToken,
+} = require("../middleware/authenticationToken");
+
 require("dotenv").config();
 
 const passport = require("passport");
@@ -13,9 +18,6 @@ const passport = require("passport");
 const authController = require("../controllers/Authentication/authentication");
 
 const forgotPassword = require("../controllers/Authentication/passwordReset");
-
-const { google } = require("../controllers/Authentication/googleLogin");
-google();
 
 router.post("/register", authMiddleware.saveUser, authController.register);
 
@@ -29,19 +31,37 @@ router.get("/verify-email/:uuid/:token", authController.verifyEmail);
 
 router.post("/resendVerifyEmail", authController.resendEmailLink);
 
-router.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }))
-
 router.get(
-  "/auth/google/callback",
-  passport.authenticate("google", {
-    successRedirect: "http://localhost:3000/dashboard",
-    // failureRedirect: "http://localhost:3000/signin",
-  }),
-
-  (req, res) => {
-    const token = generateAuthToken.generateAuthToken(req.user);
-   return res.json({ token });
-  }
+  "/google",
+  passport.authenticate("google", { scope: ["profile", "email"] })
 );
+
+router.get("/google/callback", (req, res, next) => {
+  passport.authenticate("google", (err, user) => {
+    console.log(user, "users");
+    if (err) {
+      return res
+        .status(500)
+        .json({ Error: "This email is already registered. Please sign in" });
+    }
+    if (!user) {
+      return res
+        .status(409)
+        .json({
+          Error: "User Already Exists & Failed To Authentication to Google",
+        });
+    }
+    const access_token = generateAuthToken.generateAuthToken(user);
+    const refresh_token = generateAuthToken.generateAuthRefreshToken(user);
+    res
+      .status(200)
+      .json({ access_token: access_token,refresh_token:refresh_token,verify: user.isVerified });
+  })(req, res, next);
+});
+
+
+
+
+router.post("/refresh-token", refreshToken);
 
 module.exports = router;

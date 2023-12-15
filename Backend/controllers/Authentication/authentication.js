@@ -85,9 +85,9 @@ const login = async (req, res) => {
   try {
     // validation
 
-    const { error } = loginSchema.validate(req.body);
+    // const { error } = loginSchema.validate(req.body);
 
-    if (error) return res.status(400).json({ error: error.details[0].message });
+    // if (error) return res.status(400).json({ error: error.details[0].message });
 
     const { email, password } = req.body;
 
@@ -116,11 +116,11 @@ const login = async (req, res) => {
       } else {
         return res.status(401).send({ password: "Invaild Crendtials" });
       }
-    } else {
+    } 
+    else {
       return res.status(401).send({ email: "Invaild Crendtials" });
     }
   } catch (error) {
-    console.log("eee", error);
     return res.status(400).send({ email: "Email Not Verified" });
   }
 };

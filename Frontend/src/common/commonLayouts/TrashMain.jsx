@@ -5,6 +5,8 @@ import { Checkbox } from "antd";
 
 export const TrashMain = (props) => {
   const [deleteState, setDeleteState] = useState(null);
+  const [screenHeight, setScreenHeight] = useState(window.innerHeight);
+
   const deleteIconRef = useRef({});
   const deleteRef = useRef(null);
 
@@ -24,16 +26,25 @@ export const TrashMain = (props) => {
         }
       }
     };
+    const updateScreenHeight = () => {
+      setScreenHeight(window.innerHeight);
+    };
 
     window.addEventListener("click", closeOnOutsideClick);
+    window.addEventListener("resize", updateScreenHeight);
+
     return () => {
       window.removeEventListener("click", closeOnOutsideClick);
+      window.removeEventListener("resize", updateScreenHeight);
     };
   }, [deleteState]);
 
   return (
-    <div className="bg-[#F4F7FC]  h-[500px] overflow-auto  pl-[30px] pr-[30px]">
-      <div className="text-2xl  text-textPrimary  pt-3 pb-3">
+    <div
+      className="bg-[#F4F7FC]  h-[500px] overflow-auto  pl-[30px] pr-[30px]"
+      style={{ height: `calc(${screenHeight}px - 64px)` }}
+    >
+      <div className="text-2xl phone:text-[16px] text-textPrimary  pt-3 pb-3">
         {props.trashData ? (
           props.trashData.length > 0 ? (
             // Render if there are items in the trash
@@ -47,21 +58,21 @@ export const TrashMain = (props) => {
           <div>Loading or No Data</div>
         )}
       </div>
-
-      <div className="m-auto grid 2xl:grid-cols-5 xl:grid-cols-4 gap-4  ">
-        {props.trashData ? (
-          props.trashData.length > 0 ? (
-            props.trashData.map((trashScript) => (
+      {props.trashData ? (
+        props.trashData.length > 0 ? (
+          <div className="m-auto grid 2xl:grid-cols-5 xl:grid-cols-4 lg:grid-cols-3 phone:grid-cols-2 gap-4">
+            {props.trashData.map((trashScript) => (
               <div
                 key={trashScript.uuid}
-                className={`bg-white  border-[1px] rounded-[10px]  hover:border-primary  relative xl:p-[10px] 2xl:p-[20px] 
+                className={`bg-white border-[1px] rounded-[10px] hover:border-primary relative lg:p-[5px] xl:p-[10px] 2xl:p-[20px] ${
                   props.styleState &&
-                  props.styleState.includes(trashScript.uuid) &&
-                  "scale-105"
+                  props.styleState.includes(trashScript.uuid)
+                    ? "scale-105"
+                    : ""
                 }`}
                 id={trashScript.uuid}
               >
-                <div className="w-[100%] ">
+                <div className="w-[100%] phone:p-[5px]">
                   <div
                     className="rounded-t-lg flex items-center justify-between  "
                     id={trashScript.uuid}
@@ -72,7 +83,7 @@ export const TrashMain = (props) => {
                       className="ml-2"
                     ></Checkbox>
                     <span
-                      className="material-symbols-outlined text-primary cursor-pointer text-2xl"
+                      className="material-symbols-outlined text-primary cursor-pointer text-2xl phone:text-[14px] leading-[6px]"
                       onClick={deleteForeverPopup}
                       ref={(ref) =>
                         (deleteIconRef.current[trashScript.uuid] = ref)
@@ -115,20 +126,25 @@ export const TrashMain = (props) => {
                   </div>
                 )}
               </div>
-            ))
-          ) : (
-            <div className="ml-56">
-              <img className="h-[400px] w-[400px] " src={deletes} alt="" />
-            </div>
-          )
-        ) : (
-          <div>
-            <p className="absolute top-72 left-[600px] z-40">
-              <HashLoader color="#3197e8" />
-            </p>
+            ))}
           </div>
-        )}
-      </div>
+        ) : (
+          <div className="">
+            <img className="w-[400px] m-auto" src={deletes} alt="" />
+          </div>
+        )
+      ) : (
+        <div>
+          <>
+            <div className="bg-[#aeaeca] opacity-[0.5] w-[100%] h-[100vh] absolute top-0 left-0  z-10"></div>
+            <div className="">
+              <p className="absolute top-[48%] left-[48%] z-50 ">
+                <HashLoader color="#3197e8" />
+              </p>
+            </div>
+          </>
+        </div>
+      )}
     </div>
   );
 };

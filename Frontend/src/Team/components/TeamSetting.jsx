@@ -88,10 +88,12 @@ export const TeamSetting = (props) => {
 
         {loading && (
           <>
-            <div className="bg-[#a3a2e9] opacity-[0.5] w-screen h-screen absolute top-0 left-0  z-10"></div>
-            <p className="absolute top-72 left-[600px] z-40">
-              <HashLoader color="#3197e8" />
-            </p>
+            <div className="bg-[#aeaeca] opacity-[0.5] w-[100%] h-[100vh] absolute top-0 left-0  z-10"></div>
+            <div className="">
+              <p className="absolute top-[48%] left-[48%] z-50 ">
+                <HashLoader color="#3197e8" />
+              </p>
+            </div>
           </>
         )}
       </div>

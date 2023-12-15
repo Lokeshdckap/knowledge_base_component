@@ -48,6 +48,15 @@ const MyContextProvider = ({ children }) => {
       hideProgressBar: true,
       draggable: true,
       closeOnClick: true,
+      closeButton: () => (
+        <div style={{ margin: 'auto',fontSize:"22px" }}>
+          <button className="custom-close-button">×</button>
+        </div>
+      ),
+      style: {
+        borderRadius: "8px",
+        padding:"10px"
+      },
     });
   };
 
@@ -304,8 +313,8 @@ const MyContextProvider = ({ children }) => {
         handleTrash,
         userInfo,
         userDetail,
-        screenHeight, 
-        setScreenHeight
+        screenHeight,
+        setScreenHeight,
       }}
     >
       {children}

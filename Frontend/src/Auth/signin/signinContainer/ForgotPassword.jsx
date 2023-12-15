@@ -8,17 +8,10 @@ import "react-toastify/dist/ReactToastify.css";
 import axiosClient from "../../../axios-client";
 import HashLoader from "react-spinners/HashLoader";
 
-
-
-
-
-
-
 export default function ForgotPassword() {
   const [newItem, setNewItem] = useState("");
   const [errors, setError] = useState({});
   const [loading, setLoading] = useState(false);
-
 
   const duration = 2000;
 
@@ -46,10 +39,11 @@ export default function ForgotPassword() {
     if (!newItem.email) {
       validationErrors.email = "email is required";
     } else {
-      setLoading(true)
-      axiosClient.post("/api/auth/forgotPassword", newItem)
+      setLoading(true);
+      axiosClient
+        .post("/api/auth/forgotPassword", newItem)
         .then((res) => {
-          setLoading(false)
+          setLoading(false);
 
           showToastMessage(res.data);
         })
@@ -60,7 +54,7 @@ export default function ForgotPassword() {
             error.email = response.data;
 
             setError(error);
-          setLoading(false)
+            setLoading(false);
           } else {
             console.error("Error:", response?.status);
           }
@@ -70,13 +64,13 @@ export default function ForgotPassword() {
   };
 
   return (
-    <main className="flex">
-      <div className="bg-secondary h-screen w-1/2 pt-32 pl-32">
-        <div className="space-y-2">
-          <h1 className="text-3xl text-primary font-bold">
+    <main className="flex h-[100vh] max-w-[100%]">
+      <div className="m-auto px-[40px]">
+        <div className="">
+          <h1 className="text-3xl phone:text-[24px] text-primary font-bold">
             Forgot Your Password?
           </h1>
-          <h2 className="text-base text-textPrimary w-96">
+          <h2 className="text-base phone:text-[14px] text-textPrimary max-w-[390px] w-[100%] pt-2">
             To reset your password please enter the email address of your Pen it
             account
           </h2>
@@ -95,7 +89,7 @@ export default function ForgotPassword() {
                 placeholder="email"
               />
 
-              <div className="mt-0 flex items-center justify-between ">
+              <div className="mt-1 flex items-center justify-between ">
                 {!errors.email ? (
                   <div>
                     <p className="invisible">Required</p>
@@ -111,23 +105,37 @@ export default function ForgotPassword() {
           <div className="pt-5">
             <button
               type="submit"
-              className="bg-primary text-white h-11 rounded-md w-96 text-base"
+              className="bg-primary text-white h-11 rounded-md w-96 phone:w-[296px] text-base"
               name="email"
             >
               Reset Password Link
             </button>
           </div>
         </form>
-        <div className="pt-5 pl-32 underline text-primary">
+        <div className="pt-5 flex justify-center  underline text-primary">
           <Link to="/signin">Go to Signin</Link>
         </div>
       </div>
-      <div className="bg-primary w-1/2 h-screen">
-        <img src={forgotPassword} alt="" className="pl-24 pt-10" />
+      <div
+        className=" phone:hidden md:hidden   lg:bg-primary lg:block xl:block 2xl:block
+        h-[100vh] w-[50%]
+        "
+      >
+        <div className="  h-[100vh] m-auto flex justify-center items-center ">
+          <img src={forgotPassword} alt="" className="max-w-[390px]" />
+        </div>
       </div>
       <ToastContainer />
-      {loading && <p className="absolute top-72 left-[622px]">
-        <HashLoader color="#3197e8" /></p>}
+      {loading && (
+        <>
+          <div className="bg-[#aeaeca] opacity-[0.5] w-[100%] h-[100vh] absolute top-0 left-0  z-10"></div>
+          <div className="">
+            <p className="absolute top-[48%] left-[48%] z-50 ">
+              <HashLoader color="#3197e8" />
+            </p>
+          </div>
+        </>
+      )}
     </main>
   );
 }

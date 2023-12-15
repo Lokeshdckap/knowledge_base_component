@@ -10,19 +10,22 @@ import Checklist from "@editorjs/checklist";
 import Quote from "@editorjs/quote";
 import Embed from "@editorjs/embed";
 import ImageTool from "@editorjs/image";
-import BreakLine from 'editorjs-break-line';
+import BreakLine from "editorjs-break-line";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import axiosClient from "../../axios-client";
 import { PageTree } from "../commonComponents/PageTree";
 import { Search } from "./Search";
 export const UrlPage = () => {
   const location = useLocation();
-  
+
   const navigate = useNavigate();
 
   const [script, setScript] = useState(null);
   const [page, setPages] = useState([]);
   const params = useParams();
+
+  //style State
+  const [screenHeight, setScreenHeight] = useState(window.innerHeight);
 
   const [serachPopup, setsearchPopup] = useState(false);
   const [searchPageData, setSearchPageData] = useState(null);
@@ -48,14 +51,15 @@ export const UrlPage = () => {
 
           if (response && response?.status === 404) {
             navigate("/error");
-
           } else {
             console.error("Error:", response?.status);
           }
         });
 
       axiosClient
-        .get(`/api/public/documents/${params.uuid}/${params.slug}/${params["*"]}`)
+        .get(
+          `/api/public/documents/${params.uuid}/${params.slug}/${params["*"]}`
+        )
         .then((res) => {
           if (!res.data.script.is_published) {
             navigate("/error");
@@ -69,7 +73,6 @@ export const UrlPage = () => {
 
           if (response && response?.status === 404) {
             navigate("/error");
-
           } else {
             console.error("Error:", response?.status);
           }
@@ -77,7 +80,9 @@ export const UrlPage = () => {
     }
     if (params.slug && params["*"] == "") {
       axiosClient
-        .get(`/api/public/documents/${params.uuid}/${params.slug}/${params["*"]}`)
+        .get(
+          `/api/public/documents/${params.uuid}/${params.slug}/${params["*"]}`
+        )
         .then((res) => {
           if (!res.data.script.is_published) {
             navigate("/error");
@@ -96,6 +101,15 @@ export const UrlPage = () => {
             console.error("Error:", response?.status);
           }
         });
+
+      const updateScreenHeight = () => {
+        setScreenHeight(window.innerHeight);
+      };
+      // Attach the event listener for window resize
+      window.addEventListener("resize", updateScreenHeight);
+      return () => {
+        window.removeEventListener("resize", updateScreenHeight);
+      };
     }
   }, [params.slug, params["*"]]);
 
@@ -132,7 +146,7 @@ export const UrlPage = () => {
         },
         header: Header,
         image: {
-          class: ImageTool
+          class: ImageTool,
         },
         checklist: {
           class: Checklist,
@@ -166,7 +180,7 @@ export const UrlPage = () => {
         breakLine: {
           class: BreakLine,
           inlineToolbar: true,
-          shortcut: 'CMD+SHIFT+ENTER',
+          shortcut: "CMD+SHIFT+ENTER",
         },
         underline: Underline,
       },
@@ -191,7 +205,9 @@ export const UrlPage = () => {
     let path = params.slug + "/" + params["*"];
 
     await axiosClient
-      .get(`/api/dashboard/${params.uuid}/${params.slug}/pageSearch/items?q=${value}`)
+      .get(
+        `/api/dashboard/${params.uuid}/${params.slug}/pageSearch/items?q=${value}`
+      )
       .then((res) => {
         if (res.data.length > 0) {
           setSearchPageData(res.data);
@@ -209,10 +225,9 @@ export const UrlPage = () => {
       });
   };
 
-
   return (
     <div className="">
-      <div className="flex justify-between w-[1200px] m-auto  mt-6 mb-6 items-center">
+      <div className="flex justify-between items-center py-[20px] px-[30px]">
         <p className="font-bold text-2xl">{script && script.title}</p>
         <input
           type="text"
@@ -225,28 +240,42 @@ export const UrlPage = () => {
       </div>
       <hr className="" />
       <div className="flex ">
-        <div className="w-[250px] m-auto mt-5 h-[540px] pr-2 overflow-auto">
-          {page.map((topLevelPage, index) => (
-            <div
-              key={topLevelPage.uuid}
-              id={topLevelPage.page_id}
-              className=""
-            >
-              <PageTree
-                node={topLevelPage}
-                hasSibling={index < page.length - 1}
-                hasParent={false}
-                contentPage={contentPage}
-                parentOpen={parentOpen}
-              />
-            </div>
-          ))}
+        <div
+          className=" overflow-auto"
+          style={{
+            maxHeight: `calc(${screenHeight}px - 85px)`,
+          }}
+        >
+          <div className="w-[250px] pr-[10px] pl-[24px] pt-[20px]">
+            {page.map((topLevelPage, index) => (
+              <div
+                key={topLevelPage.uuid}
+                id={topLevelPage.page_id}
+                className=""
+              >
+                <PageTree
+                  node={topLevelPage}
+                  hasSibling={index < page.length - 1}
+                  hasParent={false}
+                  contentPage={contentPage}
+                  parentOpen={parentOpen}
+                />
+              </div>
+            ))}
+          </div>
         </div>
-        <div className="bg-gray-300 h-[543px] w-px"></div>
-
-        <div className="h-[520px] overflow-auto pt-12 pl-14 w-[1000px]">
+        <div className="bg-gray-300 w-px"></div>
+        <div
+          className=" overflow-auto pt-10 pl-14"
+          style={{
+            width: "calc(100% - 250px)",
+            maxHeight: `calc(${screenHeight}px - 85px)`,
+          }}
+        >
           <h1 className="text-3xl font-bold mb-5">
-            {page.length == 0 ? "Page Name" : loadPage.title && loadPage.title.split("-")[0]}
+            {page.length == 0
+              ? "Page Name"
+              : loadPage.title && loadPage.title.split("-")[0]}
           </h1>
           <h4 className="text-xl mb-5">
             {page.length == 0 ? "Page description" : loadPage.description}

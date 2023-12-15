@@ -74,22 +74,22 @@ export default function Main(props) {
           <div className={`flex justify-between  `}>
             <div className="flex space-x-3 pt-2">
               <div className="rounded-full h-12 w-12 bg-[#DEE0E4]">
-                <i className="fa-solid fa-user-group text-[25px] pl-2 pt-[10px] text-[#6E7E86]"></i>
+                <i className="fa-solid fa-user-group text-[25px] pl-[6px] pt-[10px] text-[#6E7E86]"></i>
               </div>
               <div>
-                <h1 className="text-xl font-bold">Team Documents</h1>
-                <h3 className="text-sm">{props.team} 's Teams</h3>
+                <h1 className="text-xl phone:text-[14px] font-bold">Team Documents</h1>
+                <h3 className="text-sm phone:text-[12px]">{props.team} 's Teams</h3>
               </div>
             </div>
-            <div className="flex items-center space-x-5">
+            <div className="flex items-center space-x-5 phone:space-x-2">
               <button
-                className="h-[40px] w-[121px] text-slate-500 rounded border-slate-400  border-[1px] "
+                className="h-[40px] w-[121px] phone:h-[25px] phone:w-[60px] text-slate-500 rounded border-slate-400 phone:text-[10px] border-[1px] "
                 onClick={addBatchEvent}
               >
                 New Batch
               </button>
               <button
-                className="h-[45px] w-[160px] text-white rounded  bg-primary"
+                className="h-[45px] w-[160px] phone:h-[28px] phone:w-[80px] text-white rounded  bg-primary phone:text-[10px]"
                 onClick={scriptEvent}
               >
                 New Script
@@ -101,20 +101,20 @@ export default function Main(props) {
               className={`h-px my-8 bg-[#D5D7DA] border-0 dark:bg-gray-900  m-auto`}
             />
           </div>
-          <p className="font-semibold text-textPrimary text-xl pl-1">BATCHS</p>
+          <p className="font-semibold text-textPrimary text-xl phone:text-lg pl-1">BATCHS</p>
           <div
-            className={` m-auto grid 2xl:grid-cols-5 xl:grid-cols-4 lg:grid-cols-3 gap-2 mt-2`}
+            className={` m-auto grid 2xl:grid-cols-5 xl:grid-cols-4 lg:grid-cols-3 phone:grid-cols-2 gap-2 mt-2`}
           >
             {batchList && batchList.length > 0 ? (
               batchList.map((batch, index) => (
                 <div
                   key={batch.uuid}
-                  className="bg-white border-[1px] rounded-[10px]  hover:border-primary relative lg:p-[5px] xl:p-[10px] 2xl:p-[20px]"
+                  className="bg-white border-[1px] rounded-[10px]  hover:border-primary relative   lg:p-[5px] xl:p-[10px] 2xl:p-[20px]"
                 >
-                  <div className="w-[100%] ">
+                  <div className="w-[100%] phone:p-[5px] ">
                     <div className="rounded-t-lg text-end ">
                       <span
-                        className="material-symbols-outlined text-primary cursor-pointer text-2xl "
+                        className="material-symbols-outlined text-primary cursor-pointer text-2xl phone:text-[14px] leading-[6px]"
                         onClick={deleteForeverPopup}
                         id={batch.uuid}
                         ref={(ref) => (deleteIconRef.current[batch.uuid] = ref)}
@@ -128,7 +128,7 @@ export default function Main(props) {
                       onClick={handleBatch}
                     >
                       <p
-                        className="2xl:text-2xl"
+                        className="2xl:text-2xl phone:text-[14px]"
                         id={batch.uuid}
                         onClick={handleBatch}
                       >
@@ -138,7 +138,7 @@ export default function Main(props) {
                         <p
                           id={batch.uuid}
                           onClick={handleBatch}
-                          className="text-gray-500 pt-1"
+                          className="text-gray-500 pt-1 phone:text-[12px]"
                         >
                           {scriptCount[index].script_count} Scripts
                         </p>
@@ -175,12 +175,12 @@ export default function Main(props) {
               </div>
             )}
           </div>
-          <p className="font-semibold text-textPrimary text-xl pt-5 pl-1">
+          <p className="font-semibold text-textPrimary text-xl phone:text-lg pt-5 pl-1">
             SCRIPTS
           </p>
 
           <div
-            className={` m-auto grid 2xl:grid-cols-5 xl:grid-cols-4 lg:grid-cols-3 gap-2  mt-2`}
+            className={` m-auto grid 2xl:grid-cols-5 xl:grid-cols-4 lg:grid-cols-3 phone:grid-cols-2  gap-2  mt-2`}
           >
             {scriptList && scriptList.length > 0 ? (
               scriptList.map((script) => (
@@ -188,10 +188,10 @@ export default function Main(props) {
                   className="bg-white  border-[1px] rounded-[10px]  hover:border-primary  relative lg:p-[5px] xl:p-[10px] 2xl:p-[20px]"
                   key={script.uuid}
                 >
-                  <div className="w-[100%]">
+                  <div className="w-[100%] phone:p-[5px]">
                     <div className=" rounded-t-lg text-end  ">
                       <span
-                        className="material-symbols-outlined text-primary cursor-pointer text-2xl"
+                        className="material-symbols-outlined text-primary cursor-pointer text-2xl phone:text-[14px] leading-[6px]"
                         onClick={deleteForeverPopup}
                         id={script.uuid}
                         ref={(ref) =>
@@ -207,7 +207,7 @@ export default function Main(props) {
                       onClick={handleScripts}
                     >
                       <p
-                        className="2xl:text-2xl"
+                        className="2xl:text-2xl phone:text-[14px]"
                         id={script.uuid}
                         onClick={handleScripts}
                       >
@@ -216,7 +216,7 @@ export default function Main(props) {
                       <p
                         id={script.uuid}
                         onClick={handleScripts}
-                        className="text-gray-500 pt-1"
+                        className="text-gray-500 pt-1 phone:text-[12px]"
                       >
                       Pages
                       </p>

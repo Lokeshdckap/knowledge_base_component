@@ -38,17 +38,17 @@ export const PageTree = ({
     <div className="mb-1" id={node.uuid}  key={node.uuid} >
       <div 
       key={node.uuid}
-        className={`flex items-center hover:bg-slate-300 ${
+        className={`flex items-center  hover:bg-slate-300 ${
           pageIds == node.uuid ? "bg-slate-300 " : ""
         }  ${
           "/" + slug + "/" + wildcardValue == node.path
             ? "bg-slate-300 "
             : ""
-        }  rounded hover:rounded pl-2`}
+        }  rounded hover:rounded pl-2 phone:pl-px`}
         data-set={node.path}
       >
         <span
-          className="text-[18px]  cursor-pointer pt-1 pb-1 w-[100%]"
+          className="text-[18px] phone:text-[14px] cursor-pointer pt-1 pb-1 w-[100%]"
           onMouseEnter={handleScriptMouseEnter}
           onMouseLeave={handleScriptMouseLeave}
           onClick={contentPage}
@@ -67,7 +67,7 @@ export const PageTree = ({
           )}
         </span>
         <button className="text-sm mr-2" onClick={toggleOpen}>
-          {isOpen ? (
+          {isOpen  ? (
             <i className="fa-solid fa-angle-down cursor-pointer "></i>
           ) : (
             <i className="fa-solid fa-angle-up cursor-pointer rotate-90"></i>

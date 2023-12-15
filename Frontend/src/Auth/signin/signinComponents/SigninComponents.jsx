@@ -29,14 +29,12 @@ export default function SigninComponents() {
   const HandleChange = (e) => {
     const { name, value } = e.target;
     setFormValues({ ...formValues, [name]: value });
-
     delete errors[name];
   };
 
   const validation = () => {
     let isValid = true;
     let validationErrors = {};
-    let passwordRegex = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
 
     if (!formValues.email.trim()) {
       validationErrors.email = "Email is required";
@@ -46,11 +44,7 @@ export default function SigninComponents() {
     if (!formValues.password.trim()) {
       validationErrors.password = "Password is required";
       isValid = false;
-    } else if (!passwordRegex.test(formValues.password)) {
-      validationErrors.password = "Password is not valid";
-      isValid = false;
     }
-
     setError(validationErrors);
 
     return isValid;
@@ -99,131 +93,137 @@ export default function SigninComponents() {
   };
 
   return (
-    <main className="flex">
-      <div className="  2xl:bg-primary 2xl:w-1/2 2xl:h-screen 
-      xl:bg-primary xl:w-1/2 xl:h-screen
-      lg:bg-primary lg:w-1/2 lg:h-screen
-           ">
-        <img
-          src={"https://i.postimg.cc/ydTtqjsF/book-2.png"}
-          alt=""
-          className="max-w-md ml-11 mt-6 h-6 "
-        />
-
-        <p className="mx-6 text-white text-sm font-medium pt-2">Rhino Tome</p>
-        <img
-          src={logo}
-          alt=""
-          className="max-w-[390px]  m-auto mt-[70px] mb-[112px] "
-        />
-      </div>
-      <div className="bg-secondary h-screen  w-1/2 p-32">
+    <main className="flex h-[100vh] max-w-[100%]">
+      <div
+        className=" phone:hidden md:hidden   lg:bg-primary lg:block xl:block 2xl:block
+        h-[100vh] w-[50%]
+        "
+      >
         <div>
-          <h2 className="text-xl text-textPrimary">
-            Happy To See You Back ! Our Rhino Tome{" "}
-          </h2>
-          <h3 className="pt-2 text-base text-textPrimary">
-            Log in and unlock your world!
-          </h3>
-        </div>
-        <form onSubmit={handleSubmit}>
-          <div className="pt-5">
-            <label className="text-textPrimary text-base">
-              Email <span className="text-red-500">*</span>
-            </label>
-            <div className="pt-3 ">
-              <Input
-                name="email"
-                type="text"
-                event={HandleChange}
-                value={formValues.email}
-                placeholder="Email"
-              />
-            </div>
-            {!errors.email ? (
-              <div>
-                <p className="invisible mt-1">Required</p>
-              </div>
-            ) : (
-              <div>
-                <p className="text-red-500 mt-1">{errors.email}</p>
-              </div>
-            )}
+          <div className="pt-[20px] pl-[20px]">
+            <img
+              src={"https://i.postimg.cc/ydTtqjsF/book-2.png"}
+              alt=""
+              className="w-6"
+            />
+            <p className=" text-white text-sm font-medium pt-2">Rhino Tome</p>
           </div>
-          <div className="pt-1">
-            <label className="text-textPrimary text-base">
-              Password <span className="text-red-500">*</span>
-            </label>
-            <div className="pt-3 absolute">
-              <Input
-                name="password"
-                type={PasswordVisible ? "text" : "password"}
-                event={HandleChange}
-                value={formValues.password}
-                placeholder="Password"
-              />
-              <div className="">
-                {PasswordVisible ? (
-                  <span
-                    className="material-symbols-outlined absolute right-3 top-5 cursor-pointer text-gray-500 text-xl"
-                    onClick={togglePassword}
-                  >
-                    {" "}
-                    visibility
-                  </span>
-                ) : (
-                  <span
-                    className="material-symbols-outlined absolute right-3 top-5 cursor-pointer text-gray-500 text-xl"
-                    onClick={togglePassword}
-                  >
-                    {" "}
-                    visibility_off
-                  </span>
-                )}
-
-                <div className="mt-1 flex items-center justify-between ">
-                  {!errors.password ? (
-                    <div>
-                      <p className="invisible">Required</p>
-                    </div>
+          <div className="  h-[80vh] m-auto flex justify-center items-center ">
+            <img src={logo} alt="" className=" max-w-[390px]" />
+          </div>
+        </div>
+      </div>
+      <div className="m-auto  ">
+        <div className=" w-[100%] ">
+          <div>
+            <h2 className="text-xl phone:text-[16px] text-textPrimary">
+              Happy To See You Back ! Our Rhino Tome{" "}
+            </h2>
+            <h3 className="pt-2 text-base phone:text-[14px] text-textPrimary">
+              Log in and unlock your world!
+            </h3>
+          </div>
+          <form onSubmit={handleSubmit}>
+            <div className="pt-5">
+              <label className="text-textPrimary text-base">
+                Email <span className="text-red-500">*</span>
+              </label>
+              <div className="pt-3 ">
+                <Input
+                  name="email"
+                  type="text"
+                  event={HandleChange}
+                  value={formValues.email}
+                  placeholder="Email"
+                />
+              </div>
+              {!errors.email ? (
+                <div>
+                  <p className="invisible mt-1">Required</p>
+                </div>
+              ) : (
+                <div>
+                  <p className="text-red-500 mt-1">{errors.email}</p>
+                </div>
+              )}
+            </div>
+            <div className="pt-1">
+              <label className="text-textPrimary text-base">
+                Password <span className="text-red-500">*</span>
+              </label>
+              <div className="pt-3 absolute">
+                <Input
+                  name="password"
+                  type={PasswordVisible ? "text" : "password"}
+                  event={HandleChange}
+                  value={formValues.password}
+                  placeholder="Password"
+                />
+                <div className="">
+                  {PasswordVisible ? (
+                    <span
+                      className="material-symbols-outlined absolute right-3 top-5 cursor-pointer text-gray-500 text-xl"
+                      onClick={togglePassword}
+                    >
+                      {" "}
+                      visibility
+                    </span>
                   ) : (
-                    <div>
-                      <p className="text-red-500">{errors.password}</p>
-                    </div>
+                    <span
+                      className="material-symbols-outlined absolute right-3 top-5 cursor-pointer text-gray-500 text-xl"
+                      onClick={togglePassword}
+                    >
+                      {" "}
+                      visibility_off
+                    </span>
                   )}
 
-                  <Link to="/forgotpassword">
-                    <p className="text-primary text-sm  pt-2">
-                      Forgot Password
-                    </p>
-                  </Link>
+                  <div className="mt-1 flex items-center justify-between ">
+                    {!errors.password ? (
+                      <div>
+                        <p className="invisible">Required</p>
+                      </div>
+                    ) : (
+                      <div>
+                        <p className="text-red-500">{errors.password}</p>
+                      </div>
+                    )}
+
+                    <Link to="/forgotpassword">
+                      <p className="text-primary text-sm  pt-2">
+                        Forgot Password
+                      </p>
+                    </Link>
+                  </div>
                 </div>
               </div>
             </div>
+            <div className="mt-28 flex justify-center">
+              <button
+                type="submit"
+                className="bg-primary w-36 text-white h-11 rounded-md"
+              >
+                Signin
+              </button>
+            </div>
+          </form>
+          <div className="space-x-1 pt-4 flex justify-center ">
+            <span className="text-textPrimary">Create an account?</span>
+            <Link to="/signup" className="text-primary">
+              Signup
+            </Link>
           </div>
-          <div className="mt-28 ml-24">
-            <button
-              type="submit"
-              className="bg-primary w-36 text-white h-11 rounded-md"
-            >
-              Signin
-            </button>
-          </div>
-        </form>
-        <div className="space-x-1 pt-4 ml-20 ">
-          <span className="text-textPrimary">Create an account?</span>
-          <Link to="/signup" className="text-primary">
-            Signup
-          </Link>
+          {loading && (
+            <>
+              <div className="bg-[#aeaeca] opacity-[0.5] w-[100%] h-[100vh] absolute top-0 left-0  z-10"></div>
+              <div className="">
+                <p className="absolute top-[48%] left-[48%] z-50 ">
+                  <HashLoader color="#3197e8" />
+                </p>
+              </div>
+            </>
+          )}
         </div>
-        {loading && (
-          <>
-            <div className="bg-[#a3a2e9] opacity-[0.5] w-screen h-screen absolute top-0 left-0  z-10"></div>
-            <p className="absolute top-72 left-[600px] z-40">
-              <HashLoader color="#3197e8" />
-            </p>
-          </>
-        )}
       </div>
     </main>
   );

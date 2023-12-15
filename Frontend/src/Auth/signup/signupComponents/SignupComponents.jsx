@@ -11,9 +11,8 @@ import Cookies from "js-cookie";
 
 export default function SignupComponents() {
   const googleAuth = () => {
-    
-    window.location.href = 'http://localhost:4000/api/auth/auth/google';
-	};
+    window.location.href = "http://localhost:4000/api/auth/auth/google";
+  };
 
   const [errors, setError] = useState({});
   const params = useParams();
@@ -44,7 +43,9 @@ export default function SignupComponents() {
   const handleSumbit = (e) => {
     e.preventDefault();
     const validationErrors = {};
-    let passwordRegex = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
+
+    let passwordRegex =
+      /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+{}\[\]:;<>,.?~\\-]).{8,}$/;
 
     if (!formValues.username.trim()) {
       validationErrors.username = "Username is required";
@@ -61,9 +62,18 @@ export default function SignupComponents() {
 
     if (!formValues.password.trim()) {
       validationErrors.password = "Password is required";
+    } else if (formValues.password.length < 8) {
+      validationErrors.password = "Password must be at least 8 characters long";
+    } else if (!/[A-Z]/.test(formValues.password)) {
+      validationErrors.password =
+        "Password must contain at least one uppercase letter";
+    } else if (!/[!@#$%^&*()_+{}\[\]:;<>,.?~\\-]/.test(formValues.password)) {
+      validationErrors.password =
+        "Password must contain at least one special character";
     } else if (!passwordRegex.test(formValues.password)) {
-      validationErrors.password = "Password is not valid";
+      validationErrors.password = "Password must contain numbers";
     }
+
     if (!formValues.confirmPassword.trim()) {
       validationErrors.confirmPassword = "ConfirmPassword is required";
     }
@@ -72,7 +82,6 @@ export default function SignupComponents() {
     }
 
     setError(validationErrors);
-
 
     if (Object.keys(validationErrors).length === 0) {
       setLoading(true);
@@ -124,27 +133,33 @@ export default function SignupComponents() {
   };
 
   return (
-    <div className="">
-      <div className="flex ">
-        <div className="bg-primary w-1/2 h-screen">
-          <img
-            src={"https://i.postimg.cc/ydTtqjsF/book-2.png"}
-            alt=""
-            className="max-w-md ml-11 mt-6 h-6"
-          />
-
-          <p className="mx-6 text-white text-sm font-medium pt-2">Rhino Tome</p>
-          <img
-            src={logo}
-            className="max-w-[390px]  m-auto mt-[70px] mb-[112px] "
-          />
+    <>
+      <main className="flex h-[100vh] max-w-[100%]">
+        <div
+          className=" phone:hidden md:hidden   lg:bg-primary lg:block xl:block 2xl:block
+        h-[100vh] w-[50%]
+        "
+        >
+          <div>
+            <div className="pt-[20px] pl-[20px]">
+              <img
+                src={"https://i.postimg.cc/ydTtqjsF/book-2.png"}
+                alt=""
+                className="w-6"
+              />
+              <p className=" text-white text-sm font-medium pt-2">Rhino Tome</p>
+            </div>
+            <div className="  h-[80vh] m-auto flex justify-center items-center ">
+              <img src={logo} alt="" className=" max-w-[390px]" />
+            </div>
+          </div>
         </div>
-        <div className="bg-secondary w-1/2 h-screen">
-          <div className=" ml-[140px]  mt-[2px] space-y-1">
-            <h2 className="text-textPrimary font-bold text-2xl">
+        <div className="m-auto ">
+          <div className=" w-[100%]">
+            <h2 className="text-textPrimary font-bold text-2xl phone:text-[18px]">
               Welcome to DCKAP Rhino Tome! 👋
             </h2>
-            <h3 className="text-textPrimary font-medium">
+            <h3 className="text-textPrimary font-medium phone:text-[14px]">
               Please Sign Into Your Account
             </h3>
             <form className="space-y-1" onSubmit={handleSumbit}>
@@ -195,7 +210,7 @@ export default function SignupComponents() {
                     type={PasswordVisible ? "text" : "password"}
                     onChange={HandleChange}
                     value={formValues.password}
-                    className="w-96 h-9 mt-1 rounded-sm border-slate-900 p-2 text-sm outline-none outline-gray-200"
+                    className="w-96 phone:w-[296px] h-9 mt-1 rounded-sm border-slate-900 p-2 text-sm outline-none outline-gray-200"
                     placeholder="Password"
                     name="password"
                     onPaste={(e) => {
@@ -246,7 +261,7 @@ export default function SignupComponents() {
                     type={ConfirmPasswordVisible ? "text" : "password"}
                     value={formValues.confirmPassword}
                     onChange={HandleChange}
-                    className="w-96 h-9 mt-1 rounded-sm border-slate-900 p-2 text-sm outline-none outline-gray-200"
+                    className="w-96 phone:w-[296px] h-9 mt-1 rounded-sm border-slate-900 p-2 text-sm outline-none outline-gray-200"
                     name="confirmPassword"
                     placeholder="Confirm Password"
                     onPaste={(e) => {
@@ -286,11 +301,11 @@ export default function SignupComponents() {
                   )}
                 </div>
               </div>
-              <div className="">
+              <div className="flex justify-center">
                 <Button name="Signup" />
               </div>
             </form>
-            <div className="space-x-1 mt-5 ml-12">
+            <div className="flex justify-center space-x-1 py-2">
               <span className="text-textPrimary ">
                 Already have an account?
               </span>
@@ -298,27 +313,31 @@ export default function SignupComponents() {
                 Signin Here
               </Link>
             </div>
-            <div className="flex ml-16">
+            <div className="flex justify-center">
               <div className="bg-white w-10 h-10 ">
                 <img src={googles} className="p-2" />
               </div>
-              <button onClick={googleAuth}
+              <button
+                onClick={googleAuth}
                 className="bg-white w-40 h-10 text-primary rounded backdrop-blur-[2px] border-[1px]"
               >
-                  Signup With Google
+                Signup With Google
               </button>
             </div>
           </div>
         </div>
-      </div>
+      </main>
+
       {loading && (
         <>
-          <div className="bg-[#a3a2e9] opacity-[0.5] w-screen h-screen absolute top-0 left-0  z-10"></div>
-          <p className="absolute top-72 left-[600px] z-40">
-            <HashLoader color="#3197e8" />
-          </p>
+          <div className="bg-[#aeaeca] opacity-[0.5] w-[100%] h-[100vh] absolute top-0 left-0  z-10"></div>
+          <div className="">
+            <p className="absolute top-[48%] left-[48%] z-50 ">
+              <HashLoader color="#3197e8" />
+            </p>
+          </div>
         </>
       )}
-    </div>
+    </>
   );
 }

@@ -1,10 +1,10 @@
 import React from "react";
 import { TrashHeader } from "../../common/commonLayouts/TrashHeader";
 import { TrashMain } from "../../common/commonLayouts/TrashMain";
+import HashLoader from "react-spinners/HashLoader";
 
 
 export const TrashComponent = (props) => {
-
   return (
     <>
       <TrashHeader
@@ -12,6 +12,7 @@ export const TrashComponent = (props) => {
         deletePopup={props.deletePopup}
         deleteAllPopup={props.deleteAllPopup}
         handleDelete={props.handleDelete}
+        trashData={props.trashData}
       />
       <TrashMain
         trashData={props.trashData}
@@ -21,7 +22,16 @@ export const TrashComponent = (props) => {
         styleState={props.styleState}
         setStyleState={props.setStyleState}
       />
-      </>
-
+      {props.loading && (
+        <>
+          <div className="bg-[#aeaeca] opacity-[0.5] w-[100%] h-[100vh] absolute top-0 left-0  z-10"></div>
+          <div className="">
+            <p className="absolute top-[48%] left-[48%] z-50 ">
+              <HashLoader color="#3197e8" />
+            </p>
+          </div>
+        </>
+      )}
+    </>
   );
 };

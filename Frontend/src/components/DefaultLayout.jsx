@@ -14,7 +14,7 @@ export default function DefaultLayout() {
       <MyContextProvider>
         <div className="flex">
           <SideNavLarge />
-          <div className=" 2xl:w-[calc(100%-260px)] xl:w-[calc(100%-220px)] lg:w-[calc(100%-220px)]">
+          <div className=" 2xl:w-[calc(100%-260px)] xl:w-[calc(100%-220px)] lg:w-[calc(100%-220px)] phone:w-[100%]">
             <Outlet />
           </div>
         </div>

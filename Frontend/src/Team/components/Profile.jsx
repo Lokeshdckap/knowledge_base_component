@@ -17,7 +17,6 @@ export const Profile = (props) => {
 
   const [image, setImage] = useState(null);
 
-
   const handlePopup = () => {
     setChangePasswordPopup((prevState) => !prevState);
   };
@@ -25,7 +24,6 @@ export const Profile = (props) => {
   useEffect(() => {
     userInfo();
   }, [params]);
-
 
   let duration = 2000;
   const showToastMessage = (data) => {
@@ -61,31 +59,25 @@ export const Profile = (props) => {
     let username = userName;
 
     if (username) {
-
       setLoading(true);
       const formData = new FormData();
-      formData.append('username', username);
-      formData.append('image', image); // Assuming you have an 'avatar' file to upload
-      
+      formData.append("username", username);
+      formData.append("image", image); // Assuming you have an 'avatar' file to upload
+
       axiosClient
-        .put(
-          'http://localhost:4000/api/user/userUpdateProfile',
-          formData,
-          {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-            },
-          }
-        )
+        .put("http://localhost:4000/api/user/userUpdateProfile", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
         .then(({ data }) => {
           showToastMessage(data.message);
           setLoading(false);
         })
         .catch((err) => {
           const response = err.response;
-          console.error('Error:', response.status);
+          console.error("Error:", response.status);
         });
-      
     } else {
       showToastErrorMessage("please fill the input field");
     }
@@ -220,13 +212,14 @@ export const Profile = (props) => {
       <ToastContainer />
       {loading && (
         <>
-          <div className="bg-[#a3a2e9] opacity-[0.5] w-screen h-screen absolute top-0 left-0  z-10"></div>
-          <p className="absolute top-72 left-[600px] z-40">
-            <HashLoader color="#3197e8" />
-          </p>
+          <div className="bg-[#aeaeca] opacity-[0.5] w-[100%] h-[100vh] absolute top-0 left-0  z-10"></div>
+          <div className="">
+            <p className="absolute top-[48%] left-[48%] z-50 ">
+              <HashLoader color="#3197e8" />
+            </p>
+          </div>
         </>
       )}
-
     </div>
   );
 };

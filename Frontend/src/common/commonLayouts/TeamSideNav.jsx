@@ -24,7 +24,7 @@ export const TeamSideNav = (props) => {
 
   return (
     <div className="relative">
-      <div className="bg-white h-screen overflow-auto w-56 shadow-md">
+      <div className="bg-white h-[100vh] overflow-auto w-56 shadow-md">
         <div className="bg-slate-300 h-14">
           <p className="w-20 m-auto pt-4 truncate">{teamName && teamName}</p>
         </div>

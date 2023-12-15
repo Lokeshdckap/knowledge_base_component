@@ -33,10 +33,9 @@ export default function SideNavLarge(props) {
     popUp,
     showToastMessage,
     addNewScript,
-    screenHeight, 
-    setScreenHeight
+    screenHeight,
+    setScreenHeight,
   } = useMyContext();
-
 
   //param
   const params = useParams();
@@ -50,7 +49,7 @@ export default function SideNavLarge(props) {
 
   const addPopup = useRef(null);
   const addIconRef = useRef(null);
-  
+
   //TeamState
   const [teamDropDown, setteamDropDown] = useState(false);
 
@@ -73,7 +72,7 @@ export default function SideNavLarge(props) {
 
   const [inviteError, setInviteError] = useState(null);
 
-  const [topState,setTopState] = useState(null)
+  const [topState, setTopState] = useState(null);
   //
 
   useEffect(() => {
@@ -121,13 +120,13 @@ export default function SideNavLarge(props) {
 
     e.preventDefault();
     e.stopPropagation();
- 
-    const element = addIconRef.current;  
+
+    const element = addIconRef.current;
     // Check if the element is available
     if (element) {
       // Use getBoundingClientRect to get the size and position
       const top = element.getBoundingClientRect().top;
-      setTopState(top+30);
+      setTopState(top + 30);
     }
 
     let targetId = e.target.id;
@@ -263,18 +262,17 @@ export default function SideNavLarge(props) {
     };
 
     // Attach the event listener for window resize
-    window.addEventListener('resize', updateScreenHeight);
+    window.addEventListener("resize", updateScreenHeight);
     window.addEventListener("click", closeOnOutsideClick);
 
     return () => {
       window.removeEventListener("click", closeOnOutsideClick);
       window.removeEventListener("resize", updateScreenHeight);
-
     };
   }, [teamDropDown, AddNewMenu, props.overStates, popUp]);
 
   return (
-    <div className="bg-[#181F38] h-screen border-r-[1px] 2xl:w-[260px] xl:w-[220px] lg:w-[220px] shadow">
+    <div className="bg-[#181F38] h-screen border-r-[1px] 2xl:w-[260px] xl:w-[220px] lg:w-[220px] shadow phone:hidden">
       <div className="flex items-center pt-6 pl-7 space-x-2 ">
         <div>
           <img
@@ -314,15 +312,13 @@ export default function SideNavLarge(props) {
             <div>
               <p className="font-semibold text-textPrimary">Change Team</p>
               {allTeam && (
-                <ul className={`space-y-2 pt-2 overflow-auto`}
-             
-                >
+                <ul className={`space-y-2 pt-2 overflow-auto`}>
                   {allTeam.map((team, index) => (
                     <li
                       key={index}
                       id={team.team_uuid}
                       onClick={switchTeamEvent}
-                      className="text-base cursor-pointer hover:text-purple-400 "
+                      className="text-base cursor-pointer hover:text-primary "
                     >
                       {team.name}
                       {team.name == teamName && (
@@ -350,7 +346,7 @@ export default function SideNavLarge(props) {
                 >
                   <i className="fa-solid fa-user-plus cursor-pointer"></i>
                   <p className="pl-1 cursor-pointer">Invite Teamates</p>
-              </div>
+                </div>
               </div>
             </div>
             <hr
@@ -366,10 +362,11 @@ export default function SideNavLarge(props) {
           </div>
         )}
 
-        <ul className="mt-1 space-y-1  overflow-auto"
-        style={{ 
-          maxHeight: `calc(${screenHeight}px - 189px)` 
-        }}
+        <ul
+          className="mt-1 space-y-1  overflow-auto"
+          style={{
+            maxHeight: `calc(${screenHeight}px - 189px)`,
+          }}
         >
           {batch.map((batch, index) => (
             <div key={index}>
@@ -404,7 +401,7 @@ export default function SideNavLarge(props) {
                     {(overState == batch.uuid ||
                       localStorage.getItem("mainId") == batch.uuid) && (
                       <i
-                        className="fa-solid fa-ellipsis-vertical text-[#F9EFD4]   pt-[3px] pb-[3px] pl-[7px] pr-[7px] rounded-[4px] "
+                        className="fa-solid fa-ellipsis-vertical text-[#F9EFD4] cursor-pointer  pt-[3px] pb-[3px] pl-[7px] pr-[7px] rounded-[4px] "
                         id={batch.uuid}
                         onClick={addPopUp}
                         ref={addIconRef}
@@ -413,7 +410,6 @@ export default function SideNavLarge(props) {
                   </div>
                 </div>
               </Link>
-
               {popUp == batch.uuid && (
                 <>
                   <div className="bg-[#a3a2e9] opacity-[0] w-screen h-screen absolute top-0 left-0  z-10"></div>
@@ -421,7 +417,7 @@ export default function SideNavLarge(props) {
                     className="box-border bg-white  w-40   border-[1px] border-slate-300 rounded-lg shadow-lg absolute  left-40  z-10"
                     ref={addPopup}
                     style={{
-                      top:topState
+                      top: topState,
                     }}
                   >
                     <div className="w-[145px] m-auto space-y-3 pt-3 pb-3">
@@ -491,15 +487,15 @@ export default function SideNavLarge(props) {
                         </Link>
                         {popUp == child.uuid && (
                           <>
-                            <div className="box-border bg-white w-40 p-2.5 border-[1px] border-slate-300 rounded-xl shadow-lg absolute left-40 z-50"
-                             style={{
-                              top: topState
-                            }}
+                            <div
+                              className="box-border bg-white w-40 p-2.5 border-[1px] border-slate-300 rounded-xl shadow-lg absolute left-40 z-50"
+                              style={{
+                                top: topState,
+                              }}
                             >
                               <div
                                 className="w-[140px] m-auto space-y-3"
                                 ref={addPopup}
-                               
                               >
                                 <p
                                   className={`text-lg cursor-pointer text-textPrimary hover:bg-primary  hover:text-white hover:rounded p-0.5`}
@@ -561,7 +557,6 @@ export default function SideNavLarge(props) {
                   )}
                 </div>
               </Link>
-
               {popUp == script.uuid && (
                 <>
                   <div className="bg-[#a3a2e9] opacity-[0] w-screen h-screen absolute top-0 left-0  z-10"></div>
@@ -569,7 +564,7 @@ export default function SideNavLarge(props) {
                     className="box-border bg-white  w-40   border-[1px] border-slate-300 rounded-lg shadow-lg absolute left-40 z-50"
                     ref={addPopup}
                     style={{
-                      top:topState
+                      top: topState,
                     }}
                   >
                     <div className="w-[145px] m-auto space-y-3 pt-3 pb-3">
@@ -588,11 +583,8 @@ export default function SideNavLarge(props) {
           ))}
         </ul>
       </div>
-      <div className="absolute bottom-5 ">
-        <div className="h-px bg-[#c2c2c9] w-[220px] ">
-
-        </div>
- 
+      <div className="absolute bottom-4 ">
+        <div className="h-px bg-[#c2c2c9] w-[220px]  "></div>
         <div className=" flex items-center  justify-around w-[200px] m-auto  mt-6">
           <div
             className={` ${
@@ -644,10 +636,12 @@ export default function SideNavLarge(props) {
       <ToastContainer />
       {loading && (
         <>
-          <div className="bg-[#a3a2e9] opacity-[0.5] w-screen h-screen absolute top-0 left-0  z-10"></div>
-          <p className="absolute top-72 left-[600px] z-40">
-            <HashLoader color="#3197e8" />
-          </p>
+          <div className="bg-[#aeaeca] opacity-[0.5] w-[100%] h-[100vh] absolute top-0 left-0  z-10"></div>
+          <div className="">
+            <p className="absolute top-[48%] left-[48%] z-50">
+              <HashLoader color="#3197e8" />
+            </p>
+          </div>
         </>
       )}
       {teamPopup && (

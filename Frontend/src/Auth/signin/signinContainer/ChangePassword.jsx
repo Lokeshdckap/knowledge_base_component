@@ -23,8 +23,7 @@ export default function ChangePassword() {
     setPasswordVisible((prevState) => !prevState);
   }
 
-
-  let duration = 2000
+  let duration = 2000;
   const showToastMessage = (data) => {
     toast.success(data, {
       position: toast.POSITION.TOP_CENTER,
@@ -32,6 +31,9 @@ export default function ChangePassword() {
       hideProgressBar: true,
       draggable: true,
       closeOnClick: true,
+      style: {
+        borderRadius: "50px", // Adjust the value as needed
+      },
     });
   };
 
@@ -42,6 +44,9 @@ export default function ChangePassword() {
       hideProgressBar: true,
       draggable: true,
       closeOnClick: true,
+      style: {
+        borderRadius: "50px", // Adjust the value as needed
+      },
     });
   };
 
@@ -223,10 +228,12 @@ export default function ChangePassword() {
       <ToastContainer />
       {loading && (
         <>
-          <div className="bg-[#a3a2e9] opacity-[0.5] w-[1289px] h-[664px] absolute top-0 left-0  z-10"></div>
-          <p className="absolute top-72 left-[600px] z-40">
-            <HashLoader color="#3197e8" />
-          </p>
+          <div className="bg-[#aeaeca] opacity-[0.5] w-[100%] h-[100vh] absolute top-0 left-0  z-10"></div>
+          <div className="">
+            <p className="absolute top-[48%] left-[48%] z-50 ">
+              <HashLoader color="#3197e8" />
+            </p>
+          </div>
         </>
       )}
     </main>

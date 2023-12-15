@@ -10,6 +10,8 @@ export const ViewPage = (props) => {
   } = useMyContext();
   const [newPagePopup, setNewPagePopup] = useState(false);
   const [OverPage, setOverPage] = useState(null);
+  const [screenWidth, setScreenWidth] = useState(window.innerWidth);
+
   const treeNode = props.treeNode;
 
   useEffect(() => {
@@ -17,6 +19,8 @@ export const ViewPage = (props) => {
     props.setDescription(props.description);
     const updateScreenHeight = () => {
       setScreenHeight(window.innerHeight);
+
+      setScreenWidth(window.innerWidth);
     };
 
     // Attach the event listener for window resize
@@ -31,13 +35,13 @@ export const ViewPage = (props) => {
   return (
     <div className="bg-[#F4F7FC]" style={{ height: "calc(100% - 64px)" }}>
       <div className="flex">
-        <div className=" w-[278px]  overflow-auto border-r-[1px]"
+        <div className=" w-[278px] phone:w-[150px] overflow-auto border-r-[1px]"
           style={{
             height: `calc(${screenHeight}px - 64px)`,
           }}
         >
-          <div className="space-y-2 ml-4 mt-4">
-            <div className="p-4 rounded-lg shadow">
+          <div className="space-y-2 ml-4 phone:ml-px mt-4">
+            <div className="p-4 phone:p-2 rounded-lg shadow">
               {treeNode.map((topLevelPage, index) => (
                 <div key={topLevelPage.uuid} id={topLevelPage.uuid}>
                   <PageTree
@@ -56,19 +60,19 @@ export const ViewPage = (props) => {
             </div>
           </div>
           <hr
-            className={`h-px w-[250px] bg-[#D5D7DA] border-0 m-auto dark:bg-gray-900 mt-4`}
+            className={`h-px w-[100%] bg-[#D5D7DA] border-0 m-auto dark:bg-gray-900 mt-4`}
           />
         </div>
         <div className={`bg-[#fbfbfc] px-[30px]  overflow-auto`} 
              style={{
-              width: "calc(100% - 278px)",
+              width: screenWidth > "425" ?  'calc(100% - 278px)' : 'calc(100% - 150px)' ,
               maxHeight: `calc(${screenHeight}px - 64px)`,
             }}
         >
           <div>
             <input
               type="text"
-              className="text-2xl  mt-8 focus:outline-none text-textPrimary font-bold"
+              className="text-2xl phone:text-[18px] phone:w-[190px]  mt-8 focus:outline-none text-textPrimary font-bold"
               value={title}
               placeholder="Page Name"
               readOnly={true}
@@ -76,7 +80,7 @@ export const ViewPage = (props) => {
           </div>
           <div>
             <input
-              className="text-2xl  mt-5 focus:outline-none text-textPrimary "
+              className="text-2xl phone:text-[16px] phone:w-[170px]   mt-2 focus:outline-none text-textPrimary "
               value={props.description}
               placeholder="Page Description"
               readOnly={true}

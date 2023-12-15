@@ -5,19 +5,13 @@ import axiosClient from "../../axios-client";
 import { useMyContext } from "../../context/AppContext";
 
 export const Trash = () => {
+  const { getAllDeletedData, trashData, setTrashData } = useMyContext();
 
-  const {
-    getAllDeletedData,
-    trashData, 
-    setTrashData
-
-  } = useMyContext();
- 
   const params = useParams();
 
   const [deletePopup, setDeletePopup] = useState(false);
-  // const [trashData, setTrashData] = useState([]);
   const [styleState, setStyleState] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     getAllDeletedData();
@@ -30,6 +24,7 @@ export const Trash = () => {
   };
 
   const handleDelete = async () => {
+    setLoading(true);
 
     if (styleState.length > 0) {
       await axiosClient
@@ -42,6 +37,7 @@ export const Trash = () => {
             deleteAllPopup();
             showToastMessage(res.data.message);
             setStyleState([]);
+            setLoading(false);
           }
         })
         .catch((err) => {
@@ -55,6 +51,7 @@ export const Trash = () => {
             getAllDeletedData();
             deleteAllPopup();
             showToastMessage(res.data.success);
+            setLoading(false);
           }
         })
         .catch((err) => {
@@ -64,12 +61,14 @@ export const Trash = () => {
   };
 
   const handleParticularDelete = async (e) => {
+    setLoading(true);
     if (e.target.id) {
       await axiosClient
         .delete(`/api/trash/permanentDelete/${params.uuid}/${e.target.id}`)
         .then((res) => {
           getAllDeletedData();
           showToastMessage(res.data.message);
+          setLoading(false);
         })
         .catch((err) => {
           console.log(err);
@@ -78,6 +77,8 @@ export const Trash = () => {
   };
 
   const handleParticularRestore = async (e) => {
+    setLoading(true);
+
     if (e.target.id) {
       await axiosClient
         .put(`/api/trash/restore/${params.uuid}/${e.target.id}`)
@@ -85,6 +86,7 @@ export const Trash = () => {
           getAllDeletedData();
           showToastMessage(res.data.message);
           getScript();
+          setLoading(false);
         })
         .catch((err) => {
           console.log(err);
@@ -118,6 +120,7 @@ export const Trash = () => {
         handleSelect={handleSelect}
         styleState={styleState}
         setStyleState={setStyleState}
+        loading={loading}
       />
     </>
   );

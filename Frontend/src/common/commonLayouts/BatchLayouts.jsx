@@ -8,7 +8,7 @@ export const BatchLayouts = (props) => {
 
   const params = useParams();
   const navigate = useNavigate();
-  const { screenHeight, setScreenHeight } = useMyContext();
+  const { screenHeight, setScreenHeight, role } = useMyContext();
   const [popUpState, setPopUpState] = useState(null);
 
   let scripts = props.scripts;
@@ -65,6 +65,7 @@ export const BatchLayouts = (props) => {
                   value={props.batchTitle || ""}
                   onChange={props.changeEvent}
                   onBlur={props.handleBlur}
+                  disabled={role === 2 ? true : false}
                 />
               </div>
               <div className="mt-4">
@@ -75,6 +76,7 @@ export const BatchLayouts = (props) => {
                   value={props.batchDescription || ""}
                   onChange={props.changeEvent}
                   onBlur={props.handleDescriptionBlur}
+                  disabled={role === 2 ? true : false}
                 />
               </div>
             </div>
@@ -83,6 +85,7 @@ export const BatchLayouts = (props) => {
                 className="h-[45px] w-[160px] phone:h-[35px] phone:w-[100px]  text-white rounded  bg-primary"
                 onClick={props.AddScript}
                 id={params.slug}
+                disabled={role === 2 ? true : false}
               >
                 New Script
               </button>
@@ -107,16 +110,20 @@ export const BatchLayouts = (props) => {
                 >
                   <div className="w-[100%] phone:p-[5px]">
                     <div className="rounded-t-lg text-end pt-px">
-                      <span
-                        className="material-symbols-outlined text-primary cursor-pointer phone:text-[14px] text-2xl "
-                        id={script.uuid}
-                        onClick={deleteForeverPopup}
-                        ref={(ref) =>
-                          (deleteIconRef.current[script.uuid] = ref)
-                        }
-                      >
-                        more_vert
-                      </span>
+                      {role == 2 ? (
+                        ""
+                      ) : (
+                        <span
+                          className="material-symbols-outlined text-primary cursor-pointer phone:text-[14px] text-2xl "
+                          id={script.uuid}
+                          onClick={deleteForeverPopup}
+                          ref={(ref) =>
+                            (deleteIconRef.current[script.uuid] = ref)
+                          }
+                        >
+                          more_vert
+                        </span>
+                      )}
                     </div>
                     <div
                       className=" font-medium cursor-pointer"

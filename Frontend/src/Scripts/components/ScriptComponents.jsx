@@ -10,7 +10,7 @@ import { useMyContext } from "../../context/AppContext";
 export const ScriptComponents = () => {
   const navigate = useNavigate();
   const params = useParams();
-  const { getScript, script, getScripts,setLoading } = useMyContext();
+  const { getScript, script, getScripts,setLoading,role } = useMyContext();
 
   //hooks
 
@@ -281,6 +281,7 @@ export const ScriptComponents = () => {
         HandleShare={HandleShare}
         scriptError={scriptError}
         publish={publish}
+        role={role}
       />
       <EditPage
         treeNode={treeNode}
@@ -307,6 +308,8 @@ export const ScriptComponents = () => {
         renderScript={renderScript}
         parentOpen={parentOpen}
         teamUuid={teamUuid}
+        role={role}
+
       />
     </>
   );

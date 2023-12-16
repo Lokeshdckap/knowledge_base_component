@@ -10,6 +10,7 @@ export const TeamSetting = (props) => {
   const [teamName, setTeamName] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
+  const [role, setRole] = useState(null);
 
   useEffect(() => {
     team();
@@ -26,6 +27,7 @@ export const TeamSetting = (props) => {
       .get(`/api/teams/getTeam/${params.uuid}`)
       .then((res) => {
         setTeamName(res.data.Teams[0].name);
+        setRole(res.data.team_member.role_id);
       })
       .catch((err) => {
         console.log(err);
@@ -71,6 +73,7 @@ export const TeamSetting = (props) => {
                 value={(teamName && teamName) || ""}
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded  block w-[500px] pl-2 p-2.5 focus:outline-primary mt-2"
                 placeholder="Team Name"
+                disabled={role == 2 ? true : false}
                 onChange={(e) => setTeamName(e.target.value)}
                 required
               />

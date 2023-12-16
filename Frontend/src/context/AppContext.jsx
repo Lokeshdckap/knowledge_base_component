@@ -32,6 +32,7 @@ const MyContextProvider = ({ children }) => {
   const [userDetail, setUserDetail] = useState(null);
 
   const [openSideNave, setOpenSideNave] = useState("hidden");
+  const [role,setRole] = useState(null);
 
   const duration = 2000;
   const showToastMessage = (data) => {
@@ -72,6 +73,7 @@ const MyContextProvider = ({ children }) => {
     await axiosClient
       .get(`/api/teams/getTeam/${params.uuid}`)
       .then((res) => {
+        setRole(res.data.team_member.role_id);
         setTeam(res.data.Teams[0].name);
         getBatch();
         getScript();
@@ -239,7 +241,7 @@ const MyContextProvider = ({ children }) => {
             if (batchId) {
               handleAfterAddedChildrenScripts(batchId);
             }
-           navigate("/")
+           navigate(`/dashboard/${params.uuid}`)
 
           }
           getAllDeletedData();
@@ -279,6 +281,9 @@ const MyContextProvider = ({ children }) => {
         console.log(response);
       });
   };
+
+
+
 
   return (
     <AppContext.Provider
@@ -330,6 +335,7 @@ const MyContextProvider = ({ children }) => {
         setScreenHeight,
         openSideNave,
         setOpenSideNave,
+        role
       }}
     >
       {children}

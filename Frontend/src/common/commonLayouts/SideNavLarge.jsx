@@ -35,8 +35,9 @@ export default function SideNavLarge(props) {
     addNewScript,
     screenHeight,
     setScreenHeight,
-    openSideNave, 
-    setOpenSideNave
+    openSideNave,
+    setOpenSideNave,
+    role,
   } = useMyContext();
 
   //param
@@ -70,7 +71,7 @@ export default function SideNavLarge(props) {
 
   const [invitePopup, setInvitePopup] = useState(false);
   const [inviteEmail, setInviteEmail] = useState("");
-  const [role, setRole] = useState("");
+  const [roles, setRoles] = useState("");
 
   const [inviteError, setInviteError] = useState(null);
 
@@ -78,7 +79,6 @@ export default function SideNavLarge(props) {
   //
 
   useEffect(() => {
-    
     getAllTeam();
     if (localStorage.getItem("mainId")) {
       localStorage.removeItem("mainId");
@@ -119,8 +119,6 @@ export default function SideNavLarge(props) {
 
   //Batch Popup
   const addPopUp = (e) => {
-    console.log(e.target);
-
     e.preventDefault();
     e.stopPropagation();
 
@@ -198,7 +196,7 @@ export default function SideNavLarge(props) {
       setLoading(false);
 
       setInviteError("Email is required");
-    } else if (!role.trim()) {
+    } else if (!roles.trim()) {
       setLoading(false);
 
       setInviteError("Role is required");
@@ -206,7 +204,7 @@ export default function SideNavLarge(props) {
       axiosClient
         .post("/api/invites/inviteUsers", {
           email: inviteEmail,
-          role: role,
+          role: roles,
           team_uuid: params.uuid,
         })
         .then((res) => {
@@ -275,7 +273,9 @@ export default function SideNavLarge(props) {
   }, [teamDropDown, AddNewMenu, props.overStates, popUp]);
 
   return (
-    <div className={`bg-[#181F38] h-screen border-r-[1px] 2xl:w-[260px] xl:w-[220px] lg:w-[220px] shadow phone:${openSideNave}`}>
+    <div
+      className={`bg-[#181F38] h-screen border-r-[1px] 2xl:w-[260px] xl:w-[220px] lg:w-[220px] shadow phone:${openSideNave}`}
+    >
       <div className="flex items-center pt-6 pl-7 space-x-2 ">
         <div>
           <img
@@ -344,11 +344,15 @@ export default function SideNavLarge(props) {
                   </p>
                 </div>
                 <div
-                  className="flex items-center mb-2 hover:text-primary"
-                  onClick={() => setInvitePopup(true)}
+                  className="flex items-center mb-2 hover:text-primary cursor-pointer"
+                  onClick={() => {
+                    if (role !== 2) {
+                      setInvitePopup(true);
+                    }
+                  }}
                 >
-                  <i className="fa-solid fa-user-plus cursor-pointer"></i>
-                  <p className="pl-1 cursor-pointer">Invite Teamates</p>
+                  <i className="fa-solid fa-user-plus "></i>
+                  <p className="pl-1 ">Invite Teamates</p>
                 </div>
               </div>
             </div>
@@ -401,15 +405,17 @@ export default function SideNavLarge(props) {
                     </li>
                   </div>
                   <div>
-                    {(overState == batch.uuid ||
-                      localStorage.getItem("mainId") == batch.uuid) && (
-                      <i
-                        className="fa-solid fa-ellipsis-vertical text-[#F9EFD4] cursor-pointer  pt-[3px] pb-[3px] pl-[7px] pr-[7px] rounded-[4px] "
-                        id={batch.uuid}
-                        onClick={addPopUp}
-                        ref={addIconRef}
-                      ></i>
-                    )}
+                    {role === 2
+                      ? ""
+                      : (overState === batch.uuid ||
+                          localStorage.getItem("mainId") === batch.uuid) && (
+                          <i
+                            className="fa-solid fa-ellipsis-vertical text-[#F9EFD4] cursor-pointer pt-[3px] pb-[3px] pl-[7px] pr-[7px] rounded-[4px]"
+                            id={batch.uuid}
+                            onClick={addPopUp}
+                            ref={addIconRef}
+                          ></i>
+                        )}
                   </div>
                 </div>
               </Link>
@@ -477,15 +483,18 @@ export default function SideNavLarge(props) {
                                   (child.title.length > 6 ? ".." : "")}
                               </li>
                             </div>
-                            {(overScriptState == child.uuid ||
-                              localStorage.getItem("mainId") == child.uuid) && (
-                              <i
-                                className="fa-solid fa-ellipsis-vertical text-[#F9EFD4]   pt-[3px] pb-[3px] pl-[7px] pr-[7px] rounded-[4px] "
-                                id={child.uuid}
-                                onClick={addPopUp}
-                                ref={addIconRef}
-                              ></i>
-                            )}
+                            {role == 2
+                              ? ""
+                              : (overScriptState == child.uuid ||
+                                  localStorage.getItem("mainId") ==
+                                    child.uuid) && (
+                                  <i
+                                    className="fa-solid fa-ellipsis-vertical text-[#F9EFD4]   pt-[3px] pb-[3px] pl-[7px] pr-[7px] rounded-[4px] "
+                                    id={child.uuid}
+                                    onClick={addPopUp}
+                                    ref={addIconRef}
+                                  ></i>
+                                )}
                           </div>
                         </Link>
                         {popUp == child.uuid && (
@@ -549,15 +558,17 @@ export default function SideNavLarge(props) {
                         (script.title.length > 6 ? ".." : "")}
                     </li>
                   </div>
-                  {(overScriptState == script.uuid ||
-                    localStorage.getItem("mainId") == script.uuid) && (
-                    <i
-                      className="fa-solid fa-ellipsis-vertical text-[#F9EFD4]   pt-[3px] pb-[3px] pl-[7px] pr-[7px] rounded-[4px] "
-                      id={script.uuid}
-                      ref={addIconRef}
-                      onClick={addPopUp}
-                    ></i>
-                  )}
+                  {role == 2
+                    ? ""
+                    : (overScriptState == script.uuid ||
+                        localStorage.getItem("mainId") == script.uuid) && (
+                        <i
+                          className="fa-solid fa-ellipsis-vertical text-[#F9EFD4]   pt-[3px] pb-[3px] pl-[7px] pr-[7px] rounded-[4px] "
+                          id={script.uuid}
+                          ref={addIconRef}
+                          onClick={addPopUp}
+                        ></i>
+                      )}
                 </div>
               </Link>
               {popUp == script.uuid && (
@@ -663,7 +674,7 @@ export default function SideNavLarge(props) {
           setInvitePopup={setInvitePopup}
           setInviteEmail={setInviteEmail}
           inviteEmail={inviteEmail}
-          setRole={setRole}
+          setRole={setRoles}
           handleInviteUsers={handleInviteUsers}
           inviteError={inviteError}
         />

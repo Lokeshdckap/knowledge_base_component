@@ -13,6 +13,7 @@ export const TrashComponent = (props) => {
         deleteAllPopup={props.deleteAllPopup}
         handleDelete={props.handleDelete}
         trashData={props.trashData}
+        role={props.role}
       />
       <TrashMain
         trashData={props.trashData}
@@ -21,6 +22,8 @@ export const TrashComponent = (props) => {
         handleSelect={props.handleSelect}
         styleState={props.styleState}
         setStyleState={props.setStyleState}
+        role={props.role}
+
       />
       {props.loading && (
         <>

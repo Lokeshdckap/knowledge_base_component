@@ -16,7 +16,7 @@ export const ActiveUsers = (props) => {
   const [role, setRole] = useState("");
   const [inviteError, setInviteError] = useState(null);
   const [loading, setLoading] = useState(false);
-
+  const [assignrole,setAssignRole] = useState(null);
   useEffect(() => {
     allUsers();
     team();
@@ -40,6 +40,7 @@ export const ActiveUsers = (props) => {
       .get(`/api/teams/getAciveUsers/${params.uuid}`)
       .then((res) => {
         setTeamMembers(res.data.userDetail);
+
       })
       .catch((err) => {
         console.log(err);
@@ -52,6 +53,8 @@ export const ActiveUsers = (props) => {
       .get(`/api/teams/getTeam/${params.uuid}`)
       .then((res) => {
         setTeamName(res.data.Teams[0].name);
+        setAssignRole(res.data.team_member.role_id);
+
       })
       .catch((err) => {
         console.log(err);
@@ -137,6 +140,7 @@ export const ActiveUsers = (props) => {
                 type="button"
                 className="text-primary hover:text-white border border-primary hover:bg-primary focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-7 py-2.5 text-center mr-2 mb-2 dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-500 dark:focus:ring-blue-800"
                 onClick={handleInvite}
+                disabled={assignrole == 2 ? true : false}
               >
                 Invite users
               </button>

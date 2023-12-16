@@ -13,7 +13,8 @@ export const ScriptEditor = () => {
   const navigate = useNavigate();
   const params = useParams();
 
-  const { getScript, script, getScripts } = useMyContext();
+
+  const { getScript, script, getScripts,role } = useMyContext();
 
   //hooks
 
@@ -161,6 +162,7 @@ export const ScriptEditor = () => {
         scriptError={scriptError}
         publish={publish}
         handleEdit={handleEdit}
+        role={role}
       />
 
       <ViewPage

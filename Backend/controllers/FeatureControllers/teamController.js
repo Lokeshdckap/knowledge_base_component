@@ -72,9 +72,14 @@ const getTeam = async (req, res) => {
     const Teams = await Team.findAll({
       where: { uuid: req.params.uuid },
     });
+    const team_member = await UserTeams.findOne({
+      where: {
+        [Op.and]: [{ team_uuid: req.params.uuid }, { user_uuid: req.user.id }],
+      },
+    })
     return res
       .status(200)
-      .json({ Teams, msg: "Sucessfully Fetched All Teams" });
+      .json({ Teams,team_member, msg: "Sucessfully Fetched All Teams" });
   } catch (error) {
     return res.status(500).json({ error: "Can't Get All Team" });
   }

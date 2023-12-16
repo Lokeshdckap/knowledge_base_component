@@ -1,6 +1,7 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, {  useEffect, useRef, useState } from "react";
 import Main from "./Main";
 import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
+import { useMyContext } from "../../context/AppContext";
 
 export default function Header(props) {
   const params = useParams();
@@ -8,13 +9,14 @@ export default function Header(props) {
   const navigate = useNavigate();
   const profileIconRef = useRef(null);
 
+
+  const {openSideNave, setOpenSideNave} = useMyContext();
   const [profileState, setProfileState] = useState(false);
   const onLogout = () => {
     localStorage.removeItem("ACCESS_TOKEN");
     localStorage.removeItem("REFRESH_TOKEN");
 
-    window.location.reload("/signin")
-
+    window.location.reload("/signin");
   };
 
   useEffect(() => {
@@ -34,14 +36,21 @@ export default function Header(props) {
     setProfileState((prevState) => !prevState);
   };
 
+  const handleSideBar  = () => {
+    setOpenSideNave("block")
+  }
+
+  // setOpenSideNave
   return (
     <div className="bg-[#ffff]  shadow-md w-[100%]">
       <div
         className={`flex items-center  m-auto justify-between  relative  w-[100%]  2xl:py-[30px] pt-[8px] pb-[8px] pl-[30px] pr-[30px]`}
       >
         <div className="flex  space-x-2">
-          <div className="2xl:hidden xl:hidden lg:hidden  phone:block phone:text-[12px] ">
-            <i className="fa-solid fa-bars"></i>
+          <div className="2xl:hidden xl:hidden lg:hidden  phone:block phone:text-[12px] "
+            onClick={handleSideBar}
+          >
+            <i class="fa-solid fa-bars"></i>
           </div>
           <h2 className="phone:text-[12px]"> {props.team}'s Team</h2>
         </div>
@@ -92,11 +101,17 @@ export default function Header(props) {
           >
             <div className="w-[85%] m-auto pt-[12px] ">
               <div className="flex justify-center">
-                <img
-                  src={props.userDetail?.avatar}
-                  className="w-10 h-10 rounded-full  "
-                  alt=""
-                />
+                {props.userDetail?.avatar ? (
+                  <img
+                    src={props.userDetail?.avatar}
+                    className="w-10 h-10 rounded-full"
+                    alt=""
+                  />
+                ) : (
+                  <i
+                    className="fa-regular text-slate-600 fa-circle-user text-2xl cursor-pointer pr-3"
+                  ></i>
+                )}
               </div>
               <div className="flex justify-center ">
                 <p className="text-[12px] text-textPrimary pt-[2px] pb-[10px]">

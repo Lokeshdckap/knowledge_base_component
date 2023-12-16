@@ -23,7 +23,6 @@ export default function Main(props) {
   const scriptCount = props.scriptCount;
 
   useEffect(() => {
-    console.log(window.innerHeight);
     const closeOnOutsideClick = (e) => {
       if (deleteRef.current !== null) {
         if (

@@ -10,7 +10,7 @@ import ImageTool from "@editorjs/image";
 import BreakLine from "editorjs-break-line";
 import axiosClient from "../../axios-client";
 import AttachesTool from "@editorjs/attaches";
-import Header from '@editorjs/header';
+import Header from "@editorjs/header";
 export const EditorComponents = (props) => {
   const ejInstance = useRef();
 
@@ -40,10 +40,10 @@ export const EditorComponents = (props) => {
         header: {
           class: Header,
           config: {
-            placeholder: 'Enter a header',
+            placeholder: "Enter a header",
             levels: [2, 3, 4],
-            defaultLevel: 3
-          }
+            defaultLevel: 3,
+          },
         },
         list: {
           class: List,
@@ -180,7 +180,7 @@ export const EditorComponents = (props) => {
       ejInstance?.current?.destroy();
       ejInstance.current = null;
     };
-  }, [props.editorValue,]);
+  }, [props.editorValue]);
   return (
     <>
       <div id="editorjs"></div>

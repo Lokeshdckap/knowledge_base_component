@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import axiosClient from "../../axios-client";
-import { useNavigate, useParams } from "react-router-dom";
+import { NavLink, useNavigate, useParams } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import EditHeader from "../../common/commonLayouts/EditHeader";
 import EditPage from "../../common/commonLayouts/EditPage";
@@ -232,10 +232,8 @@ export const ScriptComponents = () => {
   const contentPage = async (e) => {
     setPageId(e.target.id);
     let pageId = e.target.id;
-    getParticularScript();
-    getParticularPage();
      navigate(`/dashboard/${params.uuid}/s/${params.slug}/?pageId=${pageId}`);
-    
+     setEditorValue("");
   };
 
   const handleScriptMouseEnter = (e) => {

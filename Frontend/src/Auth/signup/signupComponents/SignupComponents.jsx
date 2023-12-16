@@ -145,6 +145,7 @@ export default function SignupComponents() {
       closeOnClick: true,
     });
   };
+
   const errorMessage = localStorage.getItem("errorMessage");
   if (errorMessage) {
     showToastMessage(errorMessage);
@@ -335,13 +336,13 @@ export default function SignupComponents() {
               <div className="bg-white w-10 h-10 ">
                 <img src={googles} className="p-2" />
               </div>
-              <button
-                onClick={googleAuth}
-                className="bg-white w-40 h-10 text-primary rounded backdrop-blur-[2px] border-[1px]"
-              >
-                Signup With Google
-              </button>
+              <button className="bg-white w-40 h-10 text-primary rounded font-medium text-sm backdrop-blur-[2px] border-[1px]">
+              <a href="http://localhost:4000/api/auth/google">
+                Continue With Google
+              </a>
+            </button>
             </div>
+            <ToastContainer />
           </div>
         </div>
       </main>
@@ -353,6 +354,7 @@ export default function SignupComponents() {
             <p className="absolute top-[48%] left-[48%] z-50 ">
               <HashLoader color="#3197e8" />
             </p>
+          
           </div>
         </>
       )}

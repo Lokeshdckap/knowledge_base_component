@@ -228,16 +228,19 @@ const MyContextProvider = ({ children }) => {
             showToastErrorMessage(res.data.message);
             getBatch();
             getScript();
-            if (batchId) {
-              handleAfterAddedChildrenScripts(batchId);
-            }
-
+           
             getAllDeletedData();
             if (localStorage.getItem("mainId")) {
               localStorage.removeItem("mainId");
             }
+            if (batchId) {
+              handleAfterAddedChildrenScripts(batchId);
+            }
+           navigate("/")
+
           }
           getAllDeletedData();
+
         })
         .catch((err) => {
           const response = err.response;

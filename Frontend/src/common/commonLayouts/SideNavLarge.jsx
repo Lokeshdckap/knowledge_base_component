@@ -35,6 +35,8 @@ export default function SideNavLarge(props) {
     addNewScript,
     screenHeight,
     setScreenHeight,
+    openSideNave, 
+    setOpenSideNave
   } = useMyContext();
 
   //param
@@ -273,7 +275,7 @@ export default function SideNavLarge(props) {
   }, [teamDropDown, AddNewMenu, props.overStates, popUp]);
 
   return (
-    <div className="bg-[#181F38] h-screen border-r-[1px] 2xl:w-[260px] xl:w-[220px] lg:w-[220px] shadow phone:hidden">
+    <div className={`bg-[#181F38] h-screen border-r-[1px] 2xl:w-[260px] xl:w-[220px] lg:w-[220px] shadow phone:${openSideNave}`}>
       <div className="flex items-center pt-6 pl-7 space-x-2 ">
         <div>
           <img

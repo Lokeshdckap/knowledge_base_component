@@ -30,6 +30,9 @@ const MyContextProvider = ({ children }) => {
   const [batchTitle, setBatchTitle] = useState("");
   const [batchDescription, setbatchDescription] = useState("");
   const [userDetail, setUserDetail] = useState(null);
+
+  const [openSideNave, setOpenSideNave] = useState("hidden");
+
   const duration = 2000;
   const showToastMessage = (data) => {
     toast.success(data, {
@@ -49,13 +52,13 @@ const MyContextProvider = ({ children }) => {
       draggable: true,
       closeOnClick: true,
       closeButton: () => (
-        <div style={{ margin: 'auto',fontSize:"22px" }}>
+        <div style={{ margin: "auto", fontSize: "22px" }}>
           <button className="custom-close-button">×</button>
         </div>
       ),
       style: {
         borderRadius: "8px",
-        padding:"10px"
+        padding: "10px",
       },
     });
   };
@@ -90,12 +93,12 @@ const MyContextProvider = ({ children }) => {
           userInfo();
         } else if (localStorage.getItem("ACCESS_TOKEN")) {
           navigate("/teampage");
-        } 
+        }
       })
       .catch((err) => {
         const response = err.response;
         if (response && response?.status === 401) {
-          window.location.reload("/signin")
+          window.location.reload("/signin");
         }
       });
   };
@@ -274,7 +277,6 @@ const MyContextProvider = ({ children }) => {
       });
   };
 
-
   return (
     <AppContext.Provider
       value={{
@@ -323,6 +325,8 @@ const MyContextProvider = ({ children }) => {
         userDetail,
         screenHeight,
         setScreenHeight,
+        openSideNave,
+        setOpenSideNave,
       }}
     >
       {children}

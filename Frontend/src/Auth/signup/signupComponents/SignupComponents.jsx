@@ -11,9 +11,7 @@ import Cookies from "js-cookie";
 import { ToastContainer, toast } from "react-toastify";
 
 export default function SignupComponents() {
-  const googleAuth = () => {
-    window.location.href = "http://localhost:4000/api/auth/auth/google";
-  };
+
 
   const [errors, setError] = useState({});
   const params = useParams();
@@ -336,7 +334,7 @@ export default function SignupComponents() {
                 <img src={googles} className="p-2" />
               </div>
               <button
-                onClick={googleAuth}
+                // onClick={googleAuth}
                 className="bg-white w-40 h-10 text-primary rounded backdrop-blur-[2px] border-[1px]"
               >
                 Signup With Google

@@ -135,7 +135,7 @@ export const Profile = (props) => {
                     </div>
                   )}
                   <button
-                    className="absolute top-0 right-0 m-2 p-1 bg-white text-gray-600 hover:text-red-500 hover:bg-red-100 rounded-full focus:outline-none"
+                    className="absolute top-1 right-1  bg-white text-gray-600 hover:text-red-500 hover:bg-red-100 pl-[8px] pr-[8px] text-[16px] pt-[2px] pb-[2px] rounded-[50%]"
                     onClick={handleRemoveImage}
                   >
                     X

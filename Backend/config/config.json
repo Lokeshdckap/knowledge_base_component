@@ -2,7 +2,7 @@
   "development": {
     "username": "dckap",
     "password": "admin",
-    "database": "knowledge_base",
+    "database": "knowledge_base_app",
     "host": "127.0.0.1",
     "dialect": "postgres"
   },

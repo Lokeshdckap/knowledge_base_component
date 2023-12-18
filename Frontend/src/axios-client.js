@@ -28,32 +28,31 @@ axiosClient.interceptors.response.use(
               { refreshToken }
             );
 
-            // console.log("Refresh response:", refreshResponse);
-
             const newAccessToken = refreshResponse.data.access_token;
-            // console.log(newAccessToken);
-            // console.log("New Access Token:", newAccessToken);
-
-            // Remove the old access token and store the new on
             localStorage.setItem("ACCESS_TOKEN", newAccessToken);
 
             // Retry the original request with the new access token
             error.config.headers.Authorization = `Bearer ${newAccessToken}`;
             const retryOriginalRequest = await axios(error.config);
 
-            // console.log("Retry original request:", retryOriginalRequest);
-
             return retryOriginalRequest;
           } catch (refreshError) {
-            // console.error("Error refreshing token:", refreshError);
-            throw refreshError;
+            if (refreshError.response?.status === 401) {
+              // Refresh token is expired, clear both tokens
+              localStorage.removeItem("ACCESS_TOKEN");
+              localStorage.removeItem("REFRESH_TOKEN");
+              // Handle this scenario, e.g., redirect to login page
+              console.error("Both access and refresh tokens expired. User needs to re-authenticate.");
+            } else {
+              throw refreshError;
+            }
           }
         } else {
-        //   console.error("No refresh token found in local storage.");
+          console.error("No refresh token found in local storage.");
         }
       }
     } catch (e) {
-    //   console.error("Unexpected error:", e);
+      console.error("Unexpected error:", e);
       throw e;
     }
 
@@ -61,5 +60,6 @@ axiosClient.interceptors.response.use(
     throw error;
   }
 );
+
 
 export default axiosClient;

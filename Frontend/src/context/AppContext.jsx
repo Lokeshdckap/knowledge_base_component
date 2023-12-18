@@ -34,6 +34,18 @@ const MyContextProvider = ({ children }) => {
   const [openSideNave, setOpenSideNave] = useState("hidden");
   const [role,setRole] = useState(null);
 
+
+  
+  function handleUserActivity() {
+
+  }
+  
+  document.addEventListener("mousemove", handleUserActivity);
+  document.addEventListener("keydown", handleUserActivity);
+  
+
+  
+
   const duration = 2000;
   const showToastMessage = (data) => {
     toast.success(data, {

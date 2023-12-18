@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useMyContext } from "../../context/AppContext";
-
+import { formatDistanceToNow } from 'date-fns'
 export default function Main(props) {
   const deleteIconRef = useRef({});
   const deleteRef = useRef(null);
@@ -193,7 +193,9 @@ export default function Main(props) {
           <div
             className={` m-auto grid 2xl:grid-cols-5 xl:grid-cols-4 lg:grid-cols-3 phone:grid-cols-2  gap-2  mt-2`}
           >
+            {console.log(scriptList)}
             {scriptList && scriptList.length > 0 ? (
+             
               scriptList.map((script) => (
                 <div
                   className="bg-white  border-[1px] rounded-[10px]  hover:border-primary  relative lg:p-[5px] xl:p-[10px] 2xl:p-[20px]"
@@ -231,9 +233,9 @@ export default function Main(props) {
                       <p
                         id={script.uuid}
                         onClick={handleScripts}
-                        className="text-gray-500 pt-1 phone:text-[12px]"
+                        className="text-gray-500 pt-1 phone:text-[12px] text-sm"
                       >
-                        Pages
+                       Edited: {formatDistanceToNow(new Date(script.updatedAt), { addSuffix: true })}
                       </p>
                     </div>
                     {popUpState == script.uuid && (

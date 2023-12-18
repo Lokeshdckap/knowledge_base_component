@@ -85,7 +85,7 @@ export const InviteUsers = (props) => {
                     className="bg-gray-50 border absolute right-2.5 bottom-2.5 border-gray-300 text-gray-900 text-sm rounded-lg block w-20 p-1.5  "
                     onChange={(e) => props.setRole(e.target.value)}
                   >
-                    <option>select</option>
+                    <option disabled selected >select</option>
                     <option value="1">Admin</option>
                     <option value="2">Viewer</option>
                     <option value="3">Editor</option>

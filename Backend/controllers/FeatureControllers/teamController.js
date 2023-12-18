@@ -166,34 +166,6 @@ const searchActiveUsers = async (req, res) => {
   try {
     const { q } = req.query;
     const team_uuid = req.params.uuid;
-    // try {
-    //   if (!q) {
-    //     return res.status(404).json({ error: "Datas Not Found" });
-    //   }
-
-    //   const users = await UserTeams.findAll({
-    //     where: {
-    //       team_uuid: team_uuid,
-    //     },
-    //     include: [
-    //       {
-    //         model: User,
-    //         where: {
-    //           username: {
-    //             [Op.iLike]: `%${q}%`,
-    //           },
-    //         },
-    //         attributes: ['id', 'username', 'email'], // Add attributes as needed
-    //       },
-    //     ],
-    //   });
-
-    //   return res.status(200).json(users);
-    // } catch (error) {
-    //   console.error(error);
-    //   return res.status(500).json({ error: "Internal Server Error" });
-    // }
-
     const usersInTeamQuery = `
               SELECT username
               FROM "user_team_members" AS "user_team_members"
@@ -214,6 +186,34 @@ const searchActiveUsers = async (req, res) => {
   }
 };
 
+const activeUserRemove = async(req,res)=>{
+    const user_uuid = req.body.uuid;
+
+    const userFind = User.findOne({
+      where: {
+        uuid: user_uuid,
+      },
+    })
+
+    if(userFind){
+       UserTeams.destroy({
+        where :{
+          user_uuid : userFind.uuid
+        }
+      })
+       UserTeams.destroy({
+        where :{
+          email : userFind.email
+        }
+      })
+      return res.status(200).json({ msg: "SucessFully Removed" });
+    }
+    else{
+      return res.status(404).json({ msg: "Not Found Can't Removed" });
+
+    }
+}
+
 module.exports = {
   createTeams,
   getTeam,
@@ -222,4 +222,5 @@ module.exports = {
   switchTeam,
   getAllTeam,
   searchActiveUsers,
+  activeUserRemove
 };

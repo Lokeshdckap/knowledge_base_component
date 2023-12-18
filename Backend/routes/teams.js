@@ -52,4 +52,8 @@ router.get(
   teamController.searchActiveUsers
 );
 
+router.delete("/removeUserFromTeam/:uuid",
+verifyAuthMiddleware.verifyToken,
+teamController.activeUserRemove)
+
 module.exports = router;

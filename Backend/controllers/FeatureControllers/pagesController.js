@@ -117,9 +117,7 @@ const addChildPage = async (req, res) => {
 
 const updatePageData = async (req, res) => {
   try {
-
     let paths;
-
     const page = await Page.findOne({
       where: {
         uuid: req.body.id,
@@ -172,8 +170,7 @@ const updatePageData = async (req, res) => {
 
     if (req.body.title != page.title) {
       newTitle = `${req.body.title}-${randomNumber}`;
-    }
-    else if(req.body.title == "Page Name"){
+    } else if (req.body.title == "Page Name") {
       newTitle = `${req.body.title}-${randomNumber}`;
     }
 
@@ -201,10 +198,22 @@ const updatePageData = async (req, res) => {
         description: req.body.description,
         content: JSON.stringify(req.body.content),
         path: paths,
+        updatedAt: "CURRENT_TIMESTAMP",
       },
       {
         where: {
           uuid: req.body.id,
+        },
+      }
+    );
+
+    await Script.update(
+      {
+        updatedAt: "CURRENT_TIMESTAMP",
+      },
+      {
+        where: {
+          uuid: page.script_uuid,
         },
       }
     );
@@ -221,6 +230,7 @@ const updatePageData = async (req, res) => {
         await Page.update(
           {
             path: newPath,
+            updatedAt: "CURRENT_TIMESTAMP",
           },
           {
             where: { uuid: childpage.uuid },

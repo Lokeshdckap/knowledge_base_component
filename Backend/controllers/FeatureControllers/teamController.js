@@ -165,8 +165,6 @@ const getAllTeam = async (req, res) => {
 const searchActiveUsers = async (req, res) => {
   try {
     const team_uuid = req.params.uuid;
-   
-
         const { q } = req.query; // Assuming the username is provided as a query parameter
       
         const userDetail = await User.findAll({
@@ -187,12 +185,39 @@ const searchActiveUsers = async (req, res) => {
         else{
           return res.status(404).json({msg:userDetail})
         }
-    
   } catch (error) {
     res.status(500).json("Internal Server Error");
   }
 
 };
+
+const activeUserRemove = async(req,res)=>{
+    const user_uuid = req.body.uuid;
+
+    const userFind = User.findOne({
+      where: {
+        uuid: user_uuid,
+      },
+    })
+
+    if(userFind){
+       UserTeams.destroy({
+        where :{
+          user_uuid : userFind.uuid
+        }
+      })
+       UserTeams.destroy({
+        where :{
+          email : userFind.email
+        }
+      })
+      return res.status(200).json({ msg: "SucessFully Removed" });
+    }
+    else{
+      return res.status(404).json({ msg: "Not Found Can't Removed" });
+
+    }
+}
 
 module.exports = {
   createTeams,
@@ -202,4 +227,5 @@ module.exports = {
   switchTeam,
   getAllTeam,
   searchActiveUsers,
+  activeUserRemove
 };

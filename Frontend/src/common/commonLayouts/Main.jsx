@@ -8,13 +8,10 @@ export default function Main(props) {
 
   const params = useParams();
   const navigate = useNavigate();
-  const {
-    screenHeight, setScreenHeight
-  } = useMyContext();
-
+  const { screenHeight, setScreenHeight, userInfo, role, userDetail } =
+    useMyContext();
 
   const [popUpState, setPopUpState] = useState(null);
-  
 
   const batchList = props.batches;
   const scriptList = props.scripts;
@@ -39,7 +36,7 @@ export default function Main(props) {
     };
 
     // Attach the event listener for window resize
-    window.addEventListener('resize', updateScreenHeight);
+    window.addEventListener("resize", updateScreenHeight);
     window.addEventListener("click", closeOnOutsideClick);
 
     return () => {
@@ -62,8 +59,9 @@ export default function Main(props) {
   };
 
   return (
-    <div className="bg-[#F4F7FC]"
-    style={{ height: `calc(${screenHeight}px - 64px)` }}
+    <div
+      className="bg-[#F4F7FC]"
+      style={{ height: `calc(${screenHeight}px - 64px)` }}
     >
       <div
         className="pt-5  overflow-auto  pl-[30px] pr-[30px]"
@@ -76,20 +74,26 @@ export default function Main(props) {
                 <i className="fa-solid fa-user-group text-[25px] pl-[6px] pt-[10px] text-[#6E7E86]"></i>
               </div>
               <div>
-                <h1 className="text-xl phone:text-[14px] font-bold">Team Documents</h1>
-                <h3 className="text-sm phone:text-[12px]">{props.team} 's Teams</h3>
+                <h1 className="text-xl phone:text-[14px] font-bold">
+                  Team Documents
+                </h1>
+                <h3 className="text-sm phone:text-[12px]">
+                  {props.team} 's Teams
+                </h3>
               </div>
             </div>
             <div className="flex items-center space-x-5 phone:space-x-2">
               <button
-                className="h-[40px] w-[121px] phone:h-[25px] phone:w-[60px] text-slate-500 rounded border-slate-400 phone:text-[10px] border-[1px] "
+                className={`h-[40px] w-[121px] phone:h-[25px] phone:w-[60px] text-slate-500 rounded border-slate-400 phone:text-[10px] border-[1px]  `}
                 onClick={addBatchEvent}
+                disabled={role === 2 ? true : false}
               >
                 New Batch
               </button>
               <button
                 className="h-[45px] w-[160px] phone:h-[28px] phone:w-[80px] text-white rounded  bg-primary phone:text-[10px]"
                 onClick={scriptEvent}
+                disabled={role === 2 ? true : false}
               >
                 New Script
               </button>
@@ -100,7 +104,9 @@ export default function Main(props) {
               className={`h-px my-8 bg-[#D5D7DA] border-0 dark:bg-gray-900  m-auto`}
             />
           </div>
-          <p className="font-semibold text-textPrimary text-xl phone:text-lg pl-1">BATCHS</p>
+          <p className="font-semibold text-textPrimary text-xl phone:text-lg pl-1">
+            BATCHS
+          </p>
           <div
             className={` m-auto grid 2xl:grid-cols-5 xl:grid-cols-4 lg:grid-cols-3 phone:grid-cols-2 gap-2 mt-2`}
           >
@@ -112,14 +118,20 @@ export default function Main(props) {
                 >
                   <div className="w-[100%] phone:p-[5px] ">
                     <div className="rounded-t-lg text-end ">
-                      <span
-                        className="material-symbols-outlined text-primary cursor-pointer text-2xl phone:text-[14px] leading-[6px]"
-                        onClick={deleteForeverPopup}
-                        id={batch.uuid}
-                        ref={(ref) => (deleteIconRef.current[batch.uuid] = ref)}
-                      >
-                        more_vert
-                      </span>
+                      {role == 2 ? (
+                        ""
+                      ) : (
+                        <span
+                          className="material-symbols-outlined text-primary cursor-pointer text-2xl phone:text-[14px] leading-[6px]"
+                          onClick={deleteForeverPopup}
+                          id={batch.uuid}
+                          ref={(ref) =>
+                            (deleteIconRef.current[batch.uuid] = ref)
+                          }
+                        >
+                          more_vert
+                        </span>
+                      )}
                     </div>
                     <div
                       className="cursor-pointer  font-medium"
@@ -189,16 +201,20 @@ export default function Main(props) {
                 >
                   <div className="w-[100%] phone:p-[5px]">
                     <div className=" rounded-t-lg text-end  ">
-                      <span
-                        className="material-symbols-outlined text-primary cursor-pointer text-2xl phone:text-[14px] leading-[6px]"
-                        onClick={deleteForeverPopup}
-                        id={script.uuid}
-                        ref={(ref) =>
-                          (deleteIconRef.current[script.uuid] = ref)
-                        }
-                      >
-                        more_vert
-                      </span>
+                      {role == 2 ? (
+                        ""
+                      ) : (
+                        <span
+                          className="material-symbols-outlined text-primary cursor-pointer text-2xl phone:text-[14px] leading-[6px]"
+                          onClick={deleteForeverPopup}
+                          id={script.uuid}
+                          ref={(ref) =>
+                            (deleteIconRef.current[script.uuid] = ref)
+                          }
+                        >
+                          more_vert
+                        </span>
+                      )}
                     </div>
                     <div
                       className="font-medium cursor-pointer"
@@ -217,7 +233,7 @@ export default function Main(props) {
                         onClick={handleScripts}
                         className="text-gray-500 pt-1 phone:text-[12px]"
                       >
-                      Pages
+                        Pages
                       </p>
                     </div>
                     {popUpState == script.uuid && (

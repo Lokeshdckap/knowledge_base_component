@@ -15,6 +15,7 @@ export const TrashHeader = (props) => {
           <button
             className="bg-primary hover:bg-textPrimary text-white  py-1.5 phone:py-[3px] px-3 phone:px-[8px] rounded"
             onClick={props.deleteAllPopup}
+            disabled={props.role == 2 ? true : false}
           >
             Delete All
           </button>

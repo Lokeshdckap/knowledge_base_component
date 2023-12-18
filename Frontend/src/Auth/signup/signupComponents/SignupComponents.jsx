@@ -11,9 +11,7 @@ import Cookies from "js-cookie";
 import { ToastContainer, toast } from "react-toastify";
 
 export default function SignupComponents() {
-  const googleAuth = () => {
-    window.location.href = "http://localhost:4000/api/auth/auth/google";
-  };
+
 
   const [errors, setError] = useState({});
   const params = useParams();

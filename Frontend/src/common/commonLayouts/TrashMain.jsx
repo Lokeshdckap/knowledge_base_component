@@ -77,21 +77,27 @@ export const TrashMain = (props) => {
                     className="rounded-t-lg flex items-center justify-between  "
                     id={trashScript.uuid}
                   >
-                    <Checkbox
-                      onChange={props.handleSelect}
-                      id={trashScript.uuid}
-                      className="ml-2"
-                    ></Checkbox>
-                    <span
-                      className="material-symbols-outlined text-primary cursor-pointer text-2xl phone:text-[14px] leading-[6px]"
-                      onClick={deleteForeverPopup}
-                      ref={(ref) =>
-                        (deleteIconRef.current[trashScript.uuid] = ref)
-                      }
-                      id={trashScript.uuid}
-                    >
-                      more_vert
-                    </span>
+                    {props.role == 2 ? (
+                      ""
+                    ) : (
+                      <>
+                        <Checkbox
+                          onChange={props.handleSelect}
+                          id={trashScript.uuid}
+                          className="ml-2"
+                        ></Checkbox>
+                        <span
+                          className="material-symbols-outlined text-primary cursor-pointer text-2xl phone:text-[14px] leading-[6px]"
+                          onClick={deleteForeverPopup}
+                          ref={(ref) =>
+                            (deleteIconRef.current[trashScript.uuid] = ref)
+                          }
+                          id={trashScript.uuid}
+                        >
+                          more_vert
+                        </span>
+                      </>
+                    )}
                   </div>
                   <div
                     className="font-medium cursor-pointer"

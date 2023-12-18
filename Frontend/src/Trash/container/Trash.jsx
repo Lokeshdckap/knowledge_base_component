@@ -5,7 +5,7 @@ import axiosClient from "../../axios-client";
 import { useMyContext } from "../../context/AppContext";
 
 export const Trash = () => {
-  const { getAllDeletedData, trashData, setTrashData } = useMyContext();
+  const { getAllDeletedData, trashData, setTrashData,role } = useMyContext();
 
   const params = useParams();
 
@@ -121,6 +121,7 @@ export const Trash = () => {
         styleState={styleState}
         setStyleState={setStyleState}
         loading={loading}
+        role={role}
       />
     </>
   );

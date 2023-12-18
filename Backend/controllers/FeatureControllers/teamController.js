@@ -164,54 +164,34 @@ const getAllTeam = async (req, res) => {
 
 const searchActiveUsers = async (req, res) => {
   try {
-    const { q } = req.query;
     const team_uuid = req.params.uuid;
-    // try {
-    //   if (!q) {
-    //     return res.status(404).json({ error: "Datas Not Found" });
-    //   }
+   
 
-    //   const users = await UserTeams.findAll({
-    //     where: {
-    //       team_uuid: team_uuid,
-    //     },
-    //     include: [
-    //       {
-    //         model: User,
-    //         where: {
-    //           username: {
-    //             [Op.iLike]: `%${q}%`,
-    //           },
-    //         },
-    //         attributes: ['id', 'username', 'email'], // Add attributes as needed
-    //       },
-    //     ],
-    //   });
-
-    //   return res.status(200).json(users);
-    // } catch (error) {
-    //   console.error(error);
-    //   return res.status(500).json({ error: "Internal Server Error" });
-    // }
-
-    const usersInTeamQuery = `
-              SELECT username
-              FROM "user_team_members" AS "user_team_members"
-              INNER JOIN "users" AS "user" ON "user_team_members"."user_uuid" = "user"."uuid" AND ("user"."username" ILIKE :username)
-              WHERE "user_team_members"."team_uuid" = :team_uuid;
-            `;
-    try {
-      const [results] = await sequelize.query(usersInTeamQuery, {
-        replacements: { team_uuid, username: `%${q}%` },
-      });
-
-      return res.status(200).json({ results, msg: "SucessFully Finded" });
-    } catch (error) {
-      res.status(500).json({ err: error });
-    }
+        const { q } = req.query; // Assuming the username is provided as a query parameter
+      
+        const userDetail = await User.findAll({
+          attributes: ["username", "isAdmin", "email", "uuid"],
+          include: {
+            model: UserTeams,
+            where: { team_uuid: team_uuid }, // Filter by team_uuid
+          },
+          where: {
+            username: {
+              [Op.iLike]: `%${q}%`, // Use the 'like' operator for a partial match
+            },
+          },
+        });
+        if(userDetail.length > 0){
+          return res.status(200).json({userDetail})
+        }
+        else{
+          return res.status(404).json({msg:userDetail})
+        }
+    
   } catch (error) {
     res.status(500).json("Internal Server Error");
   }
+
 };
 
 module.exports = {

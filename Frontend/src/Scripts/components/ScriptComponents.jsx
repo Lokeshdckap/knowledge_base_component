@@ -10,7 +10,7 @@ import { useMyContext } from "../../context/AppContext";
 export const ScriptComponents = () => {
   const navigate = useNavigate();
   const params = useParams();
-  const { getScript, script, getScripts,setLoading,role } = useMyContext();
+  const { getScript, script, getScripts, setLoading, role } = useMyContext();
 
   //hooks
 
@@ -46,6 +46,8 @@ export const ScriptComponents = () => {
   const [state, setState] = useState(true);
 
   const [parentOpen, setParentOpen] = useState(null);
+
+  const [popUp, setPopUp] = useState(null);
 
   const duration = 2000;
 
@@ -152,7 +154,7 @@ export const ScriptComponents = () => {
   //Editor functionality
 
   const handleSave = () => {
-    setLoading(true)
+    setLoading(true);
 
     const postData = {
       id: pageIds,
@@ -167,11 +169,11 @@ export const ScriptComponents = () => {
         getParticularScript();
         getParticularPage();
         showToastSaveMessage(res.data.msg);
-        setLoading(false)
+        setLoading(false);
       })
       .catch((err) => {
         console.log(err);
-        setLoading(false)
+        setLoading(false);
       });
   };
 
@@ -232,8 +234,8 @@ export const ScriptComponents = () => {
   const contentPage = async (e) => {
     setPageId(e.target.id);
     let pageId = e.target.id;
-     navigate(`/dashboard/${params.uuid}/s/${params.slug}/?pageId=${pageId}`);
-     setEditorValue("");
+    navigate(`/dashboard/${params.uuid}/s/${params.slug}/?pageId=${pageId}`);
+    setEditorValue("");
   };
 
   const handleScriptMouseEnter = (e) => {
@@ -247,6 +249,12 @@ export const ScriptComponents = () => {
   const handleMore = (e) => {
     setParticularPageId(e.target.id);
     addChildPage(e.target.id);
+    setPopUp(null);
+    setHoverPageId(null);
+
+    if (localStorage.getItem("mainId")) {
+      localStorage.removeItem("mainId");
+    }
   };
 
   const HandleShare = () => {
@@ -309,7 +317,9 @@ export const ScriptComponents = () => {
         parentOpen={parentOpen}
         teamUuid={teamUuid}
         role={role}
-
+        setHoverPageId={setHoverPageId}
+        popUp={popUp}
+        setPopUp={setPopUp}
       />
     </>
   );

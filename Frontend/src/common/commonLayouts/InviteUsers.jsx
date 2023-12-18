@@ -34,7 +34,6 @@ export const InviteUsers = (props) => {
     <div>
       <div className="bg-[#a3a2e9] opacity-[0.5] w-[100%] h-[100%] absolute top-0 left-0  z-10"></div>
       <div className=" flex items-center justify-center h-screen w-screen absolute top-2/4 left-2/4 transform -translate-x-1/2 -translate-y-1/2 z-20 ">
-
         <div className="bg-[#fff] h-[500px] w-[600px]  rounded-lg -z-10">
           <div className="">
             <i
@@ -54,7 +53,8 @@ export const InviteUsers = (props) => {
             <div className="flex pt-8 space-x-8 items-center">
               <p
                 className={` ${changeState == "invite" && "text-primary"}  ${
-                  changeState == "invite" && "decoration-primary underline underline-offset-8"
+                  changeState == "invite" &&
+                  "decoration-primary underline underline-offset-8"
                 }  hover:underline  cursor-pointer hover:underline-offset-8 decoration-2 `}
                 onClick={() => setChangeState("invite")}
               >
@@ -62,7 +62,8 @@ export const InviteUsers = (props) => {
               </p>
               <p
                 className={` ${changeState == "pending" && "text-primary"} ${
-                  changeState == "pending" && "decoration-primary underline underline-offset-8"
+                  changeState == "pending" &&
+                  "decoration-primary underline underline-offset-8"
                 } hover:underline cursor-pointer hover:underline-offset-8 decoration-2`}
                 onClick={() => setChangeState("pending")}
               >
@@ -80,12 +81,15 @@ export const InviteUsers = (props) => {
                     value={props.inviteEmail}
                     onChange={invite}
                   />
+
                   <select
                     id="countries"
                     className="bg-gray-50 border absolute right-2.5 bottom-2.5 border-gray-300 text-gray-900 text-sm rounded-lg block w-20 p-1.5  "
                     onChange={(e) => props.setRole(e.target.value)}
                   >
-                    <option>select</option>
+                    <option disabled selected>
+                      select
+                    </option>
                     <option value="1">Admin</option>
                     <option value="2">Viewer</option>
                     <option value="3">Editor</option>

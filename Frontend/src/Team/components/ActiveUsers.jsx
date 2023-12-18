@@ -6,17 +6,16 @@ import { ToastContainer, toast } from "react-toastify";
 import HashLoader from "react-spinners/HashLoader";
 
 export const ActiveUsers = (props) => {
-
   const params = useParams();
 
   const [invitePopup, setInvitePopup] = useState(false);
   const [teamMembers, setTeamMembers] = useState([]);
   const [teamName, setTeamName] = useState("");
-  const [inviteEmail, setInviteEmail] = useState("");  
+  const [inviteEmail, setInviteEmail] = useState("");
   const [role, setRole] = useState("");
   const [inviteError, setInviteError] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [assignrole,setAssignRole] = useState(null);
+  const [assignrole, setAssignRole] = useState(null);
   useEffect(() => {
     allUsers();
     team();
@@ -34,19 +33,19 @@ export const ActiveUsers = (props) => {
     });
   };
 
-  
   const allUsers = () => {
+    setLoading(true);
     axiosClient
       .get(`/api/teams/getAciveUsers/${params.uuid}`)
       .then((res) => {
-        setTeamMembers(res.data.userDetail);
+        setLoading(false);
 
+        setTeamMembers(res.data.userDetail);
       })
       .catch((err) => {
         console.log(err);
       });
   };
-
 
   const team = () => {
     axiosClient
@@ -54,7 +53,6 @@ export const ActiveUsers = (props) => {
       .then((res) => {
         setTeamName(res.data.Teams[0].name);
         setAssignRole(res.data.team_member.role_id);
-
       })
       .catch((err) => {
         console.log(err);
@@ -65,69 +63,86 @@ export const ActiveUsers = (props) => {
     setInvitePopup(true);
   };
 
+  //role change
 
+  const handleRole = async (e) => {
+    let payload = {
+      team_uuid: params.uuid,
+      role_type: e.target.value,
+      user_uuid: e.target.id,
+    };
+    await axiosClient
+      .post("/api/invites/updateRole", payload)
+      .then((res) => {})
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
-    //role change
+  const handleInviteUsers = () => {
+    setLoading(true);
+    if (!inviteEmail.trim()) {
+      setLoading(false);
 
-    const handleRole = async (e) => {
-      let payload = {
-        team_uuid: params.uuid,
-        role_type: e.target.value,
-        user_uuid: e.target.id,
-      };
-      await axiosClient
-        .post("/api/invites/updateRole", payload)
+      setInviteError("Email is required");
+    } else if (!role.trim()) {
+      setLoading(false);
+
+      setInviteError("Role is required");
+    } else {
+      axiosClient
+        .post("/api/invites/inviteUsers", {
+          email: inviteEmail,
+          role: role,
+          team_uuid: params.uuid,
+        })
         .then((res) => {
-
+          showToastMessage(res.data);
+          setLoading(false);
         })
         .catch((err) => {
-          console.log(err);
-        });
-    };
-
-
-
-
-
-    const handleInviteUsers = () => {
-      setLoading(true);
-      if (!inviteEmail.trim()) {
-        setLoading(false);
-  
-        setInviteError("Email is required");
-      } else if (!role.trim()) {
-        setLoading(false);
-  
-        setInviteError("Role is required");
-      } else {
-        axiosClient
-          .post("/api/invites/inviteUsers", {
-            email: inviteEmail,
-            role: role,
-            team_uuid: params.uuid,
-          })
-          .then((res) => {
-            showToastMessage(res.data);
+          const response = err.response;
+          if (response && response?.status === 400) {
+            setInviteError(response.data);
+            setTimeout(() => {
+              setInviteError("");
+            }, 1500);
             setLoading(false);
-          })
-          .catch((err) => {
-            const response = err.response;
-            if (response && response?.status === 400) {
-              setInviteError(response.data);
-              setTimeout(() => {
-                setInviteError("");
-              }, 1500);
-              setLoading(false);
-            } else {
-              console.error("Error:", response?.status);
-            }
-          });
-      }
-    };
+          } else {
+            console.error("Error:", response?.status);
+          }
+        });
+    }
+  };
 
+  const searchUsers = async (e) => {
+    let value = e.target.value;
+    setLoading(true);
 
+    await axiosClient
+      .get(`/api/teams/${params.uuid}/search/users?q=${value}`)
+      .then((res) => {
+        setLoading(false);
+        setTeamMembers(res.data.userDetail);
+      })
+      .catch((err) => {
+        const response = err.response;
+
+        if (response) {
+          if (response.status === 404) {
+            setTeamMembers(response.data.msg);
+            setLoading(false);
+          } else {
+            console.error("Non-404 error occurred. Response:", response);
+          }
+        } else {
+          console.error("An unexpected error occurred:", err);
+        }
+      
+      });
+  };
   return (
-    <div className='m-auto'>
+    <div className="m-auto">
       <div className="bg-white w-[900px] h-[550px] shadow-md overflow-auto">
         <div className="w-[850px] m-auto">
           <p className="text-textPrimary text-2xl pt-5 font-semibold">
@@ -151,12 +166,15 @@ export const ActiveUsers = (props) => {
             <input
               type="search"
               id="default-search"
-              className="block w-36 p-2 pl-2 text-sm border border-gray-300 rounded-lg  focus:outline-primary mt-2 "
+              className="w-36 p-2 pl-2 text-sm border border-gray-300 rounded-lg  focus:outline-none  mt-2 "
               placeholder="search here"
+              onChange={searchUsers}
+              autoComplete="off"
               required
+
             />
           </div>
-          <div className="relative overflow-x-auto shadow-md sm:rounded-lg mt-5">
+          <div className="relative  shadow-md sm:rounded-lg mt-5">
             <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
               <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
@@ -169,16 +187,46 @@ export const ActiveUsers = (props) => {
                   <th scope="col" className="px-6 py-3">
                     Role
                   </th>
-                  <th scope="col" className="px-6 py-3">
-                    Action
-                  </th>
+                  {assignrole == 1 && (
+                    <th scope="col" className="px-6 py-3">
+                      Action
+                    </th>
+                  )}
                 </tr>
               </thead>
               <tbody>
-                
-                {teamMembers &&
+                {loading ? (
+                  <tr>
+                    <td colSpan={4} className="text-center">
+                      <div role="status" className="py-[50px]">
+                        <div role="status" className="py-[50px]" colSpan={4}>
+                          <svg
+                            aria-hidden="true"
+                            className="inline w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
+                            viewBox="0 0 100 101"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                              fill="currentColor"
+                            />
+                            <path
+                              d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                              fill="currentFill"
+                            />
+                          </svg>
+                          <span className="sr-only">Loading...</span>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                ) : teamMembers && teamMembers.length > 0 ? (
                   teamMembers.map((user) => (
-                    <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700" key={user.uuid}>
+                    <tr
+                      className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+                      key={user.uuid}
+                    >
                       <th
                         scope="row"
                         className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
@@ -188,12 +236,13 @@ export const ActiveUsers = (props) => {
                       <td className="px-6 py-4">{user.email}</td>
                       {user.user_team_members &&
                         user.user_team_members.map((member) => {
-                          if (member.role_id == 1) {
-                            return (
-                              <td className="px-6 py-4"
-                              key={member.user_uuid}
-                              >
-
+                          return assignrole === 1 ? (
+                            <td className="px-6 py-4" key={member.user_uuid}>
+                              {member?.role_id === 1 ? (
+                                <option value="1" className="font-semibold">
+                                  Admin
+                                </option>
+                              ) : (
                                 <select
                                   name=""
                                   id={member.user_uuid}
@@ -201,64 +250,188 @@ export const ActiveUsers = (props) => {
                                   onChange={handleRole}
                                   key={member.user_uuid}
                                 >
-                                  <option value="1">admin</option>
-                                  <option value="2">viewer</option>
-                                  <option value="3">editor</option>
+                                  {member?.role_id === 2 && (
+                                    <>
+                                      <option value="2">Viewer</option>
+                                      <option value="3">Editor</option>
+                                    </>
+                                  )}
+                                  {member?.role_id === 3 && (
+                                    <>
+                                      <option value="3">Editor</option>
+                                      <option value="2">Viewer</option>
+                                    </>
+                                  )}
                                 </select>
-                              </td>
-                            );
-                          } else if (member.role_id == 2) {
-                            return (
-                              <td className="px-6 py-4"
-                              key={member.user_uuid}
-                              >
-
-                                <select
-                                  name=""
-                                  id={member.user_uuid}
-                                  className="focus:outline-none"
-                                  onChange={handleRole}
-                                  key={member.user_uuid}
-
-                                >
-                                  <option value="2">viewer</option>
-                                  <option value="3">editor</option>
-                                  <option value="1">admin</option>
-                                </select>
-                              </td>
-                            );
-                          } else if (member.role_id == 3) {
-                            return (
-                              <td className="px-6 py-4"
-                              key={member.user_uuid}
-                              >
-                                <select
-                                  name=""
-                                  id={member.user_uuid}
-                                  className="focus:outline-none"
-                                  onChange={handleRole}
-                                  key={member.user_uuid}
-
-                                >
-                                  <option value="3">editor</option>
-                                  <option value="1">admin</option>
-                                  <option value="2">viewer</option>
-                                </select>
-                              </td>
-                            );
-                          }
+                              )}
+                            </td>
+                          ) : (
+                            <td
+                              className="px-6 py-4 font-semibold"
+                              key={member?.user_uuid}
+                            >
+                              {member?.role_id === 3 && (
+                                <option className="font-semibold" value="3">
+                                  Editor
+                                </option>
+                              )}
+                              {member?.role_id === 2 && (
+                                <option className="font-semibold" value="2">
+                                  Viewer
+                                </option>
+                              )}
+                              {member?.role_id === 1 && (
+                                <option value="1" className="font-semibold">
+                                  Admin
+                                </option>
+                              )}
+                            </td>
+                          );
                         })}
-                      <td className="px-6 py-4">
-                        <a
-                          href="#"
-                          className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                        >
-                          Remove{" "}
-                        </a>
-                      </td>
+                      {assignrole == 1 && (
+                        <td className="px-6 py-4">
+                          <a
+                            href="#"
+                            className="font-medium text-red-400 dark:text-red-400 hover:underline"
+                          >
+                            Remove
+                          </a>
+                        </td>
+                      )}
                     </tr>
-                  ))}
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="4" className="text-center">
+                      <div role="status" className="py-[50px]">
+                        <p>No Records Found</p>
+                      </div>
+                    </td>
+                  </tr>
+                )}
               </tbody>
+
+              {/* {loading ? (
+                <tbody>
+                  <tr>
+                    <td colSpan="4" className="text-center">
+                      <div role="status" className="py-[50px]" colspan="4">
+                        <svg
+                          aria-hidden="true"
+                          className="inline w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
+                          viewBox="0 0 100 101"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                            fill="currentColor"
+                          />
+                          <path
+                            d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                            fill="currentFill"
+                          />
+                        </svg>
+                        <span className="sr-only">Loading...</span>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              ) : (
+                <tbody>
+                  {teamMembers ? (
+                    teamMembers.map((user) => (
+                      <tr
+                        className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+                        key={user.uuid}
+                      >
+                        <th
+                          scope="row"
+                          className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                        >
+                          {user.username}
+                        </th>
+                        <td className="px-6 py-4">{user.email}</td>
+                        {user.user_team_members &&
+                          user.user_team_members.map((member) => {
+                            return assignrole === 1 ? (
+                              <td className="px-6 py-4" key={member.user_uuid}>
+                                {member?.role_id === 1 ? (
+                                  <option value="1" className="font-semibold">
+                                    Admin
+                                  </option>
+                                ) : (
+                                  <select
+                                    name=""
+                                    id={member.user_uuid}
+                                    className="focus:outline-none"
+                                    onChange={handleRole}
+                                    key={member.user_uuid}
+                                  >
+                                    {member?.role_id === 2 && (
+                                      <>
+                                        <option value="2">Viewer</option>
+                                        <option value="3">Editor</option>
+                                      </>
+                                    )}
+                                    {member?.role_id === 3 && (
+                                      <>
+                                        <option value="3">Editor</option>
+                                        <option value="2">Viewer</option>
+                                      </>
+                                    )}
+                                  </select>
+                                )}
+                              </td>
+                            ) : (
+                              <td
+                                className="px-6 py-4 font-semibold"
+                                key={member?.user_uuid}
+                              >
+                                {member?.role_id === 3 && (
+                                  <option className="font-semibold" value="3">
+                                    Editor
+                                  </option>
+                                )}
+                                {member?.role_id === 2 && (
+                                  <option className="font-semibold" value="2">
+                                    Viewer
+                                  </option>
+                                )}
+                                {member?.role_id === 1 && (
+                                  <option value="1" className="font-semibold">
+                                    Admin
+                                  </option>
+                                )}
+                              </td>
+                            );
+                          })}
+                        {assignrole == 1 && (
+                          <td className="px-6 py-4">
+                            <a
+                              href="#"
+                              className="font-medium text-red-400 dark:text-red-400 hover:underline"
+                            >
+                              Remove
+                            </a>
+                          </td>
+                        )}
+                      </tr>
+                    ))
+               
+                </tbody>   ) : (
+                  <tbody>
+                  
+                  <tr>
+                    <td colSpan="4" className="text-center">
+                      <div role="status" className="py-[50px]" colspan="4">
+                        <p>No Records Found</p>
+                      </div>
+                    </td>
+                  </tr>
+              </tbody>
+              )}
+              )} */}
             </table>
           </div>
         </div>

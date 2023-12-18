@@ -7,5 +7,5 @@ export const Scripts = () => {
   const { role } = useMyContext();
 
 
-  return <>{role == 2 ? <ScriptEditor /> : <ScriptComponents />}{console.log(role)}</>;
+  return <>{role == 2 ? <ScriptEditor /> : <ScriptComponents />}</>;
 };

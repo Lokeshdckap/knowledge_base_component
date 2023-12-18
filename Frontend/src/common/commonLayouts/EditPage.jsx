@@ -22,7 +22,6 @@ export default function EditPage(props) {
     };
     window.addEventListener("resize", updateScreenHeight);
 
-
     return () => {
       window.removeEventListener("resize", updateScreenHeight);
     };
@@ -67,6 +66,9 @@ export default function EditPage(props) {
                     hoverPageId={props.hoverPageId}
                     handleMore={props.handleMore}
                     parentOpen={props.parentOpen}
+                    setHoverPageId={props.setHoverPageId}
+                    popUp={props.popUp}
+                    setPopUp={props.setPopUp}
                   />
                 </div>
               ))}
@@ -90,7 +92,8 @@ export default function EditPage(props) {
         <div
           className={`bg-[#fbfbfc] px-[30px]  overflow-auto`}
           style={{
-            width: screenWidth > "425" ?  'calc(100% - 278px)' : 'calc(100% - 150px)' ,
+            width:
+              screenWidth > "425" ? "calc(100% - 278px)" : "calc(100% - 150px)",
             maxHeight: `calc(${screenHeight}px - 64px)`,
           }}
         >

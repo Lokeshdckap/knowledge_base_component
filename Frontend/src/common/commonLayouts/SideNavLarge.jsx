@@ -368,7 +368,6 @@ export default function SideNavLarge(props) {
             </div>
           </div>
         )}
-
         <ul
           className="mt-1 space-y-1  overflow-auto"
           style={{
@@ -626,7 +625,11 @@ export default function SideNavLarge(props) {
             ) : (
               <p
                 className="  text-primary pl-[7px] pt-[3px]"
-                onClick={() => setAddNewMenu(true)}
+                onClick={() => {
+                  if (role !== 2) {
+                    setAddNewMenu(true);
+                  }
+                }}
               >
                 <i className="fa-regular fa-plus hover:text-primary text-xl"></i>
               </p>

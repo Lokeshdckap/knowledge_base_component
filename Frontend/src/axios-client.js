@@ -41,19 +41,19 @@ axiosClient.interceptors.response.use(
             error.config.headers.Authorization = `Bearer ${newAccessToken}`;
             const retryOriginalRequest = await axios(error.config);
 
-            // console.log("Retry original request:", retryOriginalRequest);
+            console.log("Retry original request:", retryOriginalRequest);
 
             return retryOriginalRequest;
           } catch (refreshError) {
-            // console.error("Error refreshing token:", refreshError);
+            console.error("Error refreshing token:", refreshError);
             throw refreshError;
           }
         } else {
-        //   console.error("No refresh token found in local storage.");
+          console.error("No refresh token found in local storage.");
         }
       }
     } catch (e) {
-    //   console.error("Unexpected error:", e);
+      console.error("Unexpected error:", e);
       throw e;
     }
 

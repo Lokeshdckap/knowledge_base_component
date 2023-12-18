@@ -52,6 +52,7 @@ router.get("/google/callback", (req, res, next) => {
         });
     }
     const access_token = generateAuthToken.generateAuthToken(user);
+    
     const refresh_token = generateAuthToken.generateAuthRefreshToken(user);
     res
       .status(200)

@@ -32,6 +32,12 @@ router.get(
   pageController.getPage
 );
 
+router.delete(
+  "/permanentDeletePage/:uuid",
+  verifyAuthMiddleware.verifyToken,
+  pageController.permanentDeletePage
+);
+
 
 
 module.exports = router;

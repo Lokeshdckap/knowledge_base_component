@@ -252,9 +252,31 @@ const updatePageData = async (req, res) => {
   }
 };
 
+const permanentDeletePage = async(req,res)=>{
+
+    try {
+      const page_uuid = req.params.uuid;
+      await Page.destroy({
+        where: {
+          uuid : page_uuid
+        },
+      });
+      return res
+        .status(200)
+        .json({ Sucess: "Pages Permanent Deleted" });
+    } catch (err) {
+      console.log(err);
+      return res
+        .status(404)
+        .json({ error: "Pages Permanent Delete Failed" });
+    }
+
+}
+
 module.exports = {
   getPage,
   addPageData,
   addChildPage,
   updatePageData,
+  permanentDeletePage
 };

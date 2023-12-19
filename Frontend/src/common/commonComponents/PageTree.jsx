@@ -5,7 +5,7 @@ import { useLocation } from "react-router-dom";
 
 export const PageTree = ({
   node,
-  hasSibling,
+  pageCount,
   contentPage,
   handleScriptMouseEnter,
   handleScriptMouseLeave,
@@ -16,6 +16,8 @@ export const PageTree = ({
   setHoverPageId,
   popUp,
   setPopUp,
+  handlePageDelete,
+  treeNodes,
 }) => {
   const addIconRef = useRef(null);
   const addPopup = useRef(null);
@@ -33,7 +35,7 @@ export const PageTree = ({
       // Use getBoundingClientRect to get the size and position
       const top = element.getBoundingClientRect().top;
       const left = element.getBoundingClientRect().left;
-      // setTopState(top + 30);
+
       setTopState({
         top: top + 30,
         left: left,
@@ -115,11 +117,6 @@ export const PageTree = ({
                 onClick={addPopUp}
                 ref={addIconRef}
               ></i>
-              // <i
-              //   className="fa-solid fa-plus text-[#57595c] pl-6"
-              //   id={node.uuid}
-              //   onClick={handleMore}
-              // ></i>
             )}
         <button className="text-sm mr-2 " onClick={toggleOpen}>
           {isOpen ? (
@@ -128,6 +125,7 @@ export const PageTree = ({
             <i className="fa-solid fa-angle-up cursor-pointer rotate-90"></i>
           )}
         </button>
+
         {popUp == node.uuid && (
           <>
             <div className="bg-[#a3a2e9] opacity-[0] w-screen h-screen absolute top-0 left-0  z-10"></div>
@@ -145,11 +143,19 @@ export const PageTree = ({
                   <i className="fa-regular fa-file p-2"></i>New page
                 </p>
               </div>
-              <div className="w-[145px] m-auto space-y-3 pt-1 pb-3">
-                <p className="text-lg cursor-pointer  text-textPrimary hover:bg-primary  hover:text-white hover:rounded">
-                  <i className="fa-solid fa-trash p-2"></i>Trash
-                </p>
-              </div>
+              {treeNodes[0].uuid == popUp && pageCount == 1 ? (
+                <></>
+              ) : (
+                <div className="w-[145px] m-auto space-y-3 pt-1 pb-3">
+                  <p
+                    className="text-lg cursor-pointer text-textPrimary hover:bg-primary hover:text-white hover:rounded"
+                    id={node.uuid}
+                    onClick={handlePageDelete}
+                  >
+                    <i className="fa-solid fa-trash p-2"></i>Delete
+                  </p>
+                </div>
+              )}
             </div>
           </>
         )}
@@ -167,7 +173,7 @@ export const PageTree = ({
               <PageTree
                 node={child}
                 index={index}
-                hasSibling={index < node.ChildPages.length - 1}
+                pageCount={pageCount}
                 hasParent={true}
                 handleScriptMouseEnter={handleScriptMouseEnter}
                 handleScriptMouseLeave={handleScriptMouseLeave}
@@ -179,6 +185,8 @@ export const PageTree = ({
                 setHoverPageId={setHoverPageId}
                 popUp={popUp}
                 setPopUp={setPopUp}
+                handlePageDelete={handlePageDelete}
+                treeNodes={treeNodes}
               />
             </li>
           ))}

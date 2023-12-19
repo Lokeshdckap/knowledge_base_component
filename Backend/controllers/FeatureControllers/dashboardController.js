@@ -86,12 +86,17 @@ const getScriptAndPage = async (req, res) => {
     const getScriptAndPages = await Script.findOne({
       where: { uuid: script_uuid },
     });
-
+    const pageCount = await Page.count({
+      where: {
+        [Op.and]: [{ script_uuid: script_uuid }, { page_uuid: null }],
+      },
+    });
     fetchPagesWithDynamicChildInclude()
       .then((hierarchy) => {
         return res.status(200).json({
           hierarchy,
           getScriptAndPages,
+          pageCount,
           msg: "Fetched Sucessfully Scripts & Pages ",
         });
       })
@@ -216,9 +221,27 @@ const globalSearch = async (req, res) => {
         // where: whereClause,
         where: {
           [Op.and]: [whereClause, { team_uuid: team_uuid }],
-        },
-      });
-      return res.status(200).json(scripts);
+        },});
+
+        const script = await Script.findAll({
+          where: {
+            team_uuid : team_uuid
+          },
+        });
+        let script_uuid = []
+        
+        for( let findScripts of script){
+           script_uuid.push(findScripts.uuid)
+        }
+
+         const pages = await Page.findAll({
+          where: {
+            [Op.and]: [whereClause, { script_uuid: script_uuid}],
+          },
+         })
+      console.log(pages,"dhjewkdwhfhewhkfew");
+      
+      return res.status(200).json({scripts,pages});
     } catch (error) {
       console.error(error);
       return res.status(500).json({ error: error });

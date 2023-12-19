@@ -2,14 +2,14 @@ import React, { useEffect, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 export const Search = (props) => {
-
   let params = useParams();
   let navigate = useNavigate();
   let searchRef = useRef();
 
   const handleScriptGo = (e) => {
+    console.log(e.target.id);
     navigate(e.target.id);
-    props.setsearchPopup(false);    
+    props.setsearchPopup(false);
   };
 
   useEffect(() => {
@@ -43,34 +43,37 @@ export const Search = (props) => {
                 className=" w-[100%] pl-2 h-[30px] outline-none text-textPrimary"
                 onChange={props.searchEvent}
                 placeholder="search title"
-                
               />
             </div>
           </div>
+
           <div className="max-h-[320px] overflow-auto pt-3 pb-6">
             {props.searchData !== undefined ? (
               props.searchData ? (
-                props.searchData.map((search) => (
-                  <div
-                    className="flex justify-between items-center w-[550px] p-2 rounded m-auto hover:bg-sky-100 cursor-pointer"
-                    id={`/dashboard/${params.uuid}/s/${search.uuid}`}
-                    onClick={handleScriptGo}
-                  >
-                    <p
+                <>
+                  {props.searchData.scripts.map((search) => (
+                    <div
                       key={search.id}
+                      className="flex justify-between items-center w-[550px] p-2 rounded m-auto hover:bg-sky-100 cursor-pointer"
                       id={`/dashboard/${params.uuid}/s/${search.uuid}`}
-                      className="text-textPrimary"
+                      onClick={handleScriptGo}
                     >
-                      {search.title}
-                    </p>
-                    <p
-                      id={`/dashboard/${params.uuid}/s/${search.uuid}`}
-                      className="text-primary"
+                      <p className="text-textPrimary">{search.title}</p>
+                      <p className="text-primary">Go to script</p>
+                    </div>
+                  ))}
+                  {props.searchData.pages.map((search) => (
+                    <div
+                      key={search.id}
+                      className="flex justify-between items-center w-[550px] p-2 rounded m-auto hover:bg-sky-100 cursor-pointer"
+                      id={`/dashboard/${params.uuid}/s/${search.script_uuid}/?pageId=${search.uuid}`}
+                      onClick={handleScriptGo}
                     >
-                      Go to script
-                    </p>
-                  </div>
-                ))
+                      <p className="text-textPrimary">{search.title.split("-")[0]}</p>
+                      <p className="text-primary">Go to pages</p>
+                    </div>
+                  ))}
+                </>
               ) : (
                 <div className="text-center pt-5 pb-10">
                   <p className="text-xl text-textPrimary">No Records Found</p>
@@ -104,6 +107,90 @@ export const Search = (props) => {
               </div>
             )}
           </div>
+
+          {/* <div className="max-h-[320px] overflow-auto pt-3 pb-6">
+            {props.searchData !== undefined ? (
+              props.searchData ? (
+                Object.keys(props.searchData)[0] == "scripts" ? (
+                  props.searchData?.scripts.map((search) => (
+                    <div
+                      className="flex justify-between items-center w-[550px] p-2 rounded m-auto hover:bg-sky-100 cursor-pointer"
+                      id={`/dashboard/${params.uuid}/s/${search.uuid}`}
+                      onClick={handleScriptGo}
+                    >
+                      <p
+                        key={search.id}
+                        id={`/dashboard/${params.uuid}/s/${search.uuid}`}
+                        className="text-textPrimary"
+                      >
+                        {search.title}
+                      </p>
+                      <p
+                        id={`/dashboard/${params.uuid}/s/${search.uuid}`}
+                        className="text-primary"
+                      >
+                        Go to script
+                      </p>
+                    </div>
+                  ))
+                ) : 
+                (
+                  props.searchData?.pages.map((search) => (
+                    <div
+                      className="flex justify-between items-center w-[550px] p-2 rounded m-auto hover:bg-sky-100 cursor-pointer"
+                      id={`/dashboard/${params.uuid}/s/${search.script_uuid}/?pageId=${search.uuid}`}
+                      onClick={handleScriptGo}
+                    >
+                      <p
+                        key={search.id}
+                        id={`/dashboard/${params.uuid}/s/${search.script_uuid}/?pageId=${search.uuid}`}
+                        className="text-textPrimary"
+                      >
+                        {search.title}
+                      </p>
+                      <p
+                        id={`/dashboard/${params.uuid}/s/${search.script_uuid}/?pageId=${search.uuid}`}
+                        className="text-primary"
+                      >
+                        Go to pages
+                      </p>
+                    </div>
+                  ))
+                )
+              ) : (
+                <div className="text-center pt-5 pb-10">
+
+                  <p className="text-xl text-textPrimary">No Records Found</p>
+                </div>
+              )
+            ) : props.searchPageData ? (
+              props.searchPageData.map((search) => (
+                <div
+                  className="flex justify-between items-center w-[550px] p-2 rounded m-auto hover:bg-sky-100 cursor-pointer"
+                  id={`/${params.uuid}${search.path}`}
+                  onClick={handleScriptGo}
+                >
+                  <p
+                    key={search.id}
+                    id={`/${params.uuid}${search.path}`}
+                    className="text-textPrimary"
+                  >
+                    {search.title.split("-")[0]}
+                  </p>
+                  <p
+                    id={`/${params.uuid}${search.path}`}
+                    className="text-primary"
+                  >
+                    Go to Pages
+                  </p>
+                </div>
+              ))
+            ) : (
+              <div className="text-center pt-5 pb-10">
+                <p className="text-xl text-textPrimary">No Pages Found</p>
+              </div>
+            )}
+          </div> */}
         </div>
       </div>
     </div>

@@ -52,9 +52,11 @@ export default function Dashboard() {
     await axiosClient
       .get(`/api/dashboard/${params.uuid}/search/items?q=${value}`)
       .then((res) => {
-        if (res.data.length > 0) {
+        console.log(res.data,"lokeshdata");
+        if (res.data.scripts.length > 0 || res.data.pages.length > 0) {
           setSearchData(res.data);
-        } else {
+        } 
+        else {
           setSearchData(null);
         }
       })

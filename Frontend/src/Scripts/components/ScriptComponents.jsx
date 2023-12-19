@@ -49,6 +49,9 @@ export const ScriptComponents = () => {
 
   const [popUp, setPopUp] = useState(null);
 
+  //page count
+  const [maintainPageCount,setMaintainPageCount] = useState(null)
+
   const duration = 2000;
 
   const location = useLocation();
@@ -144,6 +147,8 @@ export const ScriptComponents = () => {
           setTreeNode(res.data.hierarchy);
           setRenderScript(res.data.getScriptAndPages);
           setPublish(res.data.getScriptAndPages);
+          setMaintainPageCount(res.data.pageCount);
+          console.log(res.data.pageCount);
         }
       })
       .catch((err) => {
@@ -257,6 +262,31 @@ export const ScriptComponents = () => {
     }
   };
 
+  const handlePageDelete = async (e) => {
+    let targetId = e.target.id;
+
+    if (targetId) {
+      await axiosClient
+        .delete(`/api/pages/permanentDeletePage/${targetId}`)
+        .then((res) => {
+          if (res.data.page.page_uuid != null) {
+            navigate(
+              `/dashboard/${params.uuid}/s/${params.slug}/?pageId=${res.data.page.page_uuid}`
+            );
+          } else {
+            navigate(`/dashboard/${params.uuid}/s/${params.slug}/`);
+          }
+        })
+        .catch((err) => {
+          const response = err.response;
+          console.error("Error:", response?.status);
+        });
+    }
+    if (localStorage.getItem("mainId")) {
+      localStorage.removeItem("mainId");
+    }
+  };
+
   const HandleShare = () => {
     setShareState(true);
   };
@@ -320,7 +350,10 @@ export const ScriptComponents = () => {
         setHoverPageId={setHoverPageId}
         popUp={popUp}
         setPopUp={setPopUp}
+        handlePageDelete={handlePageDelete}
+        maintainPageCount={maintainPageCount}
       />
-    </>
+
+          </>
   );
 };

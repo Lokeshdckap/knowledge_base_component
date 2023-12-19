@@ -193,7 +193,6 @@ export default function Main(props) {
           <div
             className={` m-auto grid 2xl:grid-cols-5 xl:grid-cols-4 lg:grid-cols-3 phone:grid-cols-2  gap-2  mt-2`}
           >
-            {console.log(scriptList)}
             {scriptList && scriptList.length > 0 ? (
              
               scriptList.map((script) => (

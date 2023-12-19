@@ -262,26 +262,53 @@ const updatePageData = async (req, res) => {
   }
 };
 
-const permanentDeletePage = async(req,res)=>{
+const permanentDeletePage = async (req, res) => {
+  const deletePageAndChildren = async (pageId) => {
+    // Delete the current page and its children recursively
+    await Page.destroy({
+      where: {
+        uuid: pageId,
+      },
+    });Page
+  
+    // Find all child pages
+    const childPages = await Page.findAll({
+      where: {
+        page_uuid : pageId,
+      },
+    });
 
-    try {
-      const page_uuid = req.params.uuid;
-      await Page.destroy({
-        where: {
-          uuid : page_uuid
-        },
-      });
-      return res
-        .status(200)
-        .json({ Sucess: "Pages Permanent Deleted" });
-    } catch (err) {
-      console.log(err);
-      return res
-        .status(404)
-        .json({ error: "Pages Permanent Delete Failed" });
+  
+    // Recursively delete each child page and its children
+    for (const childPage of childPages) {
+      await deletePageAndChildren(childPage.uuid);
     }
-
-}
+  };
+  
+  try {
+    const page_uuid = req.params.uuid;
+  
+    // Find the page ID by UUID
+    const page = await Page.findOne({
+      where: {
+        uuid: page_uuid,
+      },
+    });
+    
+    if (!page) {
+      return res.status(404).json({ error: "Page not found" });
+    }
+  
+    // Call the recursive function to delete the page and its children
+    await deletePageAndChildren(page.uuid);
+  
+    return res.status(200).json({ page,Success: "Pages and Children permanently deleted" });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: "Pages Permanent Delete Failed" });
+  }
+  
+};
 
 module.exports = {
   getPage,

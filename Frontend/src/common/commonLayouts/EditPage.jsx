@@ -50,7 +50,7 @@ export default function EditPage(props) {
           style={{
             height: `calc(${screenHeight}px - 64px)`,
           }}
-        >
+        >          
           <div className="space-y-2 ml-4 phone:ml-px mt-4">
             <div className="p-4  phone:p-2 rounded-lg shadow">
               {treeNode.map((topLevelPage, index) => (
@@ -58,7 +58,7 @@ export default function EditPage(props) {
                   <PageTree
                     node={topLevelPage}
                     index={index}
-                    hasSibling={index < treeNode.length - 1}
+                    pageCount={props.maintainPageCount}
                     hasParent={false}
                     contentPage={props.contentPage}
                     handleScriptMouseLeave={props.handleScriptMouseLeave}
@@ -69,6 +69,8 @@ export default function EditPage(props) {
                     setHoverPageId={props.setHoverPageId}
                     popUp={props.popUp}
                     setPopUp={props.setPopUp}
+                    handlePageDelete={props.handlePageDelete}
+                    treeNodes={treeNode}
                   />
                 </div>
               ))}

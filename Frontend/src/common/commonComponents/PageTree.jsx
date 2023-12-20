@@ -115,11 +115,6 @@ export const PageTree = ({
                 onClick={addPopUp}
                 ref={addIconRef}
               ></i>
-              // <i
-              //   className="fa-solid fa-plus text-[#57595c] pl-6"
-              //   id={node.uuid}
-              //   onClick={handleMore}
-              // ></i>
             )}
         <button className="text-sm mr-2 " onClick={toggleOpen}>
           {isOpen ? (

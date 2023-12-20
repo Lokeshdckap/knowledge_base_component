@@ -37,6 +37,7 @@ router.get(
 );
 
 router.get("/google/callback", (req, res, next) => {
+  console.log(req.body);
   passport.authenticate("google", (err, user) => {
     console.log(user, "users");
     if (err) {
@@ -45,23 +46,24 @@ router.get("/google/callback", (req, res, next) => {
         .json({ Error: "This email is already registered. Please sign in" });
     }
     if (!user) {
-      return res
-        .status(409)
-        .json({
-          Error: "User Already Exists & Failed To Authentication to Google",
-        });
+      return res.status(409).json({
+        Error: "User Already Exists & Failed To Authentication to Google",
+      });
     }
+    console.log(req.query.join,"fheruhfhr");
+
     const access_token = generateAuthToken.generateAuthToken(user);
-    
+
     const refresh_token = generateAuthToken.generateAuthRefreshToken(user);
-    res
+    return res
       .status(200)
-      .json({ access_token: access_token,refresh_token:refresh_token,verify: user.isVerified });
+      .json({
+        access_token: access_token,
+        refresh_token: refresh_token,
+        verify: user.isVerified,
+      });
   })(req, res, next);
 });
-
-
-
 
 router.post("/refresh-token", refreshToken);
 

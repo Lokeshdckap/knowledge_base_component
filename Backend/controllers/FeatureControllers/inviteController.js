@@ -27,7 +27,6 @@ const inviteTeams = async (req, res) => {
 
 
     if(sameUsers.email == req.body.email){
-    console.log(sameUsers.email,"ecjecle");
 
       return res.status(400).json(`This is your Email Can't send the invite`);
     };

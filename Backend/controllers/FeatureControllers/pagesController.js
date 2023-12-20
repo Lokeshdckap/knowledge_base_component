@@ -206,17 +206,19 @@ const updatePageData = async (req, res) => {
         },
       }
     );
-
-    await Script.update(
+  
+    const scripts = await Script.update(
       {
-        updatedAt: "CURRENT_TIMESTAMP",
+        updatedAt: literal('CURRENT_TIMESTAMP'),
       },
       {
         where: {
-          uuid: page.script_uuid,
+          uuid: script.uuid,
         },
-      }
+      }     
     );
+
+  console.log(scripts,"hfkrhfrhfhrfrufhurgf");
 
     async function updateChildPagePaths(parentPath, parentId) {
       const childpages = await Page.findAll({
@@ -262,31 +264,57 @@ const updatePageData = async (req, res) => {
   }
 };
 
-const permanentDeletePage = async(req,res)=>{
-
-    try {
-      const page_uuid = req.params.uuid;
-      await Page.destroy({
-        where: {
-          uuid : page_uuid
-        },
-      });
-      return res
-        .status(200)
-        .json({ Sucess: "Pages Permanent Deleted" });
-    } catch (err) {
-      console.log(err);
-      return res
-        .status(404)
-        .json({ error: "Pages Permanent Delete Failed" });
+const permanentDeletePage = async (req, res) => {
+  const deletePageAndChildren = async (pageId) => {
+    // Delete the current page and its children recursively
+    await Page.destroy({
+      where: {
+        uuid: pageId,
+      },
+    });
+  
+    // Find all child pages
+    const childPages = await Page.findAll({
+      where: {
+        page_uuid : pageId,
+      },
+    });
+  
+    // Recursively delete each child page and its children
+    for (const childPage of childPages) {
+      await deletePageAndChildren(childPage.uuid);
     }
-
-}
+  };
+  
+  try {
+    const page_uuid = req.params.uuid;
+  
+    // Find the page ID by UUID
+    const page = await Page.findOne({
+      where: {
+        uuid: page_uuid,
+      },
+    });
+  
+    if (!page) {
+      return res.status(404).json({ error: "Page not found" });
+    }
+  
+    // Call the recursive function to delete the page and its children
+    await deletePageAndChildren(page.uuid);
+  
+    return res.status(200).json({ Success: "Pages and Children permanently deleted" });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: "Pages Permanent Delete Failed" });
+  }
+  
+};
 
 module.exports = {
   getPage,
   addPageData,
   addChildPage,
   updatePageData,
-  permanentDeletePage
+  permanentDeletePage,
 };

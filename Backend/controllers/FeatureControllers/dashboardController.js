@@ -183,7 +183,7 @@ const uploadImage = async (req, res) => {
       const image = await Image.create({
         filename: path,
         uuid: uuid.v4(),
-        page_uuid:page_uuid
+        page_uuid: page_uuid,
       });
 
       return res
@@ -213,7 +213,6 @@ const globalSearch = async (req, res) => {
     };
     try {
       const scripts = await Script.findAll({
-        // where: whereClause,
         where: {
           [Op.and]: [whereClause, { team_uuid: team_uuid }],
         },
@@ -266,9 +265,6 @@ const pageSearch = async (req, res) => {
   }
 };
 
-
-
-
 const fetchImage = async (req, res) => {
   try {
     const image = await Image.findOne({
@@ -314,6 +310,21 @@ const getParentPage = async (req, res) => {
   }
 };
 
+const paginationHandle = async (req, res) => {
+  const script_uuid = req.params.uuid;
+
+
+  const findPage = await Page.findAll({
+     where:{
+      script_uuid : script_uuid
+     }
+  })
+
+  return res
+  .status(200)
+  .json({ findPage, message: "Fetched Successfully" });
+};
+
 module.exports = {
   getBatchAndScripts,
   getScriptAndPage,
@@ -323,4 +334,5 @@ module.exports = {
   fetchImage,
   getParentPage,
   pageSearch,
+  paginationHandle,
 };

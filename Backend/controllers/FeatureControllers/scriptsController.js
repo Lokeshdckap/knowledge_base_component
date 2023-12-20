@@ -156,14 +156,14 @@ const addScriptTitle = async (req, res) => {
           req.body.inputValue.split(" ").filter(Boolean).join("").toLowerCase();
 
         const scriptTitleUpdate = await Script.update(
-          { title: req.body.inputValue, path: paths },
+          {title:req.body.inputValue,path:paths,updatedAt: "CURRENT_TIMESTAMP"},
           {
             where: { uuid: req.body.queryParameter },
           }
         );
 
         const updatePath = await Page.findAll({
-          where: { script_uuid: req.body.queryParameter },
+          where: { script_uuid: req.body.queryParameter},
         });
 
         const updateAllPages = async () => {

@@ -24,7 +24,6 @@ export const EditorComponents = (props) => {
       readOnly: false,
       data: props.editorValue,
       onChange: async () => {
-        // console.log(props.editorContent);
 
         try {
           // Check if editor is defined before calling save method
@@ -176,7 +175,7 @@ export const EditorComponents = (props) => {
       initEditor();
     }
 
-    return () => {
+    return async () => {
       ejInstance?.current?.destroy();
       ejInstance.current = null;
     };

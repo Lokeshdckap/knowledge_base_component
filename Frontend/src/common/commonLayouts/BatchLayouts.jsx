@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useMyContext } from "../../context/AppContext";
-
+import { formatDistanceToNow } from "date-fns";
 export const BatchLayouts = (props) => {
   const deleteIconRef = useRef({});
   const deleteRef = useRef(null);
@@ -140,9 +140,12 @@ export const BatchLayouts = (props) => {
                       <p
                         id={script.uuid}
                         onClick={handleScripts}
-                        className="text-gray-500 pt-1 phone:text-[12px]"
+                        className="text-gray-500 pt-1 phone:text-[12px] text-sm"
                       >
-                        0 Pages
+                        Edited:{" "}
+                        {formatDistanceToNow(new Date(script.updatedAt), {
+                          addSuffix: true,
+                        })}
                       </p>
                     </div>
                   </div>

@@ -11,7 +11,7 @@ export default function EditPage(props) {
   const treeNode = props.treeNode;
   const { screenHeight, setScreenHeight } = useMyContext();
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
-
+  
   useEffect(() => {
     props.setParticularTitle(props.particularTitle);
     props.setDescription(props.description);

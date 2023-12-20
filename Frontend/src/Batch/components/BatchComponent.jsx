@@ -20,13 +20,12 @@ export const BatchComponent = () => {
     batchDescription,
     setbatchDescription,
     scripts,
+    setLoading
   } = useMyContext();
   //hooks
 
   //state
   const [state, setState] = useState(true);
-  const [loading, setLoading] = useState(false);
-
   useEffect(() => {
  
     // getScripts();

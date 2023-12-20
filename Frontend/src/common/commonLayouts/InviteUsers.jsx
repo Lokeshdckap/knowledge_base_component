@@ -13,6 +13,7 @@ export const InviteUsers = (props) => {
       axiosClient
         .get(`/api/invites/pendingList/${params.uuid}`)
         .then((res) => {
+          console.log(res.data);
           setPendingData(res.data.pendingData);
         })
         .catch((err) => {
@@ -81,7 +82,6 @@ export const InviteUsers = (props) => {
                     value={props.inviteEmail}
                     onChange={invite}
                   />
-
                   <select
                     id="countries"
                     className="bg-gray-50 border absolute right-2.5 bottom-2.5 border-gray-300 text-gray-900 text-sm rounded-lg block w-20 p-1.5  "

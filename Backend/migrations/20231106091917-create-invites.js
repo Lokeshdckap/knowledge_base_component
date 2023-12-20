@@ -15,7 +15,7 @@ module.exports = {
       email: {
         type: Sequelize.STRING
       },
-      is_progess: {
+      is_progress: {
         type: Sequelize.INTEGER,
         allowNull: false,
 

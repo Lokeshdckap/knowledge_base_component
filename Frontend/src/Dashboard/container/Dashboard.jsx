@@ -25,6 +25,8 @@ export default function Dashboard() {
     showToastMessage,
     userInfo,
     userDetail,
+    loading,
+     setLoading
   } = useMyContext();
 
   //hooks
@@ -34,7 +36,7 @@ export default function Dashboard() {
 
 
   const [state, setState] = useState(true);
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
 
   //search states
   const [searchPopup, setsearchPopup] = useState(false);
@@ -52,7 +54,6 @@ export default function Dashboard() {
     await axiosClient
       .get(`/api/dashboard/${params.uuid}/search/items?q=${value}`)
       .then((res) => {
-        console.log(res.data,"lokeshdata");
         if (res.data.scripts.length > 0 || res.data.pages.length > 0) {
           setSearchData(res.data);
         } 
@@ -72,7 +73,6 @@ export default function Dashboard() {
 
   const handleTrash = (e) => {
     let targetId = e.target.id;
-
     if (targetId) {
       setLoading(true);
       axiosClient

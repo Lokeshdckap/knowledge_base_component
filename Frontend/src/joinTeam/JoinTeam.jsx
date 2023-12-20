@@ -11,11 +11,11 @@ export const JoinTeam = () => {
   useEffect(() => {
     if (!hasEffectRun) {
       const decoded = jwtDecode(params.token);
-      let payLoad = {
-        id: decoded.id,
-        team_uuid: decoded.team_uuid,
-        role: decoded.role,
-      };
+      // let payLoad = {
+      //   id: decoded.id,
+      //   team_uuid: decoded.team_uuid,
+      //   role: decoded.role,
+      // };
 
       if (decoded.id) {
         let payLoad = {
@@ -24,10 +24,11 @@ export const JoinTeam = () => {
           role: decoded.role,
           isProgress:1
         };
+        console.log(payLoad);
         axiosClient
           .post("/api/invites/updateInvite", payLoad)
           .then((res) => {
-
+            console.log(res.data);
             navigate("/dashboard");
           })
           .catch((err) => {

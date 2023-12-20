@@ -50,7 +50,7 @@ export default function Header(props) {
           <div className="2xl:hidden xl:hidden lg:hidden  phone:block phone:text-[12px] "
             onClick={handleSideBar}
           >
-            <i class="fa-solid fa-bars"></i>
+            <i className="fa-solid fa-bars"></i>
           </div>
           <h2 className="phone:text-[12px]"> {props.team}'s Team</h2>
         </div>

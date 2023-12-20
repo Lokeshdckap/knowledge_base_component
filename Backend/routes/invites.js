@@ -16,7 +16,6 @@ router.post(
 
 router.post(
   "/updateInvite",
-  verifyAuthMiddleware.verifyToken,
   inviteController.updateInvite
 );
 

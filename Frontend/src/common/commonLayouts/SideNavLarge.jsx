@@ -170,9 +170,11 @@ export default function SideNavLarge(props) {
       axiosClient
         .post("/api/teams/team", formValues)
         .then((res) => {
+          console.log(res.data.newTeam);
           setTeamPopup(false);
           getAllTeam();
           showToastMessage(res.data.Success);
+          navigate(`/dashboard/${res.data.newTeam.uuid}`)
         })
         .catch((err) => {
           const response = err.response;
@@ -296,23 +298,24 @@ export default function SideNavLarge(props) {
           </p>
           {teamDropDown ? (
             <i
-              className="fa-solid fa-angle-up text-[#F9EFD4] cursor-pointer"
+              className="fa-solid fa-angle-down text-[#F9EFD4] cursor-pointer"
               onClick={() => setteamDropDown(false)}
               ref={iconRef}
             ></i>
           ) : (
+            
             <i
-              className="fa-solid fa-angle-down text-[#F9EFD4] cursor-pointer"
+              className="fa-solid fa-angle-right text-[#F9EFD4] cursor-pointer"
               onClick={() => setteamDropDown(true)}
             ></i>
           )}
         </div>
         {teamDropDown && (
           <div
-            className="box-border bg-white w-52 pt-4 pl-4 pb-4 border-[1px] rounded-xl shadow-lg absolute left-48 top-28 z-10"
+            className="box-border bg-white w-52 pt-4 pb-4 border-[1px] rounded-xl shadow-lg absolute left-48 top-28 z-10"
             ref={teamRef}
           >
-            <div>
+            <div className="w-[180px] m-auto">
               <p className="font-semibold text-textPrimary">Change Team</p>
               {allTeam && (
                 <ul className={`space-y-2 pt-2 overflow-auto`}>
@@ -331,8 +334,8 @@ export default function SideNavLarge(props) {
                   ))}
                 </ul>
               )}
-              <hr
-                className={`h-px  bg-[#454E5E] border-0 dark:bg-gray-900 mt-2`}
+               <hr
+                className={`h-px  bg-[#D5D7DA] border-0 dark:bg-gray-900 mt-2`}
               />
               <div className="mt-2">
                 <div className="flex items-center mb-2 hover:text-primary">
@@ -355,16 +358,16 @@ export default function SideNavLarge(props) {
                   <p className="pl-1 ">Invite Teamates</p>
                 </div>
               </div>
-            </div>
-            <hr
-              className={`h-px  bg-[#D5D7DA] border-0 dark:bg-gray-900 mt-2`}
-            />
-            <div
-              className="mt-2 flex items-center mb-2 cursor-pointer hover:text-primary"
-              onClick={() => setTeamPopup(true)}
-            >
-              <i className="fa-solid fa-plus "></i>
-              <p className="pl-1 ">Create Team</p>
+              <hr
+                className={`h-px  bg-[#D5D7DA] border-0 dark:bg-gray-900 mt-2`}
+              />
+              <div
+                className="mt-2 flex items-center mb-2 cursor-pointer hover:text-primary"
+                onClick={() => setTeamPopup(true)}
+              >
+                <i className="fa-solid fa-plus "></i>
+                <p className="pl-1 ">Create Team</p>
+              </div>
             </div>
           </div>
         )}

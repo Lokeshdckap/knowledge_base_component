@@ -16,7 +16,8 @@ import { createContext, useState } from "react";
         _setAuth(auth)
         if(auth.token){
             localStorage.setItem('ACCESS_TOKEN',auth.token);
-            localStorage.setItem("REFRESH_TOKEN",auth.refresh_token,)
+            localStorage.setItem("REFRESH_TOKEN",auth.refresh_token)
+            localStorage.setItem("TIME",new Date());
             Cookies.remove('userEmail');
         }
         else{

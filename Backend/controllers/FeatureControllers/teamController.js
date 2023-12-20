@@ -4,6 +4,8 @@ const { sequelize, col } = require("../../utils/database");
 const Team = db.teams;
 const User = db.users;
 const UserTeams = db.user_team_members;
+const Invite = db.invites;
+
 const { createTeamSchema } = require("../../utils/validations");
 const uuid = require("uuid");
 
@@ -81,7 +83,7 @@ const getTeam = async (req, res) => {
       .status(200)
       .json({ Teams,team_member, msg: "Sucessfully Fetched All Teams" });
   } catch (error) {
-    return res.status(500).json({ error: "Can't Get All Team" });
+    return res.status(404).json({ error: "Can't Get All Team" });
   }
 };
 
@@ -192,21 +194,29 @@ const searchActiveUsers = async (req, res) => {
 };
 
 const activeUserRemove = async(req,res)=>{
-    const user_uuid = req.body.uuid;
+    const user_uuid = req.params.uuid;
 
-    const userFind = User.findOne({
+    const userFind = await User.findOne({
       where: {
         uuid: user_uuid,
       },
     })
 
+    console.log(userFind);
+
     if(userFind){
-       UserTeams.destroy({
+      await UserTeams.destroy({
         where :{
           user_uuid : userFind.uuid
         }
       })
-       UserTeams.destroy({
+      await UserTeams.destroy({
+        where :{
+          user_uuid : userFind.uuid
+        }
+      })
+
+      await Invite.destroy({
         where :{
           email : userFind.email
         }

@@ -148,7 +148,6 @@ export const ScriptComponents = () => {
           setRenderScript(res.data.getScriptAndPages);
           setPublish(res.data.getScriptAndPages);
           setMaintainPageCount(res.data.pageCount);
-          console.log(res.data.pageCount);
         }
       })
       .catch((err) => {

@@ -82,6 +82,7 @@ const MyContextProvider = ({ children }) => {
   };
   //Team functions
   const getTeam = async () => {
+    if(params.uuid){
     await axiosClient
       .get(`/api/teams/getTeam/${params.uuid}`)
       .then((res) => {
@@ -91,8 +92,13 @@ const MyContextProvider = ({ children }) => {
         getScript();
       })
       .catch((err) => {
+        const response = err.response;
+        if (response && response?.status === 404) {
+          navigate("/error")
+        }
+        
         console.log(err);
-      });
+      });}
   };
   const getAllTeam = async () => {
     await axiosClient
@@ -114,6 +120,9 @@ const MyContextProvider = ({ children }) => {
         if (response && response?.status === 401) {
           window.location.reload("/signin");
         }
+        // if (response && response?.status === 500) {
+        //   console.log("eheh");
+        // }
       });
   };
 

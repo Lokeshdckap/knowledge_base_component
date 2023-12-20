@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
   invites.init({
     uuid: DataTypes.UUID,
     email: DataTypes.STRING,
-    is_progess: DataTypes.INTEGER,
+    is_progress: DataTypes.INTEGER,
     team_uuid: DataTypes.UUID
   }, {
     sequelize,

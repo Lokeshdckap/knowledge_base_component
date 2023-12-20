@@ -28,7 +28,7 @@ export const Dashboards = () => {
           } 
         }
         else {
-          console.log("sdfsdf");
+
           navigate("/signin");
         }
        

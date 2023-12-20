@@ -16,6 +16,9 @@ export const ActiveUsers = (props) => {
   const [inviteError, setInviteError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [assignrole, setAssignRole] = useState(null);
+  const [isLoading, setIsLoading] = useState(null);
+
+  
   useEffect(() => {
     allUsers();
     team();
@@ -34,11 +37,11 @@ export const ActiveUsers = (props) => {
   };
 
   const allUsers = () => {
-    setLoading(true);
+    setIsLoading(true);
     axiosClient
       .get(`/api/teams/getAciveUsers/${params.uuid}`)
       .then((res) => {
-        setLoading(false);
+        setIsLoading(false);
 
         setTeamMembers(res.data.userDetail);
       })
@@ -66,6 +69,7 @@ export const ActiveUsers = (props) => {
   //role change
 
   const handleRole = async (e) => {
+    setIsLoading(true)
     let payload = {
       team_uuid: params.uuid,
       role_type: e.target.value,
@@ -73,8 +77,13 @@ export const ActiveUsers = (props) => {
     };
     await axiosClient
       .post("/api/invites/updateRole", payload)
-      .then((res) => {})
+      .then((res) => {
+        setIsLoading(false)
+
+        showToastMessage(res.data.message);
+      })
       .catch((err) => {
+        setIsLoading(false)
         console.log(err);
       });
   };
@@ -117,12 +126,12 @@ export const ActiveUsers = (props) => {
 
   const searchUsers = async (e) => {
     let value = e.target.value;
-    setLoading(true);
+    setIsLoading(true);
 
     await axiosClient
       .get(`/api/teams/${params.uuid}/search/users?q=${value}`)
       .then((res) => {
-        setLoading(false);
+        setIsLoading(false);
         setTeamMembers(res.data.userDetail);
       })
       .catch((err) => {
@@ -131,16 +140,48 @@ export const ActiveUsers = (props) => {
         if (response) {
           if (response.status === 404) {
             setTeamMembers(response.data.msg);
-            setLoading(false);
+            setIsLoading(false);
           } else {
             console.error("Non-404 error occurred. Response:", response);
           }
         } else {
           console.error("An unexpected error occurred:", err);
         }
-      
       });
   };
+
+  const handleRemove = async (e) => {
+    setIsLoading(true);
+
+    let targetId = e.target.id;
+    if (targetId) {
+      await axiosClient
+        .delete(`/api/teams/removeUserFromTeam/${targetId}`)
+        .then((res) => {
+          showToastMessage(res.data.msg);
+          setIsLoading(false);
+          allUsers()
+        })
+        .catch((err) => {
+          const response = err.response;
+
+          if (response) {
+            if (response.status === 404) {
+              setTeamMembers(response.data.msg);
+              setIsLoading(false);
+            } else {
+              console.error("Non-404 error occurred. Response:", response);
+              setIsLoading(false);
+            }
+          } else {
+            console.error("An unexpected error occurred:", err);
+            setIsLoading(false);
+          }
+          setIsLoading(false);
+        });
+    }
+  };
+
   return (
     <div className="m-auto">
       <div className="bg-white w-[900px] h-[550px] shadow-md overflow-auto">
@@ -171,7 +212,6 @@ export const ActiveUsers = (props) => {
               onChange={searchUsers}
               autoComplete="off"
               required
-
             />
           </div>
           <div className="relative  shadow-md sm:rounded-lg mt-5">
@@ -195,7 +235,7 @@ export const ActiveUsers = (props) => {
                 </tr>
               </thead>
               <tbody>
-                {loading ? (
+                {isLoading ? (
                   <tr>
                     <td colSpan={4} className="text-center">
                       <div role="status" className="py-[50px]">
@@ -288,16 +328,55 @@ export const ActiveUsers = (props) => {
                             </td>
                           );
                         })}
-                      {assignrole == 1 && (
-                        <td className="px-6 py-4">
-                          <a
-                            href="#"
-                            className="font-medium text-red-400 dark:text-red-400 hover:underline"
-                          >
-                            Remove
-                          </a>
-                        </td>
-                      )}
+                      {user.user_team_members &&
+                        user.user_team_members.map((member) => {
+                          return (
+                            assignrole === 1 && (
+                              <td className="px-6 py-4" key={member.user_uuid}>
+                                {member?.role_id === 1 ? (
+                                  <option
+                                    value="1"
+                                    className="font-semibold  pl-5"
+                                  >
+                                    -
+                                  </option>
+                                ) : (
+                                  <>
+                                    <p
+                                      className="font-medium text-red-400 dark:text-red-400 hover:underline cursor-pointer"
+                                      onClick={handleRemove}
+                                      id={user.uuid}
+                                    >
+                                      Remove
+                                    </p>
+                                  </>
+                                )}
+                              </td>
+                            )
+                          );
+                        })}
+
+                      {/* assignrole == 1 && (
+                        <td className="px-6 py-4"> */}
+                      {/* {user.user_team_members &&
+                            user.user_team_members.map((member) => { */}
+                      {
+                        //   member?.role_id === 1 ? (
+                        //     <option value="1" className="font-semibold">
+                        //       Nothing
+                        //     </option>
+                        //   ) : (
+                        // <p
+                        //   className="font-medium text-red-400 dark:text-red-400 hover:underline cursor-pointer"
+                        //   onClick={handleRemove}
+                        // >
+                        //   Remove
+                        // </p>
+                        // );
+                        // }
+                        // })}
+                      }
+                      {/* </td> */}
                     </tr>
                   ))
                 ) : (
@@ -446,6 +525,17 @@ export const ActiveUsers = (props) => {
           inviteError={inviteError}
           setInviteError={setInviteError}
         />
+      )}
+       <ToastContainer />
+      {loading && (
+        <>
+          <div className="bg-[#aeaeca] opacity-[0.5] w-[100%] h-[100vh] absolute top-0 left-0  z-10"></div>
+          <div className="">
+            <p className="absolute top-[48%] left-[48%] z-50">
+              <HashLoader color="#3197e8" />
+            </p>
+          </div>
+        </>
       )}
     </div>
   );

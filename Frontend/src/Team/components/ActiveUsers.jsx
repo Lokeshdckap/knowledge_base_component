@@ -154,9 +154,14 @@ export const ActiveUsers = (props) => {
     setIsLoading(true);
 
     let targetId = e.target.id;
+    let payload = {
+      "uuid" : targetId,
+      "team_uuid" : params.uuid
+    }
+
     if (targetId) {
       await axiosClient
-        .delete(`/api/teams/removeUserFromTeam/${targetId}`)
+        .delete(`/api/teams/removeUserFromTeam`,payload)
         .then((res) => {
           showToastMessage(res.data.msg);
           setIsLoading(false);
@@ -208,7 +213,7 @@ export const ActiveUsers = (props) => {
               type="search"
               id="default-search"
               className="w-36 p-2 pl-2 text-sm border border-gray-300 rounded-lg  focus:outline-none  mt-2 "
-              placeholder="search here"
+              placeholder="search here"                              
               onChange={searchUsers}
               autoComplete="off"
               required
@@ -341,7 +346,7 @@ export const ActiveUsers = (props) => {
                                     -
                                   </option>
                                 ) : (
-                                  <>
+                                  <>                                 
                                     <p
                                       className="font-medium text-red-400 dark:text-red-400 hover:underline cursor-pointer"
                                       onClick={handleRemove}

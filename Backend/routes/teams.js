@@ -52,7 +52,7 @@ router.get(
   teamController.searchActiveUsers
 );
 
-router.delete("/removeUserFromTeam/:uuid",
+router.delete("/removeUserFromTeam",
 verifyAuthMiddleware.verifyToken,
 teamController.activeUserRemove)
 

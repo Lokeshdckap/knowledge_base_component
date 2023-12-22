@@ -194,39 +194,33 @@ const searchActiveUsers = async (req, res) => {
 };
 
 const activeUserRemove = async(req,res)=>{
-    const user_uuid = req.params.uuid;
+  const user_uuid = req.body.uuid;
+  const team_uuid = req.body.team_uuid;
+  const userFind = await User.findOne({
+    where: {
+      uuid: user_uuid,
+    },
+  })
 
-    const userFind = await User.findOne({
+  console.log(userFind);
+
+  if(userFind){
+    await UserTeams.destroy({
       where: {
-        uuid: user_uuid,
+        [Op.and]: [{ team_uuid: team_uuid }, { user_uuid : userFind.uuid }],
       },
     })
+    await Invite.destroy({
+      where :{
+        email : userFind.email
+      }
+    })
+    return res.status(200).json({ msg: "SucessFully Removed" });
+  }
+  else{
+    return res.status(404).json({ msg: "Not Found Can't Removed" });
 
-    console.log(userFind);
-
-    if(userFind){
-      await UserTeams.destroy({
-        where :{
-          user_uuid : userFind.uuid
-        }
-      })
-      await UserTeams.destroy({
-        where :{
-          user_uuid : userFind.uuid
-        }
-      })
-
-      await Invite.destroy({
-        where :{
-          email : userFind.email
-        }
-      })
-      return res.status(200).json({ msg: "SucessFully Removed" });
-    }
-    else{
-      return res.status(404).json({ msg: "Not Found Can't Removed" });
-
-    }
+  }
 }
 
 module.exports = {

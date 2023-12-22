@@ -6,9 +6,9 @@ require("dotenv").config();
 
 const path = require("path");
 
-const verifyAuthMiddleware = require("../middleware/authenticationToken");
+const verifyAuthMiddleware = require("../middleware/authMiddleware");
 
-const trashController = require("../controllers/FeatureControllers/trashController");
+const trashController = require("../controllers/DashboardControllers/trashController");
 
 router.get(
   "/getAllTrash/:uuid",

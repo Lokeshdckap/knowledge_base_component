@@ -21,9 +21,9 @@ const upload = multer({storage});
 
 // Controllers
 
-const verifyAuthMiddleware = require("../middleware/authenticationToken");
+const verifyAuthMiddleware = require("../middleware/authMiddleware");
 
-const dashboardController = require("../controllers/FeatureControllers/dashboardController");
+const dashboardController = require("../controllers/DashboardControllers/dashboardController");
 
 
 router.get(
@@ -58,14 +58,15 @@ router.get("/:uuid/:slug/pageSearch/items",
 dashboardController.pageSearch
 )
 
-router.get("/fetchImage",
-dashboardController.fetchImage
-)
 router.get("/getOpenParent/:uuid",
 dashboardController.getParentPage
 )
 router.get("/pagination/:uuid",
 dashboardController.paginationHandle
+)
+
+router.post("/createAccessToken",
+dashboardController.createAccessToken
 )
 
 module.exports = router;

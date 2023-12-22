@@ -20,9 +20,9 @@ const storage = multer.diskStorage({
 const upload = multer({storage});
 
 
-const verifyAuthMiddleware = require("../middleware/authenticationToken");
+const verifyAuthMiddleware = require("../middleware/authMiddleware");
 
-const userController = require("../controllers/FeatureControllers/userInfoController");
+const userController = require("../controllers/DashboardControllers/userInfoController");
 
 router.get(
   "/getUserInfo",

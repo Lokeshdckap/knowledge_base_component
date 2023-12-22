@@ -4,9 +4,9 @@ const router = express.Router();
 
 require("dotenv").config();
 
-const verifyAuthMiddleware = require("../middleware/authenticationToken");
+const verifyAuthMiddleware = require("../middleware/authMiddleware");
 
-const pageController = require("../controllers/FeatureControllers/pagesController");
+const pageController = require("../controllers/DashboardControllers/pagesController");
 
 router.post(
   "/addChildPage/:script_uuid/:uuid",

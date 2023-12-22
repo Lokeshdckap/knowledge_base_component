@@ -2,14 +2,14 @@ const express = require("express");
 
 const router = express.Router();
 
-const authMiddleware = require("../middleware/auth");
+const authMiddleware = require("../middleware/userCheckMiddleware");
 
 const generateAuthToken = require("../utils/generateAuthToken");
 
 const {
   verifyToken,
   refreshToken,
-} = require("../middleware/authenticationToken");
+} = require("../middleware/authMiddleware");
 
 require("dotenv").config();
 

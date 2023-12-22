@@ -11,6 +11,7 @@ import BreakLine from "editorjs-break-line";
 import axiosClient from "../../axios-client";
 import AttachesTool from "@editorjs/attaches";
 import Header from "@editorjs/header";
+
 export const EditorComponents = (props) => {
   const ejInstance = useRef();
 
@@ -171,10 +172,10 @@ export const EditorComponents = (props) => {
   };
   // This will run only once
   useEffect(() => {
-    if (ejInstance.current === null) {
+    if (ejInstance.current === null && !ejInstance.current) {
       initEditor();
     }
-
+  
     return async () => {
       ejInstance?.current?.destroy();
       ejInstance.current = null;

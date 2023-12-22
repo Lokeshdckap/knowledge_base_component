@@ -4,7 +4,7 @@ const router = express.Router();
 
 require("dotenv").config();
 
-const publicController = require("../controllers/FeatureControllers/publicUrlController");
+const publicController = require("../controllers/DashboardControllers/publicUrlController");
 
 router.get("/documents/:uuid/:slug/*", publicController.newDocuments);
 

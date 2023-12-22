@@ -4,9 +4,9 @@ const router = express.Router();
 
 require("dotenv").config();
 
-const verifyAuthMiddleware = require("../middleware/authenticationToken");
+const verifyAuthMiddleware = require("../middleware/authMiddleware");
 
-const batchController = require("../controllers/FeatureControllers/batchController");
+const batchController = require("../controllers/DashboardControllers/batchController");
 
 router.post(
   "/addNewBatch",

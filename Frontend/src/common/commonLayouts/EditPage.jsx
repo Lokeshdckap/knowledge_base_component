@@ -3,7 +3,8 @@ import { EditorComponents } from "../commonComponents/EditorComponents";
 import { PageTree } from "../commonComponents/PageTree";
 import { PublishPopup } from "../commonComponents/PublishPopup";
 import { useMyContext } from "../../context/AppContext";
-
+// import 'emoji-mart/css/emoji-mart.css';
+import { Picker } from 'emoji-mart';
 export default function EditPage(props) {
   const { renderScript } = props;
   const [newPagePopup, setNewPagePopup] = useState(false);
@@ -11,7 +12,7 @@ export default function EditPage(props) {
   const treeNode = props.treeNode;
   const { screenHeight, setScreenHeight } = useMyContext();
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
-  
+  const instance = new Picker();
   useEffect(() => {
     props.setParticularTitle(props.particularTitle);
     props.setDescription(props.description);
@@ -28,20 +29,10 @@ export default function EditPage(props) {
   }, [props.particularTitle, props.description, props.editorContent]);
 
   const title = props.particularTitle;
-
-  const handleMouseEnter = (e) => {
-    let targetId = e.target.id;
-    setOverPage(targetId);
+  const handleEmojiSelect = (emoji) => {
+    console.log(emoji.native);
+    // setInputValue(inputValue + emoji.native);
   };
-
-  const handleMouseLeave = () => {
-    setOverPage(null);
-  };
-
-  const handlePopupPage = () => {
-    setNewPagePopup((prevState) => !prevState);
-  };
-
   return (
     <div className="bg-[#F4F7FC]" style={{ height: "calc(100% - 64px)" }}>
       <div className="flex">
@@ -50,7 +41,9 @@ export default function EditPage(props) {
           style={{
             height: `calc(${screenHeight}px - 64px)`,
           }}
-        >          
+        >      
+            <instance onSelect={handleEmojiSelect} />
+
           <div className="space-y-2 ml-4 phone:ml-px mt-4">
             <div className="p-4  phone:p-2 rounded-lg shadow">
               {treeNode.map((topLevelPage, index) => (

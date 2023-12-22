@@ -6,9 +6,9 @@ require("dotenv").config();
 
 const path = require("path");
 
-const verifyAuthMiddleware = require("../middleware/authenticationToken");
+const verifyAuthMiddleware = require("../middleware/authMiddleware");
 
-const teamController = require("../controllers/FeatureControllers/teamController");
+const teamController = require("../controllers/DashboardControllers/teamController");
 
 router.post(
   "/team",

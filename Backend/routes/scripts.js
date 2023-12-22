@@ -4,9 +4,9 @@ const router = express.Router();
 
 require("dotenv").config();
 
-const verifyAuthMiddleware = require("../middleware/authenticationToken");
+const verifyAuthMiddleware = require("../middleware/authMiddleware");
 
-const scriptController = require("../controllers/FeatureControllers/scriptsController");
+const scriptController = require("../controllers/DashboardControllers/scriptsController");
 
 router.post(
   "/addNewScript",

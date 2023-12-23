@@ -174,7 +174,7 @@ export default function SideNavLarge(props) {
           setTeamPopup(false);
           getAllTeam();
           showToastMessage(res.data.Success);
-          navigate(`/dashboard/${res.data.newTeam.uuid}`)
+          navigate(`/dashboard/${res.data.newTeam.uuid}`);
         })
         .catch((err) => {
           const response = err.response;
@@ -286,7 +286,7 @@ export default function SideNavLarge(props) {
             className="h-6 text-[#F9EFD4]"
           />
         </div>
-        <p className=" text-lg text-[#F9EFD4] font-medium">DCKAP Tome</p>
+        <p className=" text-lg text-[#F9EFD4] font-medium">Rhino Tome</p>
       </div>
       <div className="">
         <div className="mt-8 flex items-center justify-between w-[200px] m-auto ">
@@ -303,7 +303,6 @@ export default function SideNavLarge(props) {
               ref={iconRef}
             ></i>
           ) : (
-            
             <i
               className="fa-solid fa-angle-right text-[#F9EFD4] cursor-pointer"
               onClick={() => setteamDropDown(true)}
@@ -334,7 +333,7 @@ export default function SideNavLarge(props) {
                   ))}
                 </ul>
               )}
-               <hr
+              <hr
                 className={`h-px  bg-[#D5D7DA] border-0 dark:bg-gray-900 mt-2`}
               />
               <div className="mt-2">

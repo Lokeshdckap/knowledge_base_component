@@ -45,6 +45,7 @@ const pageRoute = require("./routes/pages");
 const publicRoute = require("./routes/publicUrl");
 const userRoute = require("./routes/userInfo");
 const tagRoute = require("./routes/tags");
+const externalRoute = require("./routes/externalApi");
 
 app.use(`${apiBasePath}/auth`, authRoute);
 app.use(`${apiBasePath}/dashboard`, dashboardRoute);
@@ -57,6 +58,7 @@ app.use(`${apiBasePath}/pages`, pageRoute);
 app.use(`${apiBasePath}/public`, publicRoute);
 app.use(`${apiBasePath}/user`, userRoute);
 app.use(`${apiBasePath}/tags`, tagRoute);
+app.use(`${apiBasePath}/externalApi`,externalRoute);
 
 app.set("views", path.join(__dirname, "views"));
 

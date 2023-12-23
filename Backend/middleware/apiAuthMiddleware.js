@@ -1,14 +1,11 @@
-const jwt = require("jsonwebtoken");
-
-const config = process.env;
-
 const db = require("../utils/database");
-
 const { verifyExternalJwt } = require("../utils/jwt");
+const { Op, where } = require("sequelize");
 
 const Access_Token = db.access_tokens;
 
 const apiAuthMiddleware = async (req, res, next) => {
+  
   const token =
     req.body.token || req.query.token || req.headers["authorization"];
 

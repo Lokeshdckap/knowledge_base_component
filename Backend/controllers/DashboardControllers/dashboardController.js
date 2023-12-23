@@ -11,7 +11,7 @@ const UserTeams = db.user_team_members;
 const Access_Token = db.access_tokens;
 const config = process.env;
 const uuid = require("uuid");
-
+const jwt = require("jsonwebtoken");
 const getBatchAndScripts = async (req, res) => {
   try {
     let result = await Script.findAll({
@@ -336,8 +336,6 @@ const paginationHandle = async (req, res) => {
   return res.status(200).json({ findPage, message: "Fetched Successfully" });
 };
 
-
-
 const createAccessToken = async (req, res) => {
   try {
     const team_uuid = req.body.uuid;
@@ -351,30 +349,32 @@ const createAccessToken = async (req, res) => {
     const Team_Members = await UserTeams.findAll({
       where: {
         team_uuid: team_uuid,
-        user_uuid: req.user.id,
       },
     });
-
 
     if (!Teams || Teams.length === 0) {
       if (!Team_Members || Team_Members.length === 0) {
         return res.status(404).json(`You Can't Access the Team`);
       }
     }
+    const payload = { id: team_uuid }
 
-    const payload = { id: team_uuid };
 
+    // const token = jwt.sign(payload, config.secretKey);
 
-    const token = jwt.sign(payload, config.secretKey);
+    const token = jwt.sign(payload, config.secretKey, {
+      expiresIn: "15m",
+    });
 
-    const createToken = Access_Token.create({
+    console.log(token);
+    const createToken = await Access_Token.create({
       team_uuid: team_uuid,
       token: token,
       status: 1,
       uuid: uuid.v4(),
     });
 
-    const access_token = Access_Token.findAll({
+    const access_token = await Access_Token.findAll({
       where: {
         team_uuid: team_uuid,
       },
@@ -382,7 +382,7 @@ const createAccessToken = async (req, res) => {
 
     return res
       .status(200)
-      .json({ msg: "Your Token Created Sucessfully", access_token });
+      .json({ msg: "Your Access Token Created Sucessfully",access_token});
   } catch (err) {
     return res.status(500).json({ err: "Error" });
   }

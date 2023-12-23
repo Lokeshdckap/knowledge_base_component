@@ -25,6 +25,7 @@ import { ActiveUsers } from "./Team/components/ActiveUsers.jsx";
 import { ScriptEditor } from "./Scripts/components/ScriptEditor.jsx";
 import { EmailVerificationCheck } from "./Auth/signup/signupContainer/EmailVerificationCheck";
 import GoogleCallback from "./Auth/signup/signupComponents/GoogleCallback";
+import { ApiTokens } from "./Team/components/ApiTokens.jsx";
 
 const router = createBrowserRouter([
   {
@@ -43,6 +44,12 @@ const router = createBrowserRouter([
         path: ":uuid/activeusers",
         element: <ActiveUsers />,
       },
+      {
+        path: ":uuid/apitokens",
+        element: <ApiTokens />,
+      },
+
+      
     ],
   },
   
@@ -82,7 +89,6 @@ const router = createBrowserRouter([
         path: "/dashboard/:uuid/s/:slug",
         element: <Scripts />,
       },
-
       {
         path: "/share",
         element: <TeamPage />,

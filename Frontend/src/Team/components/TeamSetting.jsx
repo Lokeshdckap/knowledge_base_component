@@ -23,13 +23,17 @@ export const TeamSetting = (props) => {
   };
 
   const team = () => {
+    setLoading(true);
     axiosClient
       .get(`/api/teams/getTeam/${params.uuid}`)
       .then((res) => {
         setTeamName(res.data.Teams[0].name);
         setRole(res.data.team_member.role_id);
+        setLoading(false);
       })
       .catch((err) => {
+        setLoading(false);
+
         console.log(err);
       });
   };

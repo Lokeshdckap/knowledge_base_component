@@ -222,7 +222,7 @@ export const ActiveUsers = (props) => {
           <div className="relative  shadow-md sm:rounded-lg mt-5">
             <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
               <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                <tr>
+                <tr >
                   <th scope="col" className="px-6 py-3">
                     Name
                   </th>

@@ -49,8 +49,10 @@ export const ScriptComponents = () => {
 
   const [popUp, setPopUp] = useState(null);
 
+  const [isLoading, setIsLoading] = useState(null);
+
   //page count
-  const [maintainPageCount,setMaintainPageCount] = useState(null)
+  const [maintainPageCount, setMaintainPageCount] = useState(null);
 
   const duration = 2000;
 
@@ -94,6 +96,7 @@ export const ScriptComponents = () => {
   //Api
 
   const getParticularPage = async () => {
+    setIsLoading(true);
     await axiosClient
       .get(`/api/pages/getPage/${pageIds}`)
       .then((res) => {
@@ -101,9 +104,11 @@ export const ScriptComponents = () => {
         setDescription(res.data.pages.description);
         setEditorValue(res.data.pages.content);
         setEditorContent(res.data.pages.content);
+        setIsLoading(false);
       })
       .catch((err) => {
         console.log(err);
+        setIsLoading(false);
       });
   };
 
@@ -134,6 +139,7 @@ export const ScriptComponents = () => {
   };
 
   const getParticularScript = async () => {
+    setLoading(true);
     let script_uuid = params.slug;
     await axiosClient
       .get(`/api/dashboard/getScriptAndPage/${script_uuid}`)
@@ -148,10 +154,12 @@ export const ScriptComponents = () => {
           setRenderScript(res.data.getScriptAndPages);
           setPublish(res.data.getScriptAndPages);
           setMaintainPageCount(res.data.pageCount);
+          setLoading(false);
         }
       })
       .catch((err) => {
         console.log(err);
+        setLoading(false);
       });
   };
 
@@ -350,9 +358,9 @@ export const ScriptComponents = () => {
         popUp={popUp}
         setPopUp={setPopUp}
         handlePageDelete={handlePageDelete}
+        isLoading = {isLoading}
         maintainPageCount={maintainPageCount}
       />
-
-          </>
+    </>
   );
 };

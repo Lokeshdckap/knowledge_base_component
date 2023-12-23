@@ -54,6 +54,17 @@ export const TeamSideNav = (props) => {
               <p>Active users</p>
             </div>
           </Link>
+          <Link to={`/setting/${params.uuid}/apitokens`}>
+            <div
+              className={`flex space-x-2 items-center p-2 mt-2 hover:bg-[#e5e8f1] cursor-pointer rounded ${
+                window.location.pathname ==
+                  `/setting/${params.uuid}/apitokens` && "bg-[#e5e8f1]"
+              }`}
+            >
+              <i class="fa-solid fa-key"></i>
+              <p>API Access Tokens</p>
+            </div>
+          </Link>
           <div>
             <p className="text-textPrimary font-bold text-lg mt-3 ">Personal</p>
             <Link to={`/setting/${params.uuid}/profile`}>

@@ -32,19 +32,12 @@ const MyContextProvider = ({ children }) => {
   const [userDetail, setUserDetail] = useState(null);
 
   const [openSideNave, setOpenSideNave] = useState("hidden");
-  const [role,setRole] = useState(null);
+  const [role, setRole] = useState(null);
 
+  function handleUserActivity() {}
 
-  
-  function handleUserActivity() {
-
-  }
-  
   document.addEventListener("mousemove", handleUserActivity);
   document.addEventListener("keydown", handleUserActivity);
-  
-
-  
 
   const duration = 2000;
   const showToastMessage = (data) => {
@@ -82,23 +75,26 @@ const MyContextProvider = ({ children }) => {
   };
   //Team functions
   const getTeam = async () => {
-    if(params.uuid){
-    await axiosClient
-      .get(`/api/teams/getTeam/${params.uuid}`)
-      .then((res) => {
-        setRole(res.data.team_member.role_id);
-        setTeam(res.data.Teams[0].name);
-        getBatch();
-        getScript();
-      })
-      .catch((err) => {
-        const response = err.response;
-        if (response && response?.status === 404) {
-          navigate("/error")
-        }
-        
-        console.log(err);
-      });}
+    setLoading(true);
+    if (params.uuid) {
+      await axiosClient
+        .get(`/api/teams/getTeam/${params.uuid}`)
+        .then((res) => {
+          setLoading(false);
+          setRole(res.data.team_member.role_id);
+          setTeam(res.data.Teams[0].name);
+          getBatch();
+          getScript();
+        })
+        .catch((err) => {
+          const response = err.response;
+          if (response && response?.status === 404) {
+            navigate("/error");
+          }
+          console.log(err);
+          setLoading(false);
+        });
+    }
   };
   const getAllTeam = async () => {
     await axiosClient
@@ -199,6 +195,7 @@ const MyContextProvider = ({ children }) => {
       })
       .catch((err) => {
         console.log(err);
+        setLoading(false);
       });
   };
 
@@ -216,6 +213,7 @@ const MyContextProvider = ({ children }) => {
   };
 
   const getLoadScript = async (team_uuid, batch_uuid) => {
+    setLoading(true);
     await axiosClient
       .get(`/api/dashboard/getBatchAndScripts/${team_uuid}/${batch_uuid}`)
       .then((res) => {
@@ -223,9 +221,11 @@ const MyContextProvider = ({ children }) => {
         setbatchDescription(res.data.result[0].batch.description);
         setScripts(res.data.result);
         setChildScript(res.data.result);
+        setLoading(false);
       })
       .catch((err) => {
         console.log(err);
+        setLoading(false);
       });
   };
 
@@ -254,7 +254,7 @@ const MyContextProvider = ({ children }) => {
             showToastErrorMessage(res.data.message);
             getBatch();
             getScript();
-           
+
             getAllDeletedData();
             if (localStorage.getItem("mainId")) {
               localStorage.removeItem("mainId");
@@ -262,11 +262,9 @@ const MyContextProvider = ({ children }) => {
             if (batchId) {
               handleAfterAddedChildrenScripts(batchId);
             }
-           navigate(`/dashboard/${params.uuid}`)
-
+            navigate(`/dashboard/${params.uuid}`);
           }
           getAllDeletedData();
-
         })
         .catch((err) => {
           const response = err.response;
@@ -302,9 +300,6 @@ const MyContextProvider = ({ children }) => {
         console.log(response);
       });
   };
-
-
-
 
   return (
     <AppContext.Provider
@@ -356,7 +351,7 @@ const MyContextProvider = ({ children }) => {
         setScreenHeight,
         openSideNave,
         setOpenSideNave,
-        role
+        role,
       }}
     >
       {children}

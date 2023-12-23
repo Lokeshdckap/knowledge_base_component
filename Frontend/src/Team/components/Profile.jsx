@@ -43,15 +43,19 @@ export const Profile = (props) => {
   };
 
   const userInfo = async () => {
+    setLoading(true);
+
     await axiosClient
       .get("/api/user/getUserInfo")
       .then((res) => {
         setUserInfo(res.data.userInfo);
         setSelectedImage(res.data.userInfo.avatar);
         setUserName(res.data.userInfo.username);
+        setLoading(false);
       })
       .catch((err) => {
         const response = err.response;
+        setLoading(false);
       });
   };
 

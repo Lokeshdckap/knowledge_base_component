@@ -338,19 +338,33 @@ const paginationHandle = async (req, res) => {
 
 const getApiTokens = async (req, res) => {
   try {
-    const access_token = await Access_Token.findAll({
+    const page = parseInt(req.query.page) || 1; // Default to page 1 if not specified
+    const pageSize = 5; // Number of tokens per page
+
+    const { count, rows: access_tokens } = await Access_Token.findAndCountAll({
       where: {
         team_uuid: req.params.uuid,
       },
+
       order: [["createdAt", "ASC"]],
+
+      limit: pageSize,
+      offset: (page - 1) * pageSize,
+
     });
-    return res
-      .status(200)
-      .json({ msg: "All Tokens Fetched Sucessfully", access_token });
+
+    return res.status(200).json({
+      msg: "Tokens Fetched Successfully",
+      totalTokens: count,
+      totalPages: Math.ceil(count / pageSize),
+      currentPage: page,
+      access_tokens,
+  });
   } catch (err) {
-    return res.status(500).json({ err: err });
+    return res.status(500).json({ err: err.message });
   }
 };
+
 
 const createAccessToken = async (req, res) => {
   try {
@@ -377,6 +391,7 @@ const createAccessToken = async (req, res) => {
 
     const token = jwt.sign(payload, config.secretKey);
 
+
     const createToken = await Access_Token.create({
       team_uuid: team_uuid,
       token: token,
@@ -392,7 +407,7 @@ const createAccessToken = async (req, res) => {
 
     return res
       .status(200)
-      .json({ msg: "Your Access Token Created Sucessfully", access_token });
+      .json({ msg: "New Access Token Created Sucessfully", access_token });
   } catch (err) {
     return res.status(500).json({ err: err });
   }

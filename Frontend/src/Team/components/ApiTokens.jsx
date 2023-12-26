@@ -4,11 +4,15 @@ import axiosClient from "../../axios-client";
 import { useParams } from "react-router-dom";
 import ClipboardJS from "clipboard";
 import { ToastContainer, toast } from "react-toastify";
+import { Pagination } from "antd";
 
 export const ApiTokens = () => {
   const params = useParams();
   const [loading, setLoading] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [data, setData] = useState([]);
+  const [totalPages, setTotalPages] = useState(null);
 
   let duration = 2000;
   const showToastMessage = (data) => {
@@ -25,29 +29,21 @@ export const ApiTokens = () => {
   let clipboard = null;
   const [apiToken, setApiTokens] = useState([]);
   useEffect(() => {
-    getApiTokens();
+    getApiTokens(currentPage);
 
-    // clipboard = new ClipboardJS(buttonRef.current, {
-    //   text: () => textToCopyRef.current.innerText,
-    // });
-    // clipboard.on("success", (e) => {
-    //   e.clearSelection(); // Deselect the text
-    //   showToastMessage("Link Copied !");
-    // });
+  }, [currentPage]);
 
-    // return () => {
-    //   if (clipboard) {
-    //     clipboard.destroy();
-    //   }
-    // };
-  }, []);
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
 
-  const getApiTokens = async () => {
+  const getApiTokens = async (page) => {
     setLoading(true);
     await axiosClient
-      .get(`/api/dashboard/getApiTokens/${params.uuid}`)
+      .get(`/api/dashboard/getApiTokens/${params.uuid}/?page=${page}`)
       .then((res) => {
-        setApiTokens(res.data.access_token);
+        setApiTokens(res.data.access_tokens);
+        setTotalPages(Number(res.data.totalPages + "0"));
         setLoading(false);
       })
       .catch((err) => {
@@ -57,7 +53,7 @@ export const ApiTokens = () => {
   };
 
   const createTokenHandle = async () => {
-    setLoading(true);
+    setIsLoading(true);
     let payLoad = {
       uuid: params.uuid,
     };
@@ -65,21 +61,15 @@ export const ApiTokens = () => {
     await axiosClient
       .post("/api/dashboard/createAccessToken", payLoad)
       .then((res) => {
-        setApiTokens(res.data.access_token);
-        setLoading(false);
+        getApiTokens(currentPage);
+        setIsLoading(false);
+        showToastMessage(res.data.msg);
       })
       .catch((err) => {
-        setLoading(false);
+        setIsLoading(false);
         console.log(err);
       });
   };
-
-  // const copyLink = (link) => {
-  //   let path = link;
-  //   // navigator.clipboard.writeText(path);
-  //   console.log("Sffs");
-  //   showToastMessage("Token Copied !");
-  // };
 
   const handleChange = (value) => {
     // setIsLoading(true);
@@ -113,7 +103,7 @@ export const ApiTokens = () => {
                 type="button"
                 className="text-primary hover:text-white border border-primary hover:bg-primary focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg  px-6 py-2 text-center dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-500 dark:focus:ring-blue-800"
               >
-                {loading ? (
+                {isLoading ? (
                   <div role="status" className="">
                     <div role="status" className="" colSpan={4}>
                       <svg
@@ -159,8 +149,8 @@ export const ApiTokens = () => {
                 </tr>
               </thead>
 
-              <tbody>
-                {isLoading ? (
+              <tbody className="">
+                {loading ? (
                   <tr>
                     <td colSpan={4} className="text-center">
                       <div role="status" className="py-[50px]">
@@ -188,14 +178,34 @@ export const ApiTokens = () => {
                   </tr>
                 ) : apiToken && apiToken.length > 0 ? (
                   apiToken.map((token) => (
-                    <tr className="bg-white border-b text-center dark:bg-gray-800 dark:border-gray-700">
+                    <tr
+                      className="bg-white border-b text-center dark:bg-gray-800 dark:border-gray-700"
+                      key={token.uuid}
+                    >
                       <td className="px-6 py-4 flex space-x-5">
-                        <p className="max-w-[450px] w-[100%] overflow-hidden"
-                        ref={textToCopyRef}
+                        <div className="flex">
+                          <p
+                            className="max-w-[450px] w-[100%] overflow-hidden whitespace-nowrap"
+                            ref={textToCopyRef}
+                          >
+                            {token.token}
+                          </p>
+
+                          <span>...</span>
+                        </div>
+                        <p
+                          ref={(button) => {
+                            if (button) {
+                              new ClipboardJS(button, {
+                                text: () => token.token, // Use the specific token for each button
+                              }).on("success", (e) => {
+                                e.clearSelection();
+                                showToastMessage("Access Token Copied !");
+                              });
+                            }
+                          }}
+                          data-clipboard-text="Copy Text"
                         >
-                          {token.token}
-                        </p>
-                        <p ref={buttonRef} data-clipboard-text="Copy Text">
                           <i className="fa-regular fa-copy text-lg  text-gray-400 cursor-pointer"></i>
                         </p>
                       </td>
@@ -235,20 +245,20 @@ export const ApiTokens = () => {
               </tbody>
             </table>
           </div>
+          <div className="pt-5 text-right  ">
+            {console.log(currentPage,totalPages)}
+            <Pagination
+              defaultCurrent={currentPage}
+              onChange={handlePageChange}
+              total={totalPages}
+              showSizeChanger={false}
+              showLessItems={3}
+            />
+          </div>
         </div>
       </div>
 
       <ToastContainer />
-      {/* {loading && (
-      <>
-        <div className="bg-[#aeaeca] opacity-[0.5] w-[100%] h-[100vh] absolute top-0 left-0  z-10"></div>
-        <div className="">
-          <p className="absolute top-[48%] left-[48%] z-50">
-            <HashLoader color="#3197e8" />
-          </p>
-        </div>
-      </>
-    )} */}
     </div>
   );
 };

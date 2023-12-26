@@ -20,7 +20,7 @@ module.exports = {
       },
       description: {
         type: Sequelize.STRING,
-        defaultValue: "Batch Description"
+        defaultValue: "Folder Description"
       },
       team_uuid: {
         type: Sequelize.UUID,

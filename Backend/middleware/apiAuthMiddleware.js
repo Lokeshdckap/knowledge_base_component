@@ -5,7 +5,6 @@ const { Op, where } = require("sequelize");
 const Access_Token = db.access_tokens;
 
 const apiAuthMiddleware = async (req, res, next) => {
-  
   const token =
     req.body.token || req.query.token || req.headers["authorization"];
 
@@ -37,7 +36,7 @@ const apiAuthMiddleware = async (req, res, next) => {
         err: decodeToken.err,
       });
     }
-    req.user = decodeToken;
+    req.team = decodeToken;
 
     next();
   } catch (err) {

@@ -5,14 +5,12 @@ const Batch = db.batch;
 const Script = db.script;
 const Team = db.teams;
 const Page = db.pages;
-const uuid = require("uuid");
-const slugify = require("slugify");
 
 const getBatchApi = async (req, res) => {
   try {
     const batchs = await Batch.findAll({
       where: {
-        team_uuid: req.params.team_uuid,
+        team_uuid: req.team.id,
         deleted_at: {
           [Op.is]: null,
         },
@@ -32,7 +30,7 @@ const getScriptApi = async (req, res) => {
   try {
     const script = await Script.findAll({
       where: {
-        [Op.and]: [{ team_uuid: req.params.team_uuid }, { batch_uuid: null }],
+        [Op.and]: [{ team_uuid: req.team.id }, { batch_uuid: null }],
         deleted_at: {
           [Op.is]: null,
         },
@@ -69,7 +67,7 @@ const getBatchAndScriptsApi = async (req, res) => {
             {
               model: Team,
               where: {
-                uuid: req.params.team_uuid, // WHERE condition for the Team model
+                uuid: req.team.id, // WHERE condition for the Team model
               },
               attributes: [], // Exclude Team details
             },

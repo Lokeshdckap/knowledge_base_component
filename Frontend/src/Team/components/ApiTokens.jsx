@@ -9,6 +9,7 @@ export const ApiTokens = () => {
   const params = useParams();
   const [loading, setLoading] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadings, setIsLoadings] = useState(false);
 
   let duration = 2000;
   const showToastMessage = (data) => {
@@ -74,29 +75,24 @@ export const ApiTokens = () => {
       });
   };
 
-  // const copyLink = (link) => {
-  //   let path = link;
-  //   // navigator.clipboard.writeText(path);
-  //   console.log("Sffs");
-  //   showToastMessage("Token Copied !");
-  // };
+  function handleChange(value, selectId) {
+    let payLoad = {
+      "token": selectId,
+      "status": value,
+    };
+    setIsLoadings(true);
+    axiosClient
+      .put("/api/dashboard/tokenStatusUpdate", payLoad)
+      .then((res) => {
+        setIsLoadings(false);
+        showToastMessage(res.data.Success);
+      })
+      .catch((err) => {
+        setIsLoadings(false);
 
-  const handleChange = (value) => {
-    // setIsLoading(true);
-    console.log(`selected ${value}`);
-
-    // let payLoad = {
-    // }
-    // axiosClient.post("/api/createToken",payLoad)
-    // .then((res) => {
-    //     setIsLoading(false);
-    //   })
-    //   .catch((err) => {
-    //     setIsLoading(false);
-
-    //     console.log(err);
-    //   });
-  };
+        console.log(err);
+      });
+  }
 
   return (
     <div className="m-auto">
@@ -190,8 +186,9 @@ export const ApiTokens = () => {
                   apiToken.map((token) => (
                     <tr className="bg-white border-b text-center dark:bg-gray-800 dark:border-gray-700">
                       <td className="px-6 py-4 flex space-x-5">
-                        <p className="max-w-[450px] w-[100%] overflow-hidden"
-                        ref={textToCopyRef}
+                        <p
+                          className="max-w-[450px] w-[100%] overflow-hidden"
+                          ref={textToCopyRef}
                         >
                           {token.token}
                         </p>
@@ -201,21 +198,22 @@ export const ApiTokens = () => {
                       </td>
                       <td className="px-6 py-4">
                         <Select
+                          id={token.token}
                           defaultValue={
                             token?.status == 1 ? "active" : "inactive"
                           }
                           style={{
                             width: 120,
                           }}
-                          loading={false}
-                          onChange={handleChange}
+                          loading={isLoadings}
+                          onChange={(value) => handleChange(value, token.token)}
                           options={[
                             {
-                              value: "active",
+                              value: "1",
                               label: "active",
                             },
                             {
-                              value: "inactive",
+                              value: "0",
                               label: "inactive",
                             },
                           ]}

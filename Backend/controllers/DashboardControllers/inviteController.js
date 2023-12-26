@@ -24,7 +24,7 @@ const inviteTeams = async (req, res) => {
         ],
       },
     });
-
+    
     const sameUsers = await User.findOne({
       where: { uuid: req.user.id },
     });

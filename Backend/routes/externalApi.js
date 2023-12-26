@@ -9,19 +9,19 @@ const verifyApiAuthMiddleware = require("../middleware/apiAuthMiddleware");
 const externalApiContoller = require("../controllers/DashboardControllers/externalApiController");
 
 router.get(
-  "/getBatch/:team_uuid",
+  "/getBatch",
   verifyApiAuthMiddleware.apiAuthMiddleware,
   externalApiContoller.getBatchApi
 );
 
 router.get(
-  "/getScript/:team_uuid",
+  "/getScript",
   verifyApiAuthMiddleware.apiAuthMiddleware,
   externalApiContoller.getScriptApi
 );
 
 router.get(
-  "/getBatchAndScripts/:team_uuid/:batch_uuid",
+  "/getBatchAndScripts/:batch_uuid",
   verifyApiAuthMiddleware.apiAuthMiddleware,
   externalApiContoller.getBatchAndScriptsApi
 );

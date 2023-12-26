@@ -342,6 +342,7 @@ const getApiTokens = async (req, res) => {
       where: {
         team_uuid: req.params.uuid,
       },
+      order: [["createdAt", "ASC"]],
     });
     return res
       .status(200)
@@ -354,8 +355,6 @@ const getApiTokens = async (req, res) => {
 const createAccessToken = async (req, res) => {
   try {
     const team_uuid = req.body.uuid;
-
-    console.log(team_uuid);
 
     const Teams = await Team.findAll({
       where: {
@@ -378,7 +377,6 @@ const createAccessToken = async (req, res) => {
 
     const token = jwt.sign(payload, config.secretKey);
 
-    console.log(token);
     const createToken = await Access_Token.create({
       team_uuid: team_uuid,
       token: token,
@@ -400,7 +398,26 @@ const createAccessToken = async (req, res) => {
   }
 };
 
+const tokenStatusUpdate = async (req, res) => {
+  try {
+    const token = req.body.token;
+    const updateStatus = req.body.status;
+    const updateData = {};
 
+    updateData.status = updateStatus;
+
+    await Access_Token.update(updateData, {
+      where: { token: token },
+    });
+    return res.status(200).send({
+      Success: "Access Token Status Update Sucessfully",
+    });
+  } catch (err) {
+    return res.status(500).send({
+      Error: "Access Token Status Can't Update ",
+    });
+  }
+};
 
 module.exports = {
   getBatchAndScripts,
@@ -413,4 +430,5 @@ module.exports = {
   paginationHandle,
   createAccessToken,
   getApiTokens,
+  tokenStatusUpdate,
 };

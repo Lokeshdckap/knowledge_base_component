@@ -61,9 +61,6 @@ dashboardController.pageSearch
 router.get("/getOpenParent/:uuid",
 dashboardController.getParentPage
 )
-router.get("/pagination/:uuid",
-dashboardController.paginationHandle
-)
 
 router.get("/getApiTokens/:uuid",
 dashboardController.getApiTokens
@@ -72,5 +69,17 @@ dashboardController.getApiTokens
 router.post("/createAccessToken",
 dashboardController.createAccessToken
 )
+
+router.put("/tokenStatusUpdate",
+dashboardController.tokenStatusUpdate
+)
+
+
+
+router.get("/pagination/:uuid",
+dashboardController.paginationHandle
+)
+
+
 
 module.exports = router;

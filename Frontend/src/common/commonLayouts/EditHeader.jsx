@@ -51,7 +51,7 @@ export default function EditHeader(props) {
                   items,
                 }}
               >
-                Save Page
+                Save
               </Dropdown.Button>
             </Space>
           </div>

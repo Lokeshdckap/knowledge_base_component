@@ -441,7 +441,7 @@ export default function SideNavLarge(props) {
                           className="fa-regular fa-file p-2 "
                           id={batch.uuid}
                         ></i>
-                        New Script
+                        New Section
                       </p>
                       <p
                         className="text-lg cursor-pointer  text-textPrimary  hover:bg-primary  hover:text-white hover:rounded"

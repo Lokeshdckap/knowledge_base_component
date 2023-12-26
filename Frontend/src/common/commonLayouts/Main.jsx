@@ -88,14 +88,14 @@ export default function Main(props) {
                 onClick={addBatchEvent}
                 disabled={role === 2 ? true : false}
               >
-                New Batch
+                New Folder
               </button>
               <button
                 className="h-[45px] w-[160px] phone:h-[28px] phone:w-[80px] text-white rounded  bg-primary phone:text-[10px]"
                 onClick={scriptEvent}
                 disabled={role === 2 ? true : false}
               >
-                New Script
+                New Section
               </button>
             </div>
           </div>
@@ -105,7 +105,7 @@ export default function Main(props) {
             />
           </div>
           <p className="font-semibold text-textPrimary text-xl phone:text-lg pl-1">
-            BATCHS
+            New BATCHS
           </p>
           <div
             className={` m-auto grid 2xl:grid-cols-5 xl:grid-cols-4 lg:grid-cols-3 phone:grid-cols-2 gap-2 mt-2`}
@@ -187,9 +187,8 @@ export default function Main(props) {
             )}
           </div>
           <p className="font-semibold text-textPrimary text-xl phone:text-lg pt-5 pl-1">
-            SCRIPTS
+           New SECTION
           </p>
-
           <div
             className={` m-auto grid 2xl:grid-cols-5 xl:grid-cols-4 lg:grid-cols-3 phone:grid-cols-2  gap-2  mt-2`}
           >

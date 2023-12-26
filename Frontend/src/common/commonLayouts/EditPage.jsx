@@ -3,8 +3,7 @@ import { EditorComponents } from "../commonComponents/EditorComponents";
 import { PageTree } from "../commonComponents/PageTree";
 import { PublishPopup } from "../commonComponents/PublishPopup";
 import { useMyContext } from "../../context/AppContext";
-// import 'emoji-mart/css/emoji-mart.css';
-import { Picker } from "emoji-mart";
+
 export default function EditPage(props) {
   const { renderScript } = props;
   const [newPagePopup, setNewPagePopup] = useState(false);

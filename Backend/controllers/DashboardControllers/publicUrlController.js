@@ -81,7 +81,7 @@ const newDocuments = async (req, res) => {
           parentPages,
           hierarchy,
           script,
-          msg: "All Scripts & Pages Fetched Sucessfully",
+          msg: "All Sections & Pages Fetched Sucessfully",
         });
       })
       .catch((error) => {

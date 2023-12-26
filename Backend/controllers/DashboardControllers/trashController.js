@@ -98,7 +98,7 @@ const moveToTrash = async (req, res) => {
         if (updatedTable > 0) {
           return res
             .status(200)
-            .json({ deletedBatch, message: "Batch Deleted Sucessfully" });
+            .json({ deletedBatch, message: "Folder Deleted Sucessfully" });
         } else {
           return res.status(500).json({ error: "Deleted Failed" });
         }
@@ -114,7 +114,7 @@ const moveToTrash = async (req, res) => {
       });
       return res
         .status(200)
-        .json({ deletedScript, message: "Script Deleted Sucessfully" });
+        .json({ deletedScript, message: "Folder Deleted Sucessfully" });
     }
   } catch (err) {
     return res.status(500).json({ error: "Deleted Failed" });
@@ -145,7 +145,7 @@ const restoreParticular = async (req, res) => {
       if (restoreScript > 0) {
         return res
           .status(200)
-          .json({ restoreScript, message: "Script Restore Sucessfully" });
+          .json({ restoreScript, message: "Section Restore Sucessfully" });
       } else {
         return res.status(500).json({ error: "Restore Failed" });
       }
@@ -168,7 +168,7 @@ const permanentDeleteParticular = async (req, res) => {
     });
     return res
       .status(200)
-      .json({ message: "Script & Pages  Deleted Sucessfully" });
+      .json({ message: "Sections & Pages  Deleted Sucessfully" });
   } catch (err) {
     return res.status(404).json({ error: "Delete Failed or Can't Find" });
   }
@@ -193,12 +193,12 @@ const permanentDeleteAll = async (req, res) => {
     });
     return res
       .status(200)
-      .json({ Sucess: "All Script and Pages Permanent Deleted" });
+      .json({ Sucess: "All Section and Pages Permanent Deleted" });
   } catch (err) {
     console.log(err);
     return res
       .status(404)
-      .json({ error: "All Script and Pages Permanent Delete Failed" });
+      .json({ error: "All Section and Pages Permanent Delete Failed" });
   }
 };
 
@@ -221,7 +221,7 @@ const selectedTrash = async (req, res) => {
     if (deleteResult > 0) {
       return res
         .status(200)
-        .json({ message: "Selected Scripts Deleted Successfully" });
+        .json({ message: "Selected Section Deleted Successfully" });
     } else {
       return res
         .status(404)

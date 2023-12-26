@@ -87,7 +87,7 @@ export const BatchLayouts = (props) => {
                 id={params.slug}
                 disabled={role === 2 ? true : false}
               >
-                New Script
+                New Section
               </button>
             </div>
           </div>
@@ -97,7 +97,7 @@ export const BatchLayouts = (props) => {
             />
           </div>
           <p className="font-semibold text-textPrimary text-xl phone:text-lg pl-1">
-            SCRIPTS
+            New Section
           </p>
           <div
             className={`m-auto grid 2xl:grid-cols-5 xl:grid-cols-4 lg:grid-cols-3 phone:grid-cols-2 gap-2 mt-2`}

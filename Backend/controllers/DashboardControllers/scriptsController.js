@@ -99,12 +99,12 @@ const addNewScripts = async (req, res) => {
       );
 
       return res.status(200).send({
-        Success: "Your Script Created Sucessfully",
+        Success: "Your Section Created Sucessfully",
         pages: Pages,
       });
     } else {
       return res.status(500).send({
-        Error: "Error Script Not Created",
+        Error: "Error Section Not Created",
       });
     }
   } catch (err) {
@@ -127,7 +127,7 @@ const getScript = async (req, res) => {
     });
     return res.status(200).send({
       script,
-      msg: "Sucessfully Fetched All Scripts",
+      msg: "Sucessfully Fetched All Section",
     });
   } catch (err) {
     return res.status(500).send({
@@ -187,7 +187,7 @@ const addScriptTitle = async (req, res) => {
       } else {
         return res
           .status(403)
-          .json({ errorMsg: "Please Choose A Different Script Name" });
+          .json({ errorMsg: "Please Choose A Different Section Name" });
       }
     } else {
       const scriptTitleUpdate = await Script.update(
@@ -198,12 +198,12 @@ const addScriptTitle = async (req, res) => {
       );
       return res
         .status(403)
-        .json({ errorMsg: "Please Enter Script Name", scriptTitleUpdate });
+        .json({ errorMsg: "Please Enter Section Name", scriptTitleUpdate });
     }
   } catch (err) {
     return res
       .status(403)
-      .json({ errorMsg: "Please Choose A Different Script Name" });
+      .json({ errorMsg: "Please Choose A Different Section Name" });
   }
 };
 

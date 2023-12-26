@@ -80,17 +80,17 @@ const addNewBatch = async (req, res) => {
     }
     if (batch) {
       return res.status(200).send({
-        Success: "Your Batch Created Sucessfully",
+        Success: "Your Folder Created Sucessfully",
       });
     } else {
       return res.status(500).send({
-        Error: "Error Batch Not Created",
+        Error: "Error Folder Not Created",
       });
     }
   } catch (err) {
     console.log("err", err);
     return res.status(500).send({
-      Error: "Error Batch Not Created",
+      Error: "Error Folder Not Created",
     });
   }
 };
@@ -122,7 +122,7 @@ const getBatch = async (req, res) => {
     });
     return res
       .status(200)
-      .json({ batchs, results, msg: "Sucessfully Fetched All Batches" });
+      .json({ batchs, results, msg: "Sucessfully Fetched All Folders" });
   } catch (err) {
     return res.status(500).json({ Error: err });
   }
@@ -164,7 +164,7 @@ const addBatchTitleAndDescription = async (req, res) => {
           return res.status(404).json({ error: "Record not found" });
         }
       } else {
-        return res.status(404).json({ error: "Please Enter Your Batch Name" });
+        return res.status(404).json({ error: "Please Enter Your Folder Name" });
       }
     } catch (error) {
       return res.status(404).json({ error: error });

@@ -43,7 +43,7 @@ const getBatchAndScripts = async (req, res) => {
     });
     return res
       .status(200)
-      .json({ batchData, result, msg: "Fetched Sucessfully Batch&Scripts" });
+      .json({ batchData, result, msg: "Fetched Sucessfully Folders&Sections" });
   } catch (err) {
     return res.status(500).json({
       Error: err,
@@ -103,7 +103,7 @@ const getScriptAndPage = async (req, res) => {
           hierarchy,
           getScriptAndPages,
           pageCount,
-          msg: "Fetched Sucessfully Scripts & Pages ",
+          msg: "Fetched Sucessfully Section & Pages ",
         });
       })
       .catch((error) => {
@@ -176,7 +176,7 @@ const getScripts = async (req, res) => {
       });
       return res
         .status(200)
-        .json({ script_batch, result, msg: "Fetched Scripts Sucessfully" });
+        .json({ script_batch, result, msg: "Fetched Section Sucessfully" });
     }
   } catch (error) {
     return res.status(500).json({ error: error });

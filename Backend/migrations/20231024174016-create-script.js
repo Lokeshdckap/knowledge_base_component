@@ -17,7 +17,7 @@ module.exports = {
       },
       title: {
         type: Sequelize.STRING,
-        defaultValue:"Untitled"
+        defaultValue:"New Section"
       },
       team_uuid: {
         type: Sequelize.UUID,

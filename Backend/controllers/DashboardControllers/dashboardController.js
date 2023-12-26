@@ -336,9 +336,26 @@ const paginationHandle = async (req, res) => {
   return res.status(200).json({ findPage, message: "Fetched Successfully" });
 };
 
+const getApiTokens = async (req, res) => {
+  try {
+    const access_token = await Access_Token.findAll({
+      where: {
+        team_uuid: req.params.uuid,
+      },
+    });
+    return res
+      .status(200)
+      .json({ msg: "All Tokens Fetched Sucessfully", access_token });
+  } catch (err) {
+    return res.status(500).json({ err: err });
+  }
+};
+
 const createAccessToken = async (req, res) => {
   try {
     const team_uuid = req.body.uuid;
+
+    console.log(team_uuid);
 
     const Teams = await Team.findAll({
       where: {
@@ -357,14 +374,9 @@ const createAccessToken = async (req, res) => {
         return res.status(404).json(`You Can't Access the Team`);
       }
     }
-    const payload = { id: team_uuid }
+    const payload = { id: team_uuid };
 
-
-    // const token = jwt.sign(payload, config.secretKey);
-
-    const token = jwt.sign(payload, config.secretKey, {
-      expiresIn: "15m",
-    });
+    const token = jwt.sign(payload, config.secretKey);
 
     console.log(token);
     const createToken = await Access_Token.create({
@@ -382,11 +394,14 @@ const createAccessToken = async (req, res) => {
 
     return res
       .status(200)
-      .json({ msg: "Your Access Token Created Sucessfully",access_token});
+      .json({ msg: "Your Access Token Created Sucessfully", access_token });
   } catch (err) {
-    return res.status(500).json({ err: "Error" });
+    return res.status(500).json({ err: err });
   }
 };
+
+
+
 module.exports = {
   getBatchAndScripts,
   getScriptAndPage,
@@ -397,4 +412,5 @@ module.exports = {
   pageSearch,
   paginationHandle,
   createAccessToken,
+  getApiTokens,
 };

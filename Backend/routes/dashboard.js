@@ -65,6 +65,10 @@ router.get("/pagination/:uuid",
 dashboardController.paginationHandle
 )
 
+router.get("/getApiTokens/:uuid",
+dashboardController.getApiTokens
+)
+
 router.post("/createAccessToken",
 dashboardController.createAccessToken
 )

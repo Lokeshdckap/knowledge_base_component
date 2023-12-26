@@ -118,13 +118,15 @@ export const PageTree = ({
                 ref={addIconRef}
               ></i>
             )}
-        <button className="text-sm mr-2 " onClick={toggleOpen}>
-          {isOpen ? (
-            <i className="fa-solid fa-angle-down cursor-pointer "></i>
-          ) : (
-            <i className="fa-solid fa-angle-up cursor-pointer rotate-90"></i>
-          )}
-        </button>
+        {node.ChildPages.length > 0 && (
+          <button className="text-sm mr-2 " onClick={toggleOpen}>
+            {isOpen ? (
+              <i className="fa-solid fa-angle-down cursor-pointer "></i>
+            ) : (
+              <i className="fa-solid fa-angle-up cursor-pointer rotate-90"></i>
+            )}
+          </button>
+        )}
 
         {popUp == node.uuid && (
           <>

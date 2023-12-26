@@ -102,20 +102,20 @@ const getBatch = async (req, res) => {
     const batchs = await Batch.findAll({
       where: {
         team_uuid: req.params.uuid,
-        deleted_at:{
+        deleted_at: {
           [Op.is]: null,
-        }
+        },
       },
       order: [["uuid", "DESC"]],
     });
 
     const joinQuery = `
-  SELECT batches.uuid, COUNT(*) as script_count
-  FROM batches
-  INNER JOIN scripts ON scripts.batch_uuid = batches.uuid
-  WHERE batches.team_uuid = :team_uuid
-  GROUP BY batches.uuid
-  ORDER BY batches.uuid DESC`;
+    SELECT batches.uuid, COUNT(*) as script_count
+    FROM batches
+    INNER JOIN scripts ON scripts.batch_uuid = batches.uuid
+    WHERE batches.team_uuid = :team_uuid AND scripts.deleted_at ISNULL
+    GROUP BY batches.uuid
+    ORDER BY batches.uuid DESC`;
 
     const [results] = await sequelize.query(joinQuery, {
       replacements: { team_uuid },

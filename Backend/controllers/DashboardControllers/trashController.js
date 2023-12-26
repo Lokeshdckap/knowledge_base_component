@@ -82,7 +82,7 @@ const moveToTrash = async (req, res) => {
     if (checkForBatch) {
       let updateData = {
         deleted_at: sequelize.literal("NOW()"),
-        batch_uuid : null
+        batch_uuid: null,
       };
       const deletedBatch = await Batch.update(updateData, {
         where: {
@@ -205,7 +205,7 @@ const permanentDeleteAll = async (req, res) => {
 const selectedTrash = async (req, res) => {
   const team_uuid = req.params.uuid;
   const selectedUuids = req.body;
-  console.log(req.body,"biy");
+  console.log(req.body, "biy");
 
   try {
     const deleteResult = await Script.destroy({

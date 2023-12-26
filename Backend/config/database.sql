@@ -13,6 +13,3 @@ CREATE TABLE users (
    updated_at timestamp
 
 );
-
--- client_id  = 1009276001337-11l7egfk4ujh49irtc9io18ki6lapv80.apps.googleusercontent.com
--- serect = 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

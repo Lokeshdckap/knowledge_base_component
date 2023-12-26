@@ -14,7 +14,6 @@ import Header from "@editorjs/header";
 
 export const EditorComponents = (props) => {
   const ejInstance = useRef();
-
   const initEditor = () => {
     const editor = new EditorJS({
       holder: "editorjs",
@@ -25,7 +24,6 @@ export const EditorComponents = (props) => {
       readOnly: false,
       data: props.editorValue,
       onChange: async () => {
-
         try {
           // Check if editor is defined before calling save method
           if (editor) {
@@ -175,9 +173,10 @@ export const EditorComponents = (props) => {
     if (ejInstance.current === null && !ejInstance.current) {
       initEditor();
     }
-  
+
     return async () => {
       ejInstance?.current?.destroy();
+
       ejInstance.current = null;
     };
   }, [props.editorValue]);

@@ -58,7 +58,7 @@ app.use(`${apiBasePath}/pages`, pageRoute);
 app.use(`${apiBasePath}/public`, publicRoute);
 app.use(`${apiBasePath}/user`, userRoute);
 app.use(`${apiBasePath}/tags`, tagRoute);
-app.use(`${apiBasePath}/externalApi`,externalRoute);
+app.use(`${apiBasePath}/externalApi`, externalRoute);
 
 app.set("views", path.join(__dirname, "views"));
 

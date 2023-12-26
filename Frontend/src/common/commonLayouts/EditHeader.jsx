@@ -4,12 +4,11 @@ import { DownOutlined, UserOutlined } from "@ant-design/icons";
 import { Dropdown, Space } from "antd";
 
 export default function EditHeader(props) {
-
   const items = [
     {
       label: "Save & Publish",
       key: "1",
-      onClick: props.handleSaveAndPublish
+      onClick: props.handleSaveAndPublish,
     },
   ];
   const [loadings, setLoadings] = useState([]);
@@ -40,12 +39,11 @@ export default function EditHeader(props) {
           onChange={(e) => props.changeEvent(e.target.value)}
         />
         <div className="flex items-center justify-between max-w-[200px] phone:max-w-[140px]  w-[100%]">
-
           <div>
             <Space direction="vertical">
               <Dropdown.Button
                 onClick={props.clickPublish}
-                icon={<DownOutlined  />}
+                icon={<DownOutlined />}
                 loading={loadings[1]}
                 menu={{
                   items,
@@ -55,7 +53,6 @@ export default function EditHeader(props) {
               </Dropdown.Button>
             </Space>
           </div>
-
 
           <Link to={`dashboard/*`}>
             <button

@@ -52,12 +52,11 @@ export const ScriptComponents = () => {
 
   const [isLoading, setIsLoading] = useState(null);
 
-
-  const [urlCopyPopup,setUrlCopyPopup] = useState(false);
+  const [urlCopyPopup, setUrlCopyPopup] = useState(false);
   //page count
   const [maintainPageCount, setMaintainPageCount] = useState(null);
 
-  const [instance,setInstance] = useState("")
+  const [instance, setInstance] = useState("");
 
   const duration = 2000;
 
@@ -194,7 +193,6 @@ export const ScriptComponents = () => {
       });
   };
 
-
   const handleSaveAndPublish = () => {
     setLoading(true);
 
@@ -221,6 +219,7 @@ export const ScriptComponents = () => {
   };
 
   const contentPublish = (checked) => {
+    setLoading(true);
 
     axiosClient
       .get(`/api/public/scripts/${params.slug}/${checked}`)
@@ -229,6 +228,8 @@ export const ScriptComponents = () => {
         setRenderScript(res.data.publicUrl);
         setUrlCopyPopup(true);
         setTeamUuid(params.uuid);
+        setLoading(false);
+
         {
           res.data.publicUrl.is_published
             ? showToastSaveMessage(res.data.msg)
@@ -238,22 +239,27 @@ export const ScriptComponents = () => {
 
       .catch((err) => {
         console.log(err);
+        setLoading(false);
       });
-
   };
 
   const addPage = async () => {
+    setLoading(true);
     await axiosClient
       .post(`/api/pages/addPageData/${params.slug}`)
       .then((res) => {
         getParticularScript();
+        setLoading(false);
+        showToastSaveMessage(res.data.msg)
       })
       .catch((err) => {
         console.log(err);
+        setLoading(false);
       });
   };
 
   const addChildPage = (uuid) => {
+    setLoading(true);
     let page_uuid = uuid;
     axiosClient
       .post(`/api/pages/addChildPage/${params.slug}/${page_uuid}`)
@@ -262,9 +268,12 @@ export const ScriptComponents = () => {
         navigate(
           `/dashboard/${params.uuid}/s/${params.slug}/?pageId=${res.data.Pages.uuid}`
         );
+        showToastSaveMessage(res.data.msg);
+        setLoading(false);
       })
       .catch((err) => {
         console.log(err);
+        setLoading(false);
       });
   };
 
@@ -296,17 +305,16 @@ export const ScriptComponents = () => {
       });
   };
 
-
-  
   const contentPage = async (e) => {
     setPageId(e.target.id);
     let pageId = e.target.id;
-    if(pageId != pageIds){
-    // window.confirm("This page's content can't be saved. If you wish to save, please save")
-    window.location.replace(`/dashboard/${params.uuid}/s/${params.slug}/?pageId=${pageId}`)
+    if (pageId != pageIds) {
+      // window.confirm("This page's content can't be saved. If you wish to save, please save")
+      window.location.replace(
+        `/dashboard/${params.uuid}/s/${params.slug}/?pageId=${pageId}`
+      );
     }
   };
-
 
   const handleScriptMouseEnter = (e) => {
     setHoverPageId(e.target.id);
@@ -328,8 +336,8 @@ export const ScriptComponents = () => {
   };
 
   const handlePageDelete = async (e) => {
-
     let targetId = e.target.id;
+    setLoading(true);
 
     if (targetId) {
       await axiosClient
@@ -339,13 +347,18 @@ export const ScriptComponents = () => {
             navigate(
               `/dashboard/${params.uuid}/s/${params.slug}/?pageId=${res.data.page.page_uuid}`
             );
+            setLoading(false);
+            showToastErrorMessage(res.data.Success);
           } else {
             navigate(`/dashboard/${params.uuid}/s/${params.slug}/`);
+            setLoading(false);
+            showToastErrorMessage(res.data.Success);
           }
         })
         .catch((err) => {
           const response = err.response;
           console.error("Error:", response?.status);
+          setLoading(false);
         });
     }
     if (localStorage.getItem("mainId")) {
@@ -358,7 +371,6 @@ export const ScriptComponents = () => {
   };
 
   const onChange = (checked) => {
-
     axiosClient
       .get(`/api/public/scripts/${params.slug}/${checked}`)
 
@@ -375,9 +387,7 @@ export const ScriptComponents = () => {
       .catch((err) => {
         console.log(err);
       });
-
   };
-
 
   return (
     <>
@@ -428,13 +438,7 @@ export const ScriptComponents = () => {
         maintainPageCount={maintainPageCount}
       />
 
-      {urlCopyPopup && (
-        <UrlCopyPopup 
-        renderScript={renderScript}
-        />
-      )
-
-      }
+      {urlCopyPopup && <UrlCopyPopup renderScript={renderScript} />}
     </>
   );
 };

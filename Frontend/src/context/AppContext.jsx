@@ -116,9 +116,6 @@ const MyContextProvider = ({ children }) => {
         if (response && response?.status === 401) {
           window.location.reload("/signin");
         }
-        // if (response && response?.status === 500) {
-        //   console.log("eheh");
-        // }
       });
   };
 
@@ -126,6 +123,7 @@ const MyContextProvider = ({ children }) => {
     await axiosClient
       .get(`/api/batch/getBatch/${params.uuid}`)
       .then((res) => {
+
         setBatch(res.data.batchs);
         setScriptCount(res.data.results);
       })
@@ -149,6 +147,7 @@ const MyContextProvider = ({ children }) => {
     await axiosClient
       .get(`/api/dashboard/getScripts/${params.uuid}/${params.slug}`)
       .then((res) => {
+
         // setOverState(res.data.script_batch.batch_uuid);
         setChildScript(res.data.result);
       });
@@ -204,6 +203,7 @@ const MyContextProvider = ({ children }) => {
     await axiosClient
       .get(`/api/dashboard/getBatchAndScripts/${params.uuid}/${batch_uuid}`)
       .then((res) => {
+   
         setChildScript(res.data.result);
         setScripts(res.data.result);
       })

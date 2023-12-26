@@ -115,8 +115,6 @@ const addChildPage = async (req, res) => {
   }
 };
 
-
-
 const updatePageData = async (req, res) => {
   try {
     let paths;
@@ -260,8 +258,7 @@ const updatePageData = async (req, res) => {
     return res
       .status(200)
       .json({ updateData, msg: "Your Content Was Updated Sucessfully" });
-  } 
-  catch (err) {
+  } catch (err) {
     return res.status(500).json({ error: "lll" });
   }
 };
@@ -305,7 +302,7 @@ const permanentDeletePage = async (req, res) => {
 
     return res
       .status(200)
-      .json({ Success: "Pages and Children permanently deleted" });
+      .json({ page, Success: "Pages and Children permanently deleted" });
   } catch (err) {
     console.error(err);
     return res.status(500).json({ error: "Pages Permanent Delete Failed" });

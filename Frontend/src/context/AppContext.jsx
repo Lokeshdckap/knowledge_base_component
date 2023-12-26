@@ -182,6 +182,7 @@ const MyContextProvider = ({ children }) => {
       .then((res) => {
         setLoading(false);
         getScript();
+        getBatch()
         if (batch_uuid) {
           handleAfterAddedChildrenScripts(batch_uuid);
         }

@@ -4,14 +4,8 @@ const { sequelize, col } = require("../../utils/database");
 
 const uuid = require("uuid");
 
-
-const getTags = (req,res)=>{
-    
-}
-
-
+const getTags = (req, res) => {};
 
 module.exports = {
-    getTags
-  };
-
+  getTags,
+};

@@ -23,7 +23,7 @@ const newDocuments = async (req, res) => {
         where: {
           [Op.and]: [{ page_uuid: null }, { script_uuid: script.uuid }],
         },
-        order: [['createdAt', 'ASC']],
+        order: [["createdAt", "ASC"]],
       });
 
       const hierarchy = await organizePagesInHierarchy(rootPages);
@@ -36,7 +36,7 @@ const newDocuments = async (req, res) => {
       for (const page of pages) {
         const children = await Page.findAll({
           where: { page_uuid: page.uuid },
-          order: [['createdAt', 'ASC']],
+          order: [["createdAt", "ASC"]],
         });
 
         page.dataValues.ChildPages = children;
@@ -112,11 +112,12 @@ const publicUrls = async (req, res) => {
       const publicUrl = await Script.findOne({
         where: { uuid: script_uuid },
       });
-      if(publicUrl.is_published){
-      return res.status(200).json({ publicUrl, msg: "Published Sucessfully" });
-      }
-      else{
-      return res.status(200).json({ publicUrl, msg: "UnPublished Content" });
+      if (publicUrl.is_published) {
+        return res
+          .status(200)
+          .json({ publicUrl, msg: "Published Sucessfully" });
+      } else {
+        return res.status(200).json({ publicUrl, msg: "UnPublished Content" });
       }
     } catch (error) {
       return res
@@ -129,24 +130,24 @@ const publicUrls = async (req, res) => {
 };
 
 const particularPageRender = async (req, res) => {
-    try {
-      const { slug } = req.params;
-      const wildcardValue = req.params[0];
-      const path = `/${slug}/${wildcardValue}`;
-  
-      const publicUrl = await Page.findOne({
-        where: { path: path },
-      });
-      return res
-        .status(200)
-        .json({ publicUrl, msg: "Sucessfully Fetched Particular Page" });
-    } catch (error) {
-      return res.status(404).json({ error: error });
-    }
-  };
+  try {
+    const { slug } = req.params;
+    const wildcardValue = req.params[0];
+    const path = `/${slug}/${wildcardValue}`;
+
+    const publicUrl = await Page.findOne({
+      where: { path: path },
+    });
+    return res
+      .status(200)
+      .json({ publicUrl, msg: "Sucessfully Fetched Particular Page" });
+  } catch (error) {
+    return res.status(404).json({ error: error });
+  }
+};
 
 module.exports = {
   newDocuments,
   publicUrls,
-  particularPageRender
+  particularPageRender,
 };

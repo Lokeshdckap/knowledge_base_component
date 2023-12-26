@@ -112,10 +112,6 @@ db.pages.hasMany(db.pages, {
   sourceKey: "uuid",
 });
 
-// db.users.hasMany(db.user_team_members, { foreignKey: "user_uuid", targetKey: "uuid" });
-
-// db.user_team_members.belongsTo(db.users, { foreignKey: "user_uuid", targetKey: "uuid" });
-
 //exporting the module
 
 module.exports = db;

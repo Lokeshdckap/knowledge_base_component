@@ -54,6 +54,8 @@ export const ScriptComponents = () => {
   //page count
   const [maintainPageCount, setMaintainPageCount] = useState(null);
 
+  const [instance,setInstance] = useState("")
+
   const duration = 2000;
 
   const location = useLocation();
@@ -246,9 +248,12 @@ export const ScriptComponents = () => {
   const contentPage = async (e) => {
     setPageId(e.target.id);
     let pageId = e.target.id;
-    navigate(`/dashboard/${params.uuid}/s/${params.slug}/?pageId=${pageId}`);
-    setEditorValue("");
+    if(pageId != pageIds){
+    // window.confirm("This page's content can't be saved. If you wish to save, please save")
+    window.location.replace(`/dashboard/${params.uuid}/s/${params.slug}/?pageId=${pageId}`)
+    }
   };
+
 
   const handleScriptMouseEnter = (e) => {
     setHoverPageId(e.target.id);
@@ -358,7 +363,7 @@ export const ScriptComponents = () => {
         popUp={popUp}
         setPopUp={setPopUp}
         handlePageDelete={handlePageDelete}
-        isLoading = {isLoading}
+        isLoading={isLoading}
         maintainPageCount={maintainPageCount}
       />
     </>

@@ -350,7 +350,6 @@ const getApiTokens = async (req, res) => {
 
       limit: pageSize,
       offset: (page - 1) * pageSize,
-
     });
 
     return res.status(200).json({
@@ -359,12 +358,11 @@ const getApiTokens = async (req, res) => {
       totalPages: Math.ceil(count / pageSize),
       currentPage: page,
       access_tokens,
-  });
+    });
   } catch (err) {
     return res.status(500).json({ err: err.message });
   }
 };
-
 
 const createAccessToken = async (req, res) => {
   try {
@@ -390,7 +388,6 @@ const createAccessToken = async (req, res) => {
     const payload = { id: team_uuid };
 
     const token = jwt.sign(payload, config.secretKey);
-
 
     const createToken = await Access_Token.create({
       team_uuid: team_uuid,

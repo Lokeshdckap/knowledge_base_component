@@ -1,9 +1,7 @@
 const jwt = require("jsonwebtoken");
 
 const generateAuthToken = (user) => {
-  const payload = { id: user.uuid || user.id};
-;
-
+  const payload = { id: user.uuid || user.id };
   const access_token = jwt.sign(payload, process.env.secretKey, {
     expiresIn: "15m",
   });

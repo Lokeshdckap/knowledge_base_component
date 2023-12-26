@@ -6,6 +6,7 @@ import EditHeader from "../../common/commonLayouts/EditHeader";
 import EditPage from "../../common/commonLayouts/EditPage";
 import { ToastContainer, toast } from "react-toastify";
 import { useMyContext } from "../../context/AppContext";
+import { UrlCopyPopup } from "../../common/commonComponents/UrlCopyPopup";
 
 export const ScriptComponents = () => {
   const navigate = useNavigate();
@@ -51,6 +52,8 @@ export const ScriptComponents = () => {
 
   const [isLoading, setIsLoading] = useState(null);
 
+
+  const [urlCopyPopup,setUrlCopyPopup] = useState(false);
   //page count
   const [maintainPageCount, setMaintainPageCount] = useState(null);
 
@@ -189,6 +192,54 @@ export const ScriptComponents = () => {
       });
   };
 
+
+  const handleSaveAndPublish = () => {
+    setLoading(true);
+
+    const postData = {
+      id: pageIds,
+      script_uuid: params.slug,
+      title: particularTitle ? particularTitle : "Page Name",
+      description: description ? description : "Page Description",
+      content: editorContent,
+    };
+    axiosClient
+      .post("/api/pages/updatePageData", postData)
+      .then((res) => {
+        getParticularScript();
+        getParticularPage();
+        showToastSaveMessage(res.data.msg);
+        setLoading(false);
+        contentPublish(true);
+      })
+      .catch((err) => {
+        console.log(err);
+        setLoading(false);
+      });
+  };
+
+  const contentPublish = (checked) => {
+
+    axiosClient
+      .get(`/api/public/scripts/${params.slug}/${checked}`)
+
+      .then((res) => {
+        setRenderScript(res.data.publicUrl);
+        setUrlCopyPopup(true);
+        setTeamUuid(params.uuid);
+        {
+          res.data.publicUrl.is_published
+            ? showToastSaveMessage(res.data.msg)
+            : showToastErrorMessage(res.data.msg);
+        }
+      })
+
+      .catch((err) => {
+        console.log(err);
+      });
+
+  };
+
   const addPage = async () => {
     await axiosClient
       .post(`/api/pages/addPageData/${params.slug}`)
@@ -243,6 +294,8 @@ export const ScriptComponents = () => {
       });
   };
 
+
+  
   const contentPage = async (e) => {
     setPageId(e.target.id);
     let pageId = e.target.id;
@@ -270,6 +323,7 @@ export const ScriptComponents = () => {
   };
 
   const handlePageDelete = async (e) => {
+
     let targetId = e.target.id;
 
     if (targetId) {
@@ -299,8 +353,10 @@ export const ScriptComponents = () => {
   };
 
   const onChange = (checked) => {
+
     axiosClient
       .get(`/api/public/scripts/${params.slug}/${checked}`)
+
       .then((res) => {
         setRenderScript(res.data.publicUrl);
         setTeamUuid(params.uuid);
@@ -310,15 +366,19 @@ export const ScriptComponents = () => {
             : showToastErrorMessage(res.data.msg);
         }
       })
+
       .catch((err) => {
         console.log(err);
       });
+
   };
+
 
   return (
     <>
       <EditHeader
         clickPublish={handleSave}
+        handleSaveAndPublish={handleSaveAndPublish}
         changeEvent={handleChange}
         inputValue={inputValue}
         setInputValue={setInputValue}
@@ -327,6 +387,7 @@ export const ScriptComponents = () => {
         scriptError={scriptError}
         publish={publish}
         role={role}
+        onChange={onChange}
       />
       <EditPage
         treeNode={treeNode}
@@ -361,6 +422,14 @@ export const ScriptComponents = () => {
         isLoading = {isLoading}
         maintainPageCount={maintainPageCount}
       />
+
+      {urlCopyPopup && (
+        <UrlCopyPopup 
+        renderScript={renderScript}
+        />
+      )
+
+      }
     </>
   );
 };

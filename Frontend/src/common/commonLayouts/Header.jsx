@@ -1,7 +1,9 @@
-import React, {  useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Main from "./Main";
 import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import { useMyContext } from "../../context/AppContext";
+
+
 
 export default function Header(props) {
   const params = useParams();
@@ -9,8 +11,7 @@ export default function Header(props) {
   const navigate = useNavigate();
   const profileIconRef = useRef(null);
 
-
-  const {openSideNave, setOpenSideNave} = useMyContext();
+  const { openSideNave, setOpenSideNave } = useMyContext();
   const [profileState, setProfileState] = useState(false);
   const onLogout = () => {
     localStorage.removeItem("ACCESS_TOKEN");
@@ -32,13 +33,15 @@ export default function Header(props) {
     };
   }, [profileState]);
 
+
+
   const handleProfile = () => {
     setProfileState((prevState) => !prevState);
   };
 
-  const handleSideBar  = () => {
-    setOpenSideNave("block")
-  }
+  const handleSideBar = () => {
+    setOpenSideNave("block");
+  };
 
   // setOpenSideNave
   return (
@@ -47,7 +50,8 @@ export default function Header(props) {
         className={`flex items-center  m-auto justify-between  relative  w-[100%]  2xl:py-[30px] pt-[8px] pb-[8px] pl-[30px] pr-[30px]`}
       >
         <div className="flex  space-x-2">
-          <div className="2xl:hidden xl:hidden lg:hidden  phone:block phone:text-[12px] "
+          <div
+            className="2xl:hidden xl:hidden lg:hidden  phone:block phone:text-[12px] "
             onClick={handleSideBar}
           >
             <i className="fa-solid fa-bars"></i>
@@ -79,6 +83,7 @@ export default function Header(props) {
             </div>
           </div>
         </div>
+
         <div className=" cursor-pointer p-1" onClick={handleProfile}>
           {props.userDetail?.avatar ? (
             <img
@@ -94,6 +99,8 @@ export default function Header(props) {
             ></i>
           )}
         </div>
+    
+
         {profileState && (
           <div
             className="bg-white  w-52 absolute top-14 border-[1px] right-[35px] z-30 shadow-md rounded-lg"
@@ -108,9 +115,7 @@ export default function Header(props) {
                     alt=""
                   />
                 ) : (
-                  <i
-                    className="fa-regular text-slate-600 fa-circle-user text-2xl cursor-pointer pr-3"
-                  ></i>
+                  <i className="fa-regular text-slate-600 fa-circle-user text-2xl cursor-pointer pr-3"></i>
                 )}
               </div>
               <div className="flex justify-center ">

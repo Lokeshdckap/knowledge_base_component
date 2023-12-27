@@ -105,7 +105,7 @@ export default function Main(props) {
             />
           </div>
           <p className="font-semibold text-textPrimary text-xl phone:text-lg pl-1">
-            New BATCHS
+            New FOLDERS
           </p>
           <div
             className={` m-auto grid 2xl:grid-cols-5 xl:grid-cols-4 lg:grid-cols-3 phone:grid-cols-2 gap-2 mt-2`}
@@ -151,7 +151,7 @@ export default function Main(props) {
                           onClick={handleBatch}
                           className="text-gray-500 pt-1 phone:text-[12px]"
                         >
-                          {scriptCount[index].script_count} Scripts
+                          {scriptCount[index].script_count} Sections
                         </p>
                       ) : (
                         <p
@@ -159,7 +159,7 @@ export default function Main(props) {
                           onClick={handleBatch}
                           className="text-gray-500"
                         >
-                          0 Scripts
+                          0 Sections
                         </p>
                       )}
                     </div>
@@ -182,7 +182,7 @@ export default function Main(props) {
               ))
             ) : (
               <div className="text-xl text-textPrimary ">
-                No records of Batchs
+                No records of Folders
               </div>
             )}
           </div>
@@ -255,7 +255,7 @@ export default function Main(props) {
               ))
             ) : (
               <div className="text-xl text-textPrimary ">
-                No records of Scripts
+                No records of Sections
               </div>
             )}
           </div>

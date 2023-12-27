@@ -7,7 +7,6 @@ export const Search = (props) => {
   let searchRef = useRef();
 
   const handleScriptGo = (e) => {
-    console.log(e.target.id);
     navigate(e.target.id);
     props.setsearchPopup(false);
   };

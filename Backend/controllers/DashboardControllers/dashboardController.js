@@ -224,7 +224,7 @@ const globalSearch = async (req, res) => {
     try {
       const scripts = await Script.findAll({
         where: {
-          [Op.and]: [whereClause, { team_uuid: team_uuid }],
+          [Op.and]: [whereClause, { team_uuid: team_uuid }, { deleted_at: null }],
         },
       });
 
@@ -233,6 +233,7 @@ const globalSearch = async (req, res) => {
           team_uuid: team_uuid,
         },
       });
+
       let script_uuid = [];
 
       for (let findScripts of script) {

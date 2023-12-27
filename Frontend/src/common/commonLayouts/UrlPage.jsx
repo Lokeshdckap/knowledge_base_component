@@ -276,13 +276,23 @@ export const UrlPage = () => {
             maxHeight: `calc(${screenHeight}px - 85px)`,
           }}
         >
-          <h1 className="text-3xl font-bold mb-5">
-            {page.length == 0
-              ? "Page Name"
-              : loadPage.title && loadPage.title.split("-")[0]}
-          </h1>
-          <h4 className="text-xl mb-5">
-            {page.length == 0 ? "Page description" : loadPage.description}
+          <div className="flex items-center space-x-2">
+            <img
+              className="cursor-pointer w-[25px]"
+              src={
+                loadPage?.emoji
+                  ? loadPage?.emoji
+                  : `https://icons.getbootstrap.com/assets/icons/emoji-smile.svg`
+              }
+            />
+            <h1 className="text-3xl font-bold ">
+              {page?.length == 0
+                ? "Page Name"
+                : loadPage?.title && loadPage?.title.split("-")[0]}
+            </h1>
+          </div>
+          <h4 className="text-xl my-3 ml-[32px]">
+            {page?.length == 0 ? "Page description" : loadPage?.description}
           </h4>
           <div id="editorjs" className="mr-64"></div>
         </div>

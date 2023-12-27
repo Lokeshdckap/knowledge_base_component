@@ -48,6 +48,8 @@ export const ScriptEditor = () => {
   const [loading, setLoading] = useState(false);
   const [parentOpen, setParentOpen] = useState(null);
 
+
+  const [emoji,setEmoji]  =useState("")
   const duration = 2000;
 
   const location = useLocation();
@@ -75,6 +77,7 @@ export const ScriptEditor = () => {
       .then((res) => {
         setParticularTitle(res.data.pages.title.split("-")[0]);
         setDescription(res.data.pages.description);
+        setEmoji(res.data.pages.emoji)
         setEditorValue(res.data.pages.content);
       })
       .catch((err) => {
@@ -183,6 +186,7 @@ export const ScriptEditor = () => {
         renderScript={renderScript}
         parentOpen={parentOpen}
         teamUuid={teamUuid}
+        emoji={emoji}
       />
     </>
   );

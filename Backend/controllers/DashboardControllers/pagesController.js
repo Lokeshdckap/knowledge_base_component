@@ -199,6 +199,7 @@ const updatePageData = async (req, res) => {
         description: req.body.description,
         content: JSON.stringify(req.body.content),
         path: paths,
+        emoji:req.body.emoji,
         updatedAt: "CURRENT_TIMESTAMP",
       },
       {

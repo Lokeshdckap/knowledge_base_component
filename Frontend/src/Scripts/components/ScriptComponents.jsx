@@ -58,6 +58,10 @@ export const ScriptComponents = () => {
 
   const [instance, setInstance] = useState("");
 
+
+  const [inputStr, setInputStr] = useState("");
+  const [showPicker, setShowPicker] = useState(false);
+
   const duration = 2000;
 
   const location = useLocation();
@@ -106,6 +110,7 @@ export const ScriptComponents = () => {
       .then((res) => {
         setParticularTitle(res.data.pages.title.split("-")[0]);
         setDescription(res.data.pages.description);
+        setInputStr(res.data.pages.emoji);
         setEditorValue(res.data.pages.content);
         setEditorContent(res.data.pages.content);
         setIsLoading(false);
@@ -178,7 +183,9 @@ export const ScriptComponents = () => {
       title: particularTitle ? particularTitle : "Page Name",
       description: description ? description : "Page Description",
       content: editorContent,
+      emoji:inputStr
     };
+
     axiosClient
       .post("/api/pages/updatePageData", postData)
       .then((res) => {
@@ -202,6 +209,7 @@ export const ScriptComponents = () => {
       title: particularTitle ? particularTitle : "Page Name",
       description: description ? description : "Page Description",
       content: editorContent,
+      emoji:inputStr
     };
     axiosClient
       .post("/api/pages/updatePageData", postData)
@@ -404,6 +412,8 @@ export const ScriptComponents = () => {
         role={role}
         onChange={onChange}
       />
+
+  
       <EditPage
         treeNode={treeNode}
         addPage={addPage}
@@ -436,6 +446,10 @@ export const ScriptComponents = () => {
         handlePageDelete={handlePageDelete}
         isLoading={isLoading}
         maintainPageCount={maintainPageCount}
+        inputStr={inputStr}
+        setInputStr={setInputStr}
+        showPicker={showPicker}
+        setShowPicker={setShowPicker}
       />
 
       {urlCopyPopup && <UrlCopyPopup renderScript={renderScript} />}

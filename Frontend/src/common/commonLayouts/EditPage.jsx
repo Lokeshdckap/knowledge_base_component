@@ -3,6 +3,7 @@ import { EditorComponents } from "../commonComponents/EditorComponents";
 import { PageTree } from "../commonComponents/PageTree";
 import { PublishPopup } from "../commonComponents/PublishPopup";
 import { useMyContext } from "../../context/AppContext";
+import Picker from "emoji-picker-react";
 
 export default function EditPage(props) {
   const { renderScript } = props;
@@ -27,11 +28,16 @@ export default function EditPage(props) {
     };
   }, [props.particularTitle, props.description, props.editorContent]);
 
-  const title = props.particularTitle;
-  const handleEmojiSelect = (emoji) => {
-    console.log(emoji.native);
-    // setInputValue(inputValue + emoji.native);
+
+
+  const onEmojiClick = (event, emojiObject) => {
+    props.setInputStr(event.imageUrl);
+
+    props.setShowPicker(false);
   };
+
+  const title = props.particularTitle;
+
   return (
     <div className="bg-[#F4F7FC]" style={{ height: "calc(100% - 64px)" }}>
       <div className="flex">
@@ -61,6 +67,7 @@ export default function EditPage(props) {
                     setPopUp={props.setPopUp}
                     handlePageDelete={props.handlePageDelete}
                     treeNodes={treeNode}
+                    inputStr={props.inputStr}
                   />
                 </div>
               ))}
@@ -89,10 +96,29 @@ export default function EditPage(props) {
             maxHeight: `calc(${screenHeight}px - 64px)`,
           }}
         >
-          <div>
+          <div className="flex items-center relative  space-x-2 mt-8">
+            <div className="">
+              <img
+                className="cursor-pointer w-[25px]"
+                src={
+                  props.inputStr
+                    ? props.inputStr
+                    : `https://icons.getbootstrap.com/assets/icons/emoji-smile.svg`
+                }
+                onClick={() => props.setShowPicker((val) => !val)}
+              />
+              {props.showPicker && (
+                <>
+                  <Picker
+                    style={{ width: "50%", position: "absolute", zIndex: 10,left:"0px" }}
+                    onEmojiClick={onEmojiClick} // Ensure this is correctly spelled and defined
+                  />
+                </>
+              )}
+            </div>
             <input
               type="text"
-              className="text-3xl phone:text-[18px] phone:w-[190px] mt-8 focus:outline-none text-textPrimary font-bold"
+              className="text-3xl phone:text-[18px] phone:w-[190px]  focus:outline-none text-textPrimary font-bold"
               value={title}
               onChange={(e) => props.setParticularTitle(e.target.value)}
               placeholder="Page Name"
@@ -103,7 +129,7 @@ export default function EditPage(props) {
           </div>
           <div>
             <input
-              className="text-xl phone:text-[16px] phone:w-[170px] mt-3 focus:outline-none text-textPrimary "
+              className="text-xl phone:text-[16px] phone:w-[170px] mt-3 ml-[32px] focus:outline-none text-textPrimary "
               value={props.description}
               onChange={(e) => props.setDescription(e.target.value)}
               placeholder="Page Description"

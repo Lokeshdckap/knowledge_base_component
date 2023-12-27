@@ -5,9 +5,7 @@ import { useMyContext } from "../../context/AppContext";
 
 export const ViewPage = (props) => {
   const { renderScript } = props;
-  const {
-    screenHeight, setScreenHeight
-  } = useMyContext();
+  const { screenHeight, setScreenHeight } = useMyContext();
   const [newPagePopup, setNewPagePopup] = useState(false);
   const [OverPage, setOverPage] = useState(null);
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
@@ -24,7 +22,7 @@ export const ViewPage = (props) => {
     };
 
     // Attach the event listener for window resize
-    window.addEventListener('resize', updateScreenHeight);
+    window.addEventListener("resize", updateScreenHeight);
     return () => {
       window.removeEventListener("resize", updateScreenHeight);
     };
@@ -35,7 +33,8 @@ export const ViewPage = (props) => {
   return (
     <div className="bg-[#F4F7FC]" style={{ height: "calc(100% - 64px)" }}>
       <div className="flex">
-        <div className=" w-[278px] phone:w-[150px] overflow-auto border-r-[1px]"
+        <div
+          className=" w-[278px] phone:w-[150px] overflow-auto border-r-[1px]"
           style={{
             height: `calc(${screenHeight}px - 64px)`,
           }}
@@ -63,16 +62,28 @@ export const ViewPage = (props) => {
             className={`h-px w-[100%] bg-[#D5D7DA] border-0 m-auto dark:bg-gray-900 mt-4`}
           />
         </div>
-        <div className={`bg-[#fbfbfc] px-[30px]  overflow-auto`} 
-             style={{
-              width: screenWidth > "425" ?  'calc(100% - 278px)' : 'calc(100% - 150px)' ,
-              maxHeight: `calc(${screenHeight}px - 64px)`,
-            }}
+        <div
+          className={`bg-[#fbfbfc] px-[30px]  overflow-auto`}
+          style={{
+            width:
+              screenWidth > "425" ? "calc(100% - 278px)" : "calc(100% - 150px)",
+            maxHeight: `calc(${screenHeight}px - 64px)`,
+          }}
         >
-          <div>
+          <div className="flex items-center relative  space-x-2 mt-8">
+            <div className="">
+              <img
+                className="cursor-pointer w-[25px]"
+                src={
+                  props.emoji
+                    ? props.emoji
+                    : `https://icons.getbootstrap.com/assets/icons/emoji-smile.svg`
+                }
+              />
+            </div>
             <input
               type="text"
-              className="text-2xl phone:text-[18px] phone:w-[190px]  mt-8 focus:outline-none text-textPrimary font-bold"
+              className="text-2xl phone:text-[18px] phone:w-[190px]  focus:outline-none text-textPrimary font-bold"
               value={title}
               placeholder="Page Name"
               readOnly={true}

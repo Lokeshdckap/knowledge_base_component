@@ -18,6 +18,7 @@ export const PageTree = ({
   setPopUp,
   handlePageDelete,
   treeNodes,
+  inputStr,
 }) => {
   const addIconRef = useRef(null);
   const addPopup = useRef(null);
@@ -98,6 +99,12 @@ export const PageTree = ({
         onMouseEnter={handleScriptMouseEnter}
         onMouseLeave={handleScriptMouseLeave}
       >
+        {node?.emoji && (
+          <img
+            className="cursor-pointer w-[18px] mr-1"
+            src={node?.emoji ? node?.emoji : ``}
+          />
+        )}
         <span
           className="text-[18px] phone:text-[14px]  cursor-pointer pt-1 pb-1 w-[100%]"
           onClick={contentPage}
@@ -189,6 +196,7 @@ export const PageTree = ({
                 setPopUp={setPopUp}
                 handlePageDelete={handlePageDelete}
                 treeNodes={treeNodes}
+                inputStr={inputStr}
               />
             </li>
           ))}

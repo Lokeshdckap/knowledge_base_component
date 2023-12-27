@@ -19,7 +19,8 @@ module.exports = (sequelize, DataTypes) => {
       content: DataTypes.TEXT,
       script_uuid: DataTypes.UUID,
       page_uuid: DataTypes.UUID,
-      path:DataTypes.TEXT
+      path:DataTypes.TEXT,
+      emoji:DataTypes.STRING
     },
     {
       sequelize,

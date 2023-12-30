@@ -11,7 +11,15 @@ import { UrlCopyPopup } from "../../common/commonComponents/UrlCopyPopup";
 export const ScriptComponents = () => {
   const navigate = useNavigate();
   const params = useParams();
-  const { getScript, script, getScripts, setLoading, role } = useMyContext();
+  const {
+    getScript,
+    script,
+    getScripts,
+    setLoading,
+    role,
+    hasChanges,
+    setHasChanges,
+  } = useMyContext();
 
   //hooks
 
@@ -57,7 +65,6 @@ export const ScriptComponents = () => {
   const [maintainPageCount, setMaintainPageCount] = useState(null);
 
   const [instance, setInstance] = useState("");
-
 
   const [inputStr, setInputStr] = useState("");
   const [showPicker, setShowPicker] = useState(false);
@@ -183,7 +190,7 @@ export const ScriptComponents = () => {
       title: particularTitle ? particularTitle : "Page Name",
       description: description ? description : "Page Description",
       content: editorContent,
-      emoji:inputStr
+      emoji: inputStr,
     };
 
     axiosClient
@@ -193,6 +200,7 @@ export const ScriptComponents = () => {
         getParticularPage();
         showToastSaveMessage(res.data.msg);
         setLoading(false);
+        setHasChanges(false);
       })
       .catch((err) => {
         console.log(err);
@@ -209,15 +217,16 @@ export const ScriptComponents = () => {
       title: particularTitle ? particularTitle : "Page Name",
       description: description ? description : "Page Description",
       content: editorContent,
-      emoji:inputStr
+      emoji: inputStr,
     };
     axiosClient
       .post("/api/pages/updatePageData", postData)
       .then((res) => {
         getParticularScript();
         getParticularPage();
-        showToastSaveMessage(res.data.msg);
         setLoading(false);
+        setHasChanges(false);
+
         contentPublish(true);
       })
       .catch((err) => {
@@ -237,10 +246,9 @@ export const ScriptComponents = () => {
         setUrlCopyPopup(true);
         setTeamUuid(params.uuid);
         setLoading(false);
-
         {
           res.data.publicUrl.is_published
-            ? showToastSaveMessage(res.data.msg)
+            ? showToastSaveMessage("Save and Published successsfully")
             : showToastErrorMessage(res.data.msg);
         }
       })
@@ -258,7 +266,7 @@ export const ScriptComponents = () => {
       .then((res) => {
         getParticularScript();
         setLoading(false);
-        showToastSaveMessage(res.data.msg)
+        showToastSaveMessage(res.data.msg);
       })
       .catch((err) => {
         console.log(err);
@@ -273,7 +281,8 @@ export const ScriptComponents = () => {
       .post(`/api/pages/addChildPage/${params.slug}/${page_uuid}`)
       .then((res) => {
         getParticularScript();
-        navigate(
+        handleSave();
+        window.location.replace(
           `/dashboard/${params.uuid}/s/${params.slug}/?pageId=${res.data.Pages.uuid}`
         );
         showToastSaveMessage(res.data.msg);
@@ -316,11 +325,39 @@ export const ScriptComponents = () => {
   const contentPage = async (e) => {
     setPageId(e.target.id);
     let pageId = e.target.id;
+    console.log(pageId);
     if (pageId != pageIds) {
+      const postData = {
+        id: pageIds,
+        script_uuid: params.slug,
+        title: particularTitle ? particularTitle : "Page Name",
+        description: description ? description : "Page Description",
+        content: editorContent,
+        emoji: inputStr,
+      };
+
+      axiosClient
+        .post("/api/pages/updatePageData", postData)
+        .then((res) => {
+          getParticularScript();
+          getParticularPage();
+
+          // showToastSaveMessage(res.data.msg);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      // setDescription(null);
+      // setParticularTitle(null);
+      // setEditorContent(null);
+      // setInputStr(null)
       // window.confirm("This page's content can't be saved. If you wish to save, please save")
       window.location.replace(
         `/dashboard/${params.uuid}/s/${params.slug}/?pageId=${pageId}`
       );
+      // navigate(
+      //   `/dashboard/${params.uuid}/s/${params.slug}/?pageId=${pageId}`
+      // );
     }
   };
 
@@ -413,7 +450,6 @@ export const ScriptComponents = () => {
         onChange={onChange}
       />
 
-  
       <EditPage
         treeNode={treeNode}
         addPage={addPage}

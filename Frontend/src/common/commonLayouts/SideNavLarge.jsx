@@ -9,6 +9,8 @@ import { ModelPopup } from "../commonComponents/ModelPopup";
 import { InviteUsers } from "./InviteUsers";
 import settings from "../../assets/images/settings.png";
 import { useMyContext } from "../../context/AppContext";
+import folder from "../../assets/images/folderKb.png";
+import file from "../../assets/images/files.png";
 
 export default function SideNavLarge(props) {
   //navigate
@@ -38,6 +40,9 @@ export default function SideNavLarge(props) {
     openSideNave,
     setOpenSideNave,
     role,
+    hasChanges,
+    setHasChanges,
+    handleLinkClick,
   } = useMyContext();
 
   //param
@@ -294,7 +299,9 @@ export default function SideNavLarge(props) {
             group
           </span>
           <p className="text-xl font-bold  text-[#F9EFD4]  truncate ">
-            <Link to={`/dashboard/${params.uuid}`}>{teamName}'s Team</Link>
+            <Link to={`/dashboard/${params.uuid}`} onClick={handleLinkClick}>
+              {teamName}'s Team
+            </Link>
           </p>
           {teamDropDown ? (
             <i
@@ -378,7 +385,10 @@ export default function SideNavLarge(props) {
         >
           {batch.map((batch, index) => (
             <div key={index}>
-              <Link to={`/dashboard/${params.uuid}/b/${batch.uuid}`}>
+              <Link
+                to={`/dashboard/${params.uuid}/b/${batch.uuid}`}
+                onClick={handleLinkClick}
+              >
                 <div
                   className={`flex items-center  justify-between cursor-pointer font-sans font-medium text-base hover:bg-[#323F5E] pl-6 pt-1 pb-1 pr-5 ${
                     params.slug == batch.uuid ? "bg-[#323F5E]" : ""
@@ -388,11 +398,12 @@ export default function SideNavLarge(props) {
                   onMouseEnter={handleMouseEnter}
                   onMouseLeave={handleMouseLeave}
                 >
-                  <div className="flex items-center">
-                    <i
+                  <div className="flex items-center space-x-1">
+                    {/* <i
                       className="fa-solid fa-folder text-[#F9EFD4] pr-2.5"
                       id={batch.uuid}
-                    ></i>
+                    ></i> */}
+                    <img src={folder} alt="" className="w-[17px] h-[18px]" />
                     <li
                       key={batch.uuid}
                       id={batch.uuid}
@@ -431,25 +442,31 @@ export default function SideNavLarge(props) {
                     }}
                   >
                     <div className="w-[145px] m-auto space-y-3 pt-3 pb-3">
-                      <p
-                        className="text-lg cursor-pointer  text-textPrimary hover:bg-primary  hover:text-white hover:rounded
+                      <div onClick={addNewScript} id={batch.uuid}>
+                        <p
+                          className="text-lg cursor-pointer  text-textPrimary hover:bg-primary  hover:text-white hover:rounded
                       "
-                        id={batch.uuid}
-                        onClick={addNewScript}
-                      >
-                        <i
-                          className="fa-regular fa-file p-2 "
                           id={batch.uuid}
-                        ></i>
-                        New Section
-                      </p>
-                      <p
-                        className="text-lg cursor-pointer  text-textPrimary  hover:bg-primary  hover:text-white hover:rounded"
-                        id={batch.uuid}
-                        onClick={handleTrash}
-                      >
-                        <i className="fa-solid fa-trash p-2"></i>Trash
-                      </p>
+                        >
+                          <i
+                            className="fa-regular fa-file p-2 "
+                            id={batch.uuid}
+                          ></i>
+                          New Section
+                        </p>
+                      </div>
+                      <div id={batch.uuid} onClick={handleTrash}>
+                        <p
+                          className="text-lg cursor-pointer  text-textPrimary  hover:bg-primary  hover:text-white hover:rounded"
+                          id={batch.uuid}
+                        >
+                          <i
+                            className="fa-solid fa-trash p-2"
+                            id={batch.uuid}
+                          ></i>
+                          Trash
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </>
@@ -459,7 +476,10 @@ export default function SideNavLarge(props) {
                   (child, index) =>
                     child.batch_uuid == batch.uuid && (
                       <div className="pt-1" key={index}>
-                        <Link to={`/dashboard/${params.uuid}/s/${child.uuid}`}>
+                        <Link
+                          to={`/dashboard/${params.uuid}/s/${child.uuid}`}
+                          onClick={handleLinkClick}
+                        >
                           <div
                             className={`flex items-center justify-between pl-10 font-medium text-base cursor-pointer hover:bg-[#323F5E] pt-1 pb-1 pr-7  ${
                               params.slug == child.uuid && "bg-[#323F5E]"
@@ -469,11 +489,18 @@ export default function SideNavLarge(props) {
                             onMouseEnter={handleScriptMouseEnter}
                             onMouseLeave={handleScriptMouseLeave}
                           >
-                            <div className={`flex items-center truncate`}>
-                              <i
+                            <div
+                              className={`flex items-center truncate space-x-1`}
+                            >
+                              <img
+                                src={file}
+                                alt=""
+                                className="w-[17px] h-[18px]"
+                              />
+                              {/* <i
                                 className="fa-solid fa-file  text-[#F9EFD4] pr-2"
                                 id={child.uuid}
-                              ></i>
+                              ></i> */}
                               <li
                                 key={child.id}
                                 id={child.uuid}
@@ -498,7 +525,7 @@ export default function SideNavLarge(props) {
                                 )}
                           </div>
                         </Link>
-                        {popUp == child.uuid && (
+                        {(popUp == child.uuid) && (
                           <>
                             <div
                               className="box-border bg-white w-40 p-2.5 border-[1px] border-slate-300 rounded-xl shadow-lg absolute left-40 z-50"
@@ -508,18 +535,19 @@ export default function SideNavLarge(props) {
                             >
                               <div
                                 className="w-[140px] m-auto space-y-3"
+                                id={child.uuid}
+                                onClick={handleTrash}
                                 ref={addPopup}
+                                data-set={child.batch_uuid}
                               >
                                 <p
                                   className={`text-lg cursor-pointer text-textPrimary hover:bg-primary  hover:text-white hover:rounded p-0.5`}
                                   id={child.uuid}
-                                  onClick={handleTrash}
                                   data-set={child.batch_uuid}
                                 >
                                   <i
                                     className="fa-solid fa-trash pr-[5px]"
                                     id={child.uuid}
-                                    onClick={handleTrash}
                                     data-set={child.batch_uuid}
                                   ></i>
                                   Trash
@@ -535,7 +563,10 @@ export default function SideNavLarge(props) {
           ))}
           {script.map((script, index) => (
             <div key={script.uuid}>
-              <Link to={`/dashboard/${params.uuid}/s/${script.uuid}`}>
+              <Link
+                to={`/dashboard/${params.uuid}/s/${script.uuid}`}
+                onClick={handleLinkClick}
+              >
                 <div
                   className={`flex items-center justify-between hover:bg-[#323F5E] font-medium text-base cursor-pointer pl-6 pt-[4px] pb-[4px] pr-6 ${
                     params.slug == script.uuid && "bg-[#323F5E]"
@@ -545,11 +576,13 @@ export default function SideNavLarge(props) {
                   onMouseEnter={handleScriptMouseEnter}
                   onMouseLeave={handleScriptMouseLeave}
                 >
-                  <div className="flex items-center hover:bg-[#323F5E] cursor-pointer">
-                    <i
+                  <div className="flex items-center hover:bg-[#323F5E] cursor-pointer space-x-1">
+                    {/* <i
                       className="fa-solid fa-file pr-2.5  text-[#F9EFD4]"
                       id={script.uuid}
-                    ></i>
+                    ></i> */}
+                    <img src={file} alt="" className="w-[17px] h-[18px]" />
+
                     <li
                       key={script.id}
                       id={script.uuid}
@@ -582,13 +615,20 @@ export default function SideNavLarge(props) {
                       top: topState,
                     }}
                   >
-                    <div className="w-[145px] m-auto space-y-3 pt-3 pb-3">
+                    <div
+                      className="w-[145px] m-auto space-y-3 pt-3 pb-3"
+                      id={script.uuid}
+                      onClick={handleTrash}
+                    >
                       <p
                         className="text-lg cursor-pointer  text-textPrimary hover:bg-primary  hover:text-white hover:rounded"
                         id={script.uuid}
-                        onClick={handleTrash}
                       >
-                        <i className="fa-solid fa-trash p-2"></i>Trash
+                        <i
+                          className="fa-solid fa-trash p-2"
+                          id={script.uuid}
+                        ></i>
+                        Trash
                       </p>
                     </div>
                   </div>
@@ -601,16 +641,15 @@ export default function SideNavLarge(props) {
       <div className="absolute bottom-4 ">
         <div className="h-px bg-[#c2c2c9] w-[220px]  "></div>
         <div className=" flex items-center  justify-around w-[200px] m-auto  mt-6">
-          <div
-            className={` ${
-              params.slug == "trash" ? "bg-textPrimary" : "bg-white"
-            } h-8 w-8    rounded-full cursor-pointer `}
-          >
-            <Link to={`/dashboard/${params.uuid}/t/trash`}>
+          <div className={` bg-white h-8 w-8    rounded-full cursor-pointer `}>
+            <Link
+              to={`/dashboard/${params.uuid}/t/trash`}
+              onClick={handleLinkClick}
+            >
               <p className={` text-slate-500 pl-[8px] pt-[3px]  `}>
                 <i
                   className={`fa-solid fa-trash  ${
-                    params.slug == "trash" && "text-white"
+                    params.slug == "trash" && "text-primary"
                   }`}
                 ></i>
               </p>
@@ -642,7 +681,10 @@ export default function SideNavLarge(props) {
               <AddNew click={addNewBatch} scriptEvent={addNewScript} />
             </div>
           )}
-          <Link to={`/setting/${params.uuid}/teamsetting`}>
+          <Link
+            to={`/setting/${params.uuid}/teamsetting`}
+            onClick={handleLinkClick}
+          >
             <div className="bg-white h-8 w-8 rounded-full cursor-pointer  ">
               <p className=" text-primary pl-[7px] pt-[2px]  ">
                 <i className="fa-solid fa-gear text-lg text-slate-500"></i>

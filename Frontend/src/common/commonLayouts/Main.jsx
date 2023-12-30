@@ -1,7 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useMyContext } from "../../context/AppContext";
-import { formatDistanceToNow } from 'date-fns'
+import { formatDistanceToNow } from "date-fns";
+import folder from "../../assets/images/folderKb.png";
+import file from "../../assets/images/files.png";
+
 export default function Main(props) {
   const deleteIconRef = useRef({});
   const deleteRef = useRef(null);
@@ -45,16 +48,9 @@ export default function Main(props) {
     };
   }, [popUpState]);
 
-  const handleBatch = (e) => {
-    let TargetScriptId = e.target.id;
-    navigate(`/dashboard/${params.uuid}/b/${TargetScriptId}`);
-  };
-  const handleScripts = (e) => {
-    let TargetScriptId = e.target.id;
-    navigate(`/dashboard/${params.uuid}/s/${TargetScriptId}`);
-  };
-
   const deleteForeverPopup = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
     setPopUpState(e.target.id);
   };
 
@@ -82,21 +78,31 @@ export default function Main(props) {
                 </h3>
               </div>
             </div>
-            <div className="flex items-center space-x-5 phone:space-x-2">
-              <button
-                className={`h-[40px] w-[121px] phone:h-[25px] phone:w-[60px] text-slate-500 rounded border-slate-400 phone:text-[10px] border-[1px]  `}
-                onClick={addBatchEvent}
-                disabled={role === 2 ? true : false}
-              >
-                New Folder
-              </button>
-              <button
-                className="h-[45px] w-[160px] phone:h-[28px] phone:w-[80px] text-white rounded  bg-primary phone:text-[10px]"
-                onClick={scriptEvent}
-                disabled={role === 2 ? true : false}
-              >
-                New Section
-              </button>
+            <div className="flex   items-center space-x-5 phone:space-x-2">
+              <div>
+                <button
+                  className={`flex items-center justify-center space-x-1 w-[128px]  phone:w-[80px] text-slate-500 rounded border-slate-400 phone:text-[10px] border-[1px]  `}
+                  onClick={addBatchEvent}
+                  disabled={role === 2 ? true : false}
+                >
+                  <span className="lg:py-[12px] phone:py-[5px]">
+                    <img src={folder} alt="" className="w-[17px] h-[18px]" />
+                  </span>
+                  <span>New Folder</span>
+                </button>
+              </div>
+              <div>
+                <button
+                  className="flex items-center justify-center space-x-1 w-[160px]   phone:w-[80px] text-white rounded  bg-primary phone:text-[10px]"
+                  onClick={scriptEvent}
+                  disabled={role === 2 ? true : false}
+                >
+                  <span className="lg:py-[13.5px] phone:py-[5px]">
+                    <img src={file} alt="" className="w-[17px] h-[18px]" />
+                  </span>
+                  <span>New Section</span>
+                </button>
+              </div>
             </div>
           </div>
           <div className="mt-10">
@@ -105,80 +111,100 @@ export default function Main(props) {
             />
           </div>
           <p className="font-semibold text-textPrimary text-xl phone:text-lg pl-1">
-            New FOLDERS
+            FOLDERS
           </p>
           <div
             className={` m-auto grid 2xl:grid-cols-5 xl:grid-cols-4 lg:grid-cols-3 phone:grid-cols-2 gap-2 mt-2`}
           >
             {batchList && batchList.length > 0 ? (
               batchList.map((batch, index) => (
-                <div
-                  key={batch.uuid}
-                  className="bg-white border-[1px] rounded-[10px]  hover:border-primary relative   lg:p-[5px] xl:p-[10px] 2xl:p-[20px]"
-                >
-                  <div className="w-[100%] phone:p-[5px] ">
-                    <div className="rounded-t-lg text-end ">
-                      {role == 2 ? (
-                        ""
-                      ) : (
-                        <span
-                          className="material-symbols-outlined text-primary cursor-pointer text-2xl phone:text-[14px] leading-[6px]"
-                          onClick={deleteForeverPopup}
-                          id={batch.uuid}
-                          ref={(ref) =>
-                            (deleteIconRef.current[batch.uuid] = ref)
-                          }
-                        >
-                          more_vert
-                        </span>
-                      )}
-                    </div>
+                <Link to={`/dashboard/${params.uuid}/b/${batch.uuid}`}
+                
+                key={index}>
+                  <div
+                    key={batch.id}
+                    className="bg-white border-[1px] rounded-[10px] cursor-pointer  hover:border-primary relative   lg:p-[5px] xl:p-[10px] 2xl:p-[20px]"
+                    id={batch.uuid}
+                  >
                     <div
-                      className="cursor-pointer  font-medium"
+                      className="cursor-pointer phone:p-[5px] font-medium mt-2"
                       id={batch.uuid}
-                      onClick={handleBatch}
                     >
-                      <p
-                        className="2xl:text-2xl phone:text-[14px]"
+                      <div
+                        className="flex justify-between items-center"
                         id={batch.uuid}
-                        onClick={handleBatch}
                       >
-                        {batch.title}
-                      </p>
+                        <div className="flex space-x-1 items-center">
+                          <img
+                            src={folder}
+                            alt=""
+                            className="w-[17px] h-[18px]"
+                          />
+
+                          <p
+                            className="2xl:text-2xl phone:text-[14px]"
+                            id={batch.uuid}
+                          >
+                            {batch.title}
+                          </p>
+                        </div>
+
+                        {role == 2 ? (
+                          ""
+                        ) : (
+                          <span
+                            className="material-symbols-outlined text-primary cursor-pointer text-2xl phone:text-[14px] leading-[6px]"
+                            onClick={deleteForeverPopup}
+                            id={batch.uuid}
+                            ref={(ref) =>
+                              (deleteIconRef.current[batch.uuid] = ref)
+                            }
+                          >
+                            more_vert
+                          </span>
+                        )}
+                      </div>
                       {scriptCount[index] ? (
                         <p
                           id={batch.uuid}
-                          onClick={handleBatch}
                           className="text-gray-500 pt-1 phone:text-[12px]"
                         >
                           {scriptCount[index].script_count} Sections
                         </p>
                       ) : (
-                        <p
-                          id={batch.uuid}
-                          onClick={handleBatch}
-                          className="text-gray-500"
-                        >
+                        <p id={batch.uuid} className="text-gray-500">
                           0 Sections
                         </p>
                       )}
                     </div>
-                  </div>
-                  {popUpState == batch.uuid && (
-                    <div
-                      className="bg-white shadow-lg h-[30px] border-2 border-slate-300 w-20 absolute top-8 z-10 right-[-10px] rounded-lg"
-                      ref={deleteRef}
-                    >
-                      <p
-                        className="cursor-pointer  pl-3.5 pb-0.5 pt-0 hover:bg-primary text-textPrimary hover:text-white hover:rounded-lg"
-                        id={batch.uuid}
-                        onClick={props.handleTrash}
+                    {popUpState == batch.uuid && (
+                      <div
+                        className="bg-white  shadow-lg h-[30px] border-2 hover:bg-primary hover:text-white border-slate-300 w-20 hover:rounded-lg absolute top-10 z-10 right-[-16px] rounded-lg "
+                        ref={deleteRef}
                       >
-                        Delete
-                      </p>
-                    </div>
-                  )}
-                </div>
+                        <div
+                          className="flex items-center  hover:rounded-lg  space-x-1"
+                          id={batch.uuid}
+                          onClick={props.handleTrash}
+                        >
+                          <i
+                            className="fa-solid fa-trash cursor-pointer pl-1"
+                            id={batch.uuid}
+                            onClick={props.handleTrash}
+                          ></i>
+
+                          <p
+                            className="cursor-pointer  text-[16px]   hover:rounded-lg"
+                            id={batch.uuid}
+                            onClick={props.handleTrash}
+                          >
+                            Delete
+                          </p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </Link>
               ))
             ) : (
               <div className="text-xl text-textPrimary ">
@@ -187,71 +213,98 @@ export default function Main(props) {
             )}
           </div>
           <p className="font-semibold text-textPrimary text-xl phone:text-lg pt-5 pl-1">
-           New SECTION
+            SECTIONS
           </p>
           <div
             className={` m-auto grid 2xl:grid-cols-5 xl:grid-cols-4 lg:grid-cols-3 phone:grid-cols-2  gap-2  mt-2`}
           >
             {scriptList && scriptList.length > 0 ? (
-             
-              scriptList.map((script) => (
-                <div
-                  className="bg-white  border-[1px] rounded-[10px]  hover:border-primary  relative lg:p-[5px] xl:p-[10px] 2xl:p-[20px]"
-                  key={script.uuid}
+              scriptList.map((script, index) => (
+                <Link
+                  to={`/dashboard/${params.uuid}/s/${script.uuid}`}
+                  key={index}
                 >
-                  <div className="w-[100%] phone:p-[5px]">
-                    <div className=" rounded-t-lg text-end  ">
-                      {role == 2 ? (
-                        ""
-                      ) : (
-                        <span
-                          className="material-symbols-outlined text-primary cursor-pointer text-2xl phone:text-[14px] leading-[6px]"
-                          onClick={deleteForeverPopup}
-                          id={script.uuid}
-                          ref={(ref) =>
-                            (deleteIconRef.current[script.uuid] = ref)
-                          }
-                        >
-                          more_vert
-                        </span>
-                      )}
-                    </div>
+                  <div
+                    key={script.id}
+                    className="bg-white border-[1px] rounded-[10px] cursor-pointer  hover:border-primary relative   lg:p-[5px] xl:p-[10px] 2xl:p-[20px]"
+                    id={script.uuid}
+                  >
                     <div
-                      className="font-medium cursor-pointer"
+                      className="cursor-pointer phone:p-[5px] font-medium mt-2"
                       id={script.uuid}
-                      onClick={handleScripts}
                     >
-                      <p
-                        className="2xl:text-2xl phone:text-[14px]"
+                      <div
+                        className="flex justify-between items-center"
                         id={script.uuid}
-                        onClick={handleScripts}
                       >
-                        {script.title}
-                      </p>
+                        <div className="flex space-x-1 items-center">
+                          <img
+                            src={file}
+                            alt=""
+                            className="w-[17px] h-[18px]"
+                          />
+
+                          <p
+                            className="2xl:text-2xl phone:text-[14px]"
+                            id={script.uuid}
+                          >
+                            {script.title}
+                          </p>
+                        </div>
+
+                        {role == 2 ? (
+                          ""
+                        ) : (
+                          <span
+                            className="material-symbols-outlined text-primary cursor-pointer text-2xl phone:text-[14px] leading-[6px]"
+                            onClick={deleteForeverPopup}
+                            id={script.uuid}
+                            ref={(ref) =>
+                              (deleteIconRef.current[script.uuid] = ref)
+                            }
+                          >
+                            more_vert
+                          </span>
+                        )}
+                      </div>
                       <p
                         id={script.uuid}
-                        onClick={handleScripts}
-                        className="text-gray-500 pt-1 phone:text-[12px] text-sm"
+                        className="text-gray-500 pt-2 phone:text-[12px] text-sm"
                       >
-                       Edited: {formatDistanceToNow(new Date(script.updatedAt), { addSuffix: true })}
+                        Edited:{" "}
+                        {formatDistanceToNow(new Date(script.updatedAt), {
+                          addSuffix: true,
+                        })}
                       </p>
                     </div>
                     {popUpState == script.uuid && (
                       <div
-                        className="bg-white shadow-lg h-[30px] border-2 border-slate-300 w-20 absolute top-9 z-10 right-[-10px] rounded-lg"
+                        className="bg-white  shadow-lg h-[30px] border-2 hover:bg-primary hover:text-white border-slate-300 w-20 hover:rounded-lg absolute top-10 z-10 right-[-16px] rounded-lg "
                         ref={deleteRef}
                       >
-                        <p
-                          className="cursor-pointer  pl-3.5 pb-0.5 pt-0 hover:bg-primary text-textPrimary hover:text-white hover:rounded-lg"
+                        <div
+                          className="flex items-center  hover:rounded-lg  space-x-1"
                           id={script.uuid}
                           onClick={props.handleTrash}
                         >
-                          Delete
-                        </p>
+                          <i
+                            className="fa-solid fa-trash cursor-pointer pl-1"
+                            id={script.uuid}
+                          
+                          ></i>
+
+                          <p
+                            className="cursor-pointer  text-[16px]  hover:rounded-lg"
+                            id={script.uuid}
+                          
+                          >
+                            Delete
+                          </p>
+                        </div>
                       </div>
                     )}
                   </div>
-                </div>
+                </Link>
               ))
             ) : (
               <div className="text-xl text-textPrimary ">

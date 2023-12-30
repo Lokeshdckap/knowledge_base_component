@@ -73,6 +73,8 @@ export default function Dashboard() {
 
   const handleTrash = (e) => {
     let targetId = e.target.id;
+    e.preventDefault();
+    e.stopPropagation();
     if (targetId) {
       setLoading(true);
       axiosClient

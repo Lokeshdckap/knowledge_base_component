@@ -10,7 +10,13 @@ export default function EditPage(props) {
   const [newPagePopup, setNewPagePopup] = useState(false);
   const [OverPage, setOverPage] = useState(null);
   const treeNode = props.treeNode;
-  const { screenHeight, setScreenHeight } = useMyContext();
+  const {
+    screenHeight,
+    setScreenHeight,
+    hasChanges,
+    setHasChanges,
+    handleLinkClick,
+  } = useMyContext();
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
 
   useEffect(() => {
@@ -27,8 +33,6 @@ export default function EditPage(props) {
       window.removeEventListener("resize", updateScreenHeight);
     };
   }, [props.particularTitle, props.description, props.editorContent]);
-
-
 
   const onEmojiClick = (event, emojiObject) => {
     props.setInputStr(event.imageUrl);
@@ -47,8 +51,17 @@ export default function EditPage(props) {
             height: `calc(${screenHeight}px - 64px)`,
           }}
         >
-          <div className="space-y-2 ml-4 phone:ml-px mt-4">
-            <div className="p-4  phone:p-2 rounded-lg shadow">
+          <div className="space-y-2 ml-4 phone:ml-px mt-3">
+            <div onClick={props.addPage} className="flex justify-end pr-5">
+              <button
+                type="button"
+                className="text-primary text-[14px] hover:text-white border border-primary hover:bg-primary font-medium rounded-[8px]  px-3 py-1.5 text-center dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-500 dark:focus:ring-blue-800"
+              >
+                <i className="fa-solid fa-plus pr-1"></i>
+                Add Page
+              </button>
+            </div>
+            <div className="p-4 phone:p-2 rounded-lg shadow">
               {treeNode.map((topLevelPage, index) => (
                 <div key={topLevelPage.uuid} id={topLevelPage.uuid}>
                   <PageTree
@@ -76,17 +89,6 @@ export default function EditPage(props) {
           <hr
             className={`h-px w-[100%] bg-[#D5D7DA] border-0 m-auto dark:bg-gray-900 mt-4`}
           />
-          <div>
-            <div>
-              <p
-                className="text-xl cursor-pointer text-[#90979D] pl-5 pt-3"
-                onClick={props.addPage}
-              >
-                <i className="fa-regular fa-file" onClick={props.addPage}></i>{" "}
-                New Page
-              </p>
-            </div>
-          </div>
         </div>
         <div
           className={`bg-[#fbfbfc] px-[30px]  overflow-auto`}
@@ -105,12 +107,20 @@ export default function EditPage(props) {
                     ? props.inputStr
                     : `https://icons.getbootstrap.com/assets/icons/emoji-smile.svg`
                 }
-                onClick={() => props.setShowPicker((val) => !val)}
+                onClick={() => {
+                  props.setShowPicker((val) => !val);
+                  setHasChanges(true);
+                }}
               />
               {props.showPicker && (
                 <>
                   <Picker
-                    style={{ width: "50%", position: "absolute", zIndex: 10,left:"0px" }}
+                    style={{
+                      width: "50%",
+                      position: "absolute",
+                      zIndex: 10,
+                      left: "0px",
+                    }}
                     onEmojiClick={onEmojiClick} // Ensure this is correctly spelled and defined
                   />
                 </>
@@ -120,7 +130,10 @@ export default function EditPage(props) {
               type="text"
               className="text-3xl phone:text-[18px] phone:w-[190px]  focus:outline-none text-textPrimary font-bold"
               value={title}
-              onChange={(e) => props.setParticularTitle(e.target.value)}
+              onChange={(e) => {
+                props.setParticularTitle(e.target.value);
+                setHasChanges(true);
+              }}
               placeholder="Page Name"
               readOnly={
                 props.publish && props.publish.is_published ? true : false
@@ -131,14 +144,16 @@ export default function EditPage(props) {
             <input
               className="text-xl phone:text-[16px] phone:w-[170px] mt-3 ml-[32px] focus:outline-none text-textPrimary "
               value={props.description}
-              onChange={(e) => props.setDescription(e.target.value)}
+              onChange={(e) => {
+                props.setDescription(e.target.value);
+                setHasChanges(true);
+              }}
               placeholder="Page Description"
               readOnly={
                 props.publish && props.publish.is_published ? true : false
               }
             />
           </div>
-
           <div className={`pt-3`}>
             {props.setIsLoading ? (
               <div role="status" className="py-[50px]">

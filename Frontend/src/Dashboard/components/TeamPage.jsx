@@ -3,11 +3,15 @@ import mainLogo from "../../assets/images/mainlogo.png";
 import Input from "../../common/commonComponents/Input";
 import axiosClient from "../../axios-client";
 import { useNavigate } from "react-router-dom";
+import HashLoader from "react-spinners/HashLoader";
+
 
 export default function TeamPage() {
   const [formValues, setFormValues] = useState({});
   const [errors, setError] = useState({});
+  const [loading, setLoading] = useState(false);
 
+  
   const navigate = useNavigate();
 
   const HandleChange = (e) => {
@@ -25,10 +29,13 @@ export default function TeamPage() {
 
     setError(validationErrors);
     if (Object.keys(validationErrors).length === 0) {
+      setLoading(true);
       axiosClient
         .post("/api/teams/team", formValues)
         .then((res) => {
-          navigate(`/dashboard/${res.data.newTeam.uuid}`)
+          setLoading(false);
+
+          navigate(`/dashboard/${res.data.newTeam.uuid}`);
         })
         .catch((err) => {
           const response = err.response;
@@ -38,11 +45,13 @@ export default function TeamPage() {
             let value = Object.values(response.data);
 
             error[keys] = value;
+            setLoading(false);
 
             setError(error);
           } else {
             console.error("Error:", response.status);
           }
+          setLoading(false);
         });
     }
   };
@@ -86,7 +95,16 @@ export default function TeamPage() {
         </div>
       </div>
 
-      {/* </div> */}
+      {loading && (
+        <>
+          <div className="bg-[#aeaeca] opacity-[0.5] w-[100%] h-[100vh] absolute top-0 left-0  z-10"></div>
+          <div className="">
+            <p className="absolute top-[48%] left-[48%] z-50 ">
+              <HashLoader color="#3197e8" />
+            </p>
+          </div>
+        </>
+      )}
     </div>
   );
 }

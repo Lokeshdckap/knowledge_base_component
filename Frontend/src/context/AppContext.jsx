@@ -18,6 +18,7 @@ const MyContextProvider = ({ children }) => {
   const [childScript, setChildScript] = useState([]);
   const [loading, setLoading] = useState(false);
   const [trashData, setTrashData] = useState([]);
+  const [hasChanges, setHasChanges] = useState(false);
 
   //style State
   const [screenHeight, setScreenHeight] = useState(window.innerHeight);
@@ -123,7 +124,6 @@ const MyContextProvider = ({ children }) => {
     await axiosClient
       .get(`/api/batch/getBatch/${params.uuid}`)
       .then((res) => {
-
         setBatch(res.data.batchs);
         setScriptCount(res.data.results);
       })
@@ -147,7 +147,6 @@ const MyContextProvider = ({ children }) => {
     await axiosClient
       .get(`/api/dashboard/getScripts/${params.uuid}/${params.slug}`)
       .then((res) => {
-
         // setOverState(res.data.script_batch.batch_uuid);
         setChildScript(res.data.result);
       });
@@ -182,7 +181,7 @@ const MyContextProvider = ({ children }) => {
       .then((res) => {
         setLoading(false);
         getScript();
-        getBatch()
+        getBatch();
         if (batch_uuid) {
           handleAfterAddedChildrenScripts(batch_uuid);
         }
@@ -199,12 +198,36 @@ const MyContextProvider = ({ children }) => {
       });
   };
 
+  const addNewChildScript = () => {
+    let batch_uuid = params.slug;
+    setLoading(true);
+    axiosClient
+      .post("/api/scripts/addNewScript", {
+        uuid: params.uuid,
+        batch_uuid: batch_uuid,
+      })
+      .then((res) => {
+        setLoading(false);
+        getScript();
+        getBatch();
+        if (batch_uuid) {
+          handleAfterAddedChildrenScripts(batch_uuid);
+        }
+        setAddNewMenu(false);
+        setPopup(null);
+        showToastMessage(res.data.Success);
+      })
+      .catch((err) => {
+        console.log(err);
+        setLoading(false);
+      });
+  };
+
   const handleAfterAddedChildrenScripts = async (uuid) => {
     let batch_uuid = uuid;
     await axiosClient
       .get(`/api/dashboard/getBatchAndScripts/${params.uuid}/${batch_uuid}`)
       .then((res) => {
-   
         setChildScript(res.data.result);
         setScripts(res.data.result);
       })
@@ -218,11 +241,12 @@ const MyContextProvider = ({ children }) => {
     await axiosClient
       .get(`/api/dashboard/getBatchAndScripts/${team_uuid}/${batch_uuid}`)
       .then((res) => {
-        setBatchTitle(res.data.result[0].batch.title);
-        setbatchDescription(res.data.result[0].batch.description);
+        setBatchTitle(res.data.batchData.title);
+        setbatchDescription(res.data.batchData.description);
         setScripts(res.data.result);
         setChildScript(res.data.result);
         setLoading(false);
+        console.log(res.data);
       })
       .catch((err) => {
         console.log(err);
@@ -245,6 +269,7 @@ const MyContextProvider = ({ children }) => {
   const handleTrash = (e) => {
     let targetId = e.target.id;
     let batchId = e.target.dataset.set;
+
     if (targetId) {
       setLoading(true);
       axiosClient
@@ -263,7 +288,12 @@ const MyContextProvider = ({ children }) => {
             if (batchId) {
               handleAfterAddedChildrenScripts(batchId);
             }
-            navigate(`/dashboard/${params.uuid}`);
+            let url = `/dashboard/${params.uuid}/t/trash`;
+            console.log(url,window.location.pathname);
+            if (url !== window.location.pathname) {
+              navigate(`/dashboard/${params.uuid}`);
+
+            } 
           }
           getAllDeletedData();
         })
@@ -300,6 +330,21 @@ const MyContextProvider = ({ children }) => {
         const response = err.response;
         console.log(response);
       });
+  };
+
+  const handleLinkClick = (e) => {
+    if (hasChanges) {
+      const confirmed = window.confirm(
+        "Are you sure want to Leave? you have unsaved changes"
+      );
+      if (confirmed) {
+        setHasChanges(false);
+        navigate(e.currentTarget.getAttribute("href"));
+      } else {
+        e.preventDefault();
+        return false;
+      }
+    }
   };
 
   return (
@@ -353,6 +398,10 @@ const MyContextProvider = ({ children }) => {
         openSideNave,
         setOpenSideNave,
         role,
+        addNewChildScript,
+        hasChanges,
+        setHasChanges,
+        handleLinkClick,
       }}
     >
       {children}

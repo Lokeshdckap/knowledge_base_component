@@ -16,6 +16,8 @@ import axiosClient from "../../axios-client";
 import { PageTree } from "../commonComponents/PageTree";
 import { Search } from "./Search";
 import AttachesTool from "@editorjs/attaches";
+import HashLoader from "react-spinners/HashLoader";
+
 export const UrlPage = () => {
   const location = useLocation();
 
@@ -24,9 +26,12 @@ export const UrlPage = () => {
   const [script, setScript] = useState(null);
   const [page, setPages] = useState([]);
   const params = useParams();
+  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   //style State
   const [screenHeight, setScreenHeight] = useState(window.innerHeight);
+  const [screenWidth, setScreenWidth] = useState(window.innerWidth);
 
   const [serachPopup, setsearchPopup] = useState(false);
   const [searchPageData, setSearchPageData] = useState(null);
@@ -39,19 +44,24 @@ export const UrlPage = () => {
 
   useEffect(() => {
     if (params["*"]) {
+      setLoading(true);
       axiosClient
         .get(`/api/public/pages/${params.slug}/${params["*"]}`)
         .then((res) => {
           if (res.status == 200) {
+            setLoading(false);
+
             setLoadPage(res.data.publicUrl);
             setEditorValue(res.data.publicUrl.content);
           }
         })
         .catch((err) => {
+          setLoading(false);
+
           const response = err.response;
 
           if (response && response?.status === 404) {
-            navigate("/error");
+            navigate("/underMaintenance");
           } else {
             console.error("Error:", response?.status);
           }
@@ -63,31 +73,36 @@ export const UrlPage = () => {
         )
         .then((res) => {
           if (!res.data.script.is_published) {
-            navigate("/error");
+            navigate("/underMaintenance");
           }
           setParentOpen(res.data.parentPages);
           setPages(res.data.hierarchy);
+          setLoading(false);
+
           setScript(res.data.script);
         })
         .catch((err) => {
           const response = err.response;
-
+          setLoading(false);
           if (response && response?.status === 404) {
-            navigate("/error");
+            navigate("/underMaintenance");
           } else {
             console.error("Error:", response?.status);
           }
         });
     }
     if (params.slug && params["*"] == "") {
+      setLoading(true);
       axiosClient
         .get(
           `/api/public/documents/${params.uuid}/${params.slug}/${params["*"]}`
         )
         .then((res) => {
           if (!res.data.script.is_published) {
-            navigate("/error");
+            navigate("/underMaintenance");
           }
+          setLoading(false);
+
           setPages(res.data.hierarchy);
           setScript(res.data.script);
           setParentOpen(res.data.parentPages);
@@ -97,13 +112,16 @@ export const UrlPage = () => {
           const response = err.response;
 
           if (response && response?.status === 404) {
-            navigate("/error");
+            navigate("/underMaintenance");
           } else {
             console.error("Error:", response?.status);
+            setLoading(false);
           }
+          setLoading(false);
         });
 
       const updateScreenHeight = () => {
+        setScreenWidth(window.innerWidth);
         setScreenHeight(window.innerHeight);
       };
       // Attach the event listener for window resize
@@ -232,14 +250,14 @@ export const UrlPage = () => {
   return (
     <div className="">
       <div className="flex justify-between items-center py-[20px] px-[30px]">
-        <p className="font-bold text-2xl">{script && script.title}</p>
+        <p className="font-bold text-2xl phone:text-xl">{script && script.title}</p>
         <input
           type="text"
           placeholder="Search"
           onClick={() => setsearchPopup((prevState) => !prevState)}
           ref={searchInpRef}
           readOnly
-          className="bg-gray-200 rounded-md w-48 h-10 pl-2 focus:outline-primary cursor-pointer"
+          className="bg-gray-200 rounded-md w-48 h-10 phone:w-28 phone:h-9 pl-2 focus:outline-primary cursor-pointer"
         />
       </div>
       <hr className="" />
@@ -250,7 +268,7 @@ export const UrlPage = () => {
             maxHeight: `calc(${screenHeight}px - 85px)`,
           }}
         >
-          <div className="w-[250px] pr-[10px] pl-[24px] pt-[20px]">
+          <div className="w-[250px]  phone:w-[150px]  pr-[10px] pl-[24px] pt-[20px]">
             {page.map((topLevelPage, index) => (
               <div
                 key={topLevelPage.uuid}
@@ -270,9 +288,10 @@ export const UrlPage = () => {
         </div>
         <div className="bg-gray-300 w-px"></div>
         <div
-          className=" overflow-auto pt-10 pl-14"
+          className=" overflow-auto pt-10 phone:pl-[6px] pl-14  "
           style={{
-            width: "calc(100% - 250px)",
+            width:
+            screenWidth > "425" ? "calc(100% - 250px)" : "calc(100% - 150px)",
             maxHeight: `calc(${screenHeight}px - 85px)`,
           }}
         >
@@ -285,16 +304,16 @@ export const UrlPage = () => {
                   : `https://icons.getbootstrap.com/assets/icons/emoji-smile.svg`
               }
             />
-            <h1 className="text-3xl font-bold ">
+            <h1 className="text-3xl font-bold phone:text-[18px] phone:w-[190px] ">
               {page?.length == 0
                 ? "Page Name"
                 : loadPage?.title && loadPage?.title.split("-")[0]}
             </h1>
           </div>
-          <h4 className="text-xl my-3 ml-[32px]">
+          <h4 className="text-xl my-3 ml-[32px] phone:text-[16px] phone:w-[170px] ">
             {page?.length == 0 ? "Page description" : loadPage?.description}
           </h4>
-          <div id="editorjs" className="mr-64"></div>
+          <div id="editorjs" className="mr-64 phone:pl-[30px]"></div>
         </div>
       </div>
       {serachPopup && (
@@ -305,6 +324,16 @@ export const UrlPage = () => {
           searchPageData={searchPageData}
           setSearchPageData={setSearchPageData}
         />
+      )}
+      {loading && (
+        <>
+          <div className="bg-[#aeaeca] opacity-[0.5] w-[100%] h-[100vh] absolute top-0 left-0  z-10"></div>
+          <div className="">
+            <p className="absolute top-[48%] left-[48%] z-50 ">
+              <HashLoader color="#3197e8" />
+            </p>
+          </div>
+        </>
       )}
     </div>
   );

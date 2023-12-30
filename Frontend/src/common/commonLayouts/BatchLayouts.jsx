@@ -1,7 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useMyContext } from "../../context/AppContext";
 import { formatDistanceToNow } from "date-fns";
+import file from "../../assets/images/files.png";
+
 export const BatchLayouts = (props) => {
   const deleteIconRef = useRef({});
   const deleteRef = useRef(null);
@@ -40,12 +42,9 @@ export const BatchLayouts = (props) => {
   }, [popUpState]);
 
   const deleteForeverPopup = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
     setPopUpState(e.target.id);
-  };
-
-  const handleScripts = (e) => {
-    let TargetScriptId = e.target.id;
-    navigate(`/dashboard/${params.uuid}/s/${TargetScriptId}`);
   };
 
   return (
@@ -80,14 +79,15 @@ export const BatchLayouts = (props) => {
                 />
               </div>
             </div>
-            <div className="flex items-center space-x-5 pt-6 ">
+            <div onClick={props.AddChildScript}>
               <button
-                className="h-[45px] w-[160px] phone:h-[35px] phone:w-[100px]  text-white rounded  bg-primary"
-                onClick={props.AddScript}
-                id={params.slug}
+                className="flex items-center justify-center space-x-1 w-[160px]   phone:w-[80px] text-white rounded  bg-primary phone:text-[10px]"
                 disabled={role === 2 ? true : false}
               >
-                New Section
+                <span className="lg:py-[13.5px] phone:py-[5px]">
+                  <img src={file} alt="" className="w-[17px] h-[18px]" />
+                </span>
+                <span>New Section</span>
               </button>
             </div>
           </div>
@@ -102,45 +102,58 @@ export const BatchLayouts = (props) => {
           <div
             className={`m-auto grid 2xl:grid-cols-5 xl:grid-cols-4 lg:grid-cols-3 phone:grid-cols-2 gap-2 mt-2`}
           >
-            {scripts &&
-              scripts.map((script) => (
-                <div
-                  className="bg-white  border-[1px] rounded-[10px] hover:border-primary  relative lg:p-[5px] xl:p-[10px] 2xl:p-[20px]"
-                  key={script.id}
+            {scripts && scripts.length > 0 ? (
+              scripts.map((script, index) => (
+                <Link
+                  to={`/dashboard/${params.uuid}/s/${script.uuid}`}
+                  key={index}
                 >
-                  <div className="w-[100%] phone:p-[5px]">
-                    <div className="rounded-t-lg text-end pt-px">
-                      {role == 2 ? (
-                        ""
-                      ) : (
-                        <span
-                          className="material-symbols-outlined text-primary cursor-pointer phone:text-[14px] text-2xl "
-                          id={script.uuid}
-                          onClick={deleteForeverPopup}
-                          ref={(ref) =>
-                            (deleteIconRef.current[script.uuid] = ref)
-                          }
-                        >
-                          more_vert
-                        </span>
-                      )}
-                    </div>
+                  <div
+                    key={script.uuid}
+                    className="bg-white border-[1px] rounded-[10px] cursor-pointer  hover:border-primary relative   lg:p-[5px] xl:p-[10px] 2xl:p-[20px]"
+                    id={script.uuid}
+                  >
                     <div
-                      className=" font-medium cursor-pointer"
+                      className="cursor-pointer phone:p-[5px] font-medium mt-2"
                       id={script.uuid}
-                      onClick={handleScripts}
                     >
-                      <p
-                        className="2xl:text-2xl phone:text-[14px]"
+                      <div
+                        className="flex justify-between items-center"
                         id={script.uuid}
-                        onClick={handleScripts}
                       >
-                        {script.title}
-                      </p>
+                        <div className="flex space-x-1 items-center">
+                          <img
+                            src={file}
+                            alt=""
+                            className="w-[17px] h-[18px]"
+                          />
+
+                          <p
+                            className="2xl:text-2xl phone:text-[14px]"
+                            id={script.uuid}
+                          >
+                            {script.title}
+                          </p>
+                        </div>
+
+                        {role === 2
+                          ? ""
+                          : (
+                              <span
+                                className="material-symbols-outlined text-primary cursor-pointer text-2xl phone:text-[14px] leading-[6px]"
+                                onClick={deleteForeverPopup}
+                                id={script.uuid}
+                                ref={(ref) =>
+                                  (deleteIconRef.current[script.uuid] = ref)
+                                }
+                              >
+                                more_vert
+                              </span>
+                            )}
+                      </div>
                       <p
                         id={script.uuid}
-                        onClick={handleScripts}
-                        className="text-gray-500 pt-1 phone:text-[12px] text-sm"
+                        className="text-gray-500 pt-2 phone:text-[12px] text-sm"
                       >
                         Edited:{" "}
                         {formatDistanceToNow(new Date(script.updatedAt), {
@@ -148,23 +161,34 @@ export const BatchLayouts = (props) => {
                         })}
                       </p>
                     </div>
-                  </div>
-                  {popUpState == script.uuid && (
-                    <div
-                      className="bg-white shadow-lg h-[30px] border-2 border-slate-300 w-20 absolute top-9 z-10 right-[-10px] rounded-lg"
-                      ref={deleteRef}
-                    >
-                      <p
-                        className="cursor-pointer  pl-3.5 pb-0.5 pt-0 hover:bg-primary text-textPrimary hover:text-white hover:rounded-lg"
-                        id={script.uuid}
-                        onClick={props.handleTrash}
+                    {popUpState == script.uuid && (
+                      <div
+                        className="bg-white  shadow-lg h-[30px] border-2 hover:bg-primary hover:text-white border-slate-300 w-20 hover:rounded-lg absolute top-10 z-10 right-[-16px] rounded-lg "
+                        ref={deleteRef}
                       >
-                        Delete
-                      </p>
-                    </div>
-                  )}
-                </div>
-              ))}
+                        <div
+                          className="flex items-center  hover:rounded-lg  space-x-1"
+                          id={script.uuid}
+                          onClick={props.handleTrash}
+                        >
+                          <i
+                            className="fa-solid fa-trash cursor-pointer pl-1 "
+                            id={script.uuid}
+                          ></i>
+                          <p
+                            className="cursor-pointer  text-[16px] hover:rounded-lg"
+                            id={script.uuid}
+                          >
+                            Delete
+                          </p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </Link>
+              ))):(    <div className="text-xl text-textPrimary ">
+              No records of Sections
+            </div>)}
           </div>
         </div>
       </div>

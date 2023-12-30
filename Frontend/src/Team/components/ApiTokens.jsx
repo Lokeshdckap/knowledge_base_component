@@ -251,7 +251,6 @@ export const ApiTokens = () => {
             </table>
           </div>
           <div className="pt-5 text-right  ">
-            {console.log(currentPage, totalPages)}
             <Pagination
               defaultCurrent={currentPage}
               onChange={handlePageChange}

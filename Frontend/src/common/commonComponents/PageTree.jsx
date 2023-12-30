@@ -87,7 +87,13 @@ export const PageTree = ({
   const { slug, "*": wildcardValue } = useParams();
 
   return (
-    <div className="mb-1 " id={node.uuid} key={node.uuid}>
+    <div
+      className="mb-1 "
+      id={node.uuid}
+      key={node.uuid}
+      onMouseEnter={handleScriptMouseEnter}
+      onMouseLeave={handleScriptMouseLeave}
+    >
       <div
         key={node.uuid}
         className={`flex items-center hover:bg-slate-300 ${
@@ -128,9 +134,21 @@ export const PageTree = ({
         {node.ChildPages.length > 0 && (
           <button className="text-sm mr-2 " onClick={toggleOpen}>
             {isOpen ? (
-              <i className="fa-solid fa-angle-down cursor-pointer "></i>
+              <i
+                className="fa-solid fa-angle-down cursor-pointer "
+                id={node.uuid}
+                data-set={node.path}
+                onMouseEnter={handleScriptMouseEnter}
+                onMouseLeave={handleScriptMouseLeave}
+              ></i>
             ) : (
-              <i className="fa-solid fa-angle-up cursor-pointer rotate-90"></i>
+              <i
+                className="fa-solid fa-angle-up cursor-pointer rotate-90"
+                id={node.uuid}
+                data-set={node.path}
+                onMouseEnter={handleScriptMouseEnter}
+                onMouseLeave={handleScriptMouseLeave}
+              ></i>
             )}
           </button>
         )}

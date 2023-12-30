@@ -26,6 +26,7 @@ import { ScriptEditor } from "./Scripts/components/ScriptEditor.jsx";
 import { EmailVerificationCheck } from "./Auth/signup/signupContainer/EmailVerificationCheck";
 import GoogleCallback from "./Auth/signup/signupComponents/GoogleCallback";
 import { ApiTokens } from "./Team/components/ApiTokens.jsx";
+import { UnderMaintance } from "./Error/UnderMaintance.jsx";
 
 const router = createBrowserRouter([
   {
@@ -61,10 +62,7 @@ const router = createBrowserRouter([
         path: "/",
         element: <Navigate to={`/dashboard`} />,
       },
-      {
-        path: "/dashboard",
-        element: <Dashboards />,
-      },
+
       {
         path: "/dashboard/:uuid",
         element: <Dashboard />,
@@ -163,6 +161,10 @@ const router = createBrowserRouter([
     element: <Error />,
   },
   {
+    path: "/underMaintenance",
+    element: <UnderMaintance />,
+  },
+  {
     path: "/auth/google/*",
     element: <GoogleCallback />,
   },
@@ -173,6 +175,10 @@ const router = createBrowserRouter([
   {
     path: "/teampage",
     element: <TeamPage />,
+  },
+  {
+    path: "/dashboard",
+    element: <Dashboards />,
   },
 ]);
 

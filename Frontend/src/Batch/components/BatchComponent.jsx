@@ -20,7 +20,8 @@ export const BatchComponent = () => {
     batchDescription,
     setbatchDescription,
     scripts,
-    setLoading
+    setLoading,
+    addNewChildScript
   } = useMyContext();
   //hooks
 
@@ -78,7 +79,8 @@ export const BatchComponent = () => {
 
   const handleTrash = (e) => {
     let targetId = e.target.id;
-
+    e.preventDefault();
+    e.stopPropagation();
     if (targetId) {
       setLoading(true);
       axiosClient
@@ -106,13 +108,14 @@ export const BatchComponent = () => {
       setbatchDescription(e.target.value);
     }
   };
+  console.log(batchTitle);
 
   return (
     <>
       <BatchHeader batchTitle={batchTitle} />
 
       <BatchLayouts
-        AddScript={addNewScript}
+        AddChildScript={addNewChildScript}
         scripts={scripts}
         batchTitle={batchTitle}
         setBatchTitle={setBatchTitle}

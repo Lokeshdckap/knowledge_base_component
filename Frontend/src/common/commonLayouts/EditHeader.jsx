@@ -12,6 +12,10 @@ export default function EditHeader(props) {
     },
   ];
   const [loadings, setLoadings] = useState([]);
+
+  const [selectedImage, setSelectedImage] = useState();
+  const [image, setImage] = useState(null);
+
   const enterLoading = (index) => {
     setLoadings((state) => {
       const newLoadings = [...state];
@@ -28,17 +32,61 @@ export default function EditHeader(props) {
     }, 6000);
   };
 
+  const handleImageChange = (event) => {
+    const file = event.target.files[0];
+
+    if (file) {
+      // You can perform additional checks here if needed
+      setSelectedImage(URL.createObjectURL(file));
+      setImage(file);
+    }
+  };
+
   return (
     <div className="bg-[#ffff] w-[100%]">
       <div
         className={`flex items-center m-auto justify-between relative w-[100%]  2xl:py-[30px] py-[10px]  px-[30px] phone:px-[10px]`}
       >
-        <input
-          className="text-[#444449] font-bold text-2xl bg-[#EEEEEE] focus:outline-gray-300 w-80 h-11 phone:h-8 pl-2 phone:w-[160px] rounded"
-          value={props.inputValue}
-          onChange={(e) => props.changeEvent(e.target.value)}
-        />
-        <div className="flex items-center justify-between max-w-[200px] phone:max-w-[140px]  w-[100%]">
+        <div className="flex items-center">
+          <div className=" cursor-pointer p-1">
+            <label htmlFor="imageInput" className="cursor-pointer">
+              {selectedImage ? (
+                <>
+                  <img
+                    src={selectedImage}
+                    alt="Selected"
+                    className="object-cover w-[40px]"
+                  />
+                    <input
+                    type="file"
+                    id="imageInput"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={handleImageChange}
+                  />
+                </>
+              ) : (
+                <>
+                  <i className="fa-regular text-slate-600 fa-circle-user text-2xl cursor-pointer pr-1 "></i>
+                  <input
+                    type="file"
+                    id="imageInput"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={handleImageChange}
+                  />
+                </>
+              )}
+            </label>
+          </div>
+          <input
+            className="text-[#444449] font-bold text-2xl bg-[#EEEEEE] focus:outline-gray-300 w-80 h-11 phone:h-8 pl-2 phone:w-[160px] rounded"
+            value={props.inputValue}
+            onChange={(e) => props.changeEvent(e.target.value)}
+          />
+        </div>
+
+        <div className="flex items-center justify-between max-w-[110px] phone:max-w-[140px]  w-[100%]">
           <div>
             <Space direction="vertical">
               <Dropdown.Button
@@ -54,7 +102,7 @@ export default function EditHeader(props) {
             </Space>
           </div>
 
-          <Link to={`dashboard/*`}>
+          {/* <Link to={`dashboard/*`}>
             <button
               type="button"
               className="text-textPrimary border-[1px] phone:text-sm border-gray-400 font-medium rounded-lg text-sm h-9 w-24 phone:w-16 phone:h-7 "
@@ -62,7 +110,7 @@ export default function EditHeader(props) {
             >
               Share
             </button>
-          </Link>
+          </Link> */}
         </div>
       </div>
     </div>

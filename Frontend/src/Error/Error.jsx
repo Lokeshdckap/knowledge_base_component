@@ -5,7 +5,7 @@ import errorImg from "../assets/images/Maintance.png";
 export default function Error() {
   return (
     <div className="flex justify-center">
-        <img src={errorImg} alt=""/>
+        <p className="text-3xl ">404 Not Found</p>
     </div>
   );
 }

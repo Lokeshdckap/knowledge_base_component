@@ -8,13 +8,15 @@ import { ToastContainer, toast } from "react-toastify";
 import { useMyContext } from "../../context/AppContext";
 import { ViewHeader } from "../../common/commonLayouts/ViewHeader";
 import { ViewPage } from "../../common/commonLayouts/ViewPage";
+import HashLoader from "react-spinners/HashLoader";
+
+
 
 export const ScriptEditor = () => {
   const navigate = useNavigate();
   const params = useParams();
 
-
-  const { getScript, script, getScripts,role } = useMyContext();
+  const { getScript, script, getScripts, role } = useMyContext();
 
   //hooks
 
@@ -48,8 +50,7 @@ export const ScriptEditor = () => {
   const [loading, setLoading] = useState(false);
   const [parentOpen, setParentOpen] = useState(null);
 
-
-  const [emoji,setEmoji]  =useState("")
+  const [emoji, setEmoji] = useState("");
   const duration = 2000;
 
   const location = useLocation();
@@ -72,20 +73,25 @@ export const ScriptEditor = () => {
   //Api
 
   const getParticularPage = async () => {
+    setLoading(true);
     await axiosClient
       .get(`/api/pages/getPage/${pageIds}`)
       .then((res) => {
         setParticularTitle(res.data.pages.title.split("-")[0]);
         setDescription(res.data.pages.description);
-        setEmoji(res.data.pages.emoji)
+        setEmoji(res.data.pages.emoji);
         setEditorValue(res.data.pages.content);
+        setLoading(false);
       })
       .catch((err) => {
         console.log(err);
+        setLoading(false);
       });
   };
 
   const getParticularOpenScript = async () => {
+    setLoading(true);
+
     let script_uuid = params.slug;
 
     await axiosClient
@@ -94,24 +100,32 @@ export const ScriptEditor = () => {
         navigate(
           `/dashboard/${params.uuid}/changes/${params.slug}/?pageId=${res.data.hierarchy[0].uuid}`
         );
+        setLoading(false);
       })
       .catch((err) => {
         console.log(err);
+        setLoading(false);
       });
   };
 
   const getParentOpen = async () => {
+    setLoading(true);
+
     await axiosClient
       .get(`/api/dashboard/getOpenParent/${pageIds}`)
       .then((res) => {
         setParentOpen(res.data.parentPages);
+        setLoading(false);
       })
       .catch((err) => {
         console.log(err);
+        setLoading(false);
       });
   };
 
   const getParticularScript = async () => {
+    setLoading(true);
+
     let script_uuid = params.slug;
     await axiosClient
       .get(`/api/dashboard/getScriptAndPage/${script_uuid}`)
@@ -122,10 +136,12 @@ export const ScriptEditor = () => {
           setTreeNode(res.data.hierarchy);
           setRenderScript(res.data.getScriptAndPages);
           setPublish(res.data.getScriptAndPages);
+          setLoading(false);
         }
       })
       .catch((err) => {
         console.log(err);
+        setLoading(false);
       });
   };
 
@@ -146,13 +162,17 @@ export const ScriptEditor = () => {
   };
 
   const handleEdit = () => {
+    setLoading(true);
+
     axiosClient
       .get(`/api/public/scripts/${params.slug}/${false}`)
       .then((res) => {
         navigate(`/dashboard/${params.uuid}/s/${params.slug}`);
+        setLoading(false);
       })
       .catch((err) => {
         console.log(err);
+        setLoading(false);
       });
   };
 
@@ -188,6 +208,16 @@ export const ScriptEditor = () => {
         teamUuid={teamUuid}
         emoji={emoji}
       />
+      {loading && (
+        <>
+          <div className="bg-[#aeaeca] opacity-[0.5] w-[100%] h-[100vh] absolute top-0 left-0  z-10"></div>
+          <div className="">
+            <p className="absolute top-[48%] left-[48%] z-50 ">
+              <HashLoader color="#3197e8" />
+            </p>
+          </div>
+        </>
+      )}
     </>
   );
 };

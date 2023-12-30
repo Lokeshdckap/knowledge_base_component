@@ -11,9 +11,22 @@ import BreakLine from "editorjs-break-line";
 import axiosClient from "../../axios-client";
 import AttachesTool from "@editorjs/attaches";
 import Header from "@editorjs/header";
+import { useMyContext } from "../../context/AppContext";
 
 export const EditorComponents = (props) => {
+
+  const {
+    screenHeight,
+    setScreenHeight,
+    hasChanges,
+    setHasChanges,
+    handleLinkClick,
+  } = useMyContext();
+
+
   const ejInstance = useRef();
+
+
   const initEditor = () => {
     const editor = new EditorJS({
       holder: "editorjs",
@@ -28,6 +41,7 @@ export const EditorComponents = (props) => {
           // Check if editor is defined before calling save method
           if (editor) {
             const content = await editor.saver.save();
+            setHasChanges(true);
             props.setEditorContent(content);
           }
         } catch (error) {
@@ -182,7 +196,7 @@ export const EditorComponents = (props) => {
   }, [props.editorValue]);
   return (
     <>
-      <div id="editorjs" className="z-0"></div>
+      <div id="editorjs" className="z-0 2xl:mr-1240px" ></div>
     </>
   );
 };

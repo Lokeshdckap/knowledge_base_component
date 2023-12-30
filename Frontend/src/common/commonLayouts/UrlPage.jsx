@@ -17,8 +17,11 @@ import { PageTree } from "../commonComponents/PageTree";
 import { Search } from "./Search";
 import AttachesTool from "@editorjs/attaches";
 import HashLoader from "react-spinners/HashLoader";
+import { formatDistanceToNow,isValid } from 'date-fns'
+
 
 export const UrlPage = () => {
+
   const location = useLocation();
 
   const navigate = useNavigate();
@@ -41,6 +44,12 @@ export const UrlPage = () => {
   const [loadPage, setLoadPage] = useState({});
 
   const searchInpRef = useRef();
+  const createdAt = script?.createdAt;
+  let formattedTime = 'Invalid date';
+  
+  if (createdAt && isValid(new Date(createdAt))) {
+    formattedTime = formatDistanceToNow(new Date(createdAt), { addSuffix: true });
+  }
 
   useEffect(() => {
     if (params["*"]) {
@@ -72,6 +81,7 @@ export const UrlPage = () => {
           `/api/public/documents/${params.uuid}/${params.slug}/${params["*"]}`
         )
         .then((res) => {
+          console.log(res);
           if (!res.data.script.is_published) {
             navigate("/underMaintenance");
           }
@@ -269,6 +279,8 @@ export const UrlPage = () => {
           }}
         >
           <div className="w-[250px]  phone:w-[150px]  pr-[10px] pl-[24px] pt-[20px]">
+
+         
             {page.map((topLevelPage, index) => (
               <div
                 key={topLevelPage.uuid}
@@ -311,7 +323,21 @@ export const UrlPage = () => {
             </h1>
           </div>
           <h4 className="text-xl my-3 ml-[32px] phone:text-[16px] phone:w-[170px] ">
-            {page?.length == 0 ? "Page description" : loadPage?.description}
+            {page?.length == 0 ? "Page description" : loadPage?.description}</h4>
+          <div className="float-right mx-10">
+          <p><span className="font-medium">Created By Team :</span> {script?.title} Team</p>
+          <p><span className="font-medium">Created At :</span> {formattedTime}</p>
+          <p><span className="font-medium">Last Modified At :</span> {formatDistanceToNow(new Date(script?.updatedAt), { addSuffix: true })}</p>
+          </div>
+          <h1 className="text-3xl font-bold mb-5">
+            {page.length == 0
+              ? "Page Name"
+              : loadPage.title && loadPage.title.split("-")[0]}
+          </h1>
+
+          <h4 className="text-xl mb-5">
+            {page.length == 0 ? "Page description" : loadPage.description}
+
           </h4>
           <div id="editorjs" className="mr-64 phone:pl-[30px]"></div>
         </div>

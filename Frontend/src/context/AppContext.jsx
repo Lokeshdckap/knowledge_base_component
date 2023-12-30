@@ -20,6 +20,7 @@ const MyContextProvider = ({ children }) => {
   const [trashData, setTrashData] = useState([]);
   const [hasChanges, setHasChanges] = useState(false);
 
+
   //style State
   const [screenHeight, setScreenHeight] = useState(window.innerHeight);
 
@@ -313,6 +314,7 @@ const MyContextProvider = ({ children }) => {
     axiosClient
       .get(`/api/trash/getAllTrash/${params.uuid}`)
       .then((res) => {
+          console.log(res);
         setTrashData(res.data.itemsWithDaysLeft);
       })
       .catch((err) => {

@@ -156,14 +156,14 @@ const addScriptTitle = async (req, res) => {
           req.body.inputValue.split(" ").filter(Boolean).join("").toLowerCase();
 
         const scriptTitleUpdate = await Script.update(
-          {title:req.body.inputValue,path:paths},
+          { title: req.body.inputValue, path: paths },
           {
             where: { uuid: req.body.queryParameter },
           }
         );
 
         const updatePath = await Page.findAll({
-          where: { script_uuid: req.body.queryParameter},
+          where: { script_uuid: req.body.queryParameter },
         });
 
         const updateAllPages = async () => {
@@ -176,7 +176,11 @@ const addScriptTitle = async (req, res) => {
             const updatedPath = pathArray.join("/");
 
             // Update the current row with its corresponding updatedPath
-            scriptPaths.path = updatedPath.split(" ").filter(Boolean).join("").toLowerCase();
+            scriptPaths.path = updatedPath
+              .split(" ")
+              .filter(Boolean)
+              .join("")
+              .toLowerCase();
             await scriptPaths.save();
           }
         };
@@ -207,8 +211,45 @@ const addScriptTitle = async (req, res) => {
   }
 };
 
+const scriptLogo = async (req, res) => {
+  try {
+    const script_uuid = req.body.uuid;
+    let scriptLogo;
+    if (req.file) {
+      const { filename } = req.file ? req.file : null;
+      scriptLogo = `http://localhost:4000/uploads/${filename}`;
+    }
+
+    const scriptFind = await Script.findOne({
+      where: {
+        uuid: script_uuid,
+      },
+    });
+
+    if (scriptFind) {
+      let updateData = {
+        logo: scriptLogo,
+      };
+      await Script.update(updateData, {
+        where: {
+          uuid: script_uuid,
+        },
+      });
+      return res
+        .status(200)
+        .json({ message: "Script Logo Update Sucessfully" });
+    } else {
+      return res.status(500).json({ message: "Script Logo Can't Update !" });
+    }
+  } 
+  catch (err) {
+    return res.status(500).json({ message: "Script Logo Can't Update !" });
+  }
+};
+
 module.exports = {
   addNewScripts,
   getScript,
   addScriptTitle,
+  scriptLogo,
 };

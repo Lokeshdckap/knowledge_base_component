@@ -284,6 +284,7 @@ const pageSearch = async (req, res) => {
           [Op.and]: [whereClause, { script_uuid: script.uuid }],
         },
       });
+      
       return res.status(200).json(pages);
     } catch (error) {
       console.error(error);

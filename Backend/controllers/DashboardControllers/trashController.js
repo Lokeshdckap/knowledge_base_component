@@ -17,6 +17,12 @@ const getAllTrash = async (req, res) => {
         },
       },
     });
+
+    let batch_id = [];
+    for (allTrash of allTrashBatch) {
+      batch_id.push(allTrash.uuid);
+    }
+
     const allTrashScript = await Script.findAll({
       where: {
         team_uuid: team_uuid,
@@ -24,7 +30,27 @@ const getAllTrash = async (req, res) => {
           [Op.not]: null,
         },
       },
+      include: [
+        {
+          model: Batch,
+          attributes: ["title"],
+          where: {
+            team_uuid: team_uuid,
+          },
+        },
+      ],
     });
+
+    const allTrashScripts = await Script.findAll({
+      where: {
+        team_uuid: team_uuid,
+        deleted_at: {
+          [Op.not]: null,
+        },
+        batch_uuid: null,
+      },
+    });
+
     const itemsWithDaysLeft = allTrashScript.map((item) => {
       const deletionTimestamp = item.deleted_at; // Get deletion timestamp from your data
       const now = new Date();
@@ -37,6 +63,7 @@ const getAllTrash = async (req, res) => {
       } else {
         left = 7;
       }
+
       return {
         id: item.id,
         uuid: item.uuid,
@@ -46,11 +73,21 @@ const getAllTrash = async (req, res) => {
         is_published: item.is_published,
         createdAt: item.createdAt,
         updateAt: item.updatedAt,
-        deleted_at: `${left} days left`,
+        deleted_at: item.deleted_at,
+        batch: item.batch.dataValues.title,
       };
     });
+
+    if (allTrashBatch.length > 0) {
+      for (let allTrashBatchs of allTrashBatch) {
+        itemsWithDaysLeft.push(allTrashBatchs);
+      }
+    }
+    for (let allTrashScriptsr of allTrashScripts) {
+      itemsWithDaysLeft.push(allTrashScriptsr);
+    }
+
     return res.status(200).json({
-      allTrashBatch,
       itemsWithDaysLeft,
       message: "AllTrash Fetched Successfully",
     });
@@ -72,6 +109,7 @@ const moveToTrash = async (req, res) => {
         uuid: batchOrScriptUuid,
       },
     });
+
     const checkForScript = await Script.findOne({
       where: {
         team_uuid: team_uuid,
@@ -82,40 +120,45 @@ const moveToTrash = async (req, res) => {
     if (checkForBatch) {
       let updateData = {
         deleted_at: sequelize.literal("NOW()"),
-        batch_uuid: null,
       };
+
       const deletedBatch = await Batch.update(updateData, {
         where: {
           [Op.and]: [{ team_uuid: team_uuid }, { uuid: checkForBatch.uuid }],
         },
       });
+
       if (deletedBatch > 0) {
-        const updatedTable = await Script.update(updateData, {
-          where: {
-            batch_uuid: checkForBatch.uuid,
-          },
-        });
-        if (updatedTable > 0) {
+        const updatedTable = await Script.update(
+          { deleted_at: sequelize.literal("NOW()") },
+          {
+            where: {
+              batch_uuid: checkForBatch.uuid,
+            },
+          }
+        );
+
+        if (updatedTable > 0 || deletedBatch > 0) {
           return res
             .status(200)
             .json({ deletedBatch, message: "Folder Deleted Sucessfully" });
         } else {
-          return res.status(500).json({ error: "Deleted Failed" });
+          return res.status(500).json({ error: "Deleted Failed loooo" });
         }
       }
-    } else {
-      let updateData = {
-        deleted_at: sequelize.literal("NOW()"),
-      };
-      const deletedScript = await Script.update(updateData, {
-        where: {
-          [Op.and]: [{ team_uuid: team_uuid }, { uuid: checkForScript.uuid }],
-        },
-      });
-      return res
-        .status(200)
-        .json({ deletedScript, message: "Folder Deleted Sucessfully" });
     }
+
+    let updateData = {
+      deleted_at: sequelize.literal("NOW()"),
+    };
+    const deletedScript = await Script.update(updateData, {
+      where: {
+        [Op.and]: [{ team_uuid: team_uuid }, { uuid: checkForScript.uuid }],
+      },
+    });
+    return res
+      .status(200)
+      .json({ deletedScript, message: "Section Deleted Sucessfully" });
   } catch (err) {
     return res.status(500).json({ error: "Deleted Failed" });
   }
@@ -133,19 +176,97 @@ const restoreParticular = async (req, res) => {
         uuid: batchOrScriptUuid,
       },
     });
+
+    const checkForBatch = await Batch.findOne({
+      where: {
+        team_uuid: team_uuid,
+        uuid: batchOrScriptUuid,
+      },
+    });
+
     if (checkForScript) {
+      const batchs = await Batch.findOne({
+        where: {
+          team_uuid: team_uuid,
+          uuid: checkForScript.batch_uuid,
+        },
+      });
+
+      if (batchs == null) {
+        let updateData = {
+          deleted_at: null,
+        };
+
+        const restoreScript = await Script.update(updateData, {
+          where: {
+            [Op.and]: [{ team_uuid: team_uuid }, { uuid: checkForScript.uuid }],
+          },
+        });
+
+        if (restoreScript > 0) {
+          return res.status(200).json({
+            restoreScript,
+            state: true,
+            message: "Section Restore Sucessfully",
+          });
+        } else {
+          return res.status(500).json({ error: "Restore Failed" });
+        }
+      }
+
+      if (batchs.deleted_at == null) {
+        let updateData = {
+          deleted_at: null,
+        };
+
+        const restoreScript = await Script.update(updateData, {
+          where: {
+            [Op.and]: [{ team_uuid: team_uuid }, { uuid: checkForScript.uuid }],
+          },
+        });
+
+        if (restoreScript > 0) {
+          return res.status(200).json({
+            restoreScript,
+            state: true,
+            message: "Section Restore Sucessfully",
+          });
+        } else {
+          return res.status(500).json({ error: "Restore Failed" });
+        }
+      } else {
+        return res.status(200).json({ state: false, message: "Can't Restore" });
+      }
+    }
+
+    if (checkForBatch) {
       let updateData = {
         deleted_at: null,
       };
-      const restoreScript = await Script.update(updateData, {
+      const restoreBatch = await Batch.update(updateData, {
         where: {
-          [Op.and]: [{ team_uuid: team_uuid }, { uuid: checkForScript.uuid }],
+          [Op.and]: [{ team_uuid: team_uuid }, { uuid: checkForBatch.uuid }],
         },
       });
-      if (restoreScript > 0) {
-        return res
-          .status(200)
-          .json({ restoreScript, message: "Section Restore Sucessfully" });
+
+      await Script.update(
+        { deleted_at: null },
+        {
+          where: {
+            [Op.and]: [
+              { team_uuid: team_uuid },
+              { batch_uuid: checkForBatch.uuid },
+            ],
+          },
+        }
+      );
+
+      if (restoreBatch > 0) {
+        return res.status(200).json({
+          restoreBatch,
+          state: true,
+          message: "Folder and Scripts Restore Sucessfully",
+        });
       } else {
         return res.status(500).json({ error: "Restore Failed" });
       }
@@ -160,26 +281,54 @@ const restoreParticular = async (req, res) => {
 const permanentDeleteParticular = async (req, res) => {
   try {
     const team_uuid = req.params.uuid;
-    const script_uuid = req.params.batchOrScriptuuid;
-    await Script.destroy({
+    const batchOrScriptuuid = req.params.batchOrScriptuuid;
+
+    const checkForScript = await Script.findOne({
       where: {
-        [Op.and]: [{ team_uuid: team_uuid }, { uuid: script_uuid }],
+        team_uuid: team_uuid,
+        uuid: batchOrScriptuuid,
       },
     });
+
+    if (checkForScript) {
+      await Script.destroy({
+        where: {
+          [Op.and]: [{ team_uuid: team_uuid }, { uuid: batchOrScriptuuid }],
+        },
+      });
+    }
+
+    await Batch.destroy({
+      where: {
+        [Op.and]: [{ team_uuid: team_uuid }, { uuid: batchOrScriptuuid }],
+      },
+    });
+
     return res
       .status(200)
-      .json({ message: "Sections & Pages  Deleted Sucessfully" });
+      .json({ message: "Folders  or  Sections & Pages  Deleted Sucessfully" });
   } catch (err) {
     return res.status(404).json({ error: "Delete Failed or Can't Find" });
   }
 };
 
 const permanentDeleteAll = async (req, res) => {
-  const team_uuid = req.params.uuid;
-
   try {
     const team_uuid = req.params.uuid;
+
     await Script.destroy({
+      where: {
+        [Op.and]: [
+          { team_uuid: team_uuid },
+          {
+            deleted_at: {
+              [Op.not]: null,
+            },
+          },
+        ],
+      },
+    });
+    await Batch.destroy({
       where: {
         [Op.and]: [
           { team_uuid: team_uuid },
@@ -218,10 +367,20 @@ const selectedTrash = async (req, res) => {
       },
     });
 
-    if (deleteResult > 0) {
-      return res
-        .status(200)
-        .json({ message: "Selected Section Deleted Successfully" });
+    const deleteResults = await Batch.destroy({
+      where: {
+        [Op.and]: [
+          { team_uuid: team_uuid },
+          { uuid: selectedUuids },
+          { deleted_at: { [Op.not]: null } },
+        ],
+      },
+    });
+
+    if (deleteResult > 0 || deleteResults > 0) {
+      return res.status(200).json({
+        message: "Selected Folders  or Section  Deleted Successfully",
+      });
     } else {
       return res
         .status(404)
@@ -232,6 +391,40 @@ const selectedTrash = async (req, res) => {
   }
 };
 
+const deleteOldRecords = async () => {
+  try {
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+    // Find records older than 7 days
+    const recordsToDelete = await Script.findAll({
+      where: {
+        deleted_at: {
+          [Op.not]: null,
+          [Op.lt]: sevenDaysAgo,
+        },
+      },
+    });
+
+    for (const record of recordsToDelete) {
+      await record.destroy();
+    }
+
+    console.log(`${recordsToDelete.length} records deleted.`);
+  } catch (error) {
+    console.error("Error deleting old records:", error);
+  }
+};
+// Schedule the function to run periodically (e.g., daily)
+// This depends on the scheduling mechanism you choose (cron, task scheduler, etc.)
+// For example, using a simple setTimeout for demonstration purposes:
+const scheduleInterval = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+
+const scheduleDeletion = () => {
+  deleteOldRecords(); // Initial run
+  setInterval(deleteOldRecords, scheduleInterval); // Subsequent runs
+};
+
 module.exports = {
   getAllTrash,
   moveToTrash,
@@ -239,4 +432,5 @@ module.exports = {
   permanentDeleteParticular,
   permanentDeleteAll,
   selectedTrash,
+  scheduleDeletion,
 };

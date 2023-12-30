@@ -117,6 +117,10 @@ const getBatch = async (req, res) => {
     GROUP BY batches.uuid
     ORDER BY batches.uuid DESC`;
 
+    // SELECT * FROM batches
+    // JOIN scripts ON scripts.batch_uuid = batches.uuid
+    // WHERE batches.deleted_at IS NOT NULL and scripts.batch_uuid = '131fce44-35bd-4f63-a9cb-ad7196c6681c'; 
+
     const [results] = await sequelize.query(joinQuery, {
       replacements: { team_uuid },
     });

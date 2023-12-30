@@ -264,6 +264,8 @@ const updatePageData = async (req, res) => {
   }
 };
 
+
+
 const permanentDeletePage = async (req, res) => {
   const deletePageAndChildren = async (pageId) => {
     // Delete the current page and its children recursively

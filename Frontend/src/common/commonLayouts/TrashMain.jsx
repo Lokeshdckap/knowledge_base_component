@@ -2,11 +2,14 @@ import React, { useEffect, useRef, useState } from "react";
 import deletes from "../../assets/images/delete.png";
 import HashLoader from "react-spinners/HashLoader";
 import { Checkbox } from "antd";
-
+import { formatDistanceToNow } from "date-fns";
+import { RestoreConfirmation } from "../commonComponents/RestoreConfirmation";
+import moment from 'moment';
 export const TrashMain = (props) => {
+ 
+  
   const [deleteState, setDeleteState] = useState(null);
   const [screenHeight, setScreenHeight] = useState(window.innerHeight);
-
   const deleteIconRef = useRef({});
   const deleteRef = useRef(null);
 
@@ -41,10 +44,10 @@ export const TrashMain = (props) => {
 
   return (
     <div
-      className="bg-[#F4F7FC]  h-[500px] overflow-auto  pl-[30px] pr-[30px]"
+      className="bg-[#F4F7FC] h-[500px] overflow-auto pl-[30px] pr-[30px]"
       style={{ height: `calc(${screenHeight}px - 64px)` }}
     >
-      <div className="text-2xl phone:text-[16px] text-textPrimary  pt-3 pb-3">
+      <div className="text-2xl phone:text-[16px] text-textPrimary pt-3 pb-3">
         {props.trashData ? (
           props.trashData.length > 0 ? (
             // Render if there are items in the trash
@@ -60,7 +63,7 @@ export const TrashMain = (props) => {
       </div>
       {props.trashData ? (
         props.trashData.length > 0 ? (
-          <div className="m-auto grid 2xl:grid-cols-5 xl:grid-cols-4 lg:grid-cols-3 phone:grid-cols-2 gap-4">
+          <div className="m-auto grid 2xl:grid-cols-5 xl:grid-cols-4 lg:grid-cols-3 phone:grid-cols-2 gap-4 mt-8">
             {props.trashData.map((trashScript) => (
               <div
                 key={trashScript.uuid}
@@ -74,10 +77,10 @@ export const TrashMain = (props) => {
               >
                 <div className="w-[100%] phone:p-[5px]">
                   <div
-                    className="rounded-t-lg flex items-center justify-between  "
+                    className="rounded-t-lg flex items-center justify-between"
                     id={trashScript.uuid}
                   >
-                    {props.role == 2 ? (
+                    {props.role === 2 ? (
                       ""
                     ) : (
                       <>
@@ -104,12 +107,15 @@ export const TrashMain = (props) => {
                     id={trashScript.uuid}
                   >
                     <p id={trashScript.uuid}>{trashScript.title}</p>
+                    {trashScript.batch && (
+                      <p id={trashScript.uuid}>Parent Folder : {trashScript.batch}</p>
+                    )}
                     <p className="text-gray-500 pt-1" id={trashScript.uuid}>
-                      {trashScript.deleted_at}
+                      {"7days Left"}
                     </p>
                   </div>
                 </div>
-                {deleteState == trashScript.uuid && (
+                {deleteState === trashScript.uuid && (
                   <div
                     className="bg-white shadow-lg h-[70px] w-32 absolute top-8 z-10 right-[-10px] rounded-lg"
                     ref={deleteRef}
@@ -140,16 +146,12 @@ export const TrashMain = (props) => {
           </div>
         )
       ) : (
-        <div>
-          <>
-            <div className="bg-[#aeaeca] opacity-[0.5] w-[100%] h-[100vh] absolute top-0 left-0  z-10"></div>
-            <div className="">
-              <p className="absolute top-[48%] left-[48%] z-50 ">
-                <HashLoader color="#3197e8" />
-              </p>
-            </div>
-          </>
-        </div>
+        <></>
+      )}
+      {props.restorePopup && (
+        <>
+          <RestoreConfirmation setRestorePopup={props.setRestorePopup} />
+        </>
       )}
     </div>
   );

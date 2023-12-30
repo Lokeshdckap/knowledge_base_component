@@ -322,9 +322,11 @@ export const ScriptComponents = () => {
       });
   };
 
+  console.log(particularTitle);
   const contentPage = async (e) => {
     setPageId(e.target.id);
     let pageId = e.target.id;
+
     console.log(pageId);
     if (pageId != pageIds) {
       const postData = {

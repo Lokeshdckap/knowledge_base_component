@@ -45,6 +45,7 @@ const userUpdateProfile = async (req, res) => {
           uuid: user_id,
         },
       });
+      
       if (userFind && username) {
         let updateData = {
           username: username,

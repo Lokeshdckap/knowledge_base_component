@@ -17,12 +17,15 @@ export const TrashComponent = (props) => {
       />
       <TrashMain
         trashData={props.trashData}
+        trashBatchData={props.trashBatchData}
         handleParticularDelete={props.handleParticularDelete}
         handleParticularRestore={props.handleParticularRestore}
         handleSelect={props.handleSelect}
         styleState={props.styleState}
         setStyleState={props.setStyleState}
         role={props.role}
+        restorePopup={props.restorePopup}
+        setRestorePopup={props.setRestorePopup}
 
       />
       {props.loading && (

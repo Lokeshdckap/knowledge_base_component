@@ -167,6 +167,7 @@ export const ScriptComponents = () => {
       });
   };
 
+  
   //Editor functionality
 
   const handleSave = () => {
@@ -305,15 +306,18 @@ export const ScriptComponents = () => {
       });
   };
 
+  console.log(particularTitle);
   const contentPage = async (e) => {
     setPageId(e.target.id);
     let pageId = e.target.id;
-    if (pageId != pageIds) {
-      // window.confirm("This page's content can't be saved. If you wish to save, please save")
-      window.location.replace(
-        `/dashboard/${params.uuid}/s/${params.slug}/?pageId=${pageId}`
-      );
-    }
+    // if (pageId != pageIds) {
+    //   // window.confirm("This page's content can't be saved. If you wish to save, please save")
+    //   window.location.replace(
+    //     `/dashboard/${params.uuid}/s/${params.slug}/?pageId=${pageId}`
+    //   );
+    // }
+    navigate(`/dashboard/${params.uuid}/s/${params.slug}/?pageId=${pageId}`)
+    
   };
 
   const handleScriptMouseEnter = (e) => {

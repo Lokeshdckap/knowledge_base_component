@@ -29,7 +29,10 @@ app.use(express.urlencoded({ extended: true }));
 
 const { googleLogin } = require("./controllers/Authentication/googleLogin");
 googleLogin();
-
+const {
+  scheduleDeletion,
+} = require("./controllers/DashboardControllers/trashController");
+scheduleDeletion();
 // Routes for user API
 
 const apiBasePath = "/api";
@@ -67,7 +70,6 @@ app.set("views", path.join(__dirname, "views"));
 app.use("/uploads", express.static("uploads"));
 
 const PORT = process.env.PORT || 3000;
-
 app.listen(PORT, () =>
   console.log(`Serpassportver running server on port ${PORT}`)
 );

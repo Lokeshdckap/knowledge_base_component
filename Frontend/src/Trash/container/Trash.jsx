@@ -5,13 +5,15 @@ import axiosClient from "../../axios-client";
 import { useMyContext } from "../../context/AppContext";
 
 export const Trash = () => {
-  const { getAllDeletedData, trashData, setTrashData,role } = useMyContext();
+  const { getAllDeletedData, trashData,getBatch, setTrashData,role,setTrashBatchData,trashBatchData } = useMyContext();
 
   const params = useParams();
 
   const [deletePopup, setDeletePopup] = useState(false);
   const [styleState, setStyleState] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [restorePopup,setRestorePopup] = useState(false)
+
 
   useEffect(() => {
     getAllDeletedData();
@@ -78,15 +80,20 @@ export const Trash = () => {
 
   const handleParticularRestore = async (e) => {
     setLoading(true);
-
+    console.log(e.target.id);
     if (e.target.id) {
       await axiosClient
         .put(`/api/trash/restore/${params.uuid}/${e.target.id}`)
         .then((res) => {
+
           getAllDeletedData();
           showToastMessage(res.data.message);
           getScript();
+          getBatch()
           setLoading(false);
+          if(!res.data.state){
+               setRestorePopup(true)
+          }
         })
         .catch((err) => {
           console.log(err);
@@ -122,6 +129,9 @@ export const Trash = () => {
         setStyleState={setStyleState}
         loading={loading}
         role={role}
+        trashBatchData={trashBatchData}
+        restorePopup={restorePopup}
+        setRestorePopup={setRestorePopup}
       />
     </>
   );

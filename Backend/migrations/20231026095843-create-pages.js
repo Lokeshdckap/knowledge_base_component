@@ -39,6 +39,7 @@ module.exports = {
       path:{
         type: Sequelize.TEXT,
       },
+      
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

@@ -26,6 +26,7 @@ export const BatchLayouts = (props) => {
         ) {
           setPopUpState(null);
         }
+        console.log("oo");
       }
     };
 

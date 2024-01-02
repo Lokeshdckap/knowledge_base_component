@@ -34,6 +34,7 @@ export default function Main(props) {
         }
       }
     };
+    
     const updateScreenHeight = () => {
       setScreenHeight(window.innerHeight);
     };

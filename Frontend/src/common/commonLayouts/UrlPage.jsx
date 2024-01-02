@@ -17,11 +17,9 @@ import { PageTree } from "../commonComponents/PageTree";
 import { Search } from "./Search";
 import AttachesTool from "@editorjs/attaches";
 import HashLoader from "react-spinners/HashLoader";
-import { formatDistanceToNow,isValid } from 'date-fns'
-
+import { formatDistanceToNow, isValid } from "date-fns";
 
 export const UrlPage = () => {
-
   const location = useLocation();
 
   const navigate = useNavigate();
@@ -45,10 +43,20 @@ export const UrlPage = () => {
 
   const searchInpRef = useRef();
   const createdAt = script?.createdAt;
-  let formattedTime = 'Invalid date';
-  
+  let formattedTime = "Invalid date";
+
   if (createdAt && isValid(new Date(createdAt))) {
-    formattedTime = formatDistanceToNow(new Date(createdAt), { addSuffix: true });
+    formattedTime = formatDistanceToNow(new Date(createdAt), {
+      addSuffix: true,
+    });
+  }
+  const updatedAt = script?.updatedAt;
+  let formattedTimes = "Invalid date";
+
+  if (createdAt && isValid(new Date(updatedAt))) {
+    formattedTimes = formatDistanceToNow(new Date(updatedAt), {
+      addSuffix: true,
+    });
   }
 
   useEffect(() => {
@@ -90,6 +98,7 @@ export const UrlPage = () => {
           setLoading(false);
 
           setScript(res.data.script);
+          console.log(res.data.script);
         })
         .catch((err) => {
           const response = err.response;
@@ -259,15 +268,25 @@ export const UrlPage = () => {
 
   return (
     <div className="">
-      <div className="flex justify-between items-center py-[20px] px-[30px]">
-        <p className="font-bold text-2xl phone:text-xl">{script && script.title}</p>
+      <div className="flex justify-between items-center py-[20px] px-[30px] shadow-sm">
+        <div className="flex  items-center space-x-2">
+          {script?.logo ? (
+            <img src={script?.logo} alt="" className="w-8 " />
+          ) : (
+            <i className="fa-regular text-slate-600 fa-circle-user text-2xl cursor-pointer pr-1"></i>
+          )}
+          <p className="font-bold text-2xl phone:text-xl font-inter">
+            {script && script.title}
+          </p>
+        </div>
+
         <input
           type="text"
           placeholder="Search"
           onClick={() => setsearchPopup((prevState) => !prevState)}
           ref={searchInpRef}
           readOnly
-          className="bg-gray-200 rounded-md w-48 h-10 phone:w-28 phone:h-9 pl-2 focus:outline-primary cursor-pointer"
+          className="bg-[#f0f3f7] rounded-md w-48 h-10 phone:w-28 phone:h-9 pl-2 focus:outline-primary  cursor-pointer"
         />
       </div>
       <hr className="" />
@@ -279,8 +298,6 @@ export const UrlPage = () => {
           }}
         >
           <div className="w-[250px]  phone:w-[150px]  pr-[10px] pl-[24px] pt-[20px]">
-
-         
             {page.map((topLevelPage, index) => (
               <div
                 key={topLevelPage.uuid}
@@ -300,46 +317,57 @@ export const UrlPage = () => {
         </div>
         <div className="bg-gray-300 w-px"></div>
         <div
-          className=" overflow-auto pt-10 phone:pl-[6px] pl-14  "
+          className=" overflow-auto pt-10 phone:pl-[6px] px-14  "
           style={{
             width:
-            screenWidth > "425" ? "calc(100% - 250px)" : "calc(100% - 150px)",
+              screenWidth > "425" ? "calc(100% - 250px)" : "calc(100% - 150px)",
             maxHeight: `calc(${screenHeight}px - 85px)`,
           }}
         >
-          <div className="flex items-center space-x-2">
-            <img
-              className="cursor-pointer w-[25px]"
-              src={
-                loadPage?.emoji
-                  ? loadPage?.emoji
-                  : `https://icons.getbootstrap.com/assets/icons/emoji-smile.svg`
-              }
-            />
-            <h1 className="text-3xl font-bold phone:text-[18px] phone:w-[190px] ">
-              {page?.length == 0
-                ? "Page Name"
-                : loadPage?.title && loadPage?.title.split("-")[0]}
-            </h1>
+          <div className=" flex justify-between">
+            <div>
+              <div className="flex items-center space-x-2">
+                <img
+                  className="cursor-pointer w-[25px]"
+                  src={
+                    loadPage?.emoji
+                      ? loadPage?.emoji
+                      : `https://icons.getbootstrap.com/assets/icons/emoji-smile.svg`
+                  }
+                />
+                <h1 className="text-3xl font-bold phone:text-[18px] font-inter  phone:w-[190px] ">
+                  {page?.length == 0
+                    ? "Page Name"
+                    : loadPage?.title && loadPage?.title.split("-")[0]}
+                </h1>
+              </div>
+              <h4 className="text-xl my-3 ml-[32px] font-inter phone:text-[16px] phone:w-[170px] ">
+                {page?.length == 0 ? "Page description" : loadPage?.description}
+              </h4>
+            </div>
+            <div className="float-right">
+              <p className="text-[#69747e] text-sm ">
+                <span className="font-medium text-[#25282b] text-sm">
+                  Created By Team :
+                </span>{" "}
+                {script?.title} Team
+              </p>
+              <p className="text-[#69747e] text-sm pt-1">
+                <span className="font-medium text-[#25282b] text-sm ">
+                  Created At :
+                </span>{" "}
+                     {formattedTime}
+              </p>
+              <p className="text-[#69747e] text-sm pt-1">
+                <span className="font-medium text-[#25282b] text-sm">
+                  Last Modified At :
+                </span>{" "}
+                {formattedTimes}
+              </p>
+            </div>
           </div>
-          <h4 className="text-xl my-3 ml-[32px] phone:text-[16px] phone:w-[170px] ">
-            {page?.length == 0 ? "Page description" : loadPage?.description}</h4>
-          <div className="float-right mx-10">
-          <p><span className="font-medium">Created By Team :</span> {script?.title} Team</p>
-          <p><span className="font-medium">Created At :</span> {formattedTime}</p>
-          <p><span className="font-medium">Last Modified At :</span> {formatDistanceToNow(new Date(script?.updatedAt), { addSuffix: true })}</p>
-          </div>
-          <h1 className="text-3xl font-bold mb-5">
-            {page.length == 0
-              ? "Page Name"
-              : loadPage.title && loadPage.title.split("-")[0]}
-          </h1>
 
-          <h4 className="text-xl mb-5">
-            {page.length == 0 ? "Page description" : loadPage.description}
-
-          </h4>
-          <div id="editorjs" className="mr-64 phone:pl-[30px]"></div>
+          <div id="editorjs" className="mr-64 phone:pl-[30px] font-inter "></div>
         </div>
       </div>
       {serachPopup && (

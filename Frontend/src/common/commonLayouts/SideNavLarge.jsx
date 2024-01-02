@@ -277,6 +277,7 @@ export default function SideNavLarge(props) {
       window.removeEventListener("click", closeOnOutsideClick);
       window.removeEventListener("resize", updateScreenHeight);
     };
+    
   }, [teamDropDown, AddNewMenu, props.overStates, popUp]);
 
   return (

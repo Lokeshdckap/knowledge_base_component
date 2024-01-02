@@ -214,30 +214,38 @@ const addScriptTitle = async (req, res) => {
 const scriptLogo = async (req, res) => {
   try {
     const script_uuid = req.body.uuid;
+
     let scriptLogo;
     if (req.file) {
       const { filename } = req.file ? req.file : null;
       scriptLogo = `http://localhost:4000/uploads/${filename}`;
-    }
 
+    }
     const scriptFind = await Script.findOne({
       where: {
         uuid: script_uuid,
       },
     });
-
+    let updateData ;
     if (scriptFind) {
-      let updateData = {
+      updateData = {
         logo: scriptLogo,
       };
-      await Script.update(updateData, {
+      console.log(updateData,"lpkjhgfd");
+     const scriptLogoUpdate = await Script.update(updateData, {
         where: {
           uuid: script_uuid,
         },
       });
+      console.log(scriptLogoUpdate,"ll");
+      if(scriptLogoUpdate.length > 0){
       return res
         .status(200)
         .json({ message: "Script Logo Update Sucessfully" });
+      }
+      else{
+      return res.status(500).json({ message: "Script Logo Can't Update !" });
+      }
     } else {
       return res.status(500).json({ message: "Script Logo Can't Update !" });
     }

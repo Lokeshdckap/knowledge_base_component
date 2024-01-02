@@ -24,7 +24,8 @@ module.exports = (sequelize, DataTypes) => {
     batch_uuid: DataTypes.UUID,
     deleted_at: DataTypes.DATE,
     is_published:DataTypes.INTEGER,
-    path:DataTypes.TEXT
+    path:DataTypes.TEXT,
+    logo:DataTypes.STRING
   }, {
     sequelize,
     modelName: 'script',

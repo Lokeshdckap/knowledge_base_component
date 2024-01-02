@@ -128,7 +128,7 @@ export default function EditPage(props) {
             </div>
             <input
               type="text"
-              className="text-3xl phone:text-[18px] phone:w-[190px]  focus:outline-none text-textPrimary font-bold"
+              className="text-3xl phone:text-[18px] phone:w-[190px] font-inter focus:outline-none text-textPrimary font-bold"
               value={title}
               onChange={(e) => {
                 props.setParticularTitle(e.target.value);
@@ -142,7 +142,7 @@ export default function EditPage(props) {
           </div>
           <div>
             <input
-              className="text-xl phone:text-[16px] phone:w-[170px] mt-3 ml-[32px] focus:outline-none text-textPrimary "
+              className="text-xl phone:text-[16px] font-inter phone:w-[170px] mt-3 ml-[32px] focus:outline-none text-textPrimary "
               value={props.description}
               onChange={(e) => {
                 props.setDescription(e.target.value);

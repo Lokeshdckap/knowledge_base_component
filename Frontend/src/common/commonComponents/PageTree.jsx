@@ -77,6 +77,7 @@ export const PageTree = ({
         }
       }
     };
+    
     window.addEventListener("click", closeOnOutsideClick);
 
     return () => {
@@ -96,11 +97,13 @@ export const PageTree = ({
     >
       <div
         key={node.uuid}
-        className={`flex items-center hover:bg-slate-300 ${
-          pageIds == node.uuid ? "bg-slate-300 " : ""
+        className={`flex items-center hover:bg-[#f0f3f7] ${
+          pageIds == node.uuid ? "bg-[#f0f3f7] " : ""
         }  ${
-          "/" + slug + "/" + wildcardValue == node.path ? "bg-slate-300 " : ""
-        }  rounded hover:rounded pl-2 phone:pl-px`}
+          "/" + slug + "/" + wildcardValue == node.path ? "bg-[#f0f3f7] font-medium" : ""
+        }
+        
+        rounded hover:rounded pl-2 phone:pl-px`}
         data-set={node.path}
         onMouseEnter={handleScriptMouseEnter}
         onMouseLeave={handleScriptMouseLeave}
@@ -112,7 +115,9 @@ export const PageTree = ({
           />
         )}
         <span
-          className="text-[18px] phone:text-[14px]  cursor-pointer pt-1 pb-1 w-[100%]"
+          className={`text-[18px] phone:text-[14px]   font-inter text-base cursor-pointer pt-1 pl-2 pb-1 w-[100%]${
+            "/" + slug + "/" + wildcardValue == node.path ? "font-medium" : ""
+          }`}
           onClick={contentPage}
           id={node.uuid}
           data-set={node.path}

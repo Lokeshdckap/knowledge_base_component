@@ -2,8 +2,12 @@ import Link from "antd/es/typography/Link";
 import React, { useEffect, useState } from "react";
 import { DownOutlined, UserOutlined } from "@ant-design/icons";
 import { Dropdown, Space } from "antd";
+import { useParams } from "react-router-dom";
+import axiosClient from "../../axios-client";
 
 export default function EditHeader(props) {
+  console.log(props);
+  const params = useParams();
   const items = [
     {
       label: "Save & Publish",
@@ -39,6 +43,24 @@ export default function EditHeader(props) {
       // You can perform additional checks here if needed
       setSelectedImage(URL.createObjectURL(file));
       setImage(file);
+      const formData = new FormData();
+      formData.append("uuid", params.slug); // Assuming you have an 'avatar' file to upload
+      formData.append("image", file); // Assuming you have an 'avatar' file to upload
+      console.log(formData);
+
+      axiosClient
+        .put("http://localhost:4000/api/scripts/scriptLogo", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => {
+          const response = err.response;
+          console.error("Error:", response.status);
+        });
     }
   };
 
@@ -57,7 +79,7 @@ export default function EditHeader(props) {
                     alt="Selected"
                     className="object-cover w-[40px]"
                   />
-                    <input
+                  <input
                     type="file"
                     id="imageInput"
                     accept="image/*"
@@ -67,7 +89,11 @@ export default function EditHeader(props) {
                 </>
               ) : (
                 <>
-                  <i className="fa-regular text-slate-600 fa-circle-user text-2xl cursor-pointer pr-1 "></i>
+                  {props.renderScript.logo ? (
+                    <img src={props.renderScript.logo} alt="" className="w-13 h-10" />
+                  ) : (
+                    <i className="fa-regular text-slate-600 fa-circle-user text-2xl cursor-pointer pr-1"></i>
+                  )}
                   <input
                     type="file"
                     id="imageInput"

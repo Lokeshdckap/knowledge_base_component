@@ -25,7 +25,9 @@ export const TrashMain = (props) => {
           !deleteRef.current.contains(e.target) &&
           !Object.values(deleteIconRef.current).includes(e.target)
         ) {
+          console.log("ok");
           setDeleteState(null);
+
         }
       }
     };

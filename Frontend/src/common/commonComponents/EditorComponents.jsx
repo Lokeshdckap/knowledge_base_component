@@ -196,7 +196,7 @@ export const EditorComponents = (props) => {
   }, [props.editorValue]);
   return (
     <>
-      <div id="editorjs" className="z-0 2xl:mr-1240px" ></div>
+      <div id="editorjs" className="z-0 2xl:mr-1240px font-inter" ></div>
     </>
   );
 };

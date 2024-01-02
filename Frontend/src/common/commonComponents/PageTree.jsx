@@ -161,25 +161,33 @@ export const PageTree = ({
               style={topState}
               ref={addPopup}
             >
-              <div className="w-[145px] m-auto space-y-3 pt-3 pb-3">
+              <div
+                className="w-[145px] m-auto space-y-3 pt-3 pb-3"
+                id={node.uuid}
+                onClick={handleMore}
+              >
                 <p
                   className="text-lg cursor-pointer  text-textPrimary hover:bg-primary  hover:text-white hover:rounded"
                   id={node.uuid}
-                  onClick={handleMore}
                 >
-                  <i className="fa-regular fa-file p-2"></i>New page
+                  <i className="fa-regular fa-file p-2" id={node.uuid}></i>New
+                  page
                 </p>
               </div>
               {treeNodes[0].uuid == popUp && pageCount == 1 ? (
                 <></>
               ) : (
-                <div className="w-[145px] m-auto space-y-3 pt-1 pb-3">
+                <div
+                  className="w-[145px] m-auto space-y-3 pt-1 pb-3"
+                  id={node.uuid}
+                  onClick={handlePageDelete}
+                >
                   <p
                     className="text-lg cursor-pointer text-textPrimary hover:bg-primary hover:text-white hover:rounded"
                     id={node.uuid}
-                    onClick={handlePageDelete}
                   >
-                    <i className="fa-solid fa-trash p-2"></i>Delete
+                    <i className="fa-solid fa-trash p-2" id={node.uuid}></i>
+                    Delete
                   </p>
                 </div>
               )}

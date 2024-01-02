@@ -322,12 +322,12 @@ export const ScriptComponents = () => {
       });
   };
 
-  console.log(particularTitle);
   const contentPage = async (e) => {
+    setHasChanges(false);
     setPageId(e.target.id);
     let pageId = e.target.id;
+    
 
-    console.log(pageId);
     if (pageId != pageIds) {
       const postData = {
         id: pageIds,
@@ -354,9 +354,13 @@ export const ScriptComponents = () => {
       // setEditorContent(null);
       // setInputStr(null)
       // window.confirm("This page's content can't be saved. If you wish to save, please save")
-      window.location.replace(
-        `/dashboard/${params.uuid}/s/${params.slug}/?pageId=${pageId}`
-      );
+
+
+        window.location.replace(
+          `/dashboard/${params.uuid}/s/${params.slug}/?pageId=${pageId}`
+        );
+      
+
       // navigate(
       //   `/dashboard/${params.uuid}/s/${params.slug}/?pageId=${pageId}`
       // );

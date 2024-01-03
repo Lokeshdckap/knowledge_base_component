@@ -9,6 +9,40 @@ const getAllTrash = async (req, res) => {
   try {
     const team_uuid = req.params.uuid;
 
+    const allTrashs = await Script.findAll({
+      where: {
+        team_uuid: team_uuid,
+        deleted_at: {
+          [Op.not]: null,
+        },
+      },
+    });
+
+    let uniqueBatchUuids = new Set();
+    let filteredAllTrashs = allTrashs.filter((allTrashed) => {
+      if (
+        allTrashed.batch_uuid &&
+        !uniqueBatchUuids.has(allTrashed.batch_uuid)
+      ) {
+        uniqueBatchUuids.add(allTrashed.batch_uuid);
+        return true;
+      }
+      return false;
+    });
+    let valuesArray = Array.from(uniqueBatchUuids);
+
+    const allTrashss = await Batch.findAll({
+      where: {
+        team_uuid: team_uuid,
+        deleted_at: {
+          [Op.not]: null,
+        },
+        uuid: {
+          [Op.in]: valuesArray,
+        },
+      },
+    });
+
     const allTrashBatch = await Batch.findAll({
       where: {
         team_uuid: team_uuid,
@@ -17,11 +51,40 @@ const getAllTrash = async (req, res) => {
         },
       },
     });
-
-    let batch_id = [];
-    for (allTrash of allTrashBatch) {
-      batch_id.push(allTrash.uuid);
+    let batch_uuid = [];
+    for (allTrashBatchs of allTrashBatch) {
+      batch_uuid.push(allTrashBatchs.uuid);
     }
+    const allTrashses = await Script.findAll({
+      where: {
+        team_uuid: team_uuid,
+        deleted_at: {
+          [Op.not]: null,
+        },
+        [Op.or]: [
+          { batch_uuid: null },
+          { batch_uuid: { [Op.notIn]: batch_uuid } },
+        ],
+      },
+    });
+
+    for (trash of allTrashBatch) {
+      allTrashses.push(trash);
+    }
+
+    return res.status(200).json({
+      allTrashses,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: "Fetched Failed" });
+  }
+};
+
+const getAllTrashScriptsForBatch = async (req, res) => {
+  try {
+    const team_uuid = req.params.team_uuid;
+    const batch_uuid = req.params.batch_uuid;
 
     const allTrashScript = await Script.findAll({
       where: {
@@ -29,67 +92,11 @@ const getAllTrash = async (req, res) => {
         deleted_at: {
           [Op.not]: null,
         },
-      },
-      include: [
-        {
-          model: Batch,
-          attributes: ["title"],
-          where: {
-            team_uuid: team_uuid,
-          },
-        },
-      ],
-    });
-
-    const allTrashScripts = await Script.findAll({
-      where: {
-        team_uuid: team_uuid,
-        deleted_at: {
-          [Op.not]: null,
-        },
-        batch_uuid: null,
+        batch_uuid: batch_uuid,
       },
     });
-
-    const itemsWithDaysLeft = allTrashScript.map((item) => {
-      const deletionTimestamp = item.deleted_at; // Get deletion timestamp from your data
-      const now = new Date();
-      const deletionDate = new Date(deletionTimestamp);
-      let daysLeft = Math.ceil((deletionDate - now) / (1000 * 60 * 60 * 24));
-      daysLeft = Math.min(daysLeft, 7);
-      let left;
-      if (daysLeft) {
-        left = 7 - Math.abs(daysLeft);
-      } else {
-        left = 7;
-      }
-
-      return {
-        id: item.id,
-        uuid: item.uuid,
-        title: item.title,
-        team_uuid: item.team_uuid,
-        path: item.path,
-        is_published: item.is_published,
-        createdAt: item.createdAt,
-        updateAt: item.updatedAt,
-        deleted_at: item.deleted_at,
-        batch: item.batch.dataValues.title,
-      };
-    });
-
-    if (allTrashBatch.length > 0) {
-      for (let allTrashBatchs of allTrashBatch) {
-        itemsWithDaysLeft.push(allTrashBatchs);
-      }
-    }
-    for (let allTrashScriptsr of allTrashScripts) {
-      itemsWithDaysLeft.push(allTrashScriptsr);
-    }
-
     return res.status(200).json({
-      itemsWithDaysLeft,
-      message: "AllTrash Fetched Successfully",
+      allTrashScript,
     });
   } catch (error) {
     console.log(error);
@@ -433,4 +440,5 @@ module.exports = {
   permanentDeleteAll,
   selectedTrash,
   scheduleDeletion,
+  getAllTrashScriptsForBatch,
 };

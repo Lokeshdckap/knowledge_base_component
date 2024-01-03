@@ -115,8 +115,8 @@ export const PageTree = ({
           />
         )}
         <span
-          className={`text-[18px] phone:text-[14px]   font-inter text-base cursor-pointer pt-1 pl-2 pb-1 w-[100%]${
-            "/" + slug + "/" + wildcardValue == node.path ? "font-medium" : ""
+          className={`text-[18px] phone:text-[14px]   font-inter text-base cursor-pointer pt-1 pl-2 pb-1 w-[100%] ${
+            "/" + slug + "/" + wildcardValue == node.path ? "font-medium text-primary" : ""
           }`}
           onClick={contentPage}
           id={node.uuid}

@@ -269,7 +269,7 @@ export const UrlPage = () => {
   return (
     <div className="">
       <div className="flex justify-between items-center py-[20px] px-[30px] shadow-sm">
-        <div className="flex  items-center space-x-2">
+        <div className="flex items-center space-x-2">
           {script?.logo ? (
             <img src={script?.logo} alt="" className="w-8 " />
           ) : (
@@ -292,7 +292,7 @@ export const UrlPage = () => {
       <hr className="" />
       <div className="flex ">
         <div
-          className=" overflow-auto"
+          className=" overflow-x-hidden"
           style={{
             maxHeight: `calc(${screenHeight}px - 85px)`,
           }}

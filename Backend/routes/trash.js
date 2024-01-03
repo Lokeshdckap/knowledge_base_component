@@ -16,6 +16,11 @@ router.get(
   trashController.getAllTrash
 );
 
+router.get("/getAllTrashScriptsForBatch/team_uuid/batch_uuid",
+verifyAuthMiddleware.verifyToken,
+trashController.getAllTrashScriptsForBatch
+)
+
 router.put(
   "/moveToTrash/:uuid/:batchOrScriptuuid",
   verifyAuthMiddleware.verifyToken,

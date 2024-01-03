@@ -18,6 +18,8 @@ import { Search } from "./Search";
 import AttachesTool from "@editorjs/attaches";
 import HashLoader from "react-spinners/HashLoader";
 import { formatDistanceToNow, isValid } from "date-fns";
+import 'animate.css/animate.min.css';
+
 
 export const UrlPage = () => {
   const location = useLocation();
@@ -244,6 +246,7 @@ export const UrlPage = () => {
   const searchEvent = async (e) => {
     let value = e.target.value;
     let path = params.slug + "/" + params["*"];
+    <div className="w-48 m-auto"></div>;
 
     await axiosClient
       .get(
@@ -279,7 +282,6 @@ export const UrlPage = () => {
             {script && script.title}
           </p>
         </div>
-
         <input
           type="text"
           placeholder="Search"
@@ -290,9 +292,14 @@ export const UrlPage = () => {
         />
       </div>
       <hr className="" />
-      <div className="flex ">
+      <div className="flex"
+       style={{
+        
+        height: `calc(100vh - 85px)`,
+      }}
+      >
         <div
-          className=" overflow-auto"
+          className=" overflow-x-hidden border-r-[1px]"
           style={{
             maxHeight: `calc(${screenHeight}px - 85px)`,
           }}
@@ -315,7 +322,9 @@ export const UrlPage = () => {
             ))}
           </div>
         </div>
-        <div className="bg-gray-300 w-px"></div>
+        {/* <div className="bg-gray-300 w-px"
+        
+        ></div> */}
         <div
           className=" overflow-auto pt-10 phone:pl-[6px] px-14  "
           style={{
@@ -356,7 +365,7 @@ export const UrlPage = () => {
                 <span className="font-medium text-[#25282b] text-sm ">
                   Created At :
                 </span>{" "}
-                     {formattedTime}
+                {formattedTime}
               </p>
               <p className="text-[#69747e] text-sm pt-1">
                 <span className="font-medium text-[#25282b] text-sm">
@@ -367,7 +376,10 @@ export const UrlPage = () => {
             </div>
           </div>
 
-          <div id="editorjs" className="mr-64 phone:pl-[30px] font-inter "></div>
+          <div
+            id="editorjs"
+            className="mr-64 phone:pl-[30px] font-inter "
+          ></div>
         </div>
       </div>
       {serachPopup && (
@@ -377,6 +389,7 @@ export const UrlPage = () => {
           searchEvent={searchEvent}
           searchPageData={searchPageData}
           setSearchPageData={setSearchPageData}
+          serachPopup={serachPopup}
         />
       )}
       {loading && (

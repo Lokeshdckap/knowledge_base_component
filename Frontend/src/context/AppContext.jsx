@@ -20,7 +20,6 @@ const MyContextProvider = ({ children }) => {
   const [trashData, setTrashData] = useState([]);
   const [hasChanges, setHasChanges] = useState(false);
 
-
   //style State
   const [screenHeight, setScreenHeight] = useState(window.innerHeight);
 
@@ -290,11 +289,10 @@ const MyContextProvider = ({ children }) => {
               handleAfterAddedChildrenScripts(batchId);
             }
             let url = `/dashboard/${params.uuid}/t/trash`;
-            console.log(url,window.location.pathname);
+            console.log(url, window.location.pathname);
             if (url !== window.location.pathname) {
               navigate(`/dashboard/${params.uuid}`);
-
-            } 
+            }
           }
           getAllDeletedData();
         })
@@ -311,14 +309,18 @@ const MyContextProvider = ({ children }) => {
   };
 
   const getAllDeletedData = () => {
+    setLoading(true);
+
     axiosClient
       .get(`/api/trash/getAllTrash/${params.uuid}`)
       .then((res) => {
-          console.log(res);
-        setTrashData(res.data.itemsWithDaysLeft);
+        setLoading(false);
+
+        setTrashData(res.data.allTrashs);
       })
       .catch((err) => {
         console.log(err);
+        setLoading(false);
       });
   };
 

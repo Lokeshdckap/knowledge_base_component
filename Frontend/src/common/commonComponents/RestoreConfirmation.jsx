@@ -3,7 +3,7 @@ import { PopupButton } from "./PopupButton";
 
 export const RestoreConfirmation = (props) => {
   const handleClose = () => {
-    props.setRestorePopup(false);
+    props.setHandleRestoreConfirmation(null);
   };
   return (
     <div>
@@ -19,11 +19,10 @@ export const RestoreConfirmation = (props) => {
           <div className="w-[480px] m-auto">
             <div className="flex pt-9 items-center space-x-2">
               <i class="fa-solid fa-trash-can-arrow-up text-2xl"></i>
-              <p className="text-2xl text-textPrimary">Can't Restore Scripts</p>
+              <p className="text-2xl text-textPrimary">Restore folder and all of its sections</p>
             </div>
             <p className="pt-8 text-lg text-textPrimary">
-              Section can't restore because this section under folder ! If you
-              want this section you restore folder
+            Do you want to restore the folder and all of its sections?
             </p>
             <div className="flex items-center justify-end space-x-6  pt-10">
               <div className={`text-center`} onClick={handleClose}>

@@ -97,8 +97,8 @@ export const PageTree = ({
     >
       <div
         key={node.uuid}
-        className={`flex items-center hover:bg-[#f0f3f7] ${
-          pageIds == node.uuid ? "bg-[#f0f3f7] " : ""
+        className={`flex items-center hover:bg-[#d5dde6] ${
+          pageIds == node.uuid ? "bg-[#d5dde6] " : ""
         }  ${
           "/" + slug + "/" + wildcardValue == node.path ? "bg-[#f0f3f7] font-medium" : ""
         }
@@ -115,8 +115,8 @@ export const PageTree = ({
           />
         )}
         <span
-          className={`text-[18px] phone:text-[14px]   font-inter text-base cursor-pointer pt-1 pl-2 pb-1 w-[100%]${
-            "/" + slug + "/" + wildcardValue == node.path ? "font-medium" : ""
+          className={`text-[18px] phone:text-[14px]   font-inter text-base cursor-pointer pt-1 pl-2 pb-1 w-[100%] ${
+            "/" + slug + "/" + wildcardValue == node.path ? "font-medium " : ""
           }`}
           onClick={contentPage}
           id={node.uuid}

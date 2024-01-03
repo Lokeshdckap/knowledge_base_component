@@ -326,7 +326,6 @@ export const ScriptComponents = () => {
     setHasChanges(false);
     setPageId(e.target.id);
     let pageId = e.target.id;
-    
 
     if (pageId != pageIds) {
       const postData = {
@@ -344,6 +343,10 @@ export const ScriptComponents = () => {
           getParticularScript();
           getParticularPage();
 
+          setHasChanges(false);
+          window.location.replace(
+            `/dashboard/${params.uuid}/s/${params.slug}/?pageId=${pageId}`
+          );
           // showToastSaveMessage(res.data.msg);
         })
         .catch((err) => {
@@ -354,12 +357,6 @@ export const ScriptComponents = () => {
       // setEditorContent(null);
       // setInputStr(null)
       // window.confirm("This page's content can't be saved. If you wish to save, please save")
-
-
-        window.location.replace(
-          `/dashboard/${params.uuid}/s/${params.slug}/?pageId=${pageId}`
-        );
-      
 
       // navigate(
       //   `/dashboard/${params.uuid}/s/${params.slug}/?pageId=${pageId}`

@@ -8,6 +8,15 @@ const Script = db.script;
 const getAllTrash = async (req, res) => {
   try {
     const team_uuid = req.params.uuid;
+    const allTrashs = await Script.findAll({
+      where: {
+        team_uuid: team_uuid,
+        deleted_at: {
+          [Op.not]: null,
+        },
+        batch_uuid: null,
+      },
+    });
 
     const allTrashBatch = await Batch.findAll({
       where: {
@@ -18,10 +27,23 @@ const getAllTrash = async (req, res) => {
       },
     });
 
-    let batch_id = [];
-    for (allTrash of allTrashBatch) {
-      batch_id.push(allTrash.uuid);
+    for (allTrashBatchs of allTrashBatch) {
+      allTrashs.push(allTrashBatchs);
     }
+
+    return res.status(200).json({
+      allTrashs,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: "Fetched Failed" });
+  }
+};
+
+const getAllTrashScriptsForBatch = async (req, res) => {
+  try {
+    const team_uuid = req.params.team_uuid;
+    const batch_uuid = req.params.batch_uuid;
 
     const allTrashScript = await Script.findAll({
       where: {
@@ -29,67 +51,11 @@ const getAllTrash = async (req, res) => {
         deleted_at: {
           [Op.not]: null,
         },
-      },
-      include: [
-        {
-          model: Batch,
-          attributes: ["title"],
-          where: {
-            team_uuid: team_uuid,
-          },
-        },
-      ],
-    });
-
-    const allTrashScripts = await Script.findAll({
-      where: {
-        team_uuid: team_uuid,
-        deleted_at: {
-          [Op.not]: null,
-        },
-        batch_uuid: null,
+        batch_uuid: batch_uuid,
       },
     });
-
-    const itemsWithDaysLeft = allTrashScript.map((item) => {
-      const deletionTimestamp = item.deleted_at; // Get deletion timestamp from your data
-      const now = new Date();
-      const deletionDate = new Date(deletionTimestamp);
-      let daysLeft = Math.ceil((deletionDate - now) / (1000 * 60 * 60 * 24));
-      daysLeft = Math.min(daysLeft, 7);
-      let left;
-      if (daysLeft) {
-        left = 7 - Math.abs(daysLeft);
-      } else {
-        left = 7;
-      }
-
-      return {
-        id: item.id,
-        uuid: item.uuid,
-        title: item.title,
-        team_uuid: item.team_uuid,
-        path: item.path,
-        is_published: item.is_published,
-        createdAt: item.createdAt,
-        updateAt: item.updatedAt,
-        deleted_at: item.deleted_at,
-        batch: item.batch.dataValues.title,
-      };
-    });
-
-    if (allTrashBatch.length > 0) {
-      for (let allTrashBatchs of allTrashBatch) {
-        itemsWithDaysLeft.push(allTrashBatchs);
-      }
-    }
-    for (let allTrashScriptsr of allTrashScripts) {
-      itemsWithDaysLeft.push(allTrashScriptsr);
-    }
-
     return res.status(200).json({
-      itemsWithDaysLeft,
-      message: "AllTrash Fetched Successfully",
+      allTrashScript,
     });
   } catch (error) {
     console.log(error);
@@ -297,18 +263,30 @@ const permanentDeleteParticular = async (req, res) => {
         },
       });
     }
+    
+    try {
+      // Delete associated scripts first
+      await Script.destroy({
+        where: {
+          batch_uuid: batchOrScriptuuid,
+        },
+      });
 
-    await Batch.destroy({
-      where: {
-        [Op.and]: [{ team_uuid: team_uuid }, { uuid: batchOrScriptuuid }],
-      },
-    });
+      // Then delete the batch
+      const deletes = await Batch.destroy({
+        where: {
+          [Op.and]: [{ team_uuid: team_uuid }, { uuid: batchOrScriptuuid }],
+        },
+      });
+    } catch (error) {
+      console.error("Error:", error);
+    }
 
     return res
       .status(200)
       .json({ message: "Folders  or  Sections & Pages  Deleted Sucessfully" });
   } catch (err) {
-    return res.status(404).json({ error: "Delete Failed or Can't Find" });
+    return res.status(500).json({ error: "Delete Failed or Can't Find" });
   }
 };
 
@@ -433,4 +411,5 @@ module.exports = {
   permanentDeleteAll,
   selectedTrash,
   scheduleDeletion,
+  getAllTrashScriptsForBatch,
 };

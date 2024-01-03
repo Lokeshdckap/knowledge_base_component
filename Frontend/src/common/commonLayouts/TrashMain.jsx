@@ -4,17 +4,30 @@ import HashLoader from "react-spinners/HashLoader";
 import { Checkbox } from "antd";
 import { formatDistanceToNow } from "date-fns";
 import { RestoreConfirmation } from "../commonComponents/RestoreConfirmation";
-import moment from 'moment';
+import moment from "moment";
+import { Info } from "../commonComponents/Info";
+
+import file from "../../assets/images/files.png";
+import folder from "../../assets/images/folderKb.png";
+import { DeleteConfirmation } from "../commonComponents/DeleteConfirmation";
+
 export const TrashMain = (props) => {
- 
-  
   const [deleteState, setDeleteState] = useState(null);
+  const [trashInfo, setTrashInfo] = useState(null);
+
   const [screenHeight, setScreenHeight] = useState(window.innerHeight);
   const deleteIconRef = useRef({});
+  const infoIconRef = useRef({});
   const deleteRef = useRef(null);
+  const infoRef = useRef(null);
 
   const deleteForeverPopup = (e) => {
     setDeleteState(e.target.id);
+  };
+
+  const handleTrashInfo = (e) => {
+    setTrashInfo(e.target.id);
+    props.handleTrashInfo(e.target.id);
   };
 
   useEffect(() => {
@@ -25,9 +38,17 @@ export const TrashMain = (props) => {
           !deleteRef.current.contains(e.target) &&
           !Object.values(deleteIconRef.current).includes(e.target)
         ) {
-          console.log("ok");
           setDeleteState(null);
+        }
+      }
 
+      if (infoRef.current !== null) {
+        if (
+          trashInfo &&
+          !infoRef.current.contains(e.target) &&
+          !Object.values(infoIconRef.current).includes(e.target)
+        ) {
+          setTrashInfo(null);
         }
       }
     };
@@ -42,7 +63,14 @@ export const TrashMain = (props) => {
       window.removeEventListener("click", closeOnOutsideClick);
       window.removeEventListener("resize", updateScreenHeight);
     };
-  }, [deleteState]);
+  }, [deleteState, trashInfo]);
+
+  const deleteAllPopup = () => {
+    props.setHandleDeleteConfirmation((prevState) => !prevState);
+  };
+
+  // handleRestoreConfirmation={props.handleRestoreConfirmation}
+  // setHandleRestoreConfirmation={props.setHandleRestoreConfirmation}
 
   return (
     <div
@@ -91,26 +119,53 @@ export const TrashMain = (props) => {
                           id={trashScript.uuid}
                           className="ml-2"
                         ></Checkbox>
-                        <span
-                          className="material-symbols-outlined text-primary cursor-pointer text-2xl phone:text-[14px] leading-[6px]"
-                          onClick={deleteForeverPopup}
-                          ref={(ref) =>
-                            (deleteIconRef.current[trashScript.uuid] = ref)
-                          }
-                          id={trashScript.uuid}
-                        >
-                          more_vert
-                        </span>
+                        <div className="flex items-center space-x-3">
+                          {!Object.keys(trashScript).includes("batch_uuid") && (
+                            <i
+                              className="fa-solid fa-circle-info text-primary cursor-pointer text-lg"
+                              id={trashScript.uuid}
+                              onClick={handleTrashInfo}
+                              ref={(ref) =>
+                                (infoIconRef.current[trashScript.uuid] = ref)
+                              }
+                            ></i>
+                          )}
+                          <span
+                            className="material-symbols-outlined text-primary cursor-pointer text-2xl phone:text-[14px] leading-[6px]"
+                            onClick={deleteForeverPopup}
+                            ref={(ref) =>
+                              (deleteIconRef.current[trashScript.uuid] = ref)
+                            }
+                            id={trashScript.uuid}
+                          >
+                            more_vert
+                          </span>
+                        </div>
                       </>
                     )}
                   </div>
                   <div
-                    className="font-medium cursor-pointer"
+                    className="font-medium cursor-pointer ml-2"
                     id={trashScript.uuid}
                   >
-                    <p id={trashScript.uuid}>{trashScript.title}</p>
+                    <div className="flex items-center space-x-2">
+                      {Object.keys(trashScript).includes("batch_uuid") ? (
+                        <img src={file} alt="" className="w-[17px] h-[18px]" />
+                      ) : (
+                        <img
+                          src={folder}
+                          alt=""
+                          className="w-[17px] h-[18px]"
+                        />
+                      )}
+
+                      <p id={trashScript.uuid}>{trashScript.title}</p>
+                    </div>
+
                     {trashScript.batch && (
-                      <p id={trashScript.uuid}>Parent Folder : {trashScript.batch}</p>
+                      <p id={trashScript.uuid}>
+                        Parent Folder : {trashScript.batch}
+                      </p>
                     )}
                     <p className="text-gray-500 pt-1" id={trashScript.uuid}>
                       {"7days Left"}
@@ -125,7 +180,11 @@ export const TrashMain = (props) => {
                     <p
                       className="cursor-pointer pt-1.5 pl-3.5 pb-1 hover:bg-primary text-textPrimary hover:text-white hover:rounded-t-lg"
                       id={trashScript.uuid}
-                      onClick={props.handleParticularDelete}
+                      onClick={
+                        Object.keys(trashScript).includes("batch_uuid")
+                          ? (e) => props.handleParticularDelete(e)
+                          : (e) => props.setHandleDeleteConfirmation(e)
+                      }
                     >
                       Delete forever
                     </p>
@@ -133,11 +192,24 @@ export const TrashMain = (props) => {
                     <p
                       className="cursor-pointer pt-0.5 pl-3.5 pb-2 hover:bg-primary text-textPrimary hover:text-white hover:rounded-b-lg"
                       id={trashScript.uuid}
-                      onClick={props.handleParticularRestore}
+                      onClick={
+                        Object.keys(trashScript).includes("batch_uuid")
+                          ? (e) => props.handleParticularRestore(e)
+                          : (e) => props.setHandleRestoreConfirmation(e)
+                      }
                     >
                       Restore
                     </p>
                   </div>
+                )}
+
+                {trashScript.uuid == trashInfo && (
+                  <>
+                    <Info
+                      trashInfoDetails={props.trashInfoDetails}
+                      infoRef={infoRef}
+                    />
+                  </>
                 )}
               </div>
             ))}
@@ -150,9 +222,20 @@ export const TrashMain = (props) => {
       ) : (
         <></>
       )}
-      {props.restorePopup && (
+      {props.handleDeleteConfirmation && (
         <>
-          <RestoreConfirmation setRestorePopup={props.setRestorePopup} />
+          <DeleteConfirmation
+            deleteAllPopup={deleteAllPopup}
+            check={props.handleDeleteConfirmation}
+            handleParticularDelete={props.handleParticularDelete}
+          />
+        </>
+      )}
+      {props.handleRestoreConfirmation && (
+        <>
+          <RestoreConfirmation
+            setHandleRestoreConfirmation={props.setHandleRestoreConfirmation}
+          />
         </>
       )}
     </div>

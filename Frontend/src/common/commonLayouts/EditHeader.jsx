@@ -46,7 +46,6 @@ export default function EditHeader(props) {
       const formData = new FormData();
       formData.append("uuid", params.slug); // Assuming you have an 'avatar' file to upload
       formData.append("image", file); // Assuming you have an 'avatar' file to upload
-      console.log(formData);
 
       axiosClient
         .put("http://localhost:4000/api/scripts/scriptLogo", formData, {
@@ -67,7 +66,7 @@ export default function EditHeader(props) {
   return (
     <div className="bg-[#ffff] w-[100%]">
       <div
-        className={`flex items-center m-auto justify-between relative w-[100%]  2xl:py-[30px] py-[10px]  px-[30px] phone:px-[10px]`}
+        className={`flex items-center m-auto justify-between relative w-[100%]  2xl:py-[30px] py-[10px]  px-[30px] phone:px-[10px] shadow-sm`}
       >
         <div className="flex items-center">
           <div className=" cursor-pointer p-1">

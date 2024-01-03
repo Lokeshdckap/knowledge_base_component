@@ -5,13 +5,21 @@ export const Search = (props) => {
   let params = useParams();
   let navigate = useNavigate();
   let searchRef = useRef();
+  const inputRef = useRef(null);
 
   const handleScriptGo = (e) => {
     navigate(e.target.id);
     props.setsearchPopup(false);
   };
 
+
+
   useEffect(() => {
+
+    if (props.serachPopup || props.searchPopup) {
+      inputRef.current.focus();
+    }
+
     const closeOnOutsideClick = (e) => {
       if (
         !searchRef.current.contains(e.target) &&
@@ -25,11 +33,11 @@ export const Search = (props) => {
     return () => {
       window.removeEventListener("click", closeOnOutsideClick);
     };
-  }, []);
+  }, [props.serachPopup,props.searchPopup]);
   return (
     <div>
       <div className="bg-[#a3a2e9] opacity-[0.5] w-screen  h-screen absolute top-0 left-0  z-10"></div>
-      <div className=" absolute left-0 top-0 z-20 ">
+      <div className=" absolute left-0 top-0 z-20  ">
         <div
           className="bg-[#fff] max-h-[600px] w-[600px] ml-[380px] mt-[60px] rounded-lg -z-10"
           ref={searchRef}
@@ -42,6 +50,7 @@ export const Search = (props) => {
                 className=" w-[100%] pl-2 h-[30px] outline-none text-textPrimary"
                 onChange={props.searchEvent}
                 placeholder="search title"
+                ref={inputRef}
               />
             </div>
           </div>

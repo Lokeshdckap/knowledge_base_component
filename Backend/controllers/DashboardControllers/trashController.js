@@ -9,6 +9,7 @@ const getAllTrash = async (req, res) => {
   try {
     const team_uuid = req.params.uuid;
 
+
     const allTrashs = await Script.findAll({
       where: {
         team_uuid: team_uuid,
@@ -51,9 +52,11 @@ const getAllTrash = async (req, res) => {
         },
       },
     });
+
     let batch_uuid = [];
     for (allTrashBatchs of allTrashBatch) {
       batch_uuid.push(allTrashBatchs.uuid);
+
     }
     const allTrashses = await Script.findAll({
       where: {
@@ -80,6 +83,7 @@ const getAllTrash = async (req, res) => {
     return res.status(500).json({ error: "Fetched Failed" });
   }
 };
+
 
 const getAllTrashScriptsForBatch = async (req, res) => {
   try {
@@ -304,18 +308,30 @@ const permanentDeleteParticular = async (req, res) => {
         },
       });
     }
+    
+    try {
+      // Delete associated scripts first
+      await Script.destroy({
+        where: {
+          batch_uuid: batchOrScriptuuid,
+        },
+      });
 
-    await Batch.destroy({
-      where: {
-        [Op.and]: [{ team_uuid: team_uuid }, { uuid: batchOrScriptuuid }],
-      },
-    });
+      // Then delete the batch
+      const deletes = await Batch.destroy({
+        where: {
+          [Op.and]: [{ team_uuid: team_uuid }, { uuid: batchOrScriptuuid }],
+        },
+      });
+    } catch (error) {
+      console.error("Error:", error);
+    }
 
     return res
       .status(200)
       .json({ message: "Folders  or  Sections & Pages  Deleted Sucessfully" });
   } catch (err) {
-    return res.status(404).json({ error: "Delete Failed or Can't Find" });
+    return res.status(500).json({ error: "Delete Failed or Can't Find" });
   }
 };
 

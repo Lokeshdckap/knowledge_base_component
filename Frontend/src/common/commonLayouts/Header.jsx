@@ -45,9 +45,9 @@ export default function Header(props) {
 
   // setOpenSideNave
   return (
-    <div className="bg-[#ffff]  shadow-md w-[100%]">
+    <div className="bg-[#ffff]  w-[100%]">
       <div
-        className={`flex items-center  m-auto justify-between  relative  w-[100%]  2xl:py-[30px] pt-[8px] pb-[8px] pl-[30px] pr-[30px]`}
+        className={`flex items-center  shadow-sm m-auto justify-between  relative  w-[100%]  2xl:py-[30px] pt-[8px] pb-[8px] pl-[30px] pr-[30px]`}
       >
         <div className="flex  space-x-2">
           <div
@@ -76,8 +76,13 @@ export default function Header(props) {
               <button
                 type="submit"
                 className="absolute top-0 right-0 p-2 text-sm font-medium h-full text-white bg-[#99a5b8] rounded-r-lg  focus:outline-none "
+                // ref={props.searchInpRef}
+                // onClick={props.HandleSearch}
               >
-                <i className="fa-solid fa-magnifying-glass "></i>
+                <i className="fa-solid fa-magnifying-glass "
+                   // ref={props.searchInpRef}
+                // onClick={props.HandleSearch}
+                ></i>
                 <span className="sr-only">Search</span>
               </button>
             </div>

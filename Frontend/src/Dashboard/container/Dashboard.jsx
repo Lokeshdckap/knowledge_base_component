@@ -115,12 +115,15 @@ export default function Dashboard() {
             handleTrash={handleTrash}
           />
       
+      
+
       {searchPopup && (
         <Search
           searchEvent={searchEvent}
           searchData={searchData}
           setsearchPopup={setsearchPopup}
           searchInpRef={searchInpRef}
+          searchPopup={searchPopup}
         />
       )}
 

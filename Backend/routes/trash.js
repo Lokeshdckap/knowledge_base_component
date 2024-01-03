@@ -51,4 +51,9 @@ router.delete(
   trashController.selectedTrash
 );
 
+router.get("/getAllTrashScriptsForBatch/:team_uuid/:batch_uuid",
+verifyAuthMiddleware.verifyToken,
+trashController.getAllTrashScriptsForBatch
+)
+
 module.exports = router;

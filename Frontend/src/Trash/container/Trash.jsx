@@ -5,15 +5,27 @@ import axiosClient from "../../axios-client";
 import { useMyContext } from "../../context/AppContext";
 
 export const Trash = () => {
-  const { getAllDeletedData, trashData,getBatch, setTrashData,role,setTrashBatchData,trashBatchData } = useMyContext();
+  const {
+    getAllDeletedData,
+    trashData,
+    getBatch,
+    setTrashData,
+    role,
+    setTrashBatchData,
+    trashBatchData,
+  } = useMyContext();
 
   const params = useParams();
 
   const [deletePopup, setDeletePopup] = useState(false);
   const [styleState, setStyleState] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [restorePopup,setRestorePopup] = useState(false)
-
+  const [restorePopup, setRestorePopup] = useState(false);
+  const [trashInfoDetails, setTrashInfoDetails] = useState([]);
+  const [handleDeleteConfirmation, setHandleDeleteConfirmation] =
+    useState(false);
+  const [handleRestoreConfirmation, setHandleRestoreConfirmation] =
+    useState(false);
 
   useEffect(() => {
     getAllDeletedData();
@@ -65,15 +77,20 @@ export const Trash = () => {
   const handleParticularDelete = async (e) => {
     setLoading(true);
     if (e.target.id) {
+      console.log(e.target.id, "checked");
+
       await axiosClient
         .delete(`/api/trash/permanentDelete/${params.uuid}/${e.target.id}`)
         .then((res) => {
           getAllDeletedData();
           showToastMessage(res.data.message);
           setLoading(false);
+
+          setHandleDeleteConfirmation(null);
         })
         .catch((err) => {
           console.log(err);
+          setLoading(false);
         });
     }
   };
@@ -85,14 +102,13 @@ export const Trash = () => {
       await axiosClient
         .put(`/api/trash/restore/${params.uuid}/${e.target.id}`)
         .then((res) => {
-
           getAllDeletedData();
           showToastMessage(res.data.message);
           getScript();
-          getBatch()
+          getBatch();
           setLoading(false);
-          if(!res.data.state){
-               setRestorePopup(true)
+          if (!res.data.state) {
+            setRestorePopup(true);
           }
         })
         .catch((err) => {
@@ -114,6 +130,24 @@ export const Trash = () => {
       setStyleState([...styleState, id]);
     }
   };
+
+  const handleTrashInfo = async (id) => {
+    setLoading(true);
+
+    await axiosClient
+      .get(`/api/trash/getAllTrashScriptsForBatch/${params.uuid}/${id}`)
+      .then((res) => {
+        if (res.status == 200) {
+          setTrashInfoDetails(res.data.allTrashScript);
+          setLoading(false);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        setLoading(false);
+      });
+  };
+
   return (
     <>
       <TrashComponent
@@ -132,6 +166,12 @@ export const Trash = () => {
         trashBatchData={trashBatchData}
         restorePopup={restorePopup}
         setRestorePopup={setRestorePopup}
+        handleTrashInfo={handleTrashInfo}
+        trashInfoDetails={trashInfoDetails}
+        handleDeleteConfirmation={handleDeleteConfirmation}
+        setHandleDeleteConfirmation={setHandleDeleteConfirmation}
+        handleRestoreConfirmation={handleRestoreConfirmation}
+        setHandleRestoreConfirmation={setHandleRestoreConfirmation}
       />
     </>
   );

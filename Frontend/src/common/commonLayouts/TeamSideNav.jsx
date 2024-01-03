@@ -28,7 +28,7 @@ export const TeamSideNav = (props) => {
         <div className="bg-slate-300 h-14">
           <p className="w-20 m-auto pt-4 truncate">{teamName && teamName}</p>
         </div>
-        <div className="w-48 m-auto ">
+        <div className="w-48 m-auto">
           <p className="text-textPrimary font-bold text-lg mt-3 ">
             Team Setting
           </p>

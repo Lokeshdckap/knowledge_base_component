@@ -26,8 +26,15 @@ export const TrashComponent = (props) => {
         role={props.role}
         restorePopup={props.restorePopup}
         setRestorePopup={props.setRestorePopup}
-
+        handleTrashInfo={props.handleTrashInfo}
+        trashInfoDetails={props.trashInfoDetails}
+        handleDeleteConfirmation = {props.handleDeleteConfirmation}
+        setHandleDeleteConfirmation = {props.setHandleDeleteConfirmation}
+        handleRestoreConfirmation={props.handleRestoreConfirmation}
+        setHandleRestoreConfirmation={props.setHandleRestoreConfirmation}
       />
+
+  
       {props.loading && (
         <>
           <div className="bg-[#aeaeca] opacity-[0.5] w-[100%] h-[100vh] absolute top-0 left-0  z-10"></div>

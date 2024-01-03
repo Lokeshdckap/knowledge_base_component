@@ -9,6 +9,11 @@
     margin: 0px;
     padding: 0px;
     box-sizing: border-box;
+    -webkit-user-select: none;
+  /* Safari */
+  -ms-user-select: none;
+   /* IE 10 and IE 11 */
+  user-select: none;
     /* color: #a3a2e9; */
 }
 @keyframes blink {

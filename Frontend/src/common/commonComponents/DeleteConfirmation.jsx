@@ -16,8 +16,9 @@ export const DeleteConfirmation = (props) => {
               <p className="text-2xl text-textPrimary">Delete Scripts</p>
             </div>
             <p className="pt-8 text-lg text-textPrimary">
-              Are you sure you want to DeleteAll the Scritps & Pages but you
-              can't restore ?
+              {props.check
+                ? "Deleting page is a permanent action and cannot be restored. Also it will delete if there are any child pages associated with it "
+                : "Are you sure you want to DeleteAll the Scritps & Pages but you can't restore ?"}
             </p>
             <div className="flex items-center justify-end space-x-6  pt-10">
               <div className={`text-center`}>
@@ -31,7 +32,13 @@ export const DeleteConfirmation = (props) => {
               <div className={`text-center`}>
                 <button
                   className="bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-5 rounded"
-                  onClick={props.handleDelete}
+                  id={props.check}
+                  onClick={
+                    props.check
+                      ? (e) => props.handleParticularDelete(props.check)
+                      : () => props.handleDelete()
+                  }
+                  // onClick={props.handleDelete}
                 >
                   Delete Forever
                 </button>

@@ -7,6 +7,7 @@ import EditPage from "../../common/commonLayouts/EditPage";
 import { ToastContainer, toast } from "react-toastify";
 import { useMyContext } from "../../context/AppContext";
 import { UrlCopyPopup } from "../../common/commonComponents/UrlCopyPopup";
+import { PageDeleteConfirmation } from "../../common/commonComponents/PageDeleteConfirmation";
 
 export const ScriptComponents = () => {
   const navigate = useNavigate();
@@ -68,6 +69,8 @@ export const ScriptComponents = () => {
 
   const [inputStr, setInputStr] = useState("");
   const [showPicker, setShowPicker] = useState(false);
+
+  const [pageDeleteConfirmation, setPageDeleteConfirmation] = useState(null);
 
   const duration = 2000;
 
@@ -382,6 +385,7 @@ export const ScriptComponents = () => {
       await axiosClient
         .delete(`/api/pages/permanentDeletePage/${targetId}`)
         .then((res) => {
+          setPageDeleteConfirmation(null);
           if (res.data.page.page_uuid != null) {
             navigate(
               `/dashboard/${params.uuid}/s/${params.slug}/?pageId=${res.data.page.page_uuid}`
@@ -426,6 +430,13 @@ export const ScriptComponents = () => {
       .catch((err) => {
         console.log(err);
       });
+  };
+
+  const handleDeletePage = () => {
+    setPageDeleteConfirmation(null);
+    if (localStorage.getItem("mainId")) {
+      localStorage.removeItem("mainId");
+    }
   };
 
   return (
@@ -480,9 +491,18 @@ export const ScriptComponents = () => {
         setInputStr={setInputStr}
         showPicker={showPicker}
         setShowPicker={setShowPicker}
+        setPageDeleteConfirmation={setPageDeleteConfirmation}
       />
 
       {urlCopyPopup && <UrlCopyPopup renderScript={renderScript} />}
+      {pageDeleteConfirmation && (
+        <PageDeleteConfirmation
+          setPageDeleteConfirmation={setPageDeleteConfirmation}
+          handleDeletePage={handleDeletePage}
+          pageDeleteConfirmation={pageDeleteConfirmation}
+          handlePageDelete={handlePageDelete}
+        />
+      )}
     </>
   );
 };

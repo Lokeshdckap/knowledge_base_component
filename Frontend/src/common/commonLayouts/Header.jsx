@@ -56,7 +56,7 @@ export default function Header(props) {
           >
             <i className="fa-solid fa-bars"></i>
           </div>
-          <h2 className="phone:text-[12px]"> {props.team}'s Team</h2>
+          <p className="phone:text-[12px] text-[18px] font-medium"> {props.team}'s Team</p>
         </div>
 
         <div>

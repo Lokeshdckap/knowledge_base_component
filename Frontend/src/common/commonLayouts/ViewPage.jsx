@@ -83,15 +83,15 @@ export const ViewPage = (props) => {
             </div>
             <input
               type="text"
-              className="text-2xl phone:text-[18px] phone:w-[190px]  focus:outline-none text-textPrimary font-bold"
+              className="text-3xl phone:text-[18px] phone:w-[190px] bg-[#fbfbfc]  focus:outline-none text-textPrimary font-bold"
               value={title}
               placeholder="Page Name"
               readOnly={true}
             />
           </div>
-          <div>
+          <div className="pt-2">
             <input
-              className="text-2xl phone:text-[16px] phone:w-[170px]   mt-2 focus:outline-none text-textPrimary "
+              className="text-2xl phone:text-[16px] phone:w-[170px] bg-[#fbfbfc] pl-8  mt-2 focus:outline-none text-[#3c3e41] "
               value={props.description}
               placeholder="Page Description"
               readOnly={true}

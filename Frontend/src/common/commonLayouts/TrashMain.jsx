@@ -222,6 +222,7 @@ export const TrashMain = (props) => {
       ) : (
         <></>
       )}
+
       {props.handleDeleteConfirmation && (
         <>
           <DeleteConfirmation
@@ -231,10 +232,13 @@ export const TrashMain = (props) => {
           />
         </>
       )}
+
       {props.handleRestoreConfirmation && (
         <>
           <RestoreConfirmation
             setHandleRestoreConfirmation={props.setHandleRestoreConfirmation}
+            check={props.handleRestoreConfirmation}
+            handleParticularRestore={props.handleParticularRestore}
           />
         </>
       )}

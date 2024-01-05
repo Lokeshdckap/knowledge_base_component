@@ -314,9 +314,9 @@ const MyContextProvider = ({ children }) => {
     axiosClient
       .get(`/api/trash/getAllTrash/${params.uuid}`)
       .then((res) => {
+        console.log(res);
         setLoading(false);
-
-        setTrashData(res.data.allTrashs);
+        setTrashData(res.data.allTrashses);
       })
       .catch((err) => {
         console.log(err);

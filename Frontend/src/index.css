@@ -9,6 +9,8 @@
     margin: 0px;
     padding: 0px;
     box-sizing: border-box;
+
+    scroll-behavior: smooth;
     -webkit-user-select: none;
   /* Safari */
   -ms-user-select: none;
@@ -33,6 +35,44 @@
 }
 .codex-editor path{
   color: #1F72FD;
+}
+h1{
+  font-size: 32px;
+  font-weight: bold;
+}
+
+h2{
+  font-size: 24px;
+  font-weight: bold;
+}
+h2 > a{
+  color: #ffffff;
+
+}
+h3{
+  font-size: 18.72px;
+  font-weight: bold;
+}
+h4{
+  font-size: 16px;
+  font-weight: bold;
+}
+h5{
+  font-size: 16px;
+  font-weight: bold;
+}
+h6{
+  font-size: 10.72px;
+  font-weight: bold;
+}
+.cdx-list__item{
+  color: #2b2d2e;
+}
+.ce-paragraph {
+  color: #2b2d2e
+}
+.ce-paragraph > a {
+  color: #1F72FD
 }
 
 /* @media screen and (max-width:2560px){ 

@@ -6,7 +6,6 @@ import { useParams } from "react-router-dom";
 import axiosClient from "../../axios-client";
 
 export default function EditHeader(props) {
-  console.log(props);
   const params = useParams();
   const items = [
     {
@@ -91,7 +90,7 @@ export default function EditHeader(props) {
                   {props.renderScript.logo ? (
                     <img src={props.renderScript.logo} alt="" className="w-13 h-10" />
                   ) : (
-                    <i className="fa-regular text-slate-600 fa-circle-user text-2xl cursor-pointer pr-1"></i>
+                    <i className="fa-regular  fa-image text-slate-600 text-2xl cursor-pointer pr-1"></i>
                   )}
                   <input
                     type="file"

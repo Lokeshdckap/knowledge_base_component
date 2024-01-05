@@ -17,6 +17,7 @@ export const PageTree = ({
   popUp,
   setPopUp,
   handlePageDelete,
+  setPageDeleteConfirmation,
   treeNodes,
   inputStr,
 }) => {
@@ -110,13 +111,17 @@ export const PageTree = ({
       >
         {node?.emoji && (
           <img
-            className="cursor-pointer w-[18px] mr-1"
+            className="cursor-pointer w-[18px] mr-1 "
+            onClick={contentPage}
+            id={node.uuid}
+            data-set={node.path}
+            index={node.id}
             src={node?.emoji ? node?.emoji : ``}
           />
         )}
         <span
           className={`text-[18px] phone:text-[14px]   font-inter text-base cursor-pointer pt-1 pl-2 pb-1 w-[100%] ${
-            "/" + slug + "/" + wildcardValue == node.path ? "font-medium text-primary" : ""
+            "/" + slug + "/" + wildcardValue == node.path || pageIds == node.uuid ? " text-primary font-medium" : "text-[#515258]"
           }`}
           onClick={contentPage}
           id={node.uuid}
@@ -130,7 +135,7 @@ export const PageTree = ({
           ? ""
           : hoverPageId == node.uuid && (
               <i
-                className="fa-solid fa-ellipsis-vertical cursor-pointer  pr-5"
+                className="fa-solid fa-ellipsis-vertical cursor-pointer text-[#46474d] pr-5"
                 id={node.uuid}
                 onClick={addPopUp}
                 ref={addIconRef}
@@ -140,7 +145,7 @@ export const PageTree = ({
           <button className="text-sm mr-2 " onClick={toggleOpen}>
             {isOpen ? (
               <i
-                className="fa-solid fa-angle-down cursor-pointer "
+                className="fa-solid fa-angle-down cursor-pointer text-[#46474d] "
                 id={node.uuid}
                 data-set={node.path}
                 onMouseEnter={handleScriptMouseEnter}
@@ -148,7 +153,7 @@ export const PageTree = ({
               ></i>
             ) : (
               <i
-                className="fa-solid fa-angle-up cursor-pointer rotate-90"
+                className="fa-solid fa-angle-up cursor-pointer rotate-90 text-[#46474d] "
                 id={node.uuid}
                 data-set={node.path}
                 onMouseEnter={handleScriptMouseEnter}
@@ -162,20 +167,20 @@ export const PageTree = ({
           <>
             <div className="bg-[#a3a2e9] opacity-[0] w-screen h-screen absolute top-0 left-0  z-10"></div>
             <div
-              className="box-border bg-white  w-40  border-[1px] border-slate-300 rounded-lg shadow-lg absolute  z-40" // ref={addPopup}
+              className="box-border bg-white  w-[165px]  border-[1px] border-slate-300 rounded-lg shadow-lg absolute  z-20" // ref={addPopup}
               style={topState}
               ref={addPopup}
             >
               <div
-                className="w-[145px] m-auto space-y-3 pt-3 pb-3"
+                className="w-[150px] m-auto space-y-3 pt-3 pb-3"
                 id={node.uuid}
                 onClick={handleMore}
               >
                 <p
-                  className="text-lg cursor-pointer  text-textPrimary hover:bg-primary  hover:text-white hover:rounded"
+                  className="text-[16px] cursor-pointer  text-textPrimary hover:bg-primary  hover:text-white hover:rounded"
                   id={node.uuid}
                 >
-                  <i className="fa-regular fa-file p-2" id={node.uuid}></i>New
+                  <i className="fa-regular fa-file p-2" id={node.uuid}></i>Insert New
                   page
                 </p>
               </div>
@@ -183,12 +188,12 @@ export const PageTree = ({
                 <></>
               ) : (
                 <div
-                  className="w-[145px] m-auto space-y-3 pt-1 pb-3"
+                  className="w-[145px] m-auto space-y-3  pb-3"
                   id={node.uuid}
-                  onClick={handlePageDelete}
+                  onClick={()=>setPageDeleteConfirmation(node.uuid)}
                 >
                   <p
-                    className="text-lg cursor-pointer text-textPrimary hover:bg-primary hover:text-white hover:rounded"
+                    className="text-[16px] cursor-pointer  text-textPrimary hover:bg-primary hover:text-white hover:rounded"
                     id={node.uuid}
                   >
                     <i className="fa-solid fa-trash p-2" id={node.uuid}></i>
@@ -226,6 +231,7 @@ export const PageTree = ({
                 popUp={popUp}
                 setPopUp={setPopUp}
                 handlePageDelete={handlePageDelete}
+                setPageDeleteConfirmation={setPageDeleteConfirmation}
                 treeNodes={treeNodes}
                 inputStr={inputStr}
               />

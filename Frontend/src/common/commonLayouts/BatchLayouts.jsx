@@ -59,7 +59,7 @@ export const BatchLayouts = (props) => {
             <div>
               <div>
                 <input
-                  className="text-[40px] phone:text-[24px] phone:w-[240px]  pl-2 mt-8 font-bold focus:outline-none hover:bg-slate-100  rounded focus:bg-slate-100 h-14 phone:h-12"
+                  className="text-[40px] phone:text-[24px] phone:w-[240px]  pl-2 mt-8 font-bold focus:outline-none  hover:bg-[#e6ebf8] bg-[#F4F7FC]  rounded focus:bg-[#e6ebf8] h-14 phone:h-12 text-[#404958]"
                   placeholder="Batch Name"
                   name="title"
                   value={props.batchTitle || ""}
@@ -70,7 +70,7 @@ export const BatchLayouts = (props) => {
               </div>
               <div className="mt-4">
                 <input
-                  className="text-2xl phone:text-[18px] pl-2 focus:outline-none phone:w-[230px]  focus:bg-slate-100 hover:bg-slate-100 h-10 phone:h-8 rounded"
+                  className="text-2xl phone:text-[18px] pl-2 focus:outline-none phone:w-[230px] text-[#363d49] bg-[#F4F7FC] focus:bg-[#e6ebf8] hover:bg-[#e6ebf8] h-10 phone:h-8 rounded"
                   placeholder="Batch Description"
                   name="descritpion"
                   value={props.batchDescription || ""}
@@ -82,7 +82,7 @@ export const BatchLayouts = (props) => {
             </div>
             <div onClick={props.AddChildScript}>
               <button
-                className="flex items-center justify-center space-x-1 w-[160px]   phone:w-[80px] text-white rounded  bg-primary phone:text-[10px]"
+                className="flex items-center justify-center space-x-1 w-[160px] hover:bg-[#3d5fd8]   phone:w-[80px] text-white rounded  bg-primary phone:text-[10px]"
                 disabled={role === 2 ? true : false}
               >
                 <span className="lg:py-[13.5px] phone:py-[5px]">

@@ -28,18 +28,19 @@ export const ViewHeader = (props) => {
         className={`flex items-center m-auto justify-between relative w-[100%]  2xl:py-[30px] py-[10px]  px-[30px] phone:px-[10px] shadow-sm`}
       >
         <div className="flex  items-center  space-x-2">
-          <img
-            className="cursor-pointer w-[25px]"
-            src={
-              props.renderScript?.logo
-                ? props.renderScript?.logo
-                : `https://icons.getbootstrap.com/assets/icons/emoji-smile.svg`
-            }
-            onClick={() => {
-              props.setShowPicker((val) => !val);
-              setHasChanges(true);
-            }}
-          />
+          {props.renderScript?.logo ? (
+            <img
+              className="cursor-pointer w-[25px]"
+              src={props.renderScript?.logo && props.renderScript?.logo}
+              onClick={() => {
+                props.setShowPicker((val) => !val);
+                setHasChanges(true);
+              }}
+            />
+          ) : (
+            <i class="fa-regular fa-image text-slate-600 text-2xl cursor-pointer pr-1"></i>
+          )}
+
           <input
             className="text-textPrimary font-bold font-sans text-2xl   bg-[#EEEEEE] focus:outline-gray-300 w-80 h-11  phone:h-8 pl-2 phone:w-[160px] rounded"
             value={props.inputValue}

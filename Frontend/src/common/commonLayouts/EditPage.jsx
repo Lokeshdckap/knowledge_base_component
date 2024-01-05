@@ -81,6 +81,7 @@ export default function EditPage(props) {
                     handlePageDelete={props.handlePageDelete}
                     treeNodes={treeNode}
                     inputStr={props.inputStr}
+                    setPageDeleteConfirmation={props.setPageDeleteConfirmation}
                   />
                 </div>
               ))}
@@ -98,7 +99,9 @@ export default function EditPage(props) {
             maxHeight: `calc(${screenHeight}px - 64px)`,
           }}
         >
-          <div className="flex items-center relative  space-x-2 mt-8">
+          <div
+            className="flex  items-center relative space-x-2 mt-8"
+          >
             <div className="">
               <img
                 className="cursor-pointer w-[25px]"
@@ -128,7 +131,7 @@ export default function EditPage(props) {
             </div>
             <input
               type="text"
-              className="text-3xl phone:text-[18px] phone:w-[190px] font-inter focus:outline-none text-textPrimary font-bold"
+              className="text-3xl phone:text-[18px] phone:w-[190px] py-1 pl-1 rounded-sm bg-[#fbfbfc] font-inter focus:bg-[#e6ebf8] hover:bg-[#e6ebf8] focus:outline-none text-textPrimary font-bold"
               value={title}
               onChange={(e) => {
                 props.setParticularTitle(e.target.value);
@@ -142,7 +145,7 @@ export default function EditPage(props) {
           </div>
           <div>
             <input
-              className="text-xl phone:text-[16px] font-inter phone:w-[170px] mt-3 ml-[32px] focus:outline-none text-textPrimary "
+              className="text-xl phone:text-[16px] font-inter phone:w-[170px] bg-[#fbfbfc] focus:bg-[#e6ebf8] hover:bg-[#e6ebf8] rounded-sm py-1 pl-2 mt-3 ml-[28px] focus:outline-none text-textPrimary "
               value={props.description}
               onChange={(e) => {
                 props.setDescription(e.target.value);

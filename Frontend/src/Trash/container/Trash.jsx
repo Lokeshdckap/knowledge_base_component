@@ -41,6 +41,7 @@ export const Trash = () => {
     setLoading(true);
 
     if (styleState.length > 0) {
+ 
       await axiosClient
         .delete(`/api/trash/selectedTrash/${params.uuid}`, {
           data: styleState,
@@ -97,7 +98,7 @@ export const Trash = () => {
 
   const handleParticularRestore = async (e) => {
     setLoading(true);
-    console.log(e.target.id);
+
     if (e.target.id) {
       await axiosClient
         .put(`/api/trash/restore/${params.uuid}/${e.target.id}`)
@@ -107,6 +108,7 @@ export const Trash = () => {
           getScript();
           getBatch();
           setLoading(false);
+          setHandleRestoreConfirmation(null)
           if (!res.data.state) {
             setRestorePopup(true);
           }

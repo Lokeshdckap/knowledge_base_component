@@ -71,22 +71,22 @@ export default function Main(props) {
                 <i className="fa-solid fa-user-group text-[25px] pl-[6px] pt-[10px] text-[#6E7E86]"></i>
               </div>
               <div>
-                <h1 className="text-xl phone:text-[14px] font-bold">
+                <p className="text-xl phone:text-[14px] font-bold">
                   Team Documents
-                </h1>
-                <h3 className="text-sm phone:text-[12px]">
+                </p>
+                <p className="text-sm phone:text-[12px]">
                   {props.team} 's Teams
-                </h3>
+                </p>
               </div>
             </div>
             <div className="flex   items-center space-x-5 phone:space-x-2">
-              <div>
+              <div >
                 <button
-                  className={`flex items-center justify-center space-x-1 w-[128px]  phone:w-[80px] text-slate-500 rounded border-slate-400 phone:text-[10px] border-[1px]  `}
+                  className={`flex items-center justify-center space-x-1 hover:border-primary hover:text-primary  w-[128px]  phone:w-[80px] text-slate-500 rounded border-slate-400 phone:text-[10px] border-[1px]  `}
                   onClick={addBatchEvent}
                   disabled={role === 2 ? true : false}
                 >
-                  <span className="lg:py-[12px] phone:py-[5px]">
+                  <span className="lg:py-[12px] phone:py-[5px] ">
                     <img src={folder} alt="" className="w-[17px] h-[18px]" />
                   </span>
                   <span>New Folder</span>
@@ -94,7 +94,7 @@ export default function Main(props) {
               </div>
               <div>
                 <button
-                  className="flex items-center justify-center space-x-1 w-[160px]   phone:w-[80px] text-white rounded  bg-primary phone:text-[10px]"
+                  className="flex items-center justify-center space-x-1 w-[160px] hover:bg-[#3d5fd8]  phone:w-[80px] text-white rounded  bg-primary phone:text-[10px]"
                   onClick={scriptEvent}
                   disabled={role === 2 ? true : false}
                 >

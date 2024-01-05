@@ -18,20 +18,23 @@ import { Search } from "./Search";
 import AttachesTool from "@editorjs/attaches";
 import HashLoader from "react-spinners/HashLoader";
 import { formatDistanceToNow, isValid } from "date-fns";
-import 'animate.css/animate.min.css';
-
+import "animate.css/animate.min.css";
 
 export const UrlPage = () => {
   const location = useLocation();
 
   const navigate = useNavigate();
+  const detailRef = useRef(null);
+  const iconRef = useRef(null);
 
   const [script, setScript] = useState(null);
   const [page, setPages] = useState([]);
   const params = useParams();
   const [loading, setLoading] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
+  const [detail, setDetail] = useState(false);
+  const [onThisPage, setOnThisPage] = useState([]);
+  const [pageId, setpageId] = useState([]);
   //style State
   const [screenHeight, setScreenHeight] = useState(window.innerHeight);
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
@@ -63,6 +66,8 @@ export const UrlPage = () => {
 
   useEffect(() => {
     if (params["*"]) {
+      setOnThisPage(null);
+
       setLoading(true);
       axiosClient
         .get(`/api/public/pages/${params.slug}/${params["*"]}`)
@@ -72,6 +77,18 @@ export const UrlPage = () => {
 
             setLoadPage(res.data.publicUrl);
             setEditorValue(res.data.publicUrl.content);
+
+            const headers = res.data.publicUrl.content.blocks.filter(
+              (block) => block.type === "header"
+            );
+            const headerValuesWithId = headers.map((header) => ({
+              
+              id: header.id,
+              text: header.data.text.replace(/<[^>]*>/g, ""),
+            }
+           
+            ));
+            setOnThisPage(headerValuesWithId);
           }
         })
         .catch((err) => {
@@ -91,7 +108,7 @@ export const UrlPage = () => {
           `/api/public/documents/${params.uuid}/${params.slug}/${params["*"]}`
         )
         .then((res) => {
-          console.log(res);
+
           if (!res.data.script.is_published) {
             navigate("/underMaintenance");
           }
@@ -100,7 +117,7 @@ export const UrlPage = () => {
           setLoading(false);
 
           setScript(res.data.script);
-          console.log(res.data.script);
+       
         })
         .catch((err) => {
           const response = err.response;
@@ -147,6 +164,7 @@ export const UrlPage = () => {
       };
       // Attach the event listener for window resize
       window.addEventListener("resize", updateScreenHeight);
+
       return () => {
         window.removeEventListener("resize", updateScreenHeight);
       };
@@ -269,6 +287,24 @@ export const UrlPage = () => {
       });
   };
 
+  const closeOnOutsideClick = (e) => {
+    if (
+      detail &&
+      detailRef.current &&
+      !detailRef.current.contains(e.target) &&
+      e.target !== iconRef.current
+    ) {
+      setDetail(false);
+    }
+  };
+
+  window.addEventListener("click", closeOnOutsideClick);
+
+  // Cleanup function to remove event listener when component unmounts
+  const cleanup = () => {
+    window.removeEventListener("click", closeOnOutsideClick);
+  };
+
   return (
     <div className="">
       <div className="flex justify-between items-center py-[20px] px-[30px] shadow-sm">
@@ -276,32 +312,80 @@ export const UrlPage = () => {
           {script?.logo ? (
             <img src={script?.logo} alt="" className="w-8 " />
           ) : (
-            <i className="fa-regular text-slate-600 fa-circle-user text-2xl cursor-pointer pr-1"></i>
+            <i className="fa-regular text-slate-600 fa-image text-2xl cursor-pointer pr-1"></i>
           )}
           <p className="font-bold text-2xl phone:text-xl font-inter">
             {script && script.title}
           </p>
         </div>
-        <input
+        <div className="relative phone:w-[150px] w-[380px]">
+          <input
+            type="search"
+            id="search-dropdown"
+            className="block p-[10px] phone:p-[5px] w-[380px] phone:w-[150px] z-20 text-sm text-gray-900 bg-white rounded-lg focus:outline-slate-300  placeholder-gray-400 dark:text-white cursor-pointer border-[1px] "
+            placeholder="Search here"
+            autoComplete="off"
+            required
+            readOnly
+            onClick={() => setsearchPopup((prevState) => !prevState)}
+            ref={searchInpRef}
+          />
+          <button
+            type="submit"
+            className="absolute top-0 right-0 p-2 text-sm font-medium h-full text-white bg-[#99a5b8] rounded-r-lg  focus:outline-none "
+          >
+            <i className="fa-solid fa-magnifying-glass "></i>
+            <span className="sr-only">Search</span>
+          </button>
+        </div>
+        <div className="flex items-center ">
+          <div className="relative group " >
+            <i
+              className=" fa-solid fa-circle-info cursor-pointer text-2xl text-primary "
+              title="Info"
+              ref={iconRef}
+              onClick={() => setDetail((prevState) => !prevState)}
+            ></i>
+            
+            {detail && (
+              <div
+                className="bg-white w-64 py-5 px-4  absolute top-8.5 border-[1px] right-[-10px] z-30 shadow-md rounded-lg "
+                ref={detailRef}
+              >
+                <p className="text-[#69747e] text-sm pt-1">
+                  <span className="font-medium text-[#25282b] text-sm ">
+                    Created At :
+                  </span>{" "}
+                  {formattedTime}
+                </p>
+                <p className="text-[#69747e] text-sm pt-1">
+                  <span className="font-medium text-[#25282b] text-sm">
+                    Last Modified At :
+                  </span>{" "}
+                  {formattedTimes}
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+        {/* <input
           type="text"
           placeholder="Search"
           onClick={() => setsearchPopup((prevState) => !prevState)}
           ref={searchInpRef}
           readOnly
           className="bg-[#f0f3f7] rounded-md w-48 h-10 phone:w-28 phone:h-9 pl-2 focus:outline-primary  cursor-pointer"
-        />
+        /> */}
       </div>
       <hr className="" />
-      <div className="flex"
-       style={{
-        
-        height: `calc(100vh - 85px)`,
-      }}
+      <div
+        className="flex"
+        style={{
+          height: `calc(100vh - 85px)`,
+        }}
       >
         <div
-
           className=" overflow-x-hidden border-r-[1px]"
-
           style={{
             maxHeight: `calc(${screenHeight}px - 85px)`,
           }}
@@ -324,9 +408,6 @@ export const UrlPage = () => {
             ))}
           </div>
         </div>
-        {/* <div className="bg-gray-300 w-px"
-        
-        ></div> */}
         <div
           className=" overflow-auto pt-10 phone:pl-[6px] px-14  "
           style={{
@@ -352,30 +433,24 @@ export const UrlPage = () => {
                     : loadPage?.title && loadPage?.title.split("-")[0]}
                 </h1>
               </div>
-              <h4 className="text-xl my-3 ml-[32px] font-inter phone:text-[16px] phone:w-[170px] ">
+              <h4 className="text-[20px] my-3 ml-[32px]  font-normal font-inter phone:text-[16px] phone:w-[170px] ">
                 {page?.length == 0 ? "Page description" : loadPage?.description}
               </h4>
             </div>
-            <div className="float-right">
-              <p className="text-[#69747e] text-sm ">
-                <span className="font-medium text-[#25282b] text-sm">
-                  Created By Team :
-                </span>{" "}
-                {script?.title} Team
-              </p>
-              <p className="text-[#69747e] text-sm pt-1">
-                <span className="font-medium text-[#25282b] text-sm ">
-                  Created At :
-                </span>{" "}
-                {formattedTime}
-              </p>
-              <p className="text-[#69747e] text-sm pt-1">
-                <span className="font-medium text-[#25282b] text-sm">
-                  Last Modified At :
-                </span>{" "}
-                {formattedTimes}
-              </p>
-            </div>
+          
+            {onThisPage && (
+              <div className="float-right fixed right-4 max-w-[220px] w-[100%]">
+                <p className="font-semibold text-gray-500 text-lg font-inter">
+                  On This Page
+                </p>
+                {onThisPage &&
+                  onThisPage.map((page) => (
+                    <div className="mt-2 cursor-pointer">
+                      <a href={"#"+page.id} className={`text-[#495057] ${window.location.hash == "#"+page.id && "text-primary font-medium"} text-sm`}>{page.text.slice(0,-1)}</a>
+                    </div>
+                  ))}
+              </div>
+            )}
           </div>
 
           <div

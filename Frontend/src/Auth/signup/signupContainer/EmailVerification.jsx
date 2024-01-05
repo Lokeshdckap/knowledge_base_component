@@ -29,10 +29,10 @@ export default function EmailVerification() {
       <div className='bg-primary w-screen h-64 absolute'>
 
       </div>
-      <div className='bg-white ml-[350px] mt-1 shadow-2xl rounded w-[600px] h-[550px] absolute '>
-        <h1 className='text-primary text-center text-lg font-semibold pt-10'>Verify your Email Address</h1>
+      <div className='bg-white ml-[350px] mt-8 shadow-2xl rounded w-[600px] h-[550px] absolute '>
+        <p className='text-primary text-center text-lg font-semibold pt-10'>Verify your Email Address</p>
         <img src={emailverify} alt="" className='h-[350px] w-96 m-auto' />
-        <h2 className='w-[350px] m-auto text-textPrimary'> Before proceeding Our Knowledge Base, please check your email for a verification</h2>
+        <p className='w-[350px] m-auto text-textPrimary'> Before proceeding Our Knowledge Base, please check your email for a verification</p>
         <div className='text-center pt-5'>
           <button type="submit" className="bg-primary  w-36 text-white h-11 rounded-md " onClick={resendLink}>Resend Link</button>
           <Link to="/signin"><button type="submit" className="bg-primary  w-36 text-white h-11 rounded-md ml-2">Please Login</button></Link>

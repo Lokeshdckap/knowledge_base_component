@@ -10,7 +10,7 @@ import ImageTool from "@editorjs/image";
 import BreakLine from "editorjs-break-line";
 import axiosClient from "../../axios-client";
 import AttachesTool from "@editorjs/attaches";
-import Header from "@editorjs/header";
+import Header from '@editorjs/header'; 
 import { useMyContext } from "../../context/AppContext";
 
 export const EditorComponents = (props) => {
@@ -41,24 +41,30 @@ export const EditorComponents = (props) => {
           // Check if editor is defined before calling save method
           if (editor) {
             const content = await editor.saver.save();
+            
+            const contentWithUniqueId = {
+              ...content,
+              blocks: content.blocks.map((block) => {
+                if (block.type === 'header') {
+                  // Add anchor tag to the header block
+                  block.data.text += ` <a id="${block.id}">#</a>`;
+                }
+                return block;
+              }),
+            };
+            console.log(contentWithUniqueId);
             setHasChanges(true);
-            props.setEditorContent(content);
+
+            props.setEditorContent(contentWithUniqueId);
           }
         } catch (error) {
           console.error("Error saving content:", error);
         }
       },
       tools: {
-        header: {
-          class: Header,
-          config: {
-            placeholder: "Enter a header",
-            levels: [2, 3, 4],
-            defaultLevel: 3,
-          },
-        },
+        header: Header,
         list: {
-          class: List,
+          class: List,  
           inlineToolbar: true,
           config: {
             defaultStyle: "unordered",

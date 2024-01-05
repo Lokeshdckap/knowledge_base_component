@@ -5,10 +5,86 @@ const { sequelize, col } = require("../../utils/database");
 const Batch = db.batch;
 const Script = db.script;
 
+// const getAllTrash = async (req, res) => {
+//   try {
+//     const team_uuid = req.params.uuid;
+
+//     const allTrashs = await Script.findAll({
+//       where: {
+//         team_uuid: team_uuid,
+//         deleted_at: {
+//           [Op.not]: null,
+//         },
+//       },
+//     });
+
+//     let uniqueBatchUuids = new Set();
+//     let filteredAllTrashs = allTrashs.filter((allTrashed) => {
+//       if (
+//         allTrashed.batch_uuid &&
+//         !uniqueBatchUuids.has(allTrashed.batch_uuid)
+//       ) {
+//         uniqueBatchUuids.add(allTrashed.batch_uuid);
+//         return true;
+//       }
+//       return false;
+//     });
+//     let valuesArray = Array.from(uniqueBatchUuids);
+
+//     const allTrashss = await Batch.findAll({
+//       where: {
+//         team_uuid: team_uuid,
+//         deleted_at: {
+//           [Op.not]: null,
+//         },
+//         uuid: {
+//           [Op.in]: valuesArray,
+//         },
+//       },
+//     });
+
+//     const allTrashBatch = await Batch.findAll({
+//       where: {
+//         team_uuid: team_uuid,
+//         deleted_at: {
+//           [Op.not]: null,
+//         },
+//       },
+//     });
+//     let batch_uuid = [];
+//     for (allTrashBatchs of allTrashBatch) {
+//       batch_uuid.push(allTrashBatchs.uuid);
+//     }
+//     const allTrash = await Script.findAll({
+//       where: {
+//         team_uuid: team_uuid,
+//         deleted_at: {
+//           [Op.not]: null,
+//         },
+//         [Op.or]: [
+//           { batch_uuid: null },
+//           { batch_uuid: { [Op.notIn]: batch_uuid } },
+//         ],
+//       },
+//     });
+
+//     for (trash of allTrashBatch) {
+//       allTrash.push(trash);
+//     }
+
+//     return res.status(200).json({
+//       allTrash,
+//     });
+//   } catch (error) {
+//     console.log(error);
+//     return res.status(500).json({ error: "Fetched Failed" });
+//   }
+// };
+
+
 const getAllTrash = async (req, res) => {
   try {
     const team_uuid = req.params.uuid;
-
 
     const allTrashs = await Script.findAll({
       where: {
@@ -32,17 +108,7 @@ const getAllTrash = async (req, res) => {
     });
     let valuesArray = Array.from(uniqueBatchUuids);
 
-    const allTrashss = await Batch.findAll({
-      where: {
-        team_uuid: team_uuid,
-        deleted_at: {
-          [Op.not]: null,
-        },
-        uuid: {
-          [Op.in]: valuesArray,
-        },
-      },
-    });
+    console.log(valuesArray);
 
     const allTrashBatch = await Batch.findAll({
       where: {
@@ -55,9 +121,13 @@ const getAllTrash = async (req, res) => {
 
     let batch_uuid = [];
     for (allTrashBatchs of allTrashBatch) {
-      batch_uuid.push(allTrashBatchs.uuid);
-
+      if(allTrashBatchs.deleted_at != null){
+        batch_uuid.push(allTrashBatchs.uuid)
+      }
     }
+
+    console.log(batch_uuid,"lll");
+
     const allTrashses = await Script.findAll({
       where: {
         team_uuid: team_uuid,
@@ -377,7 +447,6 @@ const permanentDeleteAll = async (req, res) => {
 const selectedTrash = async (req, res) => {
   const team_uuid = req.params.uuid;
   const selectedUuids = req.body;
-  console.log(req.body, "biy");
 
   try {
     const deleteResult = await Script.destroy({
@@ -385,6 +454,17 @@ const selectedTrash = async (req, res) => {
         [Op.and]: [
           { team_uuid: team_uuid },
           { uuid: selectedUuids },
+          { deleted_at: { [Op.not]: null } },
+        ],
+      },
+    });
+
+
+    const deleteResultss = await Script.destroy({
+      where: {
+        [Op.and]: [
+          { team_uuid: team_uuid },
+          { batch_uuid: selectedUuids },
           { deleted_at: { [Op.not]: null } },
         ],
       },
@@ -399,8 +479,10 @@ const selectedTrash = async (req, res) => {
         ],
       },
     });
+ 
 
-    if (deleteResult > 0 || deleteResults > 0) {
+
+    if (deleteResult > 0 || deleteResults > 0 || deleteResultss > 0) {
       return res.status(200).json({
         message: "Selected Folders  or Section  Deleted Successfully",
       });

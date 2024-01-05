@@ -43,7 +43,7 @@ export default function EditPage(props) {
   const title = props.particularTitle;
 
   return (
-    <div className="bg-[#F4F7FC]" style={{ height: "calc(100% - 64px)" }}>
+    <div className="bg-[#F4F7FC]" style={{ height: "calc(100% - 68px)" }}>
       <div className="flex">
         <div
           className=" w-[278px] phone:w-[150px] overflow-auto border-r-[1px]"

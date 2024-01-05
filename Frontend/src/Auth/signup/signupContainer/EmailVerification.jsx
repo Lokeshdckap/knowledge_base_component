@@ -24,6 +24,8 @@ export default function EmailVerification() {
       showToastMessage(data);
     })
   };
+
+  
   return (
      <div>
       <div className='bg-primary w-screen h-64 absolute'>

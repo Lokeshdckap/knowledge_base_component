@@ -84,6 +84,14 @@ export default function EditPage(props) {
                     setPageDeleteConfirmation={props.setPageDeleteConfirmation}
                   />
                 </div>
+
+
+
+
+
+
+
+                
               ))}
             </div>
           </div>

@@ -5,81 +5,7 @@ const { sequelize, col } = require("../../utils/database");
 const Batch = db.batch;
 const Script = db.script;
 
-// const getAllTrash = async (req, res) => {
-//   try {
-//     const team_uuid = req.params.uuid;
 
-//     const allTrashs = await Script.findAll({
-//       where: {
-//         team_uuid: team_uuid,
-//         deleted_at: {
-//           [Op.not]: null,
-//         },
-//       },
-//     });
-
-//     let uniqueBatchUuids = new Set();
-//     let filteredAllTrashs = allTrashs.filter((allTrashed) => {
-//       if (
-//         allTrashed.batch_uuid &&
-//         !uniqueBatchUuids.has(allTrashed.batch_uuid)
-//       ) {
-//         uniqueBatchUuids.add(allTrashed.batch_uuid);
-//         return true;
-//       }
-//       return false;
-//     });
-//     let valuesArray = Array.from(uniqueBatchUuids);
-
-//     const allTrashss = await Batch.findAll({
-//       where: {
-//         team_uuid: team_uuid,
-//         deleted_at: {
-//           [Op.not]: null,
-//         },
-//         uuid: {
-//           [Op.in]: valuesArray,
-//         },
-//       },
-//     });
-
-//     const allTrashBatch = await Batch.findAll({
-//       where: {
-//         team_uuid: team_uuid,
-//         deleted_at: {
-//           [Op.not]: null,
-//         },
-//       },
-//     });
-//     let batch_uuid = [];
-//     for (allTrashBatchs of allTrashBatch) {
-//       batch_uuid.push(allTrashBatchs.uuid);
-//     }
-//     const allTrash = await Script.findAll({
-//       where: {
-//         team_uuid: team_uuid,
-//         deleted_at: {
-//           [Op.not]: null,
-//         },
-//         [Op.or]: [
-//           { batch_uuid: null },
-//           { batch_uuid: { [Op.notIn]: batch_uuid } },
-//         ],
-//       },
-//     });
-
-//     for (trash of allTrashBatch) {
-//       allTrash.push(trash);
-//     }
-
-//     return res.status(200).json({
-//       allTrash,
-//     });
-//   } catch (error) {
-//     console.log(error);
-//     return res.status(500).json({ error: "Fetched Failed" });
-//   }
-// };
 
 
 const getAllTrash = async (req, res) => {
@@ -106,43 +32,76 @@ const getAllTrash = async (req, res) => {
       }
       return false;
     });
+
+
     let valuesArray = Array.from(uniqueBatchUuids);
 
-    console.log(valuesArray);
 
     const allTrashBatch = await Batch.findAll({
       where: {
-        team_uuid: team_uuid,
+        uuid: {
+          [Op.in]: valuesArray,
+        },
         deleted_at: {
           [Op.not]: null,
         },
       },
     });
+    let allTrashses;
 
-    let batch_uuid = [];
-    for (allTrashBatchs of allTrashBatch) {
-      if(allTrashBatchs.deleted_at != null){
-        batch_uuid.push(allTrashBatchs.uuid)
-      }
+    const commonConditions = {
+      team_uuid: team_uuid,
+      [Op.or]: [
+        {
+          batch_uuid: null,
+          deleted_at: {
+            [Op.not]: null,
+          },
+        },
+        {
+          batch_uuid: {
+            [Op.not]: null,
+          },
+          deleted_at: {
+            [Op.not]: null,
+          },
+        },
+      ],
+    };
+
+    if (allTrashBatch.length > 0) {
+      // Additional conditions when allTrashBatch has data
+      commonConditions.batch_uuid = {
+        [Op.notIn]: valuesArray,
+      };
+      allTrashses = await Script.findAll({
+        where: commonConditions,
+      });
+    } else {
+      // Conditions for the case when allTrashBatch is empty
+      allTrashses = await Script.findAll({
+        where: commonConditions,
+      });
     }
 
-    console.log(batch_uuid,"lll");
+    // Now you can use 'allTrashses' in your further logic
 
-    const allTrashses = await Script.findAll({
+    for (trash of allTrashBatch) {
+      allTrashses.push(trash);
+    }
+    const allTrashsess = await Script.findAll({
+
       where: {
         team_uuid: team_uuid,
         deleted_at: {
           [Op.not]: null,
         },
-        [Op.or]: [
-          { batch_uuid: null },
-          { batch_uuid: { [Op.notIn]: batch_uuid } },
-        ],
+        batch_uuid: null,
       },
     });
 
-    for (trash of allTrashBatch) {
-      allTrashses.push(trash);
+    for (allTrashesed of allTrashsess) {
+      allTrashses.push(allTrashesed);
     }
 
     return res.status(200).json({

@@ -39,7 +39,7 @@ router.get(
 router.get("/google/callback", (req, res, next) => {
   console.log(req.body);
   passport.authenticate("google", (err, user) => {
-    console.log(user, "users");
+
     if (err) {
       return res
         .status(500)
@@ -50,8 +50,6 @@ router.get("/google/callback", (req, res, next) => {
         Error: "User Already Exists & Failed To Authentication to Google",
       });
     }
-    console.log(req.query.join,"fheruhfhr");
-
     const access_token = generateAuthToken.generateAuthToken(user);
 
     const refresh_token = generateAuthToken.generateAuthRefreshToken(user);

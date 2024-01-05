@@ -29,47 +29,74 @@ const getAllTrash = async (req, res) => {
       }
       return false;
     });
-    let valuesArray = Array.from(uniqueBatchUuids);
 
-    const allTrashss = await Batch.findAll({
-      where: {
-        team_uuid: team_uuid,
-        deleted_at: {
-          [Op.not]: null,
-        },
-        uuid: {
-          [Op.in]: valuesArray,
-        },
-      },
-    });
+    let valuesArray = Array.from(uniqueBatchUuids);
 
     const allTrashBatch = await Batch.findAll({
       where: {
-        team_uuid: team_uuid,
+        uuid: {
+          [Op.in]: valuesArray,
+        },
         deleted_at: {
           [Op.not]: null,
         },
       },
     });
-    let batch_uuid = [];
-    for (allTrashBatchs of allTrashBatch) {
-      batch_uuid.push(allTrashBatchs.uuid);
+
+    let allTrashses;
+
+    const commonConditions = {
+      team_uuid: team_uuid,
+      [Op.or]: [
+        {
+          batch_uuid: null,
+          deleted_at: {
+            [Op.not]: null,
+          },
+        },
+        {
+          batch_uuid: {
+            [Op.not]: null,
+          },
+          deleted_at: {
+            [Op.not]: null,
+          },
+        },
+      ],
+    };
+
+    if (allTrashBatch.length > 0) {
+      // Additional conditions when allTrashBatch has data
+      commonConditions.batch_uuid = {
+        [Op.notIn]: valuesArray,
+      };
+      allTrashses = await Script.findAll({
+        where: commonConditions,
+      });
+    } else {
+      // Conditions for the case when allTrashBatch is empty
+      allTrashses = await Script.findAll({
+        where: commonConditions,
+      });
     }
-    const allTrashses = await Script.findAll({
+
+    // Now you can use 'allTrashses' in your further logic
+
+    for (trash of allTrashBatch) {
+      allTrashses.push(trash);
+    }
+    const allTrashsess = await Script.findAll({
       where: {
         team_uuid: team_uuid,
         deleted_at: {
           [Op.not]: null,
         },
-        [Op.or]: [
-          { batch_uuid: null },
-          { batch_uuid: { [Op.notIn]: batch_uuid } },
-        ],
+        batch_uuid: null,
       },
     });
 
-    for (trash of allTrashBatch) {
-      allTrashses.push(trash);
+    for (allTrashesed of allTrashsess) {
+      allTrashses.push(allTrashesed);
     }
 
     return res.status(200).json({

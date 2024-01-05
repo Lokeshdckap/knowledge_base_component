@@ -21,21 +21,13 @@ const googleLogin = async () => {
           const existingUser = await User.findOne({
             where: { email: profile.emails[0].value },
           });
-       if(existingUser){
-           if (existingUser.password != null) {
-            const error = new Error(
-              "This email is already registered. Please sign in using your existing credentials."
-            );
-            return cb(error, null);
-          }
-       }
+        
+          // If the user exists, proceed with sign-in
           if (existingUser) {
-            if (existingUser.google_id) {
-              // User is trying to sign in with Google, proceed with sign-in
-              return cb(null, existingUser);
-            } 
+            return cb(null, existingUser);
           }
-          // If the email doesn't exist, proceed with signing up
+        
+          // If the user doesn't exist, proceed with signing up
           const defaultUser = {
             google_id: profile.id,
             username: profile.displayName,
@@ -44,18 +36,19 @@ const googleLogin = async () => {
             isVerified: true,
             uuid: uuid.v4(),
           };
-
+        
           const newUser = await User.findOrCreate({
             where: { google_id: profile.id },
             defaults: defaultUser,
           });
-
+        
           if (newUser && newUser[0]) return cb(null, newUser && newUser[0]);
-        } 
-        catch (error) {
-          console.log("Error during sign-up with Google", error);
+        } catch (error) {
+          // Handle any potential errors during the authentication process
           return cb(error, null);
         }
+        
+        
       }
     )
   );

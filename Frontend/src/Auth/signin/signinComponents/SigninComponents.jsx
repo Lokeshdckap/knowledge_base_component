@@ -222,7 +222,7 @@ export default function SigninComponents() {
 
             <button className="bg-white w-40 h-10 text-primary rounded font-medium text-sm backdrop-blur-[2px] border-[1px]">
               <a href="http://localhost:4000/api/auth/google">
-                Continue With Google
+                Signin With Google
               </a>
             </button>
           </div>

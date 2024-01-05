@@ -83,6 +83,14 @@ export default function EditPage(props) {
                     inputStr={props.inputStr}
                   />
                 </div>
+
+
+
+
+
+
+
+                
               ))}
             </div>
           </div>

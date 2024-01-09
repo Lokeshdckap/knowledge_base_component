@@ -10,13 +10,11 @@ import { ViewHeader } from "../../common/commonLayouts/ViewHeader";
 import { ViewPage } from "../../common/commonLayouts/ViewPage";
 import HashLoader from "react-spinners/HashLoader";
 
-
-
 export const ScriptEditor = () => {
   const navigate = useNavigate();
   const params = useParams();
 
-  const { getScript, script, getScripts, role } = useMyContext();
+  const { getScript, script, getScripts, role, setPublished } = useMyContext();
 
   //hooks
 
@@ -58,6 +56,8 @@ export const ScriptEditor = () => {
   const pageIds = queryParams.get("pageId");
 
   useEffect(() => {
+    setLoading(false);
+
     if (pageIds) {
       getParentOpen();
       getParticularPage();
@@ -148,9 +148,7 @@ export const ScriptEditor = () => {
   const contentPage = async (e) => {
     setPageId(e.target.id);
     let pageId = e.target.id;
-    navigate(
-      `/dashboard/${params.uuid}/edit/${params.slug}/?pageId=${pageId}`
-    );
+    navigate(`/dashboard/${params.uuid}/edit/${params.slug}/?pageId=${pageId}`);
   };
 
   const handleScriptMouseEnter = (e) => {
@@ -162,12 +160,16 @@ export const ScriptEditor = () => {
   };
 
   const handleEdit = () => {
-    setLoading(true);
 
+    setLoading(true);
+    let payLoad = {
+      script_uuid:params.slug,
+      status: "merge-request"
+    }
     axiosClient
-      .get(`/api/public/scripts/${params.slug}/${false}`)
+      .put(`/api/scripts/updateStatus`,payLoad)
       .then((res) => {
-        navigate(`/dashboard/${params.uuid}/s/${params.slug}`);
+        navigate(`/dashboard/${params.uuid}/changes/${params.slug}`);
         setLoading(false);
       })
       .catch((err) => {

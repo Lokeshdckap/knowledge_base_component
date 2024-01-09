@@ -25,7 +25,8 @@ module.exports = (sequelize, DataTypes) => {
     deleted_at: DataTypes.DATE,
     is_published:DataTypes.INTEGER,
     path:DataTypes.TEXT,
-    logo:DataTypes.STRING
+    logo:DataTypes.STRING,
+    status:DataTypes.STRING
   }, {
     sequelize,
     modelName: 'script',

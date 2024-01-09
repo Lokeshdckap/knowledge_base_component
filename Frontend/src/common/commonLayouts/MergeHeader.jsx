@@ -120,6 +120,7 @@ export const MergeHeader = (props) => {
             <button
               type="button"
               className="text-textPrimary border-[1px] phone:text-sm border-gray-400 font-medium rounded-lg text-sm h-9 w-24 phone:w-16 phone:h-7 hover:bg-primary hover:text-white "
+              onClick={props.handleMerge}
             >
               <i className="fa-solid fa-globe text-sm pr-1"></i>
               Merge

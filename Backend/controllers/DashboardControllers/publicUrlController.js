@@ -18,6 +18,7 @@ const publicUrls = async (req, res) => {
       await Script.update(
         {
           is_published: value,
+          status: "edit-request",
         },
         {
           where: { uuid: script_uuid },

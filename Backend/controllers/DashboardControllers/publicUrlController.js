@@ -76,7 +76,8 @@ const publicUrls = async (req, res) => {
         return res
           .status(200)
           .json({ publicUrl, msg: "Published Sucessfully" });
-      } else {
+      } 
+      else {
         return res.status(200).json({ publicUrl, msg: "UnPublished Content" });
       }
     } catch (error) {
@@ -187,6 +188,7 @@ const particularPageRender = async (req, res) => {
     const publicUrl = await Publish.findOne({
       where: { path: path },
     });
+    
     return res
       .status(200)
       .json({ publicUrl, msg: "Sucessfully Fetched Particular Page" });

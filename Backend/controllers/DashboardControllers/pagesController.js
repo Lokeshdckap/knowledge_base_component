@@ -308,6 +308,15 @@ const mergeSourceDataToPublic = async (req, res) => {
   try {
     const script_uuid = req.body.script_uuid;
 
+    await Script.update(
+      {
+        status:req.body.status ,
+      },
+      {
+        where: { uuid: req.body.script_uuid },
+      }
+    );
+
     const findMergeSourceData = await Page.findAll({
       where: {
         script_uuid: script_uuid,

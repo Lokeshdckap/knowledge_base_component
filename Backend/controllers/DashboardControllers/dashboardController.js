@@ -140,6 +140,7 @@ const blukCreation = async () => {
     console.error(error);
   }
 };
+
 blukCreation();
 
 const getScripts = async (req, res) => {

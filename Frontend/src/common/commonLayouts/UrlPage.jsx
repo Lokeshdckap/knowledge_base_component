@@ -21,7 +21,6 @@ import { formatDistanceToNow, isValid } from "date-fns";
 import "animate.css/animate.min.css";
 import { ToastContainer, toast } from "react-toastify";
 
-
 export const UrlPage = () => {
   const location = useLocation();
 
@@ -78,7 +77,6 @@ export const UrlPage = () => {
   };
 
   useEffect(() => {
-
     if (params["*"]) {
       setOnThisPage(null);
 
@@ -111,10 +109,10 @@ export const UrlPage = () => {
           }
           if (response && response?.status === 302) {
             console.log(response);
-            showToastMessage(response.data.msg)
+            showToastMessage(response.data.msg);
             navigate(`/${params.uuid}/${params.slug}`);
           }
-          
+
           console.log("Error:", response?.status);
         });
 
@@ -123,6 +121,8 @@ export const UrlPage = () => {
           `/api/public/documents/${params.uuid}/${params.slug}/${params["*"]}`
         )
         .then((res) => {
+          console.log(res);
+
           if (!res.data.script.is_published) {
             navigate("/underMaintenance");
           }
@@ -323,9 +323,7 @@ export const UrlPage = () => {
       <div className="flex justify-between items-center py-[20px] px-[30px] shadow-sm">
         <div className="flex items-center space-x-2">
           {script?.logo ? (
-            <div className="w-[38px] h-[38px]">
-              <img src={script?.logo} alt="" className="w-[100%] h-[100%]" />
-            </div>
+            <img src={script?.logo} alt="" className="w-8 " />
           ) : (
             <i className="fa-regular text-slate-600 fa-image text-2xl cursor-pointer pr-1"></i>
           )}
@@ -333,56 +331,54 @@ export const UrlPage = () => {
             {script && script.title}
           </p>
         </div>
-        <div className="flex justify-between space-x-8">
-          <div className="relative phone:w-[150px] w-[170px]">
-            <input
-              type="search"
-              id="search-dropdown"
-              className="block p-[10px] phone:p-[5px] w-[170px] phone:w-[150px] z-20 text-sm text-gray-900 bg-white rounded-lg focus:outline-slate-300  placeholder-gray-400 dark:text-white cursor-pointer border-[1px] "
-              placeholder="Search here"
-              autoComplete="off"
-              required
-              readOnly
-              onClick={() => setsearchPopup((prevState) => !prevState)}
-              ref={searchInpRef}
-            />
-            <button
-              type="submit"
-              className="absolute top-0 right-0 p-2 text-sm font-medium h-full text-white bg-[#99a5b8] rounded-r-lg  focus:outline-none "
-            >
-              <i className="fa-solid fa-magnifying-glass "></i>
-              <span className="sr-only">Search</span>
-            </button>
-          </div>
-          <div className="flex items-center ">
-            <div className="relative group ">
-              <i
-                className=" fa-solid fa-circle-info cursor-pointer text-2xl text-[#a3aec2] "
-                title="Info"
-                ref={iconRef}
-                onClick={() => setDetail((prevState) => !prevState)}
-              ></i>
+        <div className="relative phone:w-[150px] w-[380px]">
+          <input
+            type="search"
+            id="search-dropdown"
+            className="block p-[10px] phone:p-[5px] w-[380px] phone:w-[150px] z-20 text-sm text-gray-900 bg-white rounded-lg focus:outline-slate-300  placeholder-gray-400 dark:text-white cursor-pointer border-[1px] "
+            placeholder="Search here"
+            autoComplete="off"
+            required
+            readOnly
+            onClick={() => setsearchPopup((prevState) => !prevState)}
+            ref={searchInpRef}
+          />
+          <button
+            type="submit"
+            className="absolute top-0 right-0 p-2 text-sm font-medium h-full text-white bg-[#99a5b8] rounded-r-lg  focus:outline-none "
+          >
+            <i className="fa-solid fa-magnifying-glass "></i>
+            <span className="sr-only">Search</span>
+          </button>
+        </div>
+        <div className="flex items-center ">
+          <div className="relative group ">
+            <i
+              className=" fa-solid fa-circle-info cursor-pointer text-2xl text-primary "
+              title="Info"
+              ref={iconRef}
+              onClick={() => setDetail((prevState) => !prevState)}
+            ></i>
 
-              {detail && (
-                <div
-                  className="bg-white w-64 py-5 px-4  absolute top-8.5 border-[1px] right-[-10px] z-30 shadow-md rounded-lg "
-                  ref={detailRef}
-                >
-                  <p className="text-[#69747e] text-sm pt-1">
-                    <span className="font-medium text-[#25282b] text-sm ">
-                      Created At :
-                    </span>{" "}
-                    {formattedTime}
-                  </p>
-                  <p className="text-[#69747e] text-sm pt-1">
-                    <span className="font-medium text-[#25282b] text-sm">
-                      Last Modified At :
-                    </span>{" "}
-                    {formattedTimes}
-                  </p>
-                </div>
-              )}
-            </div>
+            {detail && (
+              <div
+                className="bg-white w-64 py-5 px-4  absolute top-8.5 border-[1px] right-[-10px] z-30 shadow-md rounded-lg "
+                ref={detailRef}
+              >
+                <p className="text-[#69747e] text-sm pt-1">
+                  <span className="font-medium text-[#25282b] text-sm ">
+                    Created At :
+                  </span>{" "}
+                  {formattedTime}
+                </p>
+                <p className="text-[#69747e] text-sm pt-1">
+                  <span className="font-medium text-[#25282b] text-sm">
+                    Last Modified At :
+                  </span>{" "}
+                  {formattedTimes}
+                </p>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -390,13 +386,13 @@ export const UrlPage = () => {
       <div
         className="flex"
         style={{
-          height: `calc(100vh - 100px)`,
+          height: `calc(100vh - 85px)`,
         }}
       >
         <div
           className=" overflow-x-hidden border-r-[1px]"
           style={{
-            maxHeight: `calc(${screenHeight}px - 82px)`,
+            maxHeight: `calc(${screenHeight}px - 85px)`,
           }}
         >
           <div className="w-[250px]  phone:w-[150px]  pr-[10px] pl-[24px] pt-[20px]">
@@ -422,7 +418,7 @@ export const UrlPage = () => {
           style={{
             width:
               screenWidth > "425" ? "calc(100% - 250px)" : "calc(100% - 150px)",
-            maxHeight: `calc(${screenHeight}px - 82px)`,
+            maxHeight: `calc(${screenHeight}px - 85px)`,
           }}
         >
           <div className=" flex justify-between">
@@ -469,7 +465,6 @@ export const UrlPage = () => {
               </div>
             )}
           </div>
-
           <div
             id="editorjs"
             className="mr-64 phone:pl-[30px] font-inter "
@@ -487,7 +482,6 @@ export const UrlPage = () => {
         />
       )}
       <ToastContainer />
-
       {loading && (
         <>
           <div className="bg-[#aeaeca] opacity-[0.5] w-[100%] h-[100vh] absolute top-0 left-0  z-10"></div>

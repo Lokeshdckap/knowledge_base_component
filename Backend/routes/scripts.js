@@ -47,4 +47,10 @@ router.put(
   scriptController.scriptLogo
 );
 
+router.put(
+  "/updateStatus",
+  verifyAuthMiddleware.verifyToken,
+  scriptController.updateStatus
+);
+
 module.exports = router;

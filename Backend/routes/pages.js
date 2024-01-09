@@ -38,6 +38,12 @@ router.delete(
   pageController.permanentDeletePage
 );
 
+router.put(
+  "/mergeSourceDataToPublic",
+  verifyAuthMiddleware.verifyToken,
+  pageController.mergeSourceDataToPublic
+);
+
 
 
 module.exports = router;

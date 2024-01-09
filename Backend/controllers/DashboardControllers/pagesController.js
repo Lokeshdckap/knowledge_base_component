@@ -5,7 +5,7 @@ const uuid = require("uuid");
 const slugify = require("slugify");
 const Script = db.script;
 const Page = db.pages;
-
+const Publish = db.published_contents;
 
 const getPage = async (req, res) => {
   try {
@@ -200,7 +200,7 @@ const updatePageData = async (req, res) => {
         description: req.body.description,
         content: JSON.stringify(req.body.content),
         path: paths,
-        emoji:req.body.emoji,
+        emoji: req.body.emoji,
         updatedAt: "CURRENT_TIMESTAMP",
       },
       {
@@ -209,17 +209,6 @@ const updatePageData = async (req, res) => {
         },
       }
     );
-
-    // const scripts = await Script.update(
-    //   {
-    //     updatedAt: literal("CURRENT_TIMESTAMP"),
-    //   },
-    //   {
-    //     where: {
-    //       uuid: script.uuid,
-    //     },
-    //   }
-    // );
 
     async function updateChildPagePaths(parentPath, parentId) {
       const childpages = await Page.findAll({
@@ -265,9 +254,8 @@ const updatePageData = async (req, res) => {
   }
 };
 
-
-
 const permanentDeletePage = async (req, res) => {
+
   const deletePageAndChildren = async (pageId) => {
     // Delete the current page and its children recursively
     await Page.destroy({
@@ -275,6 +263,7 @@ const permanentDeletePage = async (req, res) => {
         uuid: pageId,
       },
     });
+
     // Find all child pages
     const childPages = await Page.findAll({
       where: {
@@ -306,10 +295,57 @@ const permanentDeletePage = async (req, res) => {
 
     return res
       .status(200)
-      .json({ page, Success: "Pages and Children permanently deleted" });
+      .json({ page, Success: "Pages and Child Permanently Deleted" });
   } catch (err) {
     console.error(err);
     return res.status(500).json({ error: "Pages Permanent Delete Failed" });
+  }
+};
+
+const mergeSourceDataToPublic = async (req, res) => {
+
+  
+  try {
+    const script_uuid = req.body.script_uuid;
+
+    const findMergeSourceData = await Page.findAll({
+      where: {
+        script_uuid: script_uuid,
+      },
+    });
+    
+    if (findMergeSourceData.length > 0) {
+      await Promise.all(findMergeSourceData.map(async (data) => {
+        // Use upsert instead of update
+        await Publish.upsert(
+          {
+            id :data.id,
+            uuid: data.uuid,
+            title: data.title,
+            description: data.description,
+            content: data.content,
+            script_uuid: data.script_uuid,
+            page_uuid: data.page_uuid,
+            path: data.path,
+            emoji: data.emoji,
+            createdAt : data.createdAt,
+            updatedAt : data.updatedAt
+          },
+          {
+            where: {
+              script_uuid: data.script_uuid,
+            },
+          }
+        );
+      }));
+    
+      return res.status(200).json({ msg: "Successfully Merged Your Request" });
+    }
+    else {
+      return res.status(404).json({ msg: "404  Your Merge Request Failed" });
+    }
+  } catch (err) {
+    return res.status(404).json({ msg: "404  Your Merge Request Failed" });
   }
 };
 
@@ -319,4 +355,5 @@ module.exports = {
   addChildPage,
   updatePageData,
   permanentDeletePage,
+  mergeSourceDataToPublic,
 };

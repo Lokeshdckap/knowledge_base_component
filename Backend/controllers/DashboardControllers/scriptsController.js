@@ -256,9 +256,27 @@ const scriptLogo = async (req, res) => {
   }
 };
 
+const updateStatus = async (req,res)=>{
+  try {
+
+    await Script.update(
+      {
+        status:req.body.status ,
+      },
+      {
+        where: { uuid: req.body.script_uuid },
+      }
+    );
+  }
+  catch(err){
+   return res.status(500).json({msg:"Error Can't Update the Status"})
+  }
+}
+
 module.exports = {
   addNewScripts,
   getScript,
   addScriptTitle,
   scriptLogo,
+  updateStatus
 };

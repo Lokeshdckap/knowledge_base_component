@@ -5,7 +5,7 @@ const { Sequelize, DataTypes } = require("sequelize");
 //Database connection with dialect of postgres specifying the database we are using
 
 const sequelize = new Sequelize(
-  `postgres://dckap:admin@localhost:5432/knowledge_base`,
+  `postgres://dckap:admin@localhost:5432/knowledge_base_app`,
   { dialect: "postgres" }
 );
 //checking if connection is done
@@ -56,6 +56,9 @@ db.images_path = require("../models/images_path")(sequelize, DataTypes);
 
 db.access_tokens = require("../models/access_token")(sequelize, DataTypes);
 
+db.published_contents = require("../models/published_content")(sequelize, DataTypes);
+
+
 db.users.hasMany(db.user_team_members, {
   foreignKey: "user_uuid",
   sourceKey: "uuid",
@@ -90,7 +93,7 @@ db.script.belongsTo(db.batch, { foreignKey: "batch_uuid", targetKey: "uuid" });
 
 db.script.hasMany(
   db.pages,
-  { foreignKey: "script_uuid", s: "uuid" },
+  { foreignKey: "script_uuid", sourceKey: "uuid" },
   { onDelete: "CASCADE" }
 );
 

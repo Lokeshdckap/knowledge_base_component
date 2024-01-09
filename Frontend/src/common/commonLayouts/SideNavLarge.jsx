@@ -277,7 +277,6 @@ export default function SideNavLarge(props) {
       window.removeEventListener("click", closeOnOutsideClick);
       window.removeEventListener("resize", updateScreenHeight);
     };
-    
   }, [teamDropDown, AddNewMenu, props.overStates, popUp]);
 
   return (
@@ -493,11 +492,19 @@ export default function SideNavLarge(props) {
                             <div
                               className={`flex items-center truncate space-x-1`}
                             >
-                              <img
-                                src={file}
-                                alt=""
-                                className="w-[17px] h-[18px]"
-                              />
+                              {child.logo ? (
+                                <img
+                                  src={child.logo}
+                                  alt=""
+                                  className="w-[17px] h-[18px]"
+                                />
+                              ) : (
+                                <img
+                                  src={file}
+                                  alt=""
+                                  className="w-[17px] h-[18px]"
+                                />
+                              )}
                               {/* <i
                                 className="fa-solid fa-file  text-[#F9EFD4] pr-2"
                                 id={child.uuid}
@@ -526,7 +533,7 @@ export default function SideNavLarge(props) {
                                 )}
                           </div>
                         </Link>
-                        {(popUp == child.uuid) && (
+                        {popUp == child.uuid && (
                           <>
                             <div
                               className="box-border bg-white w-40 p-2.5 border-[1px] border-slate-300 rounded-xl shadow-lg absolute left-40 z-50"
@@ -578,11 +585,15 @@ export default function SideNavLarge(props) {
                   onMouseLeave={handleScriptMouseLeave}
                 >
                   <div className="flex items-center hover:bg-[#323F5E] cursor-pointer space-x-1">
-                    {/* <i
-                      className="fa-solid fa-file pr-2.5  text-[#F9EFD4]"
-                      id={script.uuid}
-                    ></i> */}
-                    <img src={file} alt="" className="w-[17px] h-[18px]" />
+                    {script.logo ? (
+                      <img
+                        src={script.logo}
+                        alt=""
+                        className="w-[17px] h-[18px]"
+                      />
+                    ) : (
+                      <img src={file} alt="" className="w-[17px] h-[18px]" />
+                    )}
 
                     <li
                       key={script.id}

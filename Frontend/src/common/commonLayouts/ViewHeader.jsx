@@ -32,10 +32,7 @@ export const ViewHeader = (props) => {
             <img
               className="cursor-pointer w-[25px]"
               src={props.renderScript?.logo && props.renderScript?.logo}
-              onClick={() => {
-                props.setShowPicker((val) => !val);
-                setHasChanges(true);
-              }}
+
             />
           ) : (
             <i class="fa-regular fa-image text-slate-600 text-2xl cursor-pointer pr-1"></i>

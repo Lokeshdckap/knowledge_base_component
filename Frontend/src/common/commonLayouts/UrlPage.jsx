@@ -108,6 +108,7 @@ export const UrlPage = () => {
           `/api/public/documents/${params.uuid}/${params.slug}/${params["*"]}`
         )
         .then((res) => {
+          console.log(res);
 
           if (!res.data.script.is_published) {
             navigate("/underMaintenance");

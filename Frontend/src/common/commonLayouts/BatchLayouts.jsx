@@ -123,11 +123,19 @@ export const BatchLayouts = (props) => {
                         id={script.uuid}
                       >
                         <div className="flex space-x-1 items-center">
-                          <img
-                            src={file}
-                            alt=""
-                            className="w-[17px] h-[18px]"
-                          />
+                          {script.logo ? (
+                            <img
+                              src={script.logo}
+                              alt=""
+                              className="w-[17px] h-[18px]"
+                            />
+                          ) : (
+                            <img
+                              src={file}
+                              alt=""
+                              className="w-[17px] h-[18px]"
+                            />
+                          )}
 
                           <p
                             className="2xl:text-2xl phone:text-[14px]"
@@ -137,20 +145,20 @@ export const BatchLayouts = (props) => {
                           </p>
                         </div>
 
-                        {role === 2
-                          ? ""
-                          : (
-                              <span
-                                className="material-symbols-outlined text-primary cursor-pointer text-2xl phone:text-[14px] leading-[6px]"
-                                onClick={deleteForeverPopup}
-                                id={script.uuid}
-                                ref={(ref) =>
-                                  (deleteIconRef.current[script.uuid] = ref)
-                                }
-                              >
-                                more_vert
-                              </span>
-                            )}
+                        {role === 2 ? (
+                          ""
+                        ) : (
+                          <span
+                            className="material-symbols-outlined text-primary cursor-pointer text-2xl phone:text-[14px] leading-[6px]"
+                            onClick={deleteForeverPopup}
+                            id={script.uuid}
+                            ref={(ref) =>
+                              (deleteIconRef.current[script.uuid] = ref)
+                            }
+                          >
+                            more_vert
+                          </span>
+                        )}
                       </div>
                       <p
                         id={script.uuid}
@@ -187,9 +195,12 @@ export const BatchLayouts = (props) => {
                     )}
                   </div>
                 </Link>
-              ))):(    <div className="text-xl text-textPrimary ">
-              No records of Sections
-            </div>)}
+              ))
+            ) : (
+              <div className="text-xl text-textPrimary ">
+                No records of Sections
+              </div>
+            )}
           </div>
         </div>
       </div>

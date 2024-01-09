@@ -6,6 +6,7 @@ const slugify = require("slugify");
 const Script = db.script;
 const Page = db.pages;
 
+
 const getPage = async (req, res) => {
   try {
     const page_uuid = req.params.uuid;

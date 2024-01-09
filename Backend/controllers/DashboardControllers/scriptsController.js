@@ -155,8 +155,15 @@ const addScriptTitle = async (req, res) => {
           "/" +
           req.body.inputValue.split(" ").filter(Boolean).join("").toLowerCase();
 
+        const existingScript = await Script.findOne({
+          where: { uuid: req.body.queryParameter },
+        });
+
         const scriptTitleUpdate = await Script.update(
-          { title: req.body.inputValue, path: paths },
+          {
+            title: req.body.inputValue,
+            path: existingScript.is_published ? existingScript.path : paths,
+          },
           {
             where: { uuid: req.body.queryParameter },
           }
@@ -165,28 +172,27 @@ const addScriptTitle = async (req, res) => {
         const updatePath = await Page.findAll({
           where: { script_uuid: req.body.queryParameter },
         });
+        if (!existingScript.is_published) {
+          const updateAllPages = async () => {
+            for (const scriptPaths of updatePath) {
+              let oldPath = scriptPaths.path.split("/")[1];
+              let replaceTheNew = oldPath.replace(oldPath, req.body.inputValue);
 
-        const updateAllPages = async () => {
-          for (const scriptPaths of updatePath) {
-            let oldPath = scriptPaths.path.split("/")[1];
-            let replaceTheNew = oldPath.replace(oldPath, req.body.inputValue);
+              const pathArray = scriptPaths.path.split("/");
+              pathArray.splice(1, 1, replaceTheNew);
+              const updatedPath = pathArray.join("/");
 
-            const pathArray = scriptPaths.path.split("/");
-            pathArray.splice(1, 1, replaceTheNew);
-            const updatedPath = pathArray.join("/");
-
-            // Update the current row with its corresponding updatedPath
-            scriptPaths.path = updatedPath
-              .split(" ")
-              .filter(Boolean)
-              .join("")
-              .toLowerCase();
-            await scriptPaths.save();
-          }
-        };
-
-        updateAllPages();
-
+              // Update the current row with its corresponding updatedPath
+              scriptPaths.path = updatedPath
+                .split(" ")
+                .filter(Boolean)
+                .join("")
+                .toLowerCase();
+              await scriptPaths.save();
+            }
+          };
+          updateAllPages();
+        }
         return res.status(200).json({ scriptTitleUpdate });
       } else {
         return res
@@ -219,38 +225,33 @@ const scriptLogo = async (req, res) => {
     if (req.file) {
       const { filename } = req.file ? req.file : null;
       scriptLogo = `http://localhost:4000/uploads/${filename}`;
-
     }
     const scriptFind = await Script.findOne({
       where: {
         uuid: script_uuid,
       },
     });
-    let updateData ;
+    let updateData;
     if (scriptFind) {
       updateData = {
         logo: scriptLogo,
       };
-      console.log(updateData,"lpkjhgfd");
-     const scriptLogoUpdate = await Script.update(updateData, {
+      const scriptLogoUpdate = await Script.update(updateData, {
         where: {
           uuid: script_uuid,
         },
       });
-      console.log(scriptLogoUpdate,"ll");
-      if(scriptLogoUpdate.length > 0){
-      return res
-        .status(200)
-        .json({ message: "Script Logo Update Sucessfully" });
-      }
-      else{
-      return res.status(500).json({ message: "Script Logo Can't Update !" });
+      if (scriptLogoUpdate.length > 0) {
+        return res
+          .status(200)
+          .json({ message: "Script Logo Update Sucessfully" });
+      } else {
+        return res.status(500).json({ message: "Script Logo Can't Update !" });
       }
     } else {
       return res.status(500).json({ message: "Script Logo Can't Update !" });
     }
-  } 
-  catch (err) {
+  } catch (err) {
     return res.status(500).json({ message: "Script Logo Can't Update !" });
   }
 };

@@ -45,9 +45,23 @@ h2{
   font-size: 24px;
   font-weight: bold;
 }
+h1 > a{
+  color: #ffffff;
+}
 h2 > a{
   color: #ffffff;
-
+}
+h3 > a{
+  color: #ffffff;
+}
+h4 > a{
+  color: #ffffff;
+}
+h5 > a{
+  color: #ffffff;
+}
+h6 > a{
+  color: #ffffff;
 }
 h3{
   font-size: 18.72px;

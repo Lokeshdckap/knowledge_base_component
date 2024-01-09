@@ -1,12 +1,8 @@
 const db = require("../../utils/database");
 const { Op, where } = require("sequelize");
 const { sequelize, col } = require("../../utils/database");
-
 const Batch = db.batch;
 const Script = db.script;
-
-
-
 
 const getAllTrash = async (req, res) => {
   try {
@@ -33,9 +29,7 @@ const getAllTrash = async (req, res) => {
       return false;
     });
 
-
     let valuesArray = Array.from(uniqueBatchUuids);
-
 
     const allTrashBatch = await Batch.findAll({
       where: {
@@ -47,17 +41,12 @@ const getAllTrash = async (req, res) => {
         },
       },
     });
+
     let allTrashses;
 
     const commonConditions = {
       team_uuid: team_uuid,
       [Op.or]: [
-        {
-          batch_uuid: null,
-          deleted_at: {
-            [Op.not]: null,
-          },
-        },
         {
           batch_uuid: {
             [Op.not]: null,
@@ -89,8 +78,8 @@ const getAllTrash = async (req, res) => {
     for (trash of allTrashBatch) {
       allTrashses.push(trash);
     }
-    const allTrashsess = await Script.findAll({
 
+    const allTrashsess = await Script.findAll({
       where: {
         team_uuid: team_uuid,
         deleted_at: {
@@ -112,7 +101,6 @@ const getAllTrash = async (req, res) => {
     return res.status(500).json({ error: "Fetched Failed" });
   }
 };
-
 
 const getAllTrashScriptsForBatch = async (req, res) => {
   try {
@@ -337,7 +325,7 @@ const permanentDeleteParticular = async (req, res) => {
         },
       });
     }
-    
+
     try {
       // Delete associated scripts first
       await Script.destroy({
@@ -418,7 +406,6 @@ const selectedTrash = async (req, res) => {
       },
     });
 
-
     const deleteResultss = await Script.destroy({
       where: {
         [Op.and]: [
@@ -438,8 +425,6 @@ const selectedTrash = async (req, res) => {
         ],
       },
     });
- 
-
 
     if (deleteResult > 0 || deleteResults > 0 || deleteResultss > 0) {
       return res.status(200).json({

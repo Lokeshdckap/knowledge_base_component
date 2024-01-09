@@ -34,7 +34,7 @@ export default function Main(props) {
         }
       }
     };
-    
+
     const updateScreenHeight = () => {
       setScreenHeight(window.innerHeight);
     };
@@ -80,7 +80,7 @@ export default function Main(props) {
               </div>
             </div>
             <div className="flex   items-center space-x-5 phone:space-x-2">
-              <div >
+              <div>
                 <button
                   className={`flex items-center justify-center space-x-1 hover:border-primary hover:text-primary  w-[128px]  phone:w-[80px] text-slate-500 rounded border-slate-400 phone:text-[10px] border-[1px]  `}
                   onClick={addBatchEvent}
@@ -119,9 +119,10 @@ export default function Main(props) {
           >
             {batchList && batchList.length > 0 ? (
               batchList.map((batch, index) => (
-                <Link to={`/dashboard/${params.uuid}/b/${batch.uuid}`}
-                
-                key={index}>
+                <Link
+                  to={`/dashboard/${params.uuid}/b/${batch.uuid}`}
+                  key={index}
+                >
                   <div
                     key={batch.id}
                     className="bg-white border-[1px] rounded-[10px] cursor-pointer  hover:border-primary relative   lg:p-[5px] xl:p-[10px] 2xl:p-[20px]"
@@ -239,11 +240,19 @@ export default function Main(props) {
                         id={script.uuid}
                       >
                         <div className="flex space-x-1 items-center">
-                          <img
-                            src={file}
-                            alt=""
-                            className="w-[17px] h-[18px]"
-                          />
+                          {script.logo ? (
+                            <img
+                              src={script.logo}
+                              alt=""
+                              className="w-[17px] h-[18px]"
+                            />
+                          ) : (
+                            <img
+                              src={file}
+                              alt=""
+                              className="w-[17px] h-[18px]"
+                            />
+                          )}
 
                           <p
                             className="2xl:text-2xl phone:text-[14px]"
@@ -291,13 +300,11 @@ export default function Main(props) {
                           <i
                             className="fa-solid fa-trash cursor-pointer pl-1"
                             id={script.uuid}
-                          
                           ></i>
 
                           <p
                             className="cursor-pointer  text-[16px]  hover:rounded-lg"
                             id={script.uuid}
-                          
                           >
                             Delete
                           </p>

@@ -87,6 +87,8 @@ export const TeamSetting = (props) => {
           <button
             className="bg-primary mt-5 h-12 w-48 text-white rounded text-center"
             onClick={handleUpdate}
+            disabled={role == 2 ? true : false}
+
           >
             Update
           </button>

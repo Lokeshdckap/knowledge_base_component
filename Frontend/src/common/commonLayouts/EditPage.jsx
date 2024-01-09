@@ -3,12 +3,23 @@ import { EditorComponents } from "../commonComponents/EditorComponents";
 import { PageTree } from "../commonComponents/PageTree";
 import { PublishPopup } from "../commonComponents/PublishPopup";
 import { useMyContext } from "../../context/AppContext";
+import { DownOutlined, UserOutlined } from "@ant-design/icons";
+import { Dropdown, Space } from "antd";
+import { Button, Flex } from 'antd';
 import Picker from "emoji-picker-react";
 
 export default function EditPage(props) {
   const { renderScript } = props;
   const [newPagePopup, setNewPagePopup] = useState(false);
   const [OverPage, setOverPage] = useState(null);
+  const items = [
+    {
+      label: "Save & Publish",
+      key: "1",
+      onClick: props.handleSaveAndPublish,
+    },
+  ];
+  const [loadings, setLoadings] = useState([]);
   const treeNode = props.treeNode;
   const {
     screenHeight,
@@ -43,12 +54,12 @@ export default function EditPage(props) {
   const title = props.particularTitle;
 
   return (
-    <div className="bg-[#F4F7FC]" style={{ height: "calc(100% - 68px)" }}>
+    <div className="bg-[#F4F7FC]" style={{ height: "calc(100% - 66px)" }}>
       <div className="flex">
         <div
           className=" w-[278px] phone:w-[150px] overflow-auto border-r-[1px]"
           style={{
-            height: `calc(${screenHeight}px - 64px)`,
+            height: `calc(${screenHeight}px - 66px)`,
           }}
         >
           <div className="space-y-2 ml-4 phone:ml-px mt-3">
@@ -84,14 +95,6 @@ export default function EditPage(props) {
                     setPageDeleteConfirmation={props.setPageDeleteConfirmation}
                   />
                 </div>
-
-
-
-
-
-
-
-                
               ))}
             </div>
           </div>
@@ -104,12 +107,10 @@ export default function EditPage(props) {
           style={{
             width:
               screenWidth > "425" ? "calc(100% - 278px)" : "calc(100% - 150px)",
-            maxHeight: `calc(${screenHeight}px - 64px)`,
+            maxHeight: `calc(${screenHeight}px - 66px)`,
           }}
         >
-          <div
-            className="flex  items-center relative space-x-2 mt-8"
-          >
+          <div className="flex  items-center relative space-x-2 mt-8">
             <div className="">
               <img
                 className="cursor-pointer w-[25px]"
@@ -137,19 +138,25 @@ export default function EditPage(props) {
                 </>
               )}
             </div>
-            <input
-              type="text"
-              className="text-3xl phone:text-[18px] phone:w-[190px] py-1 pl-1 rounded-sm bg-[#fbfbfc] font-inter focus:bg-[#e6ebf8] hover:bg-[#e6ebf8] focus:outline-none text-textPrimary font-bold"
-              value={title}
-              onChange={(e) => {
-                props.setParticularTitle(e.target.value);
-                setHasChanges(true);
-              }}
-              placeholder="Page Name"
-              readOnly={
-                props.publish && props.publish.is_published ? true : false
-              }
-            />
+            <div className="flex justify-between items-center">
+              <input
+                type="text"
+                className="text-3xl phone:text-[18px] phone:w-[190px] py-1 pl-1 rounded-sm bg-[#fbfbfc] font-inter focus:bg-[#e6ebf8] hover:bg-[#e6ebf8] focus:outline-none text-textPrimary font-bold"
+                value={title}
+                onChange={(e) => {
+                  props.setParticularTitle(e.target.value);
+                  setHasChanges(true);
+                }}
+                placeholder="Page Name"
+                readOnly={
+                  props.publish && props.publish.is_published ? true : false
+                }
+              />
+              <div>
+              <Button className="ml-20" onClick={props.clickPublish}>Save this Page</Button>
+       
+              </div>
+            </div>
           </div>
           <div>
             <input

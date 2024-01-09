@@ -1,5 +1,5 @@
 import React from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import { useMyContext } from "../../context/AppContext";
 export const ViewHeader = (props) => {
@@ -32,13 +32,9 @@ export const ViewHeader = (props) => {
             <img
               className="cursor-pointer w-[25px]"
               src={props.renderScript?.logo && props.renderScript?.logo}
-              onClick={() => {
-                props.setShowPicker((val) => !val);
-                setHasChanges(true);
-              }}
             />
           ) : (
-            <i class="fa-regular fa-image text-slate-600 text-2xl cursor-pointer pr-1"></i>
+            <i className="fa-regular fa-image text-slate-600 text-2xl cursor-pointer pr-1"></i>
           )}
 
           <input
@@ -55,14 +51,16 @@ export const ViewHeader = (props) => {
           >
             Copy Link
           </button>
-          <button
-            type="button"
-            className="text-textPrimary border-[1px] border-gray-400 phone:text-sm font-medium rounded-lg text-sm h-9 w-24  phone:w-16 phone:h-7 mr-2 mb-2 "
-            onClick={props.handleEdit}
-            disabled={props.role == 2 ? true : false}
-          >
-            Edit
-          </button>
+          <Link to={`/dashboard/${params.uuid}/changes/${params.slug}`}>
+            <button
+              type="button"
+              className="text-textPrimary border-[1px] border-gray-400 phone:text-sm font-medium rounded-lg text-sm h-9 w-24  phone:w-16 phone:h-7 mr-2 mb-2 "
+              // onClick={props.handleEdit}
+              disabled={props.role == 2 ? true : false}
+            >
+              Edit
+            </button>
+          </Link>
         </div>
       </div>
     </div>

@@ -147,7 +147,6 @@ const MyContextProvider = ({ children }) => {
     await axiosClient
       .get(`/api/dashboard/getScripts/${params.uuid}/${params.slug}`)
       .then((res) => {
-        // setOverState(res.data.script_batch.batch_uuid);
         setChildScript(res.data.result);
       });
   };
@@ -231,6 +230,7 @@ const MyContextProvider = ({ children }) => {
         setChildScript(res.data.result);
         setScripts(res.data.result);
       })
+
       .catch((err) => {
         console.log(err);
       });
@@ -246,7 +246,6 @@ const MyContextProvider = ({ children }) => {
         setScripts(res.data.result);
         setChildScript(res.data.result);
         setLoading(false);
-        console.log(res.data);
       })
       .catch((err) => {
         console.log(err);

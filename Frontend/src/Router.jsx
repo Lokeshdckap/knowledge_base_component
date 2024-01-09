@@ -27,6 +27,7 @@ import { EmailVerificationCheck } from "./Auth/signup/signupContainer/EmailVerif
 import GoogleCallback from "./Auth/signup/signupComponents/GoogleCallback";
 import { ApiTokens } from "./Team/components/ApiTokens.jsx";
 import { UnderMaintance } from "./Error/UnderMaintance.jsx";
+import { Merge } from "./Merge/Merge/Merge.jsx";
 
 const router = createBrowserRouter([
   {
@@ -76,12 +77,21 @@ const router = createBrowserRouter([
         element: <Scripts />,
       },
       {
-        path: "/dashboard/:uuid/changes/:slug/:pageId?",
+        path: "/dashboard/:uuid/edit/:slug/:pageId?",
         element: <ScriptEditor />,
       },
       {
-        path: "/dashboard/:uuid/changes/:slug",
+        path: "/dashboard/:uuid/edit/:slug",
         element: <ScriptEditor />,
+      },
+
+      {
+        path: "/dashboard/:uuid/changes/:slug/:pageId?",
+        element: <Merge />,
+      },
+      {
+        path: "/dashboard/:uuid/changes/:slug",
+        element: <Merge />,
       },
       {
         path: "/dashboard/:uuid/s/:slug",

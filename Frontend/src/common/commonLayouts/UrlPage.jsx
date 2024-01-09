@@ -82,12 +82,9 @@ export const UrlPage = () => {
               (block) => block.type === "header"
             );
             const headerValuesWithId = headers.map((header) => ({
-              
               id: header.id,
               text: header.data.text.replace(/<[^>]*>/g, ""),
-            }
-           
-            ));
+            }));
             setOnThisPage(headerValuesWithId);
           }
         })
@@ -108,7 +105,6 @@ export const UrlPage = () => {
           `/api/public/documents/${params.uuid}/${params.slug}/${params["*"]}`
         )
         .then((res) => {
-
           if (!res.data.script.is_published) {
             navigate("/underMaintenance");
           }
@@ -117,7 +113,6 @@ export const UrlPage = () => {
           setLoading(false);
 
           setScript(res.data.script);
-       
         })
         .catch((err) => {
           const response = err.response;
@@ -310,7 +305,9 @@ export const UrlPage = () => {
       <div className="flex justify-between items-center py-[20px] px-[30px] shadow-sm">
         <div className="flex items-center space-x-2">
           {script?.logo ? (
-            <img src={script?.logo} alt="" className="w-8 " />
+            <div className="w-[38px] h-[38px]">
+              <img src={script?.logo} alt="" className="w-[100%] h-[100%]" />
+            </div>
           ) : (
             <i className="fa-regular text-slate-600 fa-image text-2xl cursor-pointer pr-1"></i>
           )}
@@ -318,54 +315,56 @@ export const UrlPage = () => {
             {script && script.title}
           </p>
         </div>
-        <div className="relative phone:w-[150px] w-[380px]">
-          <input
-            type="search"
-            id="search-dropdown"
-            className="block p-[10px] phone:p-[5px] w-[380px] phone:w-[150px] z-20 text-sm text-gray-900 bg-white rounded-lg focus:outline-slate-300  placeholder-gray-400 dark:text-white cursor-pointer border-[1px] "
-            placeholder="Search here"
-            autoComplete="off"
-            required
-            readOnly
-            onClick={() => setsearchPopup((prevState) => !prevState)}
-            ref={searchInpRef}
-          />
-          <button
-            type="submit"
-            className="absolute top-0 right-0 p-2 text-sm font-medium h-full text-white bg-[#99a5b8] rounded-r-lg  focus:outline-none "
-          >
-            <i className="fa-solid fa-magnifying-glass "></i>
-            <span className="sr-only">Search</span>
-          </button>
-        </div>
-        <div className="flex items-center ">
-          <div className="relative group " >
-            <i
-              className=" fa-solid fa-circle-info cursor-pointer text-2xl text-primary "
-              title="Info"
-              ref={iconRef}
-              onClick={() => setDetail((prevState) => !prevState)}
-            ></i>
-            
-            {detail && (
-              <div
-                className="bg-white w-64 py-5 px-4  absolute top-8.5 border-[1px] right-[-10px] z-30 shadow-md rounded-lg "
-                ref={detailRef}
-              >
-                <p className="text-[#69747e] text-sm pt-1">
-                  <span className="font-medium text-[#25282b] text-sm ">
-                    Created At :
-                  </span>{" "}
-                  {formattedTime}
-                </p>
-                <p className="text-[#69747e] text-sm pt-1">
-                  <span className="font-medium text-[#25282b] text-sm">
-                    Last Modified At :
-                  </span>{" "}
-                  {formattedTimes}
-                </p>
-              </div>
-            )}
+        <div className="flex justify-between space-x-8">
+          <div className="relative phone:w-[150px] w-[170px]">
+            <input
+              type="search"
+              id="search-dropdown"
+              className="block p-[10px] phone:p-[5px] w-[170px] phone:w-[150px] z-20 text-sm text-gray-900 bg-white rounded-lg focus:outline-slate-300  placeholder-gray-400 dark:text-white cursor-pointer border-[1px] "
+              placeholder="Search here"
+              autoComplete="off"
+              required
+              readOnly
+              onClick={() => setsearchPopup((prevState) => !prevState)}
+              ref={searchInpRef}
+            />
+            <button
+              type="submit"
+              className="absolute top-0 right-0 p-2 text-sm font-medium h-full text-white bg-[#99a5b8] rounded-r-lg  focus:outline-none "
+            >
+              <i className="fa-solid fa-magnifying-glass "></i>
+              <span className="sr-only">Search</span>
+            </button>
+          </div>
+          <div className="flex items-center ">
+            <div className="relative group ">
+              <i
+                className=" fa-solid fa-circle-info cursor-pointer text-2xl text-[#a3aec2] "
+                title="Info"
+                ref={iconRef}
+                onClick={() => setDetail((prevState) => !prevState)}
+              ></i>
+
+              {detail && (
+                <div
+                  className="bg-white w-64 py-5 px-4  absolute top-8.5 border-[1px] right-[-10px] z-30 shadow-md rounded-lg "
+                  ref={detailRef}
+                >
+                  <p className="text-[#69747e] text-sm pt-1">
+                    <span className="font-medium text-[#25282b] text-sm ">
+                      Created At :
+                    </span>{" "}
+                    {formattedTime}
+                  </p>
+                  <p className="text-[#69747e] text-sm pt-1">
+                    <span className="font-medium text-[#25282b] text-sm">
+                      Last Modified At :
+                    </span>{" "}
+                    {formattedTimes}
+                  </p>
+                </div>
+              )}
+            </div>
           </div>
         </div>
         {/* <input
@@ -381,13 +380,13 @@ export const UrlPage = () => {
       <div
         className="flex"
         style={{
-          height: `calc(100vh - 85px)`,
+          height: `calc(100vh - 100px)`,
         }}
       >
         <div
           className=" overflow-x-hidden border-r-[1px]"
           style={{
-            maxHeight: `calc(${screenHeight}px - 85px)`,
+            maxHeight: `calc(${screenHeight}px - 82px)`,
           }}
         >
           <div className="w-[250px]  phone:w-[150px]  pr-[10px] pl-[24px] pt-[20px]">
@@ -413,7 +412,7 @@ export const UrlPage = () => {
           style={{
             width:
               screenWidth > "425" ? "calc(100% - 250px)" : "calc(100% - 150px)",
-            maxHeight: `calc(${screenHeight}px - 85px)`,
+            maxHeight: `calc(${screenHeight}px - 82px)`,
           }}
         >
           <div className=" flex justify-between">
@@ -437,7 +436,7 @@ export const UrlPage = () => {
                 {page?.length == 0 ? "Page description" : loadPage?.description}
               </h4>
             </div>
-          
+
             {onThisPage && (
               <div className="float-right fixed right-4 max-w-[220px] w-[100%]">
                 <p className="font-semibold text-gray-500 text-lg font-inter">
@@ -446,7 +445,15 @@ export const UrlPage = () => {
                 {onThisPage &&
                   onThisPage.map((page) => (
                     <div className="mt-2 cursor-pointer">
-                      <a href={"#"+page.id} className={`text-[#495057] ${window.location.hash == "#"+page.id && "text-primary font-medium"} text-sm`}>{page.text.slice(0,-1)}</a>
+                      <a
+                        href={"#" + page.id}
+                        className={`text-[#495057] ${
+                          window.location.hash == "#" + page.id &&
+                          "text-primary font-medium"
+                        } text-sm`}
+                      >
+                        {page.text.slice(0, -1)}
+                      </a>
                     </div>
                   ))}
               </div>
@@ -469,6 +476,7 @@ export const UrlPage = () => {
           serachPopup={serachPopup}
         />
       )}
+      <i class="fa-regular fa-banana"></i>
       {loading && (
         <>
           <div className="bg-[#aeaeca] opacity-[0.5] w-[100%] h-[100vh] absolute top-0 left-0  z-10"></div>

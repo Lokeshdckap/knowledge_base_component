@@ -4,9 +4,11 @@ import { DownOutlined, UserOutlined } from "@ant-design/icons";
 import { Dropdown, Space } from "antd";
 import { useParams } from "react-router-dom";
 import axiosClient from "../../axios-client";
+import { useMyContext } from "../../context/AppContext";
 
 export default function EditHeader(props) {
   const params = useParams();
+  const { handleAfterAddedChildrenScripts, getScript } = useMyContext();
   const items = [
     {
       label: "Save & Publish",
@@ -53,11 +55,17 @@ export default function EditHeader(props) {
           },
         })
         .then((res) => {
-          console.log(res);
+          if (props.renderScript?.batch_uuid) {
+            handleAfterAddedChildrenScripts(props.renderScript.batch_uuid);
+            props.getParticularScript();
+          } else {
+            getScript();
+            props.getParticularScript();
+          }
         })
         .catch((err) => {
           const response = err.response;
-          console.error("Error:", response.status);
+          console.error("Error:", response);
         });
     }
   };
@@ -68,15 +76,21 @@ export default function EditHeader(props) {
         className={`flex items-center m-auto justify-between relative w-[100%]  2xl:py-[30px] py-[10px]  px-[30px] phone:px-[10px] shadow-sm`}
       >
         <div className="flex items-center">
-          <div className=" cursor-pointer p-1">
+          <div className=" cursor-pointer p-1 ">
             <label htmlFor="imageInput" className="cursor-pointer">
-              {selectedImage ? (
+              {props.renderScript.logo ? (
                 <>
-                  <img
-                    src={selectedImage}
-                    alt="Selected"
-                    className="object-cover w-[40px]"
-                  />
+                  {props.renderScript.logo ? (
+                    <div className="w-[38px] h-[38px]">
+                      <img
+                        src={props.renderScript.logo}
+                        alt=""
+                        className="w-[100%] h-[100%]"
+                      />
+                    </div>
+                  ) : (
+                    <i className="fa-regular  fa-image text-slate-600 text-2xl cursor-pointer pr-1"></i>
+                  )}
                   <input
                     type="file"
                     id="imageInput"
@@ -87,11 +101,8 @@ export default function EditHeader(props) {
                 </>
               ) : (
                 <>
-                  {props.renderScript.logo ? (
-                    <img src={props.renderScript.logo} alt="" className="w-13 h-10" />
-                  ) : (
-                    <i className="fa-regular  fa-image text-slate-600 text-2xl cursor-pointer pr-1"></i>
-                  )}
+                  <i className="fa-regular  fa-image text-slate-600 text-2xl cursor-pointer pr-1"></i>
+
                   <input
                     type="file"
                     id="imageInput"
@@ -111,7 +122,7 @@ export default function EditHeader(props) {
         </div>
 
         <div className="flex items-center justify-between max-w-[110px] phone:max-w-[140px]  w-[100%]">
-          <div>
+          {/* <div>
             <Space direction="vertical">
               <Dropdown.Button
                 onClick={props.clickPublish}
@@ -124,7 +135,26 @@ export default function EditHeader(props) {
                 Save
               </Dropdown.Button>
             </Space>
+          </div> */}
+          <div onClick={props.handleSaveAndPublish}>
+            <button
+              type="button"
+              className="text-textPrimary border-[1px] phone:text-sm border-gray-400 font-medium rounded-lg text-sm h-9 w-24 phone:w-16 phone:h-7 hover:bg-primary hover:text-white "
+            >
+              <i className="fa-solid fa-globe text-sm pr-1"></i>
+              Publish
+            </button>
           </div>
+
+          {/* <Link to={`dashboard/*`}>
+            <button
+              type="button"
+              className="text-textPrimary border-[1px] phone:text-sm border-gray-400 font-medium rounded-lg text-sm h-9 w-24 phone:w-16 phone:h-7 "
+              onClick={props.HandleShare}
+            >
+              Edit
+            </button>
+          </Link> */}
 
           {/* <Link to={`dashboard/*`}>
             <button

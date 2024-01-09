@@ -98,7 +98,7 @@ export const ScriptEditor = () => {
       .get(`/api/dashboard/getScriptAndPage/${script_uuid}`)
       .then((res) => {
         navigate(
-          `/dashboard/${params.uuid}/changes/${params.slug}/?pageId=${res.data.hierarchy[0].uuid}`
+          `/dashboard/${params.uuid}/edit/${params.slug}/?pageId=${res.data.hierarchy[0].uuid}`
         );
         setLoading(false);
       })
@@ -149,7 +149,7 @@ export const ScriptEditor = () => {
     setPageId(e.target.id);
     let pageId = e.target.id;
     navigate(
-      `/dashboard/${params.uuid}/changes/${params.slug}/?pageId=${pageId}`
+      `/dashboard/${params.uuid}/edit/${params.slug}/?pageId=${pageId}`
     );
   };
 

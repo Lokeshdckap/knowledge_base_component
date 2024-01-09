@@ -2,11 +2,7 @@ import React, { useRef, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import ClipboardJS from "clipboard";
 
-
-
 export const UrlCopyPopup = ({ renderScript }) => {
-
-
   const params = useParams();
   const textToCopyRef = useRef(null);
 
@@ -15,24 +11,31 @@ export const UrlCopyPopup = ({ renderScript }) => {
   const queryParams = new URLSearchParams(location.search);
   const pageIds = queryParams.get("pageId");
 
-  const [save,setSave] = useState("Copy")
-
+  const [save, setSave] = useState("Copy");
 
   const handleNavigate = () => {
-    navigate(`/dashboard/${params.uuid}/s/${params.slug}/?pageId=${pageIds}`);
+    navigate(`/dashboard/${params.uuid}/s/${params.slug}`);
   };
 
   return (
     <div>
       <div className="bg-[#a3a2e9] opacity-[0.5] w-screen h-screen absolute top-0 left-0  z-10"></div>
       <div className=" flex items-center justify-center h-screen w-screen absolute top-2/4 left-2/4 transform -translate-x-1/2 -translate-y-1/2 z-20 ">
-        <div className="bg-white h-[240px] w-[600px]  rounded -z-10">
+        <div className="bg-white h-[240px] w-[600px]  rounded-lg -z-10">
           <div className="" onClick={handleNavigate}>
             <i className="fa-solid fa-xmark text-red-500 pt-3 float-right text-2xl cursor-pointer mr-5"></i>
           </div>
           <div className="w-[550px] m-auto">
-            <div className="flex pt-9 items-center space-x-2">
+            <div className="flex pt-16 items-center  justify-between">
               <p className="text-2xl text-textPrimary">Published Url</p>
+              <a
+                href={`http://localhost:3000/${params.uuid}${renderScript.path}`}
+                target="blank"
+              >
+                <div className="box-border border-[#c5ccd8] h-10 w-28 border-[1px]  rounded-lg bg-primary flex">
+                  <p className=" m-auto text-white ">Visit Site</p>
+                </div>
+              </a>
             </div>
             <div className="box-border mt-5 border-[#c5ccd8] w-full border-[1px] rounded-xl bg-white">
               <div className="w-[500px]  m-auto py-[8px]">

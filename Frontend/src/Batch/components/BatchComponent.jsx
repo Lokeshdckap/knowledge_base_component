@@ -21,14 +21,14 @@ export const BatchComponent = () => {
     setbatchDescription,
     scripts,
     setLoading,
-    addNewChildScript
+    addNewChildScript,
   } = useMyContext();
   //hooks
 
   //state
-  const [state, setState] = useState(true);
+  const [state, setState] = useState(false);
+
   useEffect(() => {
- 
     // getScripts();
     let team_uuid = params.uuid;
     let batch_uuid = params.slug;
@@ -48,16 +48,24 @@ export const BatchComponent = () => {
       batch_uuid: params.slug,
       title: batchTitle,
     };
-    await axiosClient
-      .post("/api/batch/addBatchTitleAndDescription", payLoad)
-      .then((res) => {
-        getScripts();
-        getBatch();
-      
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+
+    if (state) {
+      setLoading(true);
+
+      await axiosClient
+        .post("/api/batch/addBatchTitleAndDescription", payLoad)
+        .then((res) => {
+          getBatch();
+
+          setBatchTitle(res.data.numUpdatedData.title);
+          setLoading(false);
+        })
+        .catch((err) => {
+          console.log(err);
+          setLoading(false);
+        });
+    }
+    setState(false);
   };
 
   const handleDescriptionBlur = async () => {
@@ -65,16 +73,21 @@ export const BatchComponent = () => {
       batch_uuid: params.slug,
       description: batchDescription,
     };
-    await axiosClient
-      .post("/api/batch/addBatchTitleAndDescription", payLoad)
-      .then((res) => {
+    if (state) {
+      setLoading(true);
 
-        getScripts();
-        getBatch();
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+      await axiosClient
+        .post("/api/batch/addBatchTitleAndDescription", payLoad)
+        .then((res) => {
+          setbatchDescription(res.data.numUpdatedData.description);
+          setLoading(false);
+        })
+        .catch((err) => {
+          console.log(err);
+          setLoading(false);
+        });
+    }
+    setState(false);
   };
 
   const handleTrash = (e) => {
@@ -104,12 +117,12 @@ export const BatchComponent = () => {
   const handleTitleAndDescription = async (e) => {
     if (e.target.name == "title") {
       setBatchTitle(e.target.value);
+      setState(true);
     } else {
       setbatchDescription(e.target.value);
+      setState(true);
     }
   };
-  console.log(batchTitle);
-
   return (
     <>
       <BatchHeader batchTitle={batchTitle} />
@@ -127,8 +140,6 @@ export const BatchComponent = () => {
         handleDescriptionBlur={handleDescriptionBlur}
         handleTrash={handleTrash}
       />
-      
-
     </>
   );
 };

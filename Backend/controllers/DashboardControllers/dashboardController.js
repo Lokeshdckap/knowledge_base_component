@@ -9,6 +9,7 @@ const Roles = db.roles_type;
 const Image = db.images_path;
 const UserTeams = db.user_team_members;
 const Access_Token = db.access_tokens;
+const Publish = db.published_contents;
 const config = process.env;
 const uuid = require("uuid");
 const jwt = require("jsonwebtoken");
@@ -278,7 +279,7 @@ const pageSearch = async (req, res) => {
     };
 
     try {
-      const pages = await Page.findAll({
+      const pages = await Publish.findAll({
         // where: whereClause,
         where: {
           [Op.and]: [whereClause, { script_uuid: script.uuid }],

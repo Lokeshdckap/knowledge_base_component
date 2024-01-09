@@ -189,6 +189,7 @@ export const Merge = () => {
       .get(`/api/dashboard/getScriptAndPage/${script_uuid}`)
       .then((res) => {
         if (res.status == 200) {
+          console.log(res.data);
           // if (res.data.getScriptAndPages.is_published) {
           //   navigate(`/dashboard/${params.uuid}/edit/${params.slug}`);
           // }
@@ -209,7 +210,6 @@ export const Merge = () => {
 
   const handleSave = () => {
     setLoading(true);
-
     const postData = {
       id: pageIds,
       script_uuid: params.slug,
@@ -433,23 +433,7 @@ export const Merge = () => {
       localStorage.removeItem("mainId");
     }
   };
-  const handleEdit = () => {
-    setLoading(true);
-    let payLoad = {
-      script_uuid: params.slug,
-      status: "merge-request",
-    };
-    axiosClient
-      .put(`/api/scripts/updateStatus`, payLoad)
-      .then((res) => {
-        navigate(`/dashboard/${params.uuid}/changes/${params.slug}`);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.log(err);
-        setLoading(false);
-      });
-  };
+
 
   useEffect(() => {
     const handleBeforeUnload = (event) => {
@@ -469,21 +453,27 @@ export const Merge = () => {
   }, [hasChanges]);
 
   const handleMerge = () => {
-    setLoading(true);
-    let payLoad = {
-      script_uuid: params.slug,
-      status: "edit-request",
-    };
-    axiosClient
-      .put(`/api/scripts/updateStatus`, payLoad)
-      .then((res) => {
-        navigate(`/dashboard/${params.uuid}/edit/${params.slug}`);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.log(err);
-        setLoading(false);
-      });
+    if(!hasChanges){
+      setLoading(true);
+      let payLoad = {
+        script_uuid: params.slug,
+        status: "edit-request",
+      };
+      axiosClient
+        .put(`/api/pages/mergeSourceDataToPublic`, payLoad)
+        .then((res) => {
+          navigate(`/dashboard/${params.uuid}/edit/${params.slug}`);
+          setLoading(false);
+        })
+        .catch((err) => {
+          console.log(err);
+          setLoading(false);
+        });
+    }
+    else{
+      showToastErrorMessage("changes made please save the page!")
+    }
+
   };
 
   return (

@@ -255,7 +255,6 @@ const updatePageData = async (req, res) => {
 };
 
 const permanentDeletePage = async (req, res) => {
-
   const deletePageAndChildren = async (pageId) => {
     // Delete the current page and its children recursively
     await Page.destroy({
@@ -303,45 +302,53 @@ const permanentDeletePage = async (req, res) => {
 };
 
 const mergeSourceDataToPublic = async (req, res) => {
-
-  
   try {
     const script_uuid = req.body.script_uuid;
+
+    await Script.update(
+      {
+        status: req.body.status,
+      },
+      {
+        where: { uuid: req.body.script_uuid },
+      }
+    );
 
     const findMergeSourceData = await Page.findAll({
       where: {
         script_uuid: script_uuid,
       },
     });
-    
+
     if (findMergeSourceData.length > 0) {
-      await Promise.all(findMergeSourceData.map(async (data) => {
-        // Use upsert instead of update
-        await Publish.upsert(
-          {
-            id :data.id,
-            uuid: data.uuid,
-            title: data.title,
-            description: data.description,
-            content: data.content,
-            script_uuid: data.script_uuid,
-            page_uuid: data.page_uuid,
-            path: data.path,
-            emoji: data.emoji,
-            createdAt : data.createdAt,
-            updatedAt : data.updatedAt
-          },
-          {
-            where: {
+      await Promise.all(
+        findMergeSourceData.map(async (data) => {
+          // Use upsert instead of update
+          await Publish.upsert(
+            {
+              id: data.id,
+              uuid: data.uuid,
+              title: data.title,
+              description: data.description,
+              content: data.content,
               script_uuid: data.script_uuid,
+              page_uuid: data.page_uuid,
+              path: data.path,
+              emoji: data.emoji,
+              createdAt: data.createdAt,
+              updatedAt: data.updatedAt,
             },
-          }
-        );
-      }));
-    
+            {
+              where: {
+                script_uuid: data.script_uuid,
+              },
+            }
+          );
+        })
+      );
+
       return res.status(200).json({ msg: "Successfully Merged Your Request" });
-    }
-    else {
+    } else {
       return res.status(404).json({ msg: "404  Your Merge Request Failed" });
     }
   } catch (err) {

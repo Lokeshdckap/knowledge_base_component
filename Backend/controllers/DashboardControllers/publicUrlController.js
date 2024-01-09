@@ -187,9 +187,15 @@ const particularPageRender = async (req, res) => {
     const publicUrl = await Publish.findOne({
       where: { path: path },
     });
-    return res
+    if(publicUrl){
+      return res
       .status(200)
       .json({ publicUrl, msg: "Sucessfully Fetched Particular Page" });
+    }
+    else{
+    return res.status(302).json({msg : "Current changes updated in this URL"});
+    }
+    
   } catch (error) {
     return res.status(404).json({ error: error });
   }

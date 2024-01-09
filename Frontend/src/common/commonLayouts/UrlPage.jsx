@@ -19,6 +19,8 @@ import AttachesTool from "@editorjs/attaches";
 import HashLoader from "react-spinners/HashLoader";
 import { formatDistanceToNow, isValid } from "date-fns";
 import "animate.css/animate.min.css";
+import { ToastContainer, toast } from "react-toastify";
+
 
 export const UrlPage = () => {
   const location = useLocation();
@@ -64,7 +66,19 @@ export const UrlPage = () => {
     });
   }
 
+  let duration = 2000;
+  const showToastMessage = (data) => {
+    toast.success(data, {
+      position: toast.POSITION.TOP_CENTER,
+      autoClose: duration,
+      hideProgressBar: true,
+      draggable: true,
+      closeOnClick: true,
+    });
+  };
+
   useEffect(() => {
+
     if (params["*"]) {
       setOnThisPage(null);
 
@@ -74,7 +88,6 @@ export const UrlPage = () => {
         .then((res) => {
           if (res.status == 200) {
             setLoading(false);
-
             setLoadPage(res.data.publicUrl);
             setEditorValue(res.data.publicUrl.content);
 
@@ -95,9 +108,14 @@ export const UrlPage = () => {
 
           if (response && response?.status === 404) {
             navigate("/underMaintenance");
-          } else {
-            console.error("Error:", response?.status);
           }
+          if (response && response?.status === 302) {
+            console.log(response);
+            showToastMessage(response.data.msg)
+            navigate(`/${params.uuid}/${params.slug}`);
+          }
+          
+          console.log("Error:", response?.status);
         });
 
       axiosClient
@@ -367,14 +385,6 @@ export const UrlPage = () => {
             </div>
           </div>
         </div>
-        {/* <input
-          type="text"
-          placeholder="Search"
-          onClick={() => setsearchPopup((prevState) => !prevState)}
-          ref={searchInpRef}
-          readOnly
-          className="bg-[#f0f3f7] rounded-md w-48 h-10 phone:w-28 phone:h-9 pl-2 focus:outline-primary  cursor-pointer"
-        /> */}
       </div>
       <hr className="" />
       <div
@@ -444,7 +454,7 @@ export const UrlPage = () => {
                 </p>
                 {onThisPage &&
                   onThisPage.map((page) => (
-                    <div className="mt-2 cursor-pointer">
+                    <div className="mt-2 cursor-pointer" key={page.id}>
                       <a
                         href={"#" + page.id}
                         className={`text-[#495057] ${
@@ -476,7 +486,8 @@ export const UrlPage = () => {
           serachPopup={serachPopup}
         />
       )}
-      <i class="fa-regular fa-banana"></i>
+      <ToastContainer />
+
       {loading && (
         <>
           <div className="bg-[#aeaeca] opacity-[0.5] w-[100%] h-[100vh] absolute top-0 left-0  z-10"></div>

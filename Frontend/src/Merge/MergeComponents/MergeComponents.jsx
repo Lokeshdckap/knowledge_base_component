@@ -6,7 +6,7 @@ export const MergeComponents = (props) => {
   return (
     <>
       <MergeHeader
-        changeEvent={props.handleChange}
+        changeEvent={props.changeEvent}
         inputValue={props.inputValue}
         setInputValue={props.setInputValue}
         renderScript={props.renderScript}
@@ -14,7 +14,7 @@ export const MergeComponents = (props) => {
         publish={props.publish}
         role={props.role}
         getParticularScript={props.getParticularScript}
-        onClick={props.handleMerge}
+        handleMerge={props.handleMerge}
 
       />
       <MergeView

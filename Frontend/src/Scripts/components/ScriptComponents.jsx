@@ -64,7 +64,6 @@ export const ScriptComponents = () => {
   const [urlCopyPopup, setUrlCopyPopup] = useState(false);
   //page count
 
-
   const [maintainPageCount, setMaintainPageCount] = useState(null);
 
   const [instance, setInstance] = useState("");
@@ -166,9 +165,18 @@ export const ScriptComponents = () => {
       .get(`/api/dashboard/getScriptAndPage/${script_uuid}`)
       .then((res) => {
         if (res.status == 200) {
-          // if (res.data.getScriptAndPages.is_published) {
-          //   navigate(`/dashboard/${params.uuid}/edit/${params.slug}`);
-          // }
+          if (
+            res.data.getScriptAndPages.is_published &&
+            res.data.getScriptAndPages.status == "edit-request"
+          ) {
+            navigate(`/dashboard/${params.uuid}/edit/${params.slug}`);
+          }
+          if (
+            res.data.getScriptAndPages.is_published &&
+            res.data.getScriptAndPages.status == "merge-request"
+          ) {
+            navigate(`/dashboard/${params.uuid}/changes/${params.slug}`);
+          }
           setInputValue(res.data.getScriptAndPages.title);
           setPageContent(res.data.hierarchy[0]);
           setTreeNode(res.data.hierarchy);
@@ -456,7 +464,6 @@ export const ScriptComponents = () => {
         role={role}
         onChange={onChange}
         getParticularScript={getParticularScript}
-        
       />
 
       <EditPage
@@ -497,8 +504,6 @@ export const ScriptComponents = () => {
         setShowPicker={setShowPicker}
         setPageDeleteConfirmation={setPageDeleteConfirmation}
         clickPublish={handleSave}
-
-
       />
 
       {urlCopyPopup && <UrlCopyPopup renderScript={renderScript} />}

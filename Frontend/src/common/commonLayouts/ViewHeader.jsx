@@ -55,7 +55,7 @@ export const ViewHeader = (props) => {
             <button
               type="button"
               className="text-textPrimary border-[1px] border-gray-400 phone:text-sm font-medium rounded-lg text-sm h-9 w-24  phone:w-16 phone:h-7 mr-2 mb-2 "
-              // onClick={props.handleEdit}
+              onClick={props.handleEdit}
               disabled={props.role == 2 ? true : false}
             >
               Edit
